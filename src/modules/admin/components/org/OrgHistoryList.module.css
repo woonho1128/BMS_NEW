@@ -1,0 +1,66 @@
+.container {
+  width: 100%;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historyItem {
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.historyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.historyDate {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.historyActor {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.historyContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.historyTarget {
+  font-weight: 600;
+  color: #111827;
+}
+
+.historyArrow {
+  color: #6b7280;
+}
+
+.historyChange {
+  color: #374151;
+}
+
+@media (max-width: 768px) {
+  .historyHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .historyContent {
+    flex-wrap: wrap;
+  }
+}

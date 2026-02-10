@@ -1,0 +1,304 @@
+/* 출고등록 - 카드 기반, 반응형 */
+
+/* 웹: 화면 전체 너비 사용 */
+.page {
+  width: 100%;
+  margin: 0;
+  padding: 0 var(--space-lg);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.section {
+  margin-bottom: var(--space-lg);
+}
+
+.card {
+  width: 100%;
+}
+
+.cardDisabled {
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* ----- 출하번호 선택 ----- */
+.shipmentRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-md);
+}
+
+.shipmentSelect {
+  min-width: 200px;
+  max-width: 320px;
+}
+
+/* ----- 출고 기본정보 (ReadOnly) ----- */
+.basicGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md) var(--space-lg);
+}
+
+.basicField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.basicLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.basicValue {
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+}
+
+.basicTotal {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+}
+
+/* ----- 수금 및 품목정보 (테이블) ----- */
+.hint {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.itemActions {
+  margin-bottom: var(--space-md);
+}
+
+.itemTableWrap {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin: var(--space-md) 0;
+  padding: var(--space-md);
+}
+
+.itemTable {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.itemTable thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--color-bg-elevated, #f8f9fb);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.itemTh,
+.itemThAction {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.itemThAction {
+  width: 64px;
+  text-align: center;
+}
+
+.itemTd,
+.itemTdNum,
+.itemTdAction {
+  padding: var(--space-xs) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.itemTdNum {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.itemTdAction {
+  text-align: center;
+}
+
+.itemTable tbody tr:hover {
+  background: var(--color-hover-bg, #f5f7fa);
+}
+
+.itemTableSelect,
+.itemTableInput {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+
+.itemTableSelect:focus,
+.itemTableInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.itemTableInput {
+  text-align: right;
+}
+
+.deleteBtn {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-danger, #dc2626);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+/* ----- 납품 및 운송 정보 (접힘) ----- */
+.collapseHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  background: var(--color-bg-card);
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  text-align: left;
+}
+
+.collapseHeader:hover {
+  background: var(--color-hover-bg, #f5f7fa);
+}
+
+.collapseHeader:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.collapseTitle {
+  flex: 1;
+}
+
+.collapseIcon {
+  flex-shrink: 0;
+  margin-left: var(--space-sm);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.transportGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+}
+
+.transportInput {
+  min-width: 0;
+}
+
+.transportFull {
+  grid-column: 1 / -1;
+}
+
+/* 웹(큰 화면): 그리드로 화면 넓게 사용 */
+@media (min-width: 769px) {
+  .basicGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ----- 하단 액션 바 (페이지 내부) ----- */
+.actionBar {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.actionBarInner {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+/* 토스트 메시지 */
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--color-text-primary);
+  color: #fff;
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+  box-shadow: var(--card-shadow);
+  z-index: 101;
+  margin: 0;
+}
+
+/* ========== 반응형 ========== */
+@media (max-width: 768px) {
+  .page {
+    padding: 0 var(--space-sm);
+  }
+
+  .shipmentSelect {
+    min-width: 100%;
+    max-width: none;
+  }
+
+  .basicGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .itemTableWrap {
+    max-height: 320px;
+  }
+
+  .transportGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actionBarInner {
+    flex-direction: column;
+  }
+
+  .actionBarInner button {
+    width: 100%;
+    min-height: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .itemTableWrap {
+    max-height: 280px;
+  }
+}

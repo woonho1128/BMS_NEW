@@ -1,0 +1,5 @@
+/* 요구사항 문서용 전역 스타일 예시 (현재 프로젝트는 src/shared/styles/globals.css 사용) */
+html, body {
+  height: 100%;
+}
+

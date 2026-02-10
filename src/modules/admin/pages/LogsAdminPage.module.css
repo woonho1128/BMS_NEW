@@ -1,0 +1,105 @@
+.page {
+  width: 100%;
+  padding: 0 var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 0 var(--space-sm);
+  }
+}
+
+.toolbar {
+  margin-bottom: var(--space-lg);
+}
+
+.section {
+  margin-top: var(--space-lg);
+}
+
+.count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+}
+
+.th,
+.td {
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-page);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.userId {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.userName {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.actionBadge {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.resourceInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.resourceName {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.resourcePath {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-family: monospace;
+}
+
+.empty {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+  .tableWrap {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+}

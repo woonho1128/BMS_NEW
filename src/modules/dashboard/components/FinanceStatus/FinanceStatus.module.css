@@ -1,0 +1,41 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bms-card-border);
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  color: var(--bms-text);
+}
+
+.amount {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--bms-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.amountAlert {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-danger);
+  font-variant-numeric: tabular-nums;
+}
+
+.placeholder {
+  font-size: var(--font-size-sm);
+  color: var(--bms-text-muted);
+}

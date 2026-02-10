@@ -1,0 +1,119 @@
+.dpmSiteCard {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: box-shadow 150ms ease, transform 150ms ease;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dpmSiteCard:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  transform: translateY(-2px);
+}
+
+.dpmSiteCard__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 12px;
+}
+
+.dpmSiteCard__name {
+  font-weight: 900;
+  color: #333;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dpmStatusBadge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.dpmSiteCard__body {
+  display: grid;
+  gap: 10px;
+}
+
+.dpmSiteCard__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dpmSiteCard__label {
+  color: #666;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.dpmSiteCard__value {
+  color: #333;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.dpmSiteCard__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.dpmBtn {
+  flex: 1;
+  height: 40px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: filter 150ms ease, transform 120ms ease, background 150ms ease;
+}
+
+.dpmBtn:hover {
+  filter: brightness(0.97);
+}
+
+.dpmBtn:active {
+  transform: scale(0.99);
+}
+
+.dpmBtn--primary {
+  background: #667eea;
+  color: #fff;
+}
+
+.dpmBtn--primary:hover {
+  background: #5568d3;
+}
+
+.dpmBtn--warn {
+  background: #f39c12;
+  color: #fff;
+}
+
+.dpmBtn--warn:hover {
+  background: #d68910;
+}
+
+.dpmBtn--danger {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.dpmBtn--danger:hover {
+  background: #c0392b;
+}
+

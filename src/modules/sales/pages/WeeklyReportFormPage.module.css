@@ -1,0 +1,718 @@
+/* ===== 주간보고 등록 - 출장보고 등록과 UI 톤 통일, 보고서 문서형 ===== */
+
+/* ----- 페이지 전체 (화면 너비에 맞춤) ----- */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-bottom: var(--space-md);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  background: var(--color-bg-page);
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* ----- 1. 기본정보(왼쪽) + 이번 주 + 차주 한 줄 (비율로 화면에 맞춤) ----- */
+.topRow {
+  display: grid;
+  grid-template-columns: 0.9fr 2fr 2fr;
+  gap: var(--space-xs);
+  align-items: stretch;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.basicInfoCard {
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--color-bg-page);
+  border-color: var(--color-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.basicInfoCard > div:last-child {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.basicInfoBody {
+  padding: var(--space-xs) 8px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  flex: 1;
+  min-height: 0;
+}
+
+.basicInfoField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.basicInfoMeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  padding: var(--space-sm) var(--space-xs) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xs) 0;
+  min-height: 28px;
+}
+
+.metaRow:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.metaLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  min-width: 52px;
+  flex-shrink: 0;
+}
+
+.metaValue {
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+}
+
+.docTitleLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  letter-spacing: -0.01em;
+}
+
+.weekInput {
+  width: 100%;
+  max-width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.weekInput:hover {
+  border-color: var(--color-border-strong, #cbd5e1);
+}
+
+.weekInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.weekInput::placeholder {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-regular);
+}
+
+.weekDisplay {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+/* ----- 2. 이번 주 / 차주 카드 ----- */
+
+.weekCard {
+  flex-shrink: 1;
+  min-width: 0;
+  background: var(--card-bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.weekDateRange {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+}
+
+.weekCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 10px;
+  min-width: 0;
+}
+
+.repeatSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.repeatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xs);
+}
+
+.repeatTitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.repeatCard {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-page);
+  transition: border-color 0.2s;
+  min-width: 0;
+}
+
+.repeatCard:hover {
+  border-color: var(--color-border-strong, #cbd5e1);
+}
+
+.repeatCard .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.detailTextarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  box-sizing: border-box;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 64px;
+  max-height: 200px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.detailTextarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.detailTextarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.issueTextarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  box-sizing: border-box;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 48px;
+  max-height: 120px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.issueTextarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.issueTextarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.removeBtn {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.removeBtn:hover {
+  color: var(--color-danger);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* Textarea: 초기 높이 축소, focus 시 확장 */
+.textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 48px;
+  max-height: 200px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s, min-height 0.2s ease;
+}
+
+.textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.textarea:hover {
+  border-color: var(--color-border-strong, #cbd5e1);
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+  min-height: 80px;
+}
+
+/* ----- 3. 기타 / 첨부 카드 (시각적 무게 축소, Drag & Drop 톤) ----- */
+.attachCard {
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: 100%;
+  background: var(--card-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.uploadArea {
+  margin-bottom: var(--space-sm);
+}
+
+.uploadLabel {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
+.fileInput {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  background: var(--color-bg-page);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.fileInput:hover {
+  border-color: var(--color-primary);
+  background: rgba(59, 130, 246, 0.04);
+}
+
+.fileInput::file-selector-button {
+  margin-right: var(--space-md);
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.attachmentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.attachmentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-bg-page);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s;
+}
+
+.attachmentItem:hover {
+  border-color: var(--color-border-strong, #cbd5e1);
+}
+
+.attachmentName {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachmentRemove {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.attachmentRemove:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: var(--color-danger);
+}
+
+/* ----- 4. 버튼 영역 (하단 우측, 임시저장 / 저장(Primary) / 취소) ----- */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  margin-top: 0;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* ----- 기본정보 카드 최하단 버튼 ----- */
+.basicInfoCardFooter {
+  margin-top: auto;
+  padding-top: var(--space-sm);
+}
+
+.prevReportBtn {
+  width: 100%;
+  font-size: var(--font-size-sm);
+}
+
+/* ----- 이전 주간보고 팝업 (읽기 전용) ----- */
+.modalEmpty {
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.prevReportModal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-height: 70vh;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* 보고 선택 영역 */
+.prevReportMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prevReportSelectLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+}
+
+.prevReportSelect {
+  flex: 1;
+  min-width: 180px;
+  max-width: 320px;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.prevReportSelect:hover {
+  border-color: var(--color-border-strong, #cbd5e1);
+}
+
+.prevReportSelect:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.prevReportAuthor {
+  margin-left: auto;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-bg-page);
+  border-radius: var(--radius-sm);
+}
+
+/* 이번 주 | 차주 가로 2열 */
+.prevReportTwoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+  min-width: 0;
+  flex: 1;
+  min-height: 0;
+}
+
+.prevReportSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+  padding: var(--space-md);
+  background: var(--color-bg-page);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.prevReportSectionTitle {
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prevReportBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.prevReportLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+}
+
+.prevReportList {
+  margin: 0;
+  padding-left: var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.prevReportText {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.prevReportModalFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ===== 모바일 최적화 (768px 이하) ===== */
+@media (max-width: 768px) {
+  .page {
+    gap: var(--space-md);
+    padding-bottom: var(--space-md);
+  }
+
+  .topRow {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    align-items: stretch;
+  }
+
+  .basicInfoCard {
+    min-height: 0;
+  }
+
+  .basicInfoCardFooter {
+    padding-top: var(--space-md);
+  }
+
+  .prevReportBtn {
+    min-height: 44px;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .weekCardBody {
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  .footer {
+    flex-wrap: wrap;
+    justify-content: stretch;
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .footer button {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+  }
+}
+
+/* 이전 주간보고 팝업 - 모바일에서 세로 배치 */
+@media (max-width: 768px) {
+  .prevReportModal {
+    max-height: 85vh;
+  }
+
+  .prevReportMeta {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  .prevReportSelect {
+    max-width: none;
+    min-height: 44px;
+  }
+
+  .prevReportAuthor {
+    margin-left: 0;
+    text-align: right;
+  }
+
+  .prevReportTwoCol {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .prevReportSection {
+    padding: var(--space-sm);
+  }
+
+  .prevReportModalFooter button {
+    min-height: 44px;
+    width: 100%;
+  }
+}
+
+/* 소형 기기 (480px 이하) */
+@media (max-width: 480px) {
+  .page {
+    padding-bottom: var(--space-sm);
+  }
+
+  .basicInfoBody {
+    padding: var(--space-sm) 10px;
+  }
+
+  .weekInput {
+    max-width: none;
+  }
+
+  .repeatCard {
+    padding: var(--space-sm);
+  }
+
+  .detailTextarea,
+  .issueTextarea {
+    min-height: 56px;
+  }
+
+  .footer {
+    flex-direction: column;
+  }
+
+  .footer button {
+    flex: none;
+    width: 100%;
+  }
+}

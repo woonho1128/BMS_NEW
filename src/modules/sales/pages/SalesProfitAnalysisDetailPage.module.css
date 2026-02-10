@@ -1,0 +1,188 @@
+/* 손익분석 상세 — 조회/수정/결재, 읽기 전용 시 토큰 */
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.statusBadge {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.status_draft {
+  background: var(--color-text-muted);
+  color: #fff;
+}
+
+.status_inProgress {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.status_approved {
+  background: var(--color-success);
+  color: #fff;
+}
+
+.status_rejected {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.sectionCard {
+  flex-shrink: 0;
+}
+
+.dl {
+  margin: 0;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.dlRow {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: var(--space-md);
+  font-size: var(--font-size-sm);
+}
+
+.dlRow dt {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.dlRow dd {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.th,
+.td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.thNum,
+.tdNum {
+  padding: var(--space-sm) var(--space-md);
+  text-align: right;
+  border-bottom: 1px solid var(--color-border);
+  font-variant-numeric: tabular-nums;
+}
+
+.th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-page);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.summaryAside {
+  position: sticky;
+  top: var(--space-xl);
+}
+
+.summaryCard {
+  flex-shrink: 0;
+}
+
+.summaryCardWarning {
+  border-color: var(--color-danger);
+}
+
+.summaryList {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-md);
+}
+
+.summaryRow dt {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.summaryValue {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+.summaryValueDanger {
+  color: var(--color-danger);
+}
+
+.warningText {
+  margin: var(--space-md) 0 0;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+  background: rgba(239, 68, 68, 0.08);
+  border-radius: var(--radius-sm);
+}

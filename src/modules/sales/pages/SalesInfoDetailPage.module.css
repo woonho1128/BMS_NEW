@@ -1,0 +1,154 @@
+/* 영업정보 상세 (ReadOnly) */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+
+.sectionCard {
+  flex-shrink: 0;
+}
+
+.notFound {
+  margin-bottom: var(--space-md);
+  color: var(--color-text-secondary);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 4px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.badgeComplete {
+  background: var(--color-success, #22c55e);
+}
+
+.badgeWait {
+  background: var(--color-text-muted);
+}
+
+.specNo {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.author {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-md) var(--space-lg);
+}
+
+.readOnlyField {
+  margin-bottom: 0;
+}
+
+.readOnlyLabel {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.readOnlyValue {
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.badgeInline {
+  display: inline-block;
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.badgeYes {
+  background: var(--color-success, #22c55e);
+  color: #fff;
+}
+
+.badgeNo {
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.profitRate {
+  font-weight: var(--font-weight-semibold);
+}
+
+.profitRate_high {
+  color: var(--color-success, #22c55e);
+}
+
+.profitRate_medium {
+  color: var(--color-warning, #eab308);
+}
+
+.profitRate_low {
+  color: var(--color-danger, #ef4444);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .metaRow {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .footer button {
+    flex: 1;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    flex-direction: column;
+  }
+
+  .footer button {
+    width: 100%;
+  }
+}

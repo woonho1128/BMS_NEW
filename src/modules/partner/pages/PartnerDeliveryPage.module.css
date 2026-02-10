@@ -1,0 +1,171 @@
+.page {
+  background: #f0f2f5;
+  border-radius: 12px;
+  padding: 14px;
+  display: grid;
+  gap: 14px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  padding: 10px 2px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.tabBtnActive {
+  color: #0f172a;
+  border-bottom: 2px solid #1890ff;
+}
+
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  padding: 14px 16px;
+}
+
+.filterCard {
+  padding: 10px 12px;
+  --listfilter-gap: 15px;
+}
+
+/* Table top right actions */
+.tableTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.tableTitle {
+  font-size: 14px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.tableActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionBtn {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionBtn:hover:not(:disabled) {
+  background: #f8fafc;
+}
+
+.actionBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Tables */
+.tableWrap {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead th {
+  background: #f8f9fa;
+  font-size: 13px;
+  font-weight: 800;
+  color: #334155;
+  padding: 10px 10px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.table thead th.thNum {
+  text-align: right;
+}
+
+.table tbody td {
+  font-size: 13px;
+  color: #0f172a;
+  padding: 10px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  height: 40px;
+}
+
+.table tbody td.tdNum,
+.table tbody td.tdTotal {
+  text-align: right;
+}
+
+.table tbody tr:hover td {
+  background: #f8fafc;
+}
+
+.thNum {
+  text-align: right;
+}
+
+.tdNum {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+.tdTotal {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.emptyCell {
+  text-align: center;
+  padding: 26px 12px;
+  color: var(--color-text-secondary);
+  font-weight: 700;
+}
+
+.hint {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin-top: 6px;
+}
+
+@media (max-width: 900px) {
+  .tabs {
+    gap: 12px;
+  }
+  .card {
+    padding: 12px;
+  }
+}
+

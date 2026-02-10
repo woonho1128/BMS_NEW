@@ -1,0 +1,126 @@
+/* ===============================
+   ERP 표준 Card - 대시보드·업무 화면 공통
+   배경 동일, 장식 없음, 정보 전달 우선
+================================ */
+
+.card {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  text-align: left;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card.hoverable:hover {
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--color-border);
+}
+
+.card.clickable {
+  cursor: pointer;
+}
+
+.card.clickable:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* variant: highlight = "지금 봐야 할 카드" (상단 얇은 bar만) */
+.card.highlight {
+  border-top: 3px solid var(--color-primary);
+}
+
+/* ===============================
+   Header
+================================ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: 14px var(--card-padding-sm) 12px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.headerNoBorder {
+  border-bottom: none;
+}
+
+/* ===============================
+   Title (인디케이터는 타이틀 왼쪽 3~4px bar)
+================================ */
+.titleWrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.indicator {
+  width: 4px;
+  height: 1em;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.indicator.primary {
+  background: var(--color-primary);
+}
+
+.indicator.warning {
+  background: var(--color-warning);
+}
+
+.indicator.danger {
+  background: var(--color-danger);
+}
+
+.indicator.neutral {
+  background: var(--color-muted);
+}
+
+.title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* ===============================
+   Actions (Header 오른쪽)
+================================ */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+/* ===============================
+   Body
+================================ */
+.body {
+  padding: 18px var(--card-padding-sm);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.bodyTight {
+  padding: 12px var(--card-padding-sm);
+}
+
+/* ===============================
+   Footer (CTA 등)
+================================ */
+.footer {
+  padding: 12px var(--card-padding-sm);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}

@@ -1,0 +1,55 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.kpiCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 88px;
+}
+
+.kpiBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--bms-text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--bms-text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  align-self: flex-end;
+}
+
+.loading {
+  grid-column: 1 / -1;
+  padding: var(--bms-gap);
+  color: var(--bms-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 900px) {
+  .wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+}

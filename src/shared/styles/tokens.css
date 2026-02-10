@@ -1,0 +1,152 @@
+/* ===============================
+   ERP/BMS 디자인 토큰 시스템
+   모든 화면의 시각적 기준
+   수정 시 토큰 값만 변경하면 전체 UI 반영
+================================ */
+
+:root {
+  /* ===============================
+     Color Tokens
+     =============================== */
+  
+  /* Base */
+  --color-bg-page: #f8fafc;
+  --color-bg-card: #ffffff;
+  
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  
+  --color-border: #e2e8f0;
+  
+  /* Semantic */
+  --color-primary: #2563eb;   /* 기본 액션 */
+  --color-warning: #f59e0b;   /* 대기 / 주의 */
+  --color-danger: #ef4444;    /* 지연 / 연체 */
+  --color-success: #16a34a;   /* 완료 / 정상 */
+  
+  /* Interaction */
+  --color-hover-bg: #f1f5f9;
+  --color-active-bg: #e0e7ff;
+  
+  /* ===============================
+     Spacing Tokens
+     =============================== */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+  
+  /* ===============================
+     Radius Tokens
+     =============================== */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  
+  /* ===============================
+     Typography Tokens
+     =============================== */
+  --font-family-base: 'Pretendard', 'Inter', system-ui, sans-serif;
+  
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 20px;
+  
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* ===============================
+     Elevation (Shadow) Tokens
+     =============================== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.06);
+  
+  /* ===============================
+     Layout Tokens
+     =============================== */
+  --layout-page-padding: 24px;
+  --layout-section-gap: 24px;
+  --layout-card-gap: 20px;
+  --layout-max-width: 1440px;
+  
+  /* ===============================
+     하위 호환성 (기존 변수명 유지)
+     =============================== */
+  
+  /* Color (기존 변수명 → 새 표준 매핑) */
+  --color-bg: var(--color-bg-page);
+  --color-bg-elevated: var(--color-bg-card);
+  --color-text: var(--color-text-primary);
+  --color-muted: var(--color-text-muted);
+  --color-primary-hover: #1d4ed8;
+  --color-primary-light: #eff6ff;
+  
+  /* Sidebar (전용) */
+  --color-sidebar-bg: #1e293b;
+  --color-sidebar-text: #e2e8f0;
+  --color-sidebar-text-muted: #94a3b8;
+  --color-sidebar-active: #3b82f6;
+  --color-sidebar-hover: #334155;
+  
+  /* Spacing (기존 변수명 → 새 표준 값으로 업데이트) */
+  /* --space-xs: 8px (유지) */
+  /* --space-sm: 12px (새 표준) */
+  /* --space-md: 16px (유지) */
+  /* --space-lg: 20px (새 표준) */
+  /* --space-xl: 24px (새 표준) */
+  
+  /* Typography (기존 변수명 → 새 표준 매핑) */
+  --font-family: var(--font-family-base);
+  --font-size-base: var(--font-size-lg);
+  --font-weight-normal: var(--font-weight-regular);
+  
+  /* Radius (기존 변수명 → 새 표준 매핑) */
+  /* --radius-sm: 6px (새 표준) */
+  /* --radius-md: 10px (새 표준) */
+  /* --radius-lg: 14px (새 표준) */
+  
+  /* Shadow (기존 변수명 → 새 표준 매핑) */
+  /* --shadow-sm, --shadow-md (새 표준 사용) */
+  
+  /* Layout (기존) */
+  --header-height: 56px;
+  --sidebar-width: 256px; /* 확장 시 너비 (기본) */
+  --sidebar-width-collapsed: 64px; /* 접었을 때 아이콘만 (기본) */
+  --sidebar-icon-size: 24px; /* w-6, 아이콘 영역 고정 */
+  --content-padding: var(--layout-page-padding);
+  --sidebar-mobile-breakpoint: 768px;
+  
+  /* ===============================
+     Card 컴포넌트 전용 (표준 토큰 사용)
+     =============================== */
+  --card-bg: var(--color-bg-card);
+  --card-border: var(--color-border);
+  --card-radius: var(--radius-md);
+  --card-padding: var(--space-xl);
+  --card-padding-sm: var(--space-md);
+  --card-shadow: var(--shadow-sm);
+  --card-shadow-hover: var(--shadow-md);
+  
+  /* ===============================
+     Dashboard 전용 (표준 토큰 사용)
+     =============================== */
+  --bms-bg: var(--color-bg-page);
+  --bms-card-bg: var(--color-bg-card);
+  --bms-card-border: var(--color-border);
+  --bms-text: var(--color-text-primary);
+  --bms-text-secondary: var(--color-text-secondary);
+  --bms-text-muted: var(--color-text-muted);
+  --bms-card-radius: var(--radius-md);
+  --bms-card-shadow: var(--shadow-sm);
+  --bms-card-hover-shadow: var(--shadow-md);
+  --bms-gap: var(--layout-card-gap);
+  --bms-gap-sm: var(--space-md);
+}

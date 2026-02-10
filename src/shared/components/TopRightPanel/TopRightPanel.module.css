@@ -1,0 +1,366 @@
+.topRightPanel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  background: transparent;
+  padding: 0;
+}
+
+.notificationBtn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.notificationBtn:hover {
+  background: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  background: #ff4444;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  z-index: 10;
+}
+
+@keyframes badgePulseKeyframes {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.badgePulse {
+  animation: badgePulseKeyframes 0.4s ease;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #333;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background: #ffebee;
+  color: #d32f2f;
+  border-color: #ffcdd2;
+}
+
+.logoutText {
+  font-size: 11px;
+  line-height: 1;
+}
+
+/* overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9998;
+  display: block;
+}
+
+.overlayActive {
+  display: block;
+}
+
+/* panel */
+.notificationPanel {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 380px;
+  max-height: calc(100vh - 120px);
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(20px); }
+}
+
+.panelOpen {
+  animation: slideIn 0.3s ease-out;
+}
+
+.panelClosing {
+  animation: slideOut 0.3s ease-out;
+}
+
+.panelHeader {
+  height: 50px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 1;
+}
+
+.panelTitle {
+  font-size: 13px;
+  font-weight: 800;
+  color: #333;
+}
+
+.markAllBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  font-size: 11px;
+  color: #2196f3;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.markAllBtn:hover {
+  color: #1976d2;
+  background: rgba(33, 150, 243, 0.05);
+}
+
+.closePanelBtn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #666;
+}
+
+.closePanelBtn:hover {
+  color: #333;
+  background: #f5f5f5;
+}
+
+.panelContent {
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+}
+
+.empty {
+  padding: 18px 12px;
+  font-size: 12px;
+  color: #777;
+}
+
+.noticeItem {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  min-height: 68px;
+}
+
+.noticeItem:hover {
+  background: #f5f5f5;
+}
+
+.readDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+.dotUnread { background: #2196f3; }
+.dotRead { background: #ccc; }
+
+.noticeBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.noticeTitle {
+  font-size: 12px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.noticeTime {
+  font-size: 11px;
+  color: #999;
+}
+
+.noticeRemove {
+  border: none;
+  background: transparent;
+  color: #999;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.noticeRemove:hover {
+  color: #333;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.panelFooter {
+  height: 45px;
+  border-top: 1px solid #f0f0f0;
+  position: sticky;
+  bottom: 0;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toCenterBtn {
+  border: none;
+  background: transparent;
+  color: #2196f3;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.toCenterBtn:hover {
+  background: rgba(33, 150, 243, 0.05);
+  color: #1976d2;
+}
+
+/* logout confirm modal */
+.logoutModal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.logoutMsg {
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.logoutActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.logoutCancel {
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logoutConfirm {
+  border: 1px solid #ffcdd2;
+  background: #ffebee;
+  color: #d32f2f;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .topRightPanel {
+    top: 12px;
+    right: 12px;
+    gap: 8px;
+  }
+
+  .logoutText {
+    display: none;
+  }
+
+  .logoutBtn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .notificationPanel {
+    top: 60px;
+    right: 12px;
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 80px);
+  }
+}
+
+@media (max-width: 480px) {
+  .notificationPanel {
+    top: 50px;
+    right: 0;
+    width: 100vw;
+    border-radius: 0;
+    max-height: calc(100vh - 50px);
+  }
+}
+

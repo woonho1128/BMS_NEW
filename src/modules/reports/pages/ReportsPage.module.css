@@ -1,0 +1,22 @@
+.page {
+  padding: var(--space-lg);
+  min-height: 100%;
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-xs);
+}
+
+.subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.placeholder {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}

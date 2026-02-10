@@ -1,0 +1,282 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg, 20px);
+}
+
+/* 세그먼트 탭 */
+.tabList {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: #f8fafc;
+  border-radius: var(--radius-md, 10px);
+  width: fit-content;
+  border: 1px solid var(--color-border, #e2e8f0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.tab {
+  padding: var(--space-sm, 12px) var(--space-lg, 20px);
+  border: none;
+  border-radius: var(--radius-sm, 6px);
+  font-size: var(--font-size-md, 14px);
+  font-weight: 500;
+  color: var(--color-text-secondary, #475569);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tab:hover {
+  color: var(--color-text-primary, #0f172a);
+  background: #fff;
+}
+
+.tabActive {
+  color: var(--color-primary, #2563eb);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* 테이블 컨테이너 - 가로 스크롤 */
+.tableContainer {
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.tableScroll {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.table {
+  width: 100%;
+  min-width: 1200px;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+/* 헤더 - Sticky */
+.th {
+  padding: var(--space-sm, 12px) var(--space-md, 16px);
+  text-align: left;
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 600;
+  color: var(--color-text-secondary, #475569);
+  background: #f5f7fa;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  white-space: nowrap;
+}
+
+.thSticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f5f7fa;
+}
+
+.thRight {
+  text-align: right;
+}
+
+/* 열 너비 최적화 */
+.thDeliveryNo {
+  width: 140px;
+  min-width: 140px;
+}
+
+.thDate {
+  width: 120px;
+  min-width: 120px;
+}
+
+.thCustomer {
+  width: 150px;
+  min-width: 150px;
+}
+
+.thSite {
+  width: 180px;
+  min-width: 180px;
+}
+
+.thShippingType {
+  width: 110px;
+  min-width: 110px;
+}
+
+.thTransport {
+  width: 100px;
+  min-width: 100px;
+}
+
+.thAmount {
+  width: 130px;
+  min-width: 130px;
+}
+
+.thVat {
+  width: 120px;
+  min-width: 120px;
+}
+
+.thInputUser {
+  width: 100px;
+  min-width: 100px;
+}
+
+/* 테이블 셀 */
+.td {
+  padding: var(--space-sm, 12px) var(--space-md, 16px);
+  font-size: var(--font-size-md, 14px);
+  color: var(--color-text-primary, #0f172a);
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  background: #fff;
+}
+
+.tdRight {
+  text-align: right;
+}
+
+.row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.row:hover {
+  background: #f1f5f9;
+}
+
+.row:last-child .td {
+  border-bottom: none;
+}
+
+.emptyCell {
+  padding: var(--space-xl, 24px);
+  text-align: center;
+  color: var(--color-text-muted, #94a3b8);
+  font-size: var(--font-size-md, 14px);
+}
+
+/* 출고번호 링크 */
+.deliveryNoLink {
+  background: none;
+  border: none;
+  color: var(--color-primary, #2563eb);
+  font-size: var(--font-size-md, 14px);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.deliveryNoLink:hover {
+  color: var(--color-primary-hover, #1d4ed8);
+  text-decoration-thickness: 2px;
+}
+
+/* 상태 배지 */
+.statusBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.statusCompleted {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.statusPending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.statusPicking {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.statusRejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Drawer */
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg, 20px);
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  background: #fff;
+}
+
+.drawerTitle {
+  margin: 0;
+  font-size: var(--font-size-lg, 18px);
+  font-weight: 600;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.drawerClose {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary, #475569);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 6px);
+  transition: background 0.15s, color 0.15s;
+}
+
+.drawerClose:hover {
+  background: #f1f5f9;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.drawerContent {
+  padding: var(--space-lg, 20px);
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--space-md, 16px) var(--space-lg, 20px);
+}
+
+.detailField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs, 8px);
+}
+
+.detailLabel {
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 600;
+  color: var(--color-text-secondary, #475569);
+}
+
+.detailValue {
+  font-size: var(--font-size-md, 14px);
+  color: var(--color-text-primary, #0f172a);
+}
+
+.detailValueAmount {
+  font-weight: 600;
+  color: var(--color-primary, #2563eb);
+}

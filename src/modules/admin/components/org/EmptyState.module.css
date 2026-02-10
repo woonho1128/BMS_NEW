@@ -1,0 +1,13 @@
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.message {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}

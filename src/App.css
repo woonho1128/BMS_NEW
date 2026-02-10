@@ -1,0 +1,172 @@
+.dpmApp {
+  min-height: 100%;
+  background: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  color: #333;
+}
+
+.dpmMain {
+  padding: 16px 24px 24px;
+}
+
+/* Lock banner (edit window closed) */
+.dpmLockBanner {
+  background: rgba(231, 76, 60, 0.12);
+  border: 1px solid rgba(231, 76, 60, 0.22);
+  color: #991b1b;
+  font-weight: 900;
+  padding: 8px 10px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+
+/* Shared UI primitives */
+.dpmPrimaryBtn {
+  background: #667eea;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 150ms ease, transform 120ms ease, opacity 150ms ease;
+}
+
+.dpmPrimaryBtn:hover {
+  background: #5568d3;
+}
+
+.dpmPrimaryBtn:active {
+  transform: scale(0.99);
+}
+
+.dpmPrimaryBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.dpmSelect {
+  height: 36px;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.dpmSelect:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.18);
+}
+
+.dpmCheck {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+  color: #333;
+  font-size: 12px;
+}
+
+.dpmStatusBadge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.dpmBtn {
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: filter 150ms ease, transform 120ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.dpmBtn:hover {
+  filter: brightness(0.97);
+}
+
+.dpmBtn:active {
+  transform: scale(0.99);
+}
+
+.dpmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dpmBtn--primary {
+  background: #667eea;
+  color: #fff;
+}
+
+.dpmBtn--primary:hover {
+  background: #5568d3;
+}
+
+.dpmBtn--warn {
+  background: #f39c12;
+  color: #fff;
+}
+
+.dpmBtn--warn:hover {
+  background: #d68910;
+}
+
+.dpmBtn--danger {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.dpmBtn--danger:hover {
+  background: #c0392b;
+}
+
+.dpmBtn--success {
+  background: #27ae60;
+  color: #fff;
+}
+
+.dpmBtn--success:hover {
+  background: #1f8a4c;
+}
+
+.dpmEmpty {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 48px 18px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dpmEmpty__emoji {
+  font-size: 44px;
+  margin-bottom: 12px;
+}
+
+.dpmEmpty__title {
+  color: #666;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.dpmEmpty__desc {
+  color: #999;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+@media (max-width: 768px) {
+  .dpmMain {
+    padding: 16px;
+  }
+}
+

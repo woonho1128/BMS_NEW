@@ -1,0 +1,236 @@
+/* 손익분석 목록 — 검색 카드 제거, Toolbar(StatusTabs + QuickFilters) 통합, 디자인 토큰 */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ===============================
+   StatusTabs (탭만 한 줄)
+================================ */
+.tabsRow {
+  flex-shrink: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.tab {
+  height: 34px;
+  padding: 0 var(--space-md);
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.tab:hover {
+  background: var(--color-hover-bg);
+  border-color: var(--color-border);
+}
+
+.tabActive {
+  border-color: var(--color-primary);
+  background: var(--color-active-bg);
+  color: var(--color-primary);
+}
+
+.tabCount {
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+/* 필터는 공통 ListFilter 사용 */
+.toolbarWrap {
+  flex-shrink: 0;
+}
+
+/* ===============================
+   List Section
+================================ */
+.listSection {
+  flex: 1;
+  min-height: 0;
+}
+
+.listHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: var(--space-sm);
+}
+
+.listCount {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.rowCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 0.15s, background 0.15s;
+}
+
+.rowCard:hover {
+  background: var(--color-hover-bg);
+  box-shadow: var(--shadow-md);
+}
+
+.rowCard:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.badge {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.status_draft {
+  background: var(--color-text-muted);
+  color: #fff;
+}
+
+.status_inProgress {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.status_approved {
+  background: var(--color-success);
+  color: #fff;
+}
+
+.status_rejected {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.rowTitle {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rowMeta {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.rowActions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  font-size: var(--font-size-xs);
+  padding: 3px 8px;
+}
+
+.empty {
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* ===============================
+   Pagination
+================================ */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.pageBtn {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pageBtn:hover:not(:disabled) {
+  background: var(--color-hover-bg);
+}
+
+.pageBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageNumbers {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.pageNum {
+  min-width: 32px;
+  padding: var(--space-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pageNum:hover {
+  background: var(--color-hover-bg);
+}
+
+.pageNumActive {
+  background: var(--color-active-bg);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}

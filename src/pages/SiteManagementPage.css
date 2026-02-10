@@ -1,0 +1,82 @@
+.dpmSitePage {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dpmSection {
+  background: transparent;
+}
+
+.dpmSection__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dpmSection__title {
+  font-size: 16px;
+  font-weight: 900;
+  color: #333;
+}
+
+.dpmPrimaryBtn {
+  background: #667eea;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 150ms ease, transform 120ms ease;
+}
+
+.dpmPrimaryBtn:hover {
+  background: #5568d3;
+}
+
+.dpmPrimaryBtn:active {
+  transform: scale(0.99);
+}
+
+.dpmGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.dpmEmpty {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 60px 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dpmEmpty__emoji {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.dpmEmpty__title {
+  color: #666;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.dpmEmpty__desc {
+  color: #999;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+@media (max-width: 768px) {
+  .dpmGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,47 @@
+.dpmTabs {
+  background: #ffffff;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.dpmTabs__row {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.dpmTabs__tab {
+  padding: 12px 14px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  color: #666;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 3px solid transparent;
+  transition: background 150ms ease, color 150ms ease;
+  white-space: nowrap;
+}
+
+.dpmTabs__tab:hover {
+  color: #333;
+  background: #f9f9f9;
+}
+
+.dpmTabs__tab--active {
+  color: #333;
+  background: #f5f5f5;
+}
+
+@media (max-width: 768px) {
+  .dpmTabs__tab {
+    min-width: 100px;
+    padding: 12px 12px;
+  }
+}
+

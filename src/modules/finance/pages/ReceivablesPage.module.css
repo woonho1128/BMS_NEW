@@ -1,0 +1,509 @@
+.page {
+  display: grid;
+  gap: var(--layout-section-gap);
+}
+
+.headerActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab,
+.tabActive {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tab:hover {
+  background: #f8fafc;
+  color: var(--color-text);
+}
+
+.tabActive {
+  border-color: #1890ff;
+  background: rgba(24, 144, 255, 0.12);
+  color: #1890ff;
+}
+
+.filterToolbar {
+  background: #f5f5f5;
+  border-color: #e8e8e8;
+  padding: 12px 14px;
+}
+
+.filterNotice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(239, 68, 68, 0.75);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.noticeIcon {
+  flex: 0 0 auto;
+}
+
+.billWrap {
+  background: #f0f2f5;
+  border-radius: 14px;
+  padding: 14px;
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  padding: 16px;
+}
+
+.billFilterToolbar {
+  background: #fff;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  padding: 16px;
+}
+
+.collateralFilterToolbar {
+  background: #fff;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  padding: 16px;
+}
+
+.depositWrap {
+  background: #f0f2f5;
+  border-radius: 14px;
+  padding: 14px;
+  display: grid;
+  gap: 14px;
+}
+
+.depositFilterToolbar {
+  background: #fff;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  padding: 14px 16px;
+  border-radius: 8px;
+  --listfilter-gap: 15px;
+}
+
+.depositSearchBtn {
+  height: 32px;
+  padding: 0 14px;
+  background: #1890ff;
+  border: 1px solid #1890ff;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.depositSearchBtn:hover:not(:disabled) {
+  background: #1677ff;
+  border-color: #1677ff;
+}
+
+.depositCard {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  padding: 16px;
+}
+
+.depositTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.depositTitle {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--color-text);
+}
+
+.depositSum {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.depositTableWrap {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.depositTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.depositTable thead th {
+  background: #f5f7f9;
+  font-weight: 800;
+  color: #334155;
+  font-size: 13px;
+  padding: 9px 10px;
+  text-align: left;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+}
+
+.depositTable tbody td {
+  padding: 9px 10px;
+  height: 36px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.depositTable tbody tr:hover td {
+  background: #f8fafc;
+}
+
+.depositAmount {
+  text-align: right;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.gridTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.gridTitle {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--color-text);
+}
+
+.gridCount {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 700;
+}
+
+.collateralTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.collateralTable thead th {
+  background: #f5f7f9;
+  font-weight: 800;
+  color: #334155;
+  font-size: 13px;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.collateralTable tbody td {
+  padding: 8px 10px;
+  height: 36px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.collateralTable tbody tr:hover td {
+  background: #f8fafc;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  border: 1px solid transparent;
+}
+
+.badgeNormal {
+  background: rgba(24, 144, 255, 0.12);
+  border-color: rgba(24, 144, 255, 0.25);
+  color: #1890ff;
+}
+
+.badgeCancelled {
+  background: rgba(148, 163, 184, 0.18);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #64748b;
+}
+
+.summaryRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.summaryCard {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 84px;
+}
+
+.summaryIcon,
+.summaryIconAlt {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.summaryIcon {
+  background: rgba(24, 144, 255, 0.14);
+  color: #1890ff;
+}
+
+.summaryIconAlt {
+  background: rgba(16, 185, 129, 0.14);
+  color: #10b981;
+}
+
+.summaryText {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.summaryLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 700;
+}
+
+.summaryValue {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.tableTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.tableTopTitle {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--color-text);
+}
+
+.billTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.billTable thead th {
+  background: #f8f9fa;
+  font-weight: 800;
+  color: #334155;
+  font-size: 13px;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.billTable tbody td {
+  padding: 10px 12px;
+  height: 40px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.billTable tbody tr:hover td {
+  background: #f5f5f5;
+}
+
+@media (max-width: 900px) {
+  .summaryRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.placeholderCard {
+  border: 1px solid var(--color-border);
+  background: #fff;
+}
+
+.placeholderBody {
+  padding: 18px 16px;
+  display: grid;
+  gap: 6px;
+}
+
+.placeholderTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.placeholderDesc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.carryCard {
+  border: 1px solid var(--color-border);
+  background: #ffffff;
+}
+
+.carryBody {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.carryLeft {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.carryTitle {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 700;
+}
+
+.carryValue {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.carrySub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.carryPartner {
+  font-weight: 700;
+}
+
+.tableSection {
+  display: grid;
+  gap: 10px;
+}
+
+.tableHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tableTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.formulas {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-align: right;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.tableWrap {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg-elevated);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead th {
+  background: #f8fafc;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.thNum {
+  text-align: right !important;
+}
+
+.table tbody td {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tdNum {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.emptyCell {
+  text-align: center;
+  padding: 28px 12px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+@media (max-width: 980px) {
+  .formulas {
+    white-space: normal;
+  }
+}
+

@@ -1,0 +1,133 @@
+/* 웹: 전체 너비 사용 */
+.page {
+  width: 100%;
+  padding: 0 var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+
+.toolbar {
+  margin-bottom: var(--space-md);
+}
+
+.section {
+  margin-top: var(--space-md);
+}
+
+.count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+.empty {
+  grid-column: 1 / -1;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.cardClickable:hover {
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--color-primary);
+}
+
+.cardClickable:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.cardTitle {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  flex-shrink: 0;
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.badgeActive {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badgeInactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badgePending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.cardBody {
+  padding: var(--space-md);
+}
+
+.cardRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.cardRow:last-child {
+  margin-bottom: 0;
+}
+
+.cardLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.cardValue {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+/* 모바일: 카드형 유지 (1열) */
+@media (max-width: 768px) {
+  .page {
+    padding: 0 var(--space-sm);
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+}

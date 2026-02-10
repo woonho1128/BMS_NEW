@@ -1,0 +1,32 @@
+/* ERP/BMS 대시보드 — 조용하고 안정적인 톤 */
+.dashboard {
+  padding: 20px;
+  min-height: 0;
+  background: var(--bms-bg);
+  border-radius: var(--bms-card-radius);
+}
+
+.kpiRow {
+  margin-bottom: 20px;
+}
+
+.blocksGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.noticeRow {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: var(--bms-gap-sm);
+  }
+
+  .blocksGrid {
+    grid-template-columns: 1fr;
+  }
+}

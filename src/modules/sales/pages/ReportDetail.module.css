@@ -1,0 +1,175 @@
+/* 보고 상세 (ReadOnly + 코멘트) */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+
+.sectionCard {
+  flex-shrink: 0;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.badge {
+  padding: 4px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.status {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.author {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.readOnlyField {
+  margin-bottom: var(--space-md);
+}
+
+.readOnlyLabel {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.readOnlyValue {
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.readOnlyList {
+  margin: 0;
+  padding-left: var(--space-lg);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+.commentList {
+  list-style: none;
+  margin: 0 0 var(--space-md);
+  padding: 0;
+}
+
+.commentItem {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  align-items: baseline;
+}
+
+.commentAuthor {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.commentText {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.commentDate {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.commentEmpty {
+  padding: var(--space-md);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.commentInputRow {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-end;
+}
+
+.commentInput {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-family: inherit;
+  resize: vertical;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .metaRow {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .readOnlyField {
+    margin-bottom: var(--space-sm);
+  }
+
+  .commentInputRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .commentInput {
+    min-height: 80px;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .footer button {
+    flex: 1;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    flex-direction: column;
+  }
+
+  .footer button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,247 @@
+/* 대리점 관리카드 - 거래처 관리카드 문서 톤, ERP vs 담당자 구분 */
+
+/* 웹: 전체 너비 사용 */
+.page {
+  width: 100%;
+  padding: 0 var(--space-lg);
+  padding-bottom: var(--space-xl);
+}
+
+.card {
+  margin-bottom: var(--space-lg);
+}
+
+.notFound {
+  margin-bottom: var(--space-md);
+  color: var(--color-text-secondary);
+}
+
+/* ----- ERP 연동 영역 (ReadOnly + 자물쇠) ----- */
+.erpBlock {
+  background: var(--color-bg-page);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  min-width: 100px;
+}
+
+.lockIcon {
+  display: inline-flex;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.value {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm) var(--space-lg);
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.grid .row {
+  margin-bottom: 0;
+}
+
+/* ----- 담당자 입력 영역 (연한 강조 배경) ----- */
+.editableBlock {
+  background: rgba(var(--color-primary-rgb, 59, 130, 246), 0.06);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.editableLabel {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  color: var(--color-text-primary);
+  background: var(--color-bg-card);
+  resize: vertical;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* ----- 5년 매출 테이블 ----- */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 200px;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.th,
+.thNum,
+.td,
+.tdNum {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.thNum,
+.tdNum {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.th,
+.thNum {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-page);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.th > span {
+  display: inline-block;
+  margin-right: var(--space-xs);
+}
+
+.thAction {
+  width: 80px;
+  text-align: center;
+}
+
+.emptyCell {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--space-md);
+}
+
+/* ----- 담당자 입력 테이블 (5번) ----- */
+.tableInput,
+.tableSelect {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  color: var(--color-text-primary);
+  background: var(--color-bg-card);
+}
+
+.tableInput:focus,
+.tableSelect:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.deleteBtn {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-danger, #dc2626);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+/* ----- 푸터 ----- */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--color-text-primary);
+  color: #fff;
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+  box-shadow: var(--card-shadow);
+  z-index: 100;
+  margin: 0;
+}
+
+/* ----- 반응형: 모바일만 카드형 유지 ----- */
+@media (max-width: 768px) {
+  .page {
+    padding: 0 var(--space-sm);
+    padding-bottom: var(--space-lg);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .footer button {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    flex-direction: column;
+  }
+
+  .footer button {
+    width: 100%;
+  }
+}

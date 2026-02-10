@@ -1,0 +1,236 @@
+/**
+ * 출고 내역 Mock 데이터
+ */
+
+const STATUS_PICKING = 'picking';
+const STATUS_PENDING = 'pending';
+const STATUS_COMPLETED = 'completed';
+const STATUS_REJECTED = 'rejected';
+
+export const DELIVERY_STATUS = {
+  PICKING: STATUS_PICKING,
+  PENDING: STATUS_PENDING,
+  COMPLETED: STATUS_COMPLETED,
+  REJECTED: STATUS_REJECTED,
+};
+
+/** 출고 내역 목록 Mock */
+export const MOCK_DELIVERY_HISTORY = [
+  {
+    id: '1',
+    deliveryNo: 'OUT-2025-001',
+    deliveryDate: '2025-01-30',
+    factory: '공장A',
+    customer: 'A건설',
+    customerCode: 'CUST-001',
+    salesGroup: '영업1팀',
+    salesOrg: '영업1부',
+    shippingType: '정규출고',
+    transportMethod: '직배송',
+    destination: '서울시 강남구',
+    siteName: '강남 아파트 신축',
+    inputUser: '김영업',
+    amount: 12500000,
+    vat: 1250000,
+    status: STATUS_COMPLETED,
+  },
+  {
+    id: '2',
+    deliveryNo: 'OUT-2025-002',
+    deliveryDate: '2025-01-30',
+    factory: '공장B',
+    customer: 'B건설',
+    customerCode: 'CUST-002',
+    salesGroup: '영업1팀',
+    salesOrg: '영업1부',
+    shippingType: '긴급출고',
+    transportMethod: '택배',
+    destination: '경기도 수원시',
+    siteName: '수원 오피스텔',
+    inputUser: '김영업',
+    amount: 8500000,
+    vat: 850000,
+    status: STATUS_PENDING,
+  },
+  {
+    id: '3',
+    deliveryNo: 'OUT-2025-003',
+    deliveryDate: '2025-01-29',
+    factory: '공장A',
+    customer: 'C건설',
+    customerCode: 'CUST-003',
+    salesGroup: '영업2팀',
+    salesOrg: '영업2부',
+    shippingType: '정규출고',
+    transportMethod: '직배송',
+    destination: '인천시 연수구',
+    siteName: '인천 송도 주상복합',
+    inputUser: '이팀장',
+    amount: 15200000,
+    vat: 1520000,
+    status: STATUS_PICKING,
+  },
+  {
+    id: '4',
+    deliveryNo: 'OUT-2025-004',
+    deliveryDate: '2025-01-29',
+    factory: '공장B',
+    customer: 'D건설',
+    customerCode: 'CUST-004',
+    salesGroup: '영업1팀',
+    salesOrg: '영업1부',
+    shippingType: '정규출고',
+    transportMethod: '화물',
+    destination: '부산시 해운대구',
+    siteName: '해운대 단지',
+    inputUser: '김영업',
+    amount: 9800000,
+    vat: 980000,
+    status: STATUS_COMPLETED,
+  },
+  {
+    id: '5',
+    deliveryNo: 'OUT-2025-005',
+    deliveryDate: '2025-01-28',
+    factory: '공장A',
+    customer: 'E건설',
+    customerCode: 'CUST-005',
+    salesGroup: '영업2팀',
+    salesOrg: '영업2부',
+    shippingType: '긴급출고',
+    transportMethod: '직배송',
+    destination: '대전시 유성구',
+    siteName: '대전 유성 아파트',
+    inputUser: '박대리',
+    amount: 11200000,
+    vat: 1120000,
+    status: STATUS_REJECTED,
+  },
+  {
+    id: '6',
+    deliveryNo: 'OUT-2025-006',
+    deliveryDate: '2025-01-28',
+    factory: '공장B',
+    customer: 'F건설',
+    customerCode: 'CUST-006',
+    salesGroup: '영업1팀',
+    salesOrg: '영업1부',
+    shippingType: '정규출고',
+    transportMethod: '택배',
+    destination: '광주시 첨단구',
+    siteName: '광주 첨단 신도시',
+    inputUser: '김영업',
+    amount: 7600000,
+    vat: 760000,
+    status: STATUS_PENDING,
+  },
+  {
+    id: '7',
+    deliveryNo: 'OUT-2025-007',
+    deliveryDate: '2025-01-27',
+    factory: '공장A',
+    customer: 'G건설',
+    customerCode: 'CUST-007',
+    salesGroup: '영업2팀',
+    salesOrg: '영업2부',
+    shippingType: '정규출고',
+    transportMethod: '화물',
+    destination: '대구시 수성구',
+    siteName: '대구 수성 리모델링',
+    inputUser: '정매니저',
+    amount: 13400000,
+    vat: 1340000,
+    status: STATUS_COMPLETED,
+  },
+  {
+    id: '8',
+    deliveryNo: 'OUT-2025-008',
+    deliveryDate: '2025-01-27',
+    factory: '공장B',
+    customer: 'H건설',
+    customerCode: 'CUST-008',
+    salesGroup: '영업1팀',
+    salesOrg: '영업1부',
+    shippingType: '긴급출고',
+    transportMethod: '직배송',
+    destination: '울산시 남구',
+    siteName: '울산 남구 상가',
+    inputUser: '김영업',
+    amount: 9200000,
+    vat: 920000,
+    status: STATUS_PICKING,
+  },
+  {
+    id: '9',
+    deliveryNo: 'OUT-2025-009',
+    deliveryDate: '2025-01-26',
+    factory: '공장A',
+    customer: 'I건설',
+    customerCode: 'CUST-009',
+    salesGroup: '영업2팀',
+    salesOrg: '영업2부',
+    shippingType: '정규출고',
+    transportMethod: '택배',
+    destination: '서울시 마포구',
+    siteName: '서울 마포 래미안',
+    inputUser: '최과장',
+    amount: 16800000,
+    vat: 1680000,
+    status: STATUS_COMPLETED,
+  },
+  {
+    id: '10',
+    deliveryNo: 'OUT-2025-010',
+    deliveryDate: '2025-01-26',
+    factory: '공장B',
+    customer: 'J건설',
+    customerCode: 'CUST-010',
+    salesGroup: '영업1팀',
+    salesOrg: '영업1부',
+    shippingType: '정규출고',
+    transportMethod: '화물',
+    destination: '경기도 성남시',
+    siteName: '성남 분당 아파트',
+    inputUser: '김영업',
+    amount: 11500000,
+    vat: 1150000,
+    status: STATUS_REJECTED,
+  },
+];
+
+/** id로 출고 내역 상세 조회 */
+export function getDeliveryHistoryById(id) {
+  return MOCK_DELIVERY_HISTORY.find((item) => item.id === id) ?? null;
+}
+
+/** 필터 옵션 Mock */
+export const FACTORY_OPTIONS = [
+  { value: '', label: '전체' },
+  { value: '공장A', label: '공장A' },
+  { value: '공장B', label: '공장B' },
+];
+
+export const SHIPPING_TYPE_OPTIONS = [
+  { value: '', label: '전체' },
+  { value: '정규출고', label: '정규출고' },
+  { value: '긴급출고', label: '긴급출고' },
+];
+
+export const TRANSPORT_METHOD_OPTIONS = [
+  { value: '', label: '전체' },
+  { value: '직배송', label: '직배송' },
+  { value: '택배', label: '택배' },
+  { value: '화물', label: '화물' },
+];
+
+export const SALES_ORG_OPTIONS = [
+  { value: '', label: '전체' },
+  { value: '영업1부', label: '영업1부' },
+  { value: '영업2부', label: '영업2부' },
+];
+
+export const SALES_GROUP_OPTIONS = [
+  { value: '', label: '전체' },
+  { value: '영업1팀', label: '영업1팀' },
+  { value: '영업2팀', label: '영업2팀' },
+];

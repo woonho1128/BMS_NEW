@@ -1,0 +1,19 @@
+.placeholder {
+  padding: var(--space-xl, 24px);
+  background: var(--color-bg-card, #fff);
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  text-align: center;
+}
+
+.message {
+  font-size: var(--font-size-lg, 16px);
+  font-weight: 600;
+  color: var(--color-text-primary, #0f172a);
+  margin-bottom: var(--space-xs, 8px);
+}
+
+.hint {
+  font-size: var(--font-size-sm, 13px);
+  color: var(--color-text-muted, #94a3b8);
+}

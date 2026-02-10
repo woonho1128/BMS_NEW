@@ -1,0 +1,1216 @@
+/* 손익분석 등록 — 제안서 + 손익 시뮬레이션, 디자인 토큰 */
+
+.formLayout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+.formLayoutSingle {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 900px) {
+  .formLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  min-width: 0; /* STEP2 상단 카드가 화면 넘지 않게, 그리드에서 폭 제한 */
+}
+
+.sectionCard {
+  flex-shrink: 0;
+}
+
+/* STEP 인디케이터 */
+.stepNav {
+  display: flex;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.stepTab {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.stepTab:hover {
+  background: var(--color-hover-bg);
+}
+
+.stepTabActive {
+  border-color: var(--color-primary);
+  background: var(--color-active-bg);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.stepSection {
+  margin-bottom: var(--space-md);
+}
+
+.stepSection:last-of-type {
+  margin-bottom: 0;
+}
+
+.stepSectionTitle {
+  margin: 0 0 var(--space-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.stepActions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.required {
+  color: var(--color-danger);
+}
+
+.checkboxRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+/* ===== STEP2 레이아웃: 상단 고정 + 하단만 스크롤 ===== */
+
+.step2Container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 72px);
+  overflow: hidden;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.step2InputArea {
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto; /* 카드가 화면을 넘지 않게, 넘치면 카드 안에서 가로 스크롤 */
+  background: #ffffff;
+  margin-bottom: 16px;
+}
+
+.step2TableArea {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.step2TableArea .profitTableWrap {
+  flex: 1;
+  min-height: 0;
+}
+
+.step2Container .stepActions {
+  flex-shrink: 0;
+}
+
+/* STEP2 액션 바: [+ 품목 추가] + 안내 문구 */
+.step2ActionBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-shrink: 0;
+  padding: var(--space-sm) 0;
+  margin-bottom: var(--space-sm);
+}
+
+.step2ActionHint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* ===== Drawer (A 영역): 우측 슬라이드 패널 ===== */
+.drawerOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  animation: drawerOverlayIn 0.2s ease-out;
+}
+
+.drawerPanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 450px;
+  max-width: 100%;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  animation: drawerPanelIn 0.25s ease-out;
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.drawerTitle {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.drawerClose {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.drawerClose:hover {
+  background: var(--color-hover-bg);
+  color: var(--color-text-primary);
+}
+
+.drawerBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-lg);
+}
+
+.drawerBody .step2FormWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.drawerBody .field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* 자품번 다중 선택 샘플 (SET일 때) */
+.unitItemMultiSelect {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.unitItemChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+}
+
+.unitItemChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: var(--color-active-bg);
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+}
+
+.unitItemChipRemove {
+  padding: 0;
+  margin: 0;
+  margin-left: 2px;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.unitItemChipRemove:hover {
+  background: rgba(0,0,0,0.08);
+  color: var(--color-text-primary);
+}
+
+.unitItemChipEmpty {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.unitItemCheckboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.unitItemCheckLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.unitItemCheckLabel input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.drawerFooter {
+  flex-shrink: 0;
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+@keyframes drawerOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes drawerPanelIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* STEP2: 1행 7개(구분·SET·자품번·수주유형·수량·단가·마진율) / 2행 비고·버튼3개 */
+.step2FormWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-bottom: 0;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.step2FormRow1 {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-sm) var(--space-md);
+}
+
+.step2FormRow1 .fieldBidPrice,
+.step2FormRow1 .field .inputNum {
+  min-width: 0;
+}
+
+.step2FormRow1 .inputNum,
+.step2FormRow1 .inputBidPrice {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.step2FormRow2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-md);
+}
+
+.step2FormRow2 .field {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.step2FormActions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+@media (max-width: 900px) {
+  .step2FormRow1 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .step2FormRow2 {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .step2FormActions {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .step2FormRow1 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fieldBidPrice {
+  min-width: 0;
+}
+
+.inputBidPrice {
+  min-width: 0;
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.inputBidPrice::placeholder {
+  color: var(--color-text-muted);
+}
+
+.step2FormActions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.inputReadOnly {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-page);
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
+/* ===== STEP2: 하단 결과 테이블 (17컬럼: 구분·비고·SET품번·수주유형·원가·판매·수익성) ===== */
+
+.profitTableWrap {
+  background: #fff;
+  border: 1px solid #e7ebf3;
+  border-radius: 12px;
+  padding: 16px;
+  width: 100%;
+  min-width: 0;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.profitTableScroll {
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow-x: auto;  /* 가로 스크롤: 테이블(2180px)이 넓을 때 */
+  overflow-y: auto; /* 세로 스크롤 */
+  border-radius: 10px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* 테이블: 카드 너비에 맞춤 (100%), 컬럼은 비율로 배분 */
+.profitTable {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 100%;
+  font-size: 13px;
+  color: #1b2430;
+}
+
+.profitTable thead {
+  display: table-header-group;
+}
+
+.profitTable tbody {
+  display: table-row-group;
+}
+
+.profitTable th,
+.profitTable td {
+  padding: 12px 12px;
+  border-bottom: 1px solid #eef2f7;
+  white-space: normal;
+  overflow: hidden;
+  vertical-align: middle;
+  word-break: break-word;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+.profitTable tbody td {
+  min-height: 44px;
+  max-height: none;
+  vertical-align: middle;
+}
+
+/* 테이블 헤더: 컬럼명 1행 (sticky) */
+.colHeader th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 2px solid #d0d7e2;
+  padding: 12px 12px;
+  min-height: 44px;
+  white-space: normal;
+  word-break: break-word;
+  vertical-align: middle;
+}
+
+.colBasic { background: #ffffff; }
+.colCost { background: #fbfcfe; }
+.colSale { background: #f7f9ff; }
+.colProfit { background: #f7fdf9; }
+.colEtc { background: #ffffff; }
+
+/* 정렬 */
+.tLeft { text-align: left; }
+.tCenter { text-align: center; }
+.tRight { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Body zebra + hover */
+.profitTable tbody tr:nth-child(even) td { background: #fcfdff; }
+.profitTable tbody tr:hover td { background: #f6f9ff; }
+
+.profitTable tbody tr.isSelected td {
+  background: #eef5ff !important;
+}
+
+.profitTable tbody tr {
+  cursor: pointer;
+}
+
+/* 구분 컬럼: 타입 표시 + 비고/자품번 버튼(크기 영향 없이 절대 위치) */
+.profitTable .colTypeWithToggles {
+  position: relative;
+  vertical-align: middle;
+  padding-left: 0;
+}
+
+.rowTogglesWrap {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  width: 44px;
+  min-width: 44px;
+  pointer-events: auto;
+}
+
+.colTypeLabel {
+  display: inline-block;
+  margin-left: 0;
+  font-weight: 500;
+}
+
+.colTypeLabelWithToggle {
+  margin-left: 44px;
+}
+
+.remarkToggleBtn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.remarkToggleBtn:hover {
+  background: var(--color-hover-bg);
+  color: var(--color-primary);
+}
+
+/* 비고 전용 행 (Row Note): 데이터 행 바로 아래, 연한 배경 */
+.profitTable tr.remarkRow {
+  background: #f8f9fc;
+}
+
+.profitTable tr.remarkRow:hover {
+  background: #f8f9fc;
+}
+
+.profitTable tr.remarkRow td.remarkRowCell {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 11px !important;
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  vertical-align: top;
+}
+
+.profitTable .remarkLabel {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-right: 6px;
+}
+
+/* 비고+자품번 통합 하위 행 내용 (폰트 11px) */
+.detailRowContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px !important;
+}
+
+.detailRowContent div {
+  line-height: 1.5;
+  font-size: 11px !important;
+}
+
+/* 데이터 없을 때 */
+.emptyRow {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  padding: 24px;
+}
+
+/* 수익률 조건부 색상 */
+.rateGood { color: #16a34a; font-weight: 600; }
+.rateMid { color: #ea580c; font-weight: 600; }
+.rateLow { color: var(--color-danger); font-weight: 600; }
+
+/* 합계 행 (sticky footer) */
+.profitTable tfoot td {
+  font-weight: 700;
+  background: #eef2f7;
+  border-top: 1px solid #dfe6f1;
+  border-bottom: none;
+}
+
+.sumRow {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+.sumCell {
+  background: #eef2f7 !important;
+}
+
+.dateInput {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.fileInput {
+  width: 100%;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* 지급수수료: 그리드 셀 내 적용 체크 + 금액 */
+.fieldCommission {
+  grid-column: span 1;
+}
+
+.commissionControl {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.commissionInputWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.inputCommission {
+  width: 120px;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.commissionInputWrap .unit {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.textarea {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 60px;
+}
+
+.readOnlyValue {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg-page);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.readOnlyNote {
+  margin: 0 0 var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.trReadOnly .td,
+.trReadOnly .tdNum {
+  background: var(--color-bg-page);
+}
+
+.readOnlyRow {
+  cursor: default;
+}
+
+.readOnlyRow:hover td {
+  background: inherit !important;
+}
+
+/* ===============================
+   현장·거래 조건 필드 (컬럼 모두 수용)
+================================ */
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-md) var(--space-lg);
+}
+
+.fieldFull {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1200px) {
+  .fieldGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .fieldGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.field .label,
+.fieldFull .label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.input,
+.select {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* ===============================
+   납품 품목 Table
+================================ */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.th,
+.td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.thNum,
+.tdNum {
+  padding: var(--space-sm) var(--space-md);
+  text-align: right;
+  border-bottom: 1px solid var(--color-border);
+  font-variant-numeric: tabular-nums;
+}
+
+.thAction,
+.tdAction {
+  width: 90px;
+  padding: var(--space-sm);
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.trMain .tdAction {
+  vertical-align: middle;
+}
+
+.expandBtn {
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.expandBtn:hover {
+  background: var(--color-hover-bg);
+  color: var(--color-primary);
+}
+
+.expandBtnOpen {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-active-bg);
+}
+
+.inputCell {
+  width: 100%;
+  min-width: 80px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+}
+
+.inputCell::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* 품목별 손익 상세 (펼침 영역) */
+.trDetail {
+  background: var(--color-bg-page);
+}
+
+.tdDetail {
+  padding: 0;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.detailPanel {
+  padding: var(--space-md) var(--space-lg);
+  border-left: 3px solid var(--color-primary);
+  margin: 0 var(--space-md) var(--space-sm);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
+}
+
+.detailTitle {
+  margin: 0 0 var(--space-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.detailSection {
+  margin-bottom: var(--space-md);
+}
+
+.detailSection:last-of-type {
+  margin-bottom: 0;
+}
+
+.detailSectionTitle {
+  margin: 0 0 var(--space-xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: none;
+}
+
+.detailGrid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-sm) var(--space-lg);
+  font-size: var(--font-size-sm);
+}
+
+.detailGrid dt {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-regular);
+}
+
+.detailGrid dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-page);
+}
+
+.thSub {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+}
+
+.selectCell {
+  width: 100%;
+  min-width: 100px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-card);
+}
+
+.inputNum {
+  width: 80px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.cellReadOnly {
+  color: var(--color-text-secondary);
+}
+
+.removeBtn {
+  padding: var(--space-xs) var(--space-sm);
+  border: none;
+  background: none;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.removeBtn:hover:not(:disabled) {
+  color: var(--color-danger);
+}
+
+.removeBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===============================
+   결재 상신 영역
+================================ */
+.submitFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+/* ===============================
+   실시간 손익 요약 (Aside, Sticky)
+================================ */
+.summaryAside {
+  position: sticky;
+  top: var(--space-xl);
+}
+
+/* STEP 1 요약 카드 형태 */
+.step1SummaryGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+@media (max-width: 1400px) {
+  .step1SummaryGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  .step1SummaryGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .step1SummaryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .step1SummaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.step1SummaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid #e7ebf3;
+  border-radius: 8px;
+  transition: box-shadow 0.2s;
+}
+
+.step1SummaryCard:hover {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.step1SummaryLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.step1SummaryInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  transition: border-color 0.2s;
+}
+
+.step1SummaryInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.step1SummaryTextarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 60px;
+  transition: border-color 0.2s;
+}
+
+.step1SummaryTextarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.step1SummaryCardFull {
+  grid-column: 1 / -1;
+  min-height: 60px;
+}
+
+.step1SummaryCardFull .step1SummaryValue {
+  min-height: 60px;
+  padding: 8px 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+.step1SummaryFooter {
+  display: flex;
+  gap: var(--space-xl);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  font-size: 16px;
+  color: var(--color-text-secondary);
+}
+
+.step1SummaryFooter span {
+  font-weight: 700;
+}
+
+.step1SummaryValue {
+  font-size: 16px;
+  color: #1b2430;
+  line-height: 1.5;
+  word-break: break-word;
+  font-weight: 400;
+}
+
+/* STEP 3 하단 요약 텍스트 */
+.step3Summary {
+  display: flex;
+  gap: var(--space-xl);
+  padding: var(--space-lg) 0;
+  margin-top: var(--space-lg);
+  border-top: 2px solid var(--color-border);
+}
+
+.step3SummaryItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.step3SummaryLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.step3SummaryValue {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.summaryCard {
+  flex-shrink: 0;
+}
+
+.summaryCardWarning {
+  border-color: var(--color-danger);
+}
+
+.summaryDesc {
+  margin: 0 0 var(--space-md);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.summaryList {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-md);
+}
+
+.summaryRow dt {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.summaryValue {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+.summaryValueDanger {
+  color: var(--color-danger);
+}
+
+.warningText {
+  margin: var(--space-md) 0 0;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+  background: rgba(239, 68, 68, 0.08);
+  border-radius: var(--radius-sm);
+}
