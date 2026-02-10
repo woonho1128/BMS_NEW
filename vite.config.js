@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/postcss';
 import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
+  base: '/BMS_NEW/',
   plugins: [react()],
   css: {
     // PostCSS config auto-discovery can pick up a parent-directory config.
