@@ -122,7 +122,7 @@ function PublicOnlyRoute({ children }) {
  */
 export function Router() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/BMS_NEW">
       <Routes>
         <Route path={ROUTES.FORBIDDEN} element={<NoAccess />} />
         <Route
