@@ -41,6 +41,8 @@ import { DeliveryHistoryPage } from '../modules/delivery/pages/DeliveryHistoryPa
 import { DeliveryPlanPage } from '../modules/delivery/pages/DeliveryPlanPage';
 import { InventoryPage } from '../modules/delivery/pages/InventoryPage';
 
+
+
 import { PurchaseSalesPage } from '../modules/finance/pages/PurchaseSalesPage';
 import { ReceivablesPage } from '../modules/finance/pages/ReceivablesPage';
 import { BillsDepositsPage } from '../modules/finance/pages/BillsDepositsPage';
@@ -50,24 +52,47 @@ import { PartnerNoticePage } from '../modules/partner/pages/PartnerNoticePage';
 import { PartnerCatalogPage } from '../modules/partner/pages/PartnerCatalogPage';
 import { PartnerDeliveryPage } from '../modules/partner/pages/PartnerDeliveryPage';
 import { PartnerBasicInfoPage } from '../modules/partner/pages/PartnerBasicInfoPage';
+import { PartnerOrderPage } from '../modules/partner/pages/PartnerOrderPage';
 import { PartnerAsRedirect } from '../modules/partner/pages/PartnerAsRedirect';
 
 import { SalesPerformancePage } from '../modules/analytics/pages/SalesPerformancePage';
 import { ProfitLossPage } from '../modules/analytics/pages/ProfitLossPage';
 import { DeliveryStockStatsPage } from '../modules/analytics/pages/DeliveryStockStatsPage';
 import { PartnerPerformancePage } from '../modules/analytics/pages/PartnerPerformancePage';
+
 import { CustomReportPage } from '../modules/analytics/pages/CustomReportPage';
 import { SalesTrendsPage } from '../modules/analytics/pages/SalesTrendsPage';
 import { MarketOverviewPage } from '../modules/analytics/pages/MarketOverviewPage';
+
+import {
+  RetailOrderReviewPage,
+  RetailOrderDetailPage,
+  RetailOrderApprovalPage
+} from '../modules/sales/pages/RetailOrderComponents';
 
 import { UsersAdminPage } from '../modules/admin/pages/UsersAdminPage';
 import { OrgAdminPage } from '../modules/admin/pages/OrgAdminPage';
 import { PermissionAdminPage } from '../modules/admin/pages/PermissionAdminPage';
 import { CodesAdminPage } from '../modules/admin/pages/CodesAdminPage';
+
 import { LogsAdminPage } from '../modules/admin/pages/LogsAdminPage';
 
-import { NotFound } from '../pages/NotFound';
-import { NoAccess } from '../pages/NoAccess';
+import { PartnerProductOrderPage } from '../modules/partner/pages/PartnerProductOrderPage';
+import { PartnerOrderListPage } from '../modules/partner/pages/PartnerOrderListPage';
+import {
+  PartnerOrderDeliveryPage,
+  PartnerOrderModificationPage,
+} from '../modules/partner/pages/PartnerOrderComponents';
+
+import {
+  AdminTotalOrderPage,
+  AdminStatusChangePage,
+  AdminErpPage,
+  AdminOrderLogPage,
+} from '../modules/admin/pages/AdminOrderComponents';
+
+import { NotFound } from '../shared/pages/NotFound';
+import { NoAccess } from '../shared/pages/NoAccess';
 import { Guard } from '../shared/components/Guard';
 import { PERMISSIONS } from '../shared/constants/permissions';
 
@@ -167,12 +192,19 @@ export function Router() {
           <Route path={toRelative(ROUTES.DELIVERY_HISTORY)} element={<DeliveryHistoryPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_PLAN)} element={<DeliveryPlanPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_INVENTORY)} element={<InventoryPage />} />
+
+
           <Route path={toRelative(ROUTES.FINANCE_PURCHASE_SALES)} element={<PurchaseSalesPage />} />
           <Route path={toRelative(ROUTES.FINANCE_RECEIVABLE)} element={<ReceivablesPage />} />
           <Route path={toRelative(ROUTES.FINANCE_BILL)} element={<BillsDepositsPage />} />
           <Route path={toRelative(ROUTES.FINANCE_CREDIT)} element={<CreditCollateralPage />} />
           <Route path={toRelative(ROUTES.PARTNER_NOTICE)} element={<PartnerNoticePage />} />
           <Route path={toRelative(ROUTES.PARTNER_CATALOG)} element={<PartnerCatalogPage />} />
+          <Route path={toRelative(ROUTES.PARTNER_ORDER)} element={<PartnerOrderPage />} />
+          <Route path={toRelative(ROUTES.PARTNER_ORDER_PRODUCT)} element={<PartnerProductOrderPage />} />
+          <Route path={toRelative(ROUTES.PARTNER_ORDER_LIST)} element={<PartnerOrderListPage />} />
+          <Route path={toRelative(ROUTES.PARTNER_ORDER_MODIFY)} element={<PartnerOrderModificationPage />} />
+          <Route path={toRelative(ROUTES.PARTNER_ORDER_DELIVERY)} element={<PartnerOrderDeliveryPage />} />
           <Route path={toRelative(ROUTES.PARTNER_DELIVERY)} element={<PartnerDeliveryPage />} />
           {/* 기존 호환: /partner/receivable → 거래 정보 조회(/finance/receivable) */}
           <Route
@@ -183,6 +215,12 @@ export function Router() {
           <Route path={toRelative(ROUTES.PARTNER_AS)} element={<PartnerAsRedirect />} />
           <Route path={toRelative(ROUTES.ANALYTICS_SALES)} element={<SalesPerformancePage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_RETAIL)} element={<SalesPerformancePage />} />
+
+          {/* 리테일팀 관리 (신설) */}
+          <Route path={toRelative(ROUTES.SALES_RETAIL_REVIEW_LIST)} element={<RetailOrderReviewPage />} />
+          <Route path={toRelative(ROUTES.SALES_RETAIL_ORDER_DETAIL)} element={<RetailOrderDetailPage />} />
+          <Route path={toRelative(ROUTES.SALES_RETAIL_APPROVAL)} element={<RetailOrderApprovalPage />} />
+
           <Route path={toRelative(ROUTES.ANALYTICS_TRENDS)} element={<SalesTrendsPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_PROFIT)} element={<ProfitLossPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_DELIVERY_STOCK)} element={<DeliveryStockStatsPage />} />
@@ -194,6 +232,12 @@ export function Router() {
           <Route path={toRelative(ROUTES.ADMIN_PERMISSION)} element={<PermissionAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_CODE)} element={<CodesAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_LOG)} element={<LogsAdminPage />} />
+          {/* 관리자 주문 관리 (신설) */}
+          {/* 관리자 주문 관리 (재편) */}
+          <Route path={toRelative(ROUTES.ADMIN_ORDER_TOTAL)} element={<AdminTotalOrderPage />} />
+          <Route path={toRelative(ROUTES.ADMIN_ORDER_STATUS_FORCE)} element={<AdminStatusChangePage />} />
+          <Route path={toRelative(ROUTES.ADMIN_ORDER_ERP)} element={<AdminErpPage />} />
+          <Route path={toRelative(ROUTES.ADMIN_ORDER_HISTORY_LOG)} element={<AdminOrderLogPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

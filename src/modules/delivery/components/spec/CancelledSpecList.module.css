@@ -1,0 +1,192 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.filterGroup {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.filterItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #595959;
+}
+
+.input {
+    padding: 6px 10px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    font-size: 13px;
+    min-width: 120px;
+}
+
+/* Summary Bar */
+.summaryBar {
+    display: flex;
+    align-items: center;
+    background-color: #fff1f0;
+    /* Light red/pink background for cancelled theme */
+    border: 1px solid #ffa39e;
+    border-radius: 8px;
+    padding: 16px 24px;
+    gap: 32px;
+}
+
+.summaryItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.summaryLabel {
+    font-size: 12px;
+    color: #8c8c8c;
+    font-weight: 500;
+}
+
+.summaryValue {
+    font-size: 18px;
+    font-weight: 700;
+    color: #cf1322;
+    /* Red color for values */
+    font-variant-numeric: tabular-nums;
+}
+
+.summaryDivider {
+    width: 1px;
+    height: 32px;
+    background-color: #ffa39e;
+    opacity: 0.5;
+}
+
+/* Table */
+.tableContainer {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.tableWrapper {
+    flex: 1;
+    overflow: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.th {
+    background-color: #fafafa;
+    color: #595959;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #262626;
+}
+
+.tdCancelDate {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #cf1322;
+    font-weight: 500;
+}
+
+.tr {
+    background-color: #f7f7f7;
+    /* Light gray for cancelled items */
+    border-left: 4px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.tr:hover {
+    background-color: #f0f0f0;
+}
+
+.expandedRow {
+    background-color: #f0f0f0;
+    border-left: 4px solid #cf1322;
+    /* Red accent on expand */
+}
+
+/* Accordion */
+.chevron {
+    display: inline-block;
+    transition: transform 0.2s;
+    font-size: 10px;
+    margin-right: 8px;
+    color: #8c8c8c;
+}
+
+.chevron.open {
+    transform: rotate(90deg);
+}
+
+.detailRow {
+    background-color: #fff;
+}
+
+.detailWrapper {
+    padding: 16px 24px;
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.childTable {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.childTh {
+    background-color: #f5f5f5;
+    color: #595959;
+    padding: 8px 12px;
+    border-bottom: 1px solid #d9d9d9;
+    font-weight: 600;
+}
+
+.childTd {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #595959;
+    font-variant-numeric: tabular-nums;
+}

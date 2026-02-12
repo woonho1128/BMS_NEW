@@ -51,6 +51,9 @@ const MAIN = [
           { id: 'sales-short-project', label: '단납 프로젝트 현황', path: '/sales/short-project' },
           { id: 'analytics-partner', label: '대리점 성과 분석', path: '/analytics/partner' },
           { id: 'analytics-retail', label: '리테일 매출 분석', path: '/analytics/retail-sales' },
+          { id: 'sales-retail-review', label: '발주 검수 리스트', path: '/sales/retail/review' },
+          { id: 'sales-retail-order', label: '발주 상세', path: '/sales/retail/order/:id' }, // 상세 페이지는 보통 메뉴에는 안나오지만, 요구사항에 하위 메뉴로 추가해달라고 되어있어 추가함. 필요시 hidden 처리 가능. 일단 메뉴에 추가.
+          { id: 'sales-retail-approval', label: '발주 결재 (승인/반려/보류)', path: '/sales/retail/approval' },
         ],
       },
       {
@@ -103,9 +106,18 @@ const MAIN = [
         label: '대리점 지원',
         children: [
           { id: 'partner-notice', label: '공지/자료실', path: '/partner/notice', icon: Megaphone },
-          { id: 'partner-order', label: '온라인 주문', path: '/partner/order' },
           { id: 'partner-catalog', label: '카탈로그', path: '/partner/catalog' },
           { id: 'partner-as', label: 'AS 접수', path: '/partner/as' },
+        ],
+      },
+      {
+        id: 'partner-order-group',
+        label: '온라인 주문',
+        children: [
+          { id: 'partner-order-product', label: '상품 조회/발주 등록', path: '/partner/order/product' },
+          { id: 'partner-order-list', label: '발주 내역 조회', path: '/partner/order/list' },
+          { id: 'partner-order-modify', label: '반려 건 수정 재요청', path: '/partner/order/modify' },
+          { id: 'partner-order-delivery', label: '출고 / 배송 조회', path: '/partner/order/delivery' },
         ],
       },
       {
@@ -176,6 +188,16 @@ const ADMIN = [
           { id: 'admin-org', label: '조직 관리', path: '/admin/org' },
           { id: 'admin-permission', label: '권한 관리', path: '/admin/permission' },
           { id: 'admin-code', label: '코드 관리', path: '/admin/code' },
+        ],
+      },
+      {
+        id: 'admin-order',
+        label: '온라인 주문 관리',
+        children: [
+          { id: 'admin-order-total', label: '전체 발주 조회', path: '/admin/order/total' },
+          { id: 'admin-order-status-force', label: '상태 강제 변경', path: '/admin/order/status-force' },
+          { id: 'admin-order-erp', label: 'ERP 전송 관리 / 재전송', path: '/admin/order/erp' },
+          { id: 'admin-order-history-log', label: '발주 이력 / 로그', path: '/admin/order/history-log' },
         ],
       },
       {

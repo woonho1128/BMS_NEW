@@ -1,0 +1,143 @@
+.accordionContainer {
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.collapsedHeader {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background-color: #fafafa;
+    cursor: pointer;
+}
+
+.headerTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #262626;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chevron {
+    transition: transform 0.2s ease;
+    color: #8c8c8c;
+    font-size: 12px;
+}
+
+.chevron.expanded {
+    transform: rotate(180deg);
+}
+
+.expandedContent {
+    padding: 16px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.spaceBetween {
+    justify-content: space-between;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #595959;
+}
+
+.select {
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #262626;
+    outline: none;
+    cursor: pointer;
+}
+
+.infoText {
+    font-size: 13px;
+    color: #8c8c8c;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 8px;
+}
+
+.actionButton {
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #595959;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.actionButton:hover {
+    border-color: #1890ff;
+    color: #1890ff;
+}
+
+.primaryButton {
+    background-color: #1890ff;
+    color: #fff;
+    border: 1px solid #1890ff;
+}
+
+.primaryButton:hover {
+    background-color: #40a9ff;
+    color: #fff;
+    border-color: #40a9ff;
+}
+
+/* Summary Dropdown */
+.summaryDropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 8px;
+    background-color: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    /* Increased z-index to ensure visibility */
+    min-width: 120px;
+}
+
+.dropdownItem {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #262626;
+    cursor: pointer;
+}
+
+.dropdownItem:hover {
+    background-color: #fafafa;
+    color: #1890ff;
+}

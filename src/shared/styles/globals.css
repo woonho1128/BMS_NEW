@@ -1,4 +1,4 @@
-/* Reset + 디자인 토큰 (Tailwind 미사용 시 tokens만 적용) */
+@import "tailwindcss";
 @import './tokens.css';
 
 *,

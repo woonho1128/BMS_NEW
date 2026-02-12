@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.filterBar {
+    padding: 16px;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tableWrapper {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    /* Ensure table scroll works */
+    display: flex;
+    flex-direction: column;
+}
+
+.primaryButton {
+    background-color: #722ed1;
+    border-color: #722ed1;
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+}
+
+.primaryButton:hover {
+    background-color: #531dab;
+    border-color: #531dab;
+}

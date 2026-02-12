@@ -1,0 +1,114 @@
+.summaryOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Absolute Top Priority */
+    z-index: 99999;
+}
+
+.summaryModal {
+    width: 1500px;
+    max-width: 95vw;
+    height: 85vh;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modalHeader {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #8c8c8c;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.closeButton:hover {
+    color: #262626;
+}
+
+.modalTabs {
+    display: flex;
+    gap: 24px;
+    padding: 0 24px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #fafafa;
+}
+
+.tabButton {
+    background: none;
+    border: none;
+    padding: 12px 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #595959;
+    cursor: pointer;
+    position: relative;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.tabButton:hover {
+    color: #1890ff;
+}
+
+.tabButton.active {
+    color: #1890ff;
+    border-bottom-color: #1890ff;
+    font-weight: 600;
+}
+
+.modalContent {
+    flex: 1;
+    overflow: auto;
+    padding: 20px 24px;
+    background-color: #fff;
+}
+
+.modalFooter {
+    height: 56px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 24px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.footerButton {
+    height: 36px;
+    padding: 0 16px;
+    border: 1px solid #d9d9d9;
+    background-color: #fff;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.footerButton:hover {
+    border-color: #40a9ff;
+    color: #40a9ff;
+}

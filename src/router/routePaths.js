@@ -53,6 +53,8 @@ export const ROUTES = {
   DELIVERY_PLAN: '/delivery/plan',
   DELIVERY_INVENTORY: '/delivery/inventory',
 
+
+
   /* 채권/여신 */
   FINANCE_PURCHASE_SALES: '/finance/purchase-sales',
   FINANCE_RECEIVABLE: '/finance/receivable',
@@ -61,12 +63,25 @@ export const ROUTES = {
 
   /* 대리점 포털 */
   PARTNER_NOTICE: '/partner/notice',
-  PARTNER_ORDER: '/partner/order',
+  PARTNER_ORDER: '/partner/order', // Deprecated but kept for compatibility/redirect if needed
+  PARTNER_ORDER_PRODUCT: '/partner/order/product', // 상품 조회/발주 등록
+  PARTNER_ORDER_LIST: '/partner/order/list', // 발주 내역 조회
+  PARTNER_ORDER_MODIFY: '/partner/order/modify', // 반려 건 수정 재요청
+  PARTNER_ORDER_DELIVERY: '/partner/order/delivery', // 출고 / 배송 조회
+
+  PARTNER_ORDER_NEW: '/partner/order/new',
+  PARTNER_ORDER_ID: '/partner/order/:orderId',
   PARTNER_CATALOG: '/partner/catalog',
   PARTNER_DELIVERY: '/partner/delivery',
   PARTNER_RECEIVABLE: '/partner/receivable',
   PARTNER_BASIC: '/partner/basic',
   PARTNER_AS: '/partner/as',
+
+  /* 관리자 주문 관리 (재편) */
+  ADMIN_ORDER_TOTAL: '/admin/order/total', // 전체 발주 조회
+  ADMIN_ORDER_STATUS_FORCE: '/admin/order/status-force', // 상태 강제 변경
+  ADMIN_ORDER_ERP: '/admin/order/erp', // ERP 전송 관리 / 재전송
+  ADMIN_ORDER_HISTORY_LOG: '/admin/order/history-log', // 발주 이력 / 로그
 
   /* 인사이트/분석 */
   ANALYTICS_SALES: '/analytics/sales',
@@ -77,6 +92,11 @@ export const ROUTES = {
   ANALYTICS_MARKET: '/analytics/market', /* 시황 파악 */
   ANALYTICS_RETAIL: '/analytics/retail-sales', /* 리테일 매출 분석 (개인 KPI와 분리) */
   ANALYTICS_CUSTOM: '/analytics/custom', /* 사용자 정의 리포트 */
+
+  /* 리테일팀 관리 (신설) */
+  SALES_RETAIL_REVIEW_LIST: '/sales/retail/review',
+  SALES_RETAIL_ORDER_DETAIL: '/sales/retail/order/:id',
+  SALES_RETAIL_APPROVAL: '/sales/retail/approval',
 
   /* 관리자 */
   ADMIN_USERS: '/admin/users',
