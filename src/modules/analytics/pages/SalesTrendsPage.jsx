@@ -1,18 +1,21 @@
-import React from 'react';
-import { PageShell } from '../../../shared/components/PageShell/PageShell';
-import { ROUTES } from '../../../router/routePaths';
-import styles from './SalesTrendsPage.module.css';
-
 /**
- * 매출 동향 (시장 분석) — 개인 KPI(/analytics/sales)와 별도 메뉴·화면
+ * SalesTrendsPage — 매출 동향(시장 분석) 임시 페이지
+ *
+ * 연결 메뉴: 인사이트 > 시장 분석 > 매출 동향
+ * 연결 경로: /analytics/trends (ROUTES.ANALYTICS_TRENDS)
+ *
+ * ※ 기능 구현 예정. 준비 완료 시 이 파일에 실제 컴포넌트를 작성하세요.
  */
+import React from 'react';
+import { PlaceholderPage } from '../../../shared/components/PlaceholderPage/PlaceholderPage';
+import { ROUTES } from '../../../router/routePaths';
+
 export function SalesTrendsPage() {
   return (
-    <PageShell path={ROUTES.ANALYTICS_TRENDS} description="매출 동향을 조회합니다.">
-      <div className={styles.placeholder}>
-        <p className={styles.message}>매출 동향</p>
-        <p className={styles.hint}>시장 분석용 매출 동향 화면입니다. 추후 차트·데이터 연동 예정.</p>
-      </div>
-    </PageShell>
+    <PlaceholderPage
+      path={ROUTES.ANALYTICS_TRENDS}
+      description="기간별·채널별 매출 동향 차트 기능이 추가될 예정입니다."
+      icon="📉"
+    />
   );
 }

@@ -223,7 +223,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
       <div key={node.id} className={styles.itemWrapper}>
         <NavLink
           to={node.path}
-          end={node.path === '/'}
+          end
           onClick={handleNavClick}
           className={({ isActive }) =>
             classnames(
@@ -300,42 +300,42 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
         <div className={classnames(styles.groupBody, opened ? styles.show : styles.hide)}>
           {showAsCategoryBlocks
             ? node.children.map((child) => {
-                const childOpened = !!openMap[child.id];
-                return (
-                  <div key={child.id} className={classnames(styles.group, styles.nestedGroup)}>
-                    <button
-                      type="button"
-                      className={classnames(
-                        styles.groupHeader,
-                        styles.middleGroupHeader,
-                        childOpened && styles.opened
-                      )}
-                      onClick={() => toggleSection(child.id)}
-                      aria-expanded={childOpened}
-                      title={child.label}
+              const childOpened = !!openMap[child.id];
+              return (
+                <div key={child.id} className={classnames(styles.group, styles.nestedGroup)}>
+                  <button
+                    type="button"
+                    className={classnames(
+                      styles.groupHeader,
+                      styles.middleGroupHeader,
+                      childOpened && styles.opened
+                    )}
+                    onClick={() => toggleSection(child.id)}
+                    aria-expanded={childOpened}
+                    title={child.label}
+                  >
+                    <span className={styles.iconSlot} aria-hidden="true" />
+                    <span className={styles.groupLabel}>{child.label}</span>
+                    <span
+                      className={classnames(styles.chev, childOpened && styles.chevOpen)}
+                      aria-hidden="true"
                     >
-                      <span className={styles.iconSlot} aria-hidden="true" />
-                      <span className={styles.groupLabel}>{child.label}</span>
-                      <span
-                        className={classnames(styles.chev, childOpened && styles.chevOpen)}
-                        aria-hidden="true"
-                      >
-                        <ChevronRight size={16} strokeWidth={2} />
-                      </span>
-                    </button>
-                    <div
-                      className={classnames(
-                        styles.groupBody,
-                        childOpened ? styles.show : styles.hide
-                      )}
-                    >
-                      <div className={styles.categoryItems}>
-                        {child.children.map((leaf) => renderLeafItem(leaf, 1, showStar))}
-                      </div>
+                      <ChevronRight size={16} strokeWidth={2} />
+                    </span>
+                  </button>
+                  <div
+                    className={classnames(
+                      styles.groupBody,
+                      childOpened ? styles.show : styles.hide
+                    )}
+                  >
+                    <div className={styles.categoryItems}>
+                      {child.children.map((leaf) => renderLeafItem(leaf, 1, showStar))}
                     </div>
                   </div>
-                );
-              })
+                </div>
+              );
+            })
             : node.children.map((child) => renderNode(child, level + 1, showStar))}
         </div>
       </div>
@@ -365,6 +365,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
     const favoritePaths = new Set(favorites.map((fav) => fav.path));
     return allItems.filter((item) => favoritePaths.has(item.path));
   }, [favorites, collectAllMenuItems]);
+
 
   /** 접힌 상태: 대분류만 아이콘으로 표시 */
   const renderCollapsedNav = () => (
@@ -415,207 +416,207 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
         className={classnames(styles.sidebar, isOpen && styles.sidebarExpanded)}
         aria-expanded={isOpen}
       >
-      {/* 1. 상단: 로고 & 컨트롤 (Toggle, Pin) */}
-      <div className={styles.top}>
-        <div className={styles.brand}>
-          <button
-            type="button"
-            className={styles.brandMark}
-            onClick={goDashboard}
-            aria-label="대시보드로 이동"
-            title="대시보드"
-          >
-            <img className={styles.brandLogoImg} src="/logo.png" alt="회사 로고" />
-          </button>
-        </div>
-        <div className={styles.controls}>
-          <button
-            type="button"
-            className={styles.controlBtn}
-            onClick={onToggle}
-            aria-label={isOpen ? '사이드바 접기' : '사이드바 펼치기'}
-            title={isOpen ? '사이드바 접기' : '사이드바 펼치기'}
-          >
-            {isOpen ? <PanelLeftClose size={20} /> : <PanelLeft size={20} />}
-          </button>
-          {isOpen && (
+        {/* 1. 상단: 로고 & 컨트롤 (Toggle, Pin) */}
+        <div className={styles.top}>
+          <div className={styles.brand}>
             <button
               type="button"
-              className={classnames(styles.controlBtn, pinned && styles.controlBtnActive)}
-              onClick={onTogglePin}
-              aria-label={pinned ? '고정 해제' : '고정'}
-              aria-pressed={pinned}
-              title={pinned ? '고정 해제' : '고정'}
+              className={styles.brandMark}
+              onClick={goDashboard}
+              aria-label="대시보드로 이동"
+              title="대시보드"
             >
-              {pinned ? <PinOff size={20} /> : <Pin size={20} />}
+              <img className={styles.brandLogoImg} src="/logo.png" alt="회사 로고" />
             </button>
+          </div>
+          <div className={styles.controls}>
+            <button
+              type="button"
+              className={styles.controlBtn}
+              onClick={onToggle}
+              aria-label={isOpen ? '사이드바 접기' : '사이드바 펼치기'}
+              title={isOpen ? '사이드바 접기' : '사이드바 펼치기'}
+            >
+              {isOpen ? <PanelLeftClose size={20} /> : <PanelLeft size={20} />}
+            </button>
+            {isOpen && (
+              <button
+                type="button"
+                className={classnames(styles.controlBtn, pinned && styles.controlBtnActive)}
+                onClick={onTogglePin}
+                aria-label={pinned ? '고정 해제' : '고정'}
+                aria-pressed={pinned}
+                title={pinned ? '고정 해제' : '고정'}
+              >
+                {pinned ? <PinOff size={20} /> : <Pin size={20} />}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* 2. 중간: 메뉴 (flex-1, overflow-y-auto) */}
+        <div className={styles.navWrap}>
+          {isOpen ? (
+            <nav className={styles.nav} aria-label="Primary">
+              {/* 탭 전환 UI */}
+              <div className={styles.tabs}>
+                <button
+                  type="button"
+                  className={classnames(styles.tab, activeTab === 'all' && styles.tabActive)}
+                  onClick={() => handleTabChange('all')}
+                >
+                  전체 메뉴
+                </button>
+                <button
+                  type="button"
+                  className={classnames(styles.tab, activeTab === 'favorites' && styles.tabActive)}
+                  onClick={() => handleTabChange('favorites')}
+                >
+                  즐겨찾기
+                </button>
+              </div>
+
+              {/* 탭별 콘텐츠 */}
+              <div className={styles.tabContent}>
+                {activeTab === 'all' ? (
+                  <>
+                    {IA_SIDEBAR_SECTIONS.map((section) => (
+                      <div key={section.key} className={styles.section}>
+                        {section.divider && <div className={styles.divider} />}
+                        {section.items.map((top) => renderNode(top, 0, true))}
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <div className={styles.section}>
+                    {favoriteMenuItems.length === 0 ? (
+                      <div className={styles.favEmpty}>등록된 즐겨찾기가 없습니다.</div>
+                    ) : (
+                      <div className={styles.favList}>
+                        {favoriteMenuItems.map((item) => (
+                          <div key={item.id} className={styles.favItemWrapper}>
+                            <NavLink
+                              to={item.path}
+                              onClick={handleNavClick}
+                              className={({ isActive }) =>
+                                classnames(styles.favItem, isActive && styles.active)
+                              }
+                            >
+                              {item.icon && (
+                                <span className={styles.iconSlot} aria-hidden="true">
+                                  <item.icon size={16} strokeWidth={2} />
+                                </span>
+                              )}
+                              <span>{item.label}</span>
+                            </NavLink>
+                            <button
+                              type="button"
+                              className={classnames(styles.starBtn, styles.starBtnActive)}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toggleFavorite(item);
+                              }}
+                              aria-label="즐겨찾기 해제"
+                              title="즐겨찾기 해제"
+                            >
+                              <Star size={16} fill="#FFD700" color="#FFD700" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </nav>
+          ) : (
+            renderCollapsedNav()
           )}
         </div>
-      </div>
 
-      {/* 2. 중간: 메뉴 (flex-1, overflow-y-auto) */}
-      <div className={styles.navWrap}>
-        {isOpen ? (
-          <nav className={styles.nav} aria-label="Primary">
-            {/* 탭 전환 UI */}
-            <div className={styles.tabs}>
-              <button
-                type="button"
-                className={classnames(styles.tab, activeTab === 'all' && styles.tabActive)}
-                onClick={() => handleTabChange('all')}
-              >
-                전체 메뉴
+        {/* 3. 하단: 사용자 정보 + 메뉴 */}
+        <div className={styles.userPanel} ref={userMenuRef}>
+          <div className={styles.userPanelInfo}>
+            <div className={styles.userPanelName}>{user?.name ?? '-'}</div>
+            <div className={styles.userPanelSub}>
+              {(user?.position ?? '직원')}{user?.role ? ` / ${user.role}` : ''}
+            </div>
+          </div>
+          <button
+            type="button"
+            className={styles.userPanelMenuBtn}
+            onClick={() => setUserMenuOpen((v) => !v)}
+            aria-label="사용자 메뉴"
+            title="사용자 메뉴"
+          >
+            <MoreVertical size={18} />
+          </button>
+
+          {userMenuOpen && (
+            <div className={styles.userDropdown} role="menu" aria-label="사용자 메뉴">
+              <button type="button" className={styles.userDropdownItem} onClick={openChangePassword} role="menuitem">
+                비밀번호 변경
               </button>
               <button
                 type="button"
-                className={classnames(styles.tab, activeTab === 'favorites' && styles.tabActive)}
-                onClick={() => handleTabChange('favorites')}
+                className={classnames(styles.userDropdownItem, styles.userDropdownDanger)}
+                onClick={() => {
+                  setUserMenuOpen(false);
+                  handleLogout();
+                }}
+                role="menuitem"
               >
-                즐겨찾기
+                로그아웃
               </button>
             </div>
-
-            {/* 탭별 콘텐츠 */}
-            <div className={styles.tabContent}>
-              {activeTab === 'all' ? (
-                <>
-                  {IA_SIDEBAR_SECTIONS.map((section) => (
-                    <div key={section.key} className={styles.section}>
-                      {section.divider && <div className={styles.divider} />}
-                      {section.items.map((top) => renderNode(top, 0, true))}
-                    </div>
-                  ))}
-                </>
-              ) : (
-                <div className={styles.section}>
-                  {favoriteMenuItems.length === 0 ? (
-                    <div className={styles.favEmpty}>등록된 즐겨찾기가 없습니다.</div>
-                  ) : (
-                    <div className={styles.favList}>
-                      {favoriteMenuItems.map((item) => (
-                        <div key={item.id} className={styles.favItemWrapper}>
-                          <NavLink
-                            to={item.path}
-                            onClick={handleNavClick}
-                            className={({ isActive }) =>
-                              classnames(styles.favItem, isActive && styles.active)
-                            }
-                          >
-                            {item.icon && (
-                              <span className={styles.iconSlot} aria-hidden="true">
-                                <item.icon size={16} strokeWidth={2} />
-                              </span>
-                            )}
-                            <span>{item.label}</span>
-                          </NavLink>
-                          <button
-                            type="button"
-                            className={classnames(styles.starBtn, styles.starBtnActive)}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              toggleFavorite(item);
-                            }}
-                            aria-label="즐겨찾기 해제"
-                            title="즐겨찾기 해제"
-                          >
-                            <Star size={16} fill="#FFD700" color="#FFD700" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </nav>
-        ) : (
-          renderCollapsedNav()
-        )}
-      </div>
-
-      {/* 3. 하단: 사용자 정보 + 메뉴 */}
-      <div className={styles.userPanel} ref={userMenuRef}>
-        <div className={styles.userPanelInfo}>
-          <div className={styles.userPanelName}>{user?.name ?? '-'}</div>
-          <div className={styles.userPanelSub}>
-            {(user?.position ?? '직원')}{user?.role ? ` / ${user.role}` : ''}
-          </div>
+          )}
         </div>
-        <button
-          type="button"
-          className={styles.userPanelMenuBtn}
-          onClick={() => setUserMenuOpen((v) => !v)}
-          aria-label="사용자 메뉴"
-          title="사용자 메뉴"
-        >
-          <MoreVertical size={18} />
-        </button>
+      </aside>
 
-        {userMenuOpen && (
-          <div className={styles.userDropdown} role="menu" aria-label="사용자 메뉴">
-            <button type="button" className={styles.userDropdownItem} onClick={openChangePassword} role="menuitem">
-              비밀번호 변경
+      <Modal open={pwModalOpen} onClose={() => setPwModalOpen(false)} title="비밀번호 변경" size="sm">
+        <form className={styles.pwForm} onSubmit={submitChangePassword}>
+          <label className={styles.pwField}>
+            <span className={styles.pwLabel}>현재 비밀번호</span>
+            <input
+              className={styles.pwInput}
+              type="password"
+              value={pwForm.current}
+              onChange={(e) => setPwForm((p) => ({ ...p, current: e.target.value }))}
+              autoComplete="current-password"
+            />
+          </label>
+          <label className={styles.pwField}>
+            <span className={styles.pwLabel}>새 비밀번호</span>
+            <input
+              className={styles.pwInput}
+              type="password"
+              value={pwForm.next}
+              onChange={(e) => setPwForm((p) => ({ ...p, next: e.target.value }))}
+              autoComplete="new-password"
+            />
+          </label>
+          <label className={styles.pwField}>
+            <span className={styles.pwLabel}>새 비밀번호 확인</span>
+            <input
+              className={styles.pwInput}
+              type="password"
+              value={pwForm.confirm}
+              onChange={(e) => setPwForm((p) => ({ ...p, confirm: e.target.value }))}
+              autoComplete="new-password"
+            />
+          </label>
+          {pwError && <div className={styles.pwError}>{pwError}</div>}
+          <div className={styles.pwActions}>
+            <button type="button" className={styles.pwBtn} onClick={() => setPwModalOpen(false)}>
+              취소
             </button>
-            <button
-              type="button"
-              className={classnames(styles.userDropdownItem, styles.userDropdownDanger)}
-              onClick={() => {
-                setUserMenuOpen(false);
-                handleLogout();
-              }}
-              role="menuitem"
-            >
-              로그아웃
+            <button type="submit" className={classnames(styles.pwBtn, styles.pwBtnPrimary)}>
+              변경
             </button>
           </div>
-        )}
-      </div>
-    </aside>
-
-    <Modal open={pwModalOpen} onClose={() => setPwModalOpen(false)} title="비밀번호 변경" size="sm">
-      <form className={styles.pwForm} onSubmit={submitChangePassword}>
-        <label className={styles.pwField}>
-          <span className={styles.pwLabel}>현재 비밀번호</span>
-          <input
-            className={styles.pwInput}
-            type="password"
-            value={pwForm.current}
-            onChange={(e) => setPwForm((p) => ({ ...p, current: e.target.value }))}
-            autoComplete="current-password"
-          />
-        </label>
-        <label className={styles.pwField}>
-          <span className={styles.pwLabel}>새 비밀번호</span>
-          <input
-            className={styles.pwInput}
-            type="password"
-            value={pwForm.next}
-            onChange={(e) => setPwForm((p) => ({ ...p, next: e.target.value }))}
-            autoComplete="new-password"
-          />
-        </label>
-        <label className={styles.pwField}>
-          <span className={styles.pwLabel}>새 비밀번호 확인</span>
-          <input
-            className={styles.pwInput}
-            type="password"
-            value={pwForm.confirm}
-            onChange={(e) => setPwForm((p) => ({ ...p, confirm: e.target.value }))}
-            autoComplete="new-password"
-          />
-        </label>
-        {pwError && <div className={styles.pwError}>{pwError}</div>}
-        <div className={styles.pwActions}>
-          <button type="button" className={styles.pwBtn} onClick={() => setPwModalOpen(false)}>
-            취소
-          </button>
-          <button type="submit" className={classnames(styles.pwBtn, styles.pwBtnPrimary)}>
-            변경
-          </button>
-        </div>
-      </form>
-    </Modal>
+        </form>
+      </Modal>
     </>
   );
 }

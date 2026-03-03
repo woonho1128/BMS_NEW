@@ -1,0 +1,155 @@
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 200;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* 슬라이드 패널 */
+.panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    background: var(--color-bg-card, #fff);
+    border-left: 1px solid var(--color-border, #e0e0e0);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+    z-index: 201;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.panel.open {
+    transform: translateX(0);
+}
+
+/* 헤더 */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--color-border, #e0e0e0);
+    flex-shrink: 0;
+}
+
+.title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-primary, #1a1a1a);
+}
+
+.closeBtn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    color: #888;
+    padding: 4px 8px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: background 0.12s;
+}
+
+.closeBtn:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+/* 바디 */
+.body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.empty {
+    text-align: center;
+    color: var(--color-text-muted, #999);
+    font-size: 13px;
+    line-height: 1.7;
+    padding: 40px 0;
+}
+
+/* 위젯 목록 */
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--color-border, #e0e0e0);
+    border-radius: 8px;
+    background: var(--color-bg, #fafafa);
+    transition: box-shadow 0.12s;
+}
+
+.item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.itemInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.itemIcon {
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.itemLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-primary, #1a1a1a);
+}
+
+.itemDesc {
+    font-size: 11px;
+    color: var(--color-text-muted, #999);
+    margin-top: 2px;
+}
+
+.addBtn {
+    flex-shrink: 0;
+    height: 30px;
+    padding: 0 12px;
+    background: var(--color-primary, #4f81bd);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+
+.addBtn:hover {
+    background: var(--color-primary-hover, #3a6a9e);
+}

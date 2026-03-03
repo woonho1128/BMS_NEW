@@ -1,13 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from '../shared/components/Sidebar/Sidebar';
 import { classnames } from '../shared/utils/classnames';
 import styles from './AppLayout.module.css';
+import { Menu } from 'lucide-react';
+
 
 export function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  // 사이드바 "고정"을 디폴트로
   const [sidebarPinned, setSidebarPinned] = useState(true);
+
+  // Initialize for mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setSidebarPinned(false);
+        setSidebarOpen(false);
+      } else {
+        setSidebarPinned(true);
+        setSidebarOpen(true);
+      }
+    };
+
+    // Run once on mount
+    handleResize();
+
+    // Optional: Listen to resize if we want dynamic adaptation
+    // window.addEventListener('resize', handleResize);
+    // return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleToggle = () => {
     if (sidebarPinned) {
@@ -23,11 +44,27 @@ export function AppLayout() {
     if (!sidebarPinned) setSidebarOpen(true);
   };
 
+  const openMobileSidebar = () => {
+    setSidebarOpen(true);
+    setSidebarPinned(false); // Ensure unpinned on mobile open
+  };
+
   const effectiveOpen = sidebarOpen || sidebarPinned;
+  // Overlay: Only show if open AND NOT pinned (mobile drawer mode)
   const showOverlay = sidebarOpen && !sidebarPinned;
 
   return (
     <div className={styles.layout}>
+      {/* Mobile Header */}
+      <div className={styles.mobileHeader}>
+        <button className={styles.mobileMenuBtn} onClick={openMobileSidebar}>
+          <Menu size={24} />
+        </button>
+        <div className={styles.mobileBrand}>
+          <img src="/logo.png" alt="Logo" className={styles.mobileLogo} />
+        </div>
+      </div>
+
       <div className={styles.body}>
         {showOverlay && (
           <div

@@ -1,4 +1,12 @@
-import React, { useState } from 'react';
+/**
+ * SalesPage — ⚠️ 현재 미사용 파일
+ *
+ * router/index.jsx 에 라우트가 등록되어 있지 않아 접근 불가 상태입니다.
+ * 필요 시 실제 영업 목록 페이지로 활용하거나 삭제하세요.
+ *
+ * 기존 내용: DataTable + Modal을 사용하는 간단한 영업 목록 시범 UI (영문)
+ */
+
 import { DataTable } from '../../../shared/components/DataTable/DataTable';
 import { Button } from '../../../shared/components/Button/Button';
 import { Modal } from '../../../shared/components/Modal/Modal';

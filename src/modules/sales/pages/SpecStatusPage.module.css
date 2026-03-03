@@ -216,3 +216,102 @@
   font-weight: 700;
   color: var(--color-text-primary);
 }
+
+/* ── Ant Design Table 페이지네이션 오버라이드 ── */
+.tableContainer :global(.ant-pagination) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px 12px;
+  margin: 0 !important;
+  background: #fafafa;
+  border-top: 1px solid var(--color-border, #e8e8e8);
+  gap: 4px;
+}
+
+/* 페이지 번호 버튼 */
+.tableContainer :global(.ant-pagination-item) {
+  min-width: 30px;
+  height: 30px;
+  line-height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border, #d9d9d9);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.tableContainer :global(.ant-pagination-item:hover) {
+  border-color: var(--color-primary, #4f81bd);
+  color: var(--color-primary, #4f81bd);
+}
+
+/* 활성 페이지 */
+.tableContainer :global(.ant-pagination-item-active) {
+  background: var(--color-primary, #4f81bd);
+  border-color: var(--color-primary, #4f81bd);
+}
+
+.tableContainer :global(.ant-pagination-item-active a) {
+  color: #fff !important;
+}
+
+/* 이전/다음 버튼 */
+.tableContainer :global(.ant-pagination-prev .ant-pagination-item-link),
+.tableContainer :global(.ant-pagination-next .ant-pagination-item-link) {
+  height: 30px;
+  min-width: 30px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border, #d9d9d9);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.15s;
+}
+
+.tableContainer :global(.ant-pagination-prev:not(.ant-pagination-disabled) .ant-pagination-item-link:hover),
+.tableContainer :global(.ant-pagination-next:not(.ant-pagination-disabled) .ant-pagination-item-link:hover) {
+  border-color: var(--color-primary, #4f81bd);
+  color: var(--color-primary, #4f81bd);
+}
+
+/* 페이지 사이즈 셀렉터 */
+.tableContainer :global(.ant-select-selector) {
+  height: 30px !important;
+  border-radius: 6px !important;
+  border-color: var(--color-border, #d9d9d9) !important;
+  font-size: 13px !important;
+  padding: 0 8px !important;
+}
+
+.tableContainer :global(.ant-select-selection-item) {
+  line-height: 28px !important;
+  font-size: 13px !important;
+}
+
+.tableContainer :global(.ant-select:hover .ant-select-selector) {
+  border-color: var(--color-primary, #4f81bd) !important;
+}
+
+.tableContainer :global(.ant-select-focused .ant-select-selector) {
+  border-color: var(--color-primary, #4f81bd) !important;
+  box-shadow: 0 0 0 2px rgba(79, 129, 189, 0.12) !important;
+}
+
+/* 페이지 표시 텍스트 (X/Y 페이지) */
+.tableContainer :global(.ant-pagination-total-text) {
+  font-size: 12px;
+  color: var(--color-text-muted, #888);
+  margin-right: 8px;
+  line-height: 30px;
+}
+
+/* 줄임표 (…) */
+.tableContainer :global(.ant-pagination-jump-prev .ant-pagination-item-link),
+.tableContainer :global(.ant-pagination-jump-next .ant-pagination-item-link) {
+  border: none;
+  background: transparent;
+}

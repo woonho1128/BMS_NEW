@@ -21,10 +21,11 @@ const TAB_COMPLETED = 'completed';
 const STATUS_DONE = 'done';
 const STATUS_REJECT = 'reject';
 
-const WIDE_CATEGORIES = ['profit', 'salesInfo', 'delivery']; // 80%+ 너비
+const WIDE_CATEGORIES = ['profit', 'salesInfo', 'delivery', 'order']; // 80%+ 너비
 
 const CATEGORIES = [
   { key: 'profit', label: '손익', path: ROUTES.PROFIT_NEW },
+  { key: 'order', label: '발주', path: '/sales/retail/approval' },
   { key: 'salesInfo', label: '영업정보', path: ROUTES.SALES_INFO_NEW },
   { key: 'weekly', label: '주간보고', path: ROUTES.SALES_REPORT_WEEKLY_NEW },
   { key: 'trip', label: '출장', path: ROUTES.SALES_REPORT_TRIP_NEW },

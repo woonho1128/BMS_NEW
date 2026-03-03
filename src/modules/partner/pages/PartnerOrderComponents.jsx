@@ -19,10 +19,4 @@ export function PartnerOrderModificationPage() {
     );
 }
 
-export function PartnerOrderDeliveryPage() {
-    return (
-        <PageShell path="/partner/order/delivery">
-            <div className="p-8"><h2 className="text-2xl font-bold">출고 / 배송 조회</h2><p>기능 구현 예정</p></div>
-        </PageShell>
-    );
-}
+

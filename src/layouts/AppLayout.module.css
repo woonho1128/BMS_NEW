@@ -18,8 +18,40 @@
   max-height: 100vh;
 }
 
-.sidebarOverlay {
+/* Mobile Header */
+.mobileHeader {
   display: none;
+  height: 56px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  align-items: center;
+  padding: 0 16px;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.mobileMenuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #374151;
+}
+
+.mobileBrand {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin-right: 40px;
+  /* Balance the menu btn */
+}
+
+.mobileLogo {
+  height: 32px;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
@@ -29,6 +61,15 @@
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
     z-index: 99;
+  }
+
+  .mobileHeader {
+    display: flex;
+  }
+
+  /* On mobile, main area always full width regardless of effectiveOpen status because sidebar is overlay */
+  .main {
+    width: 100%;
   }
 }
 
@@ -41,7 +82,17 @@
   transition: all 0.3s ease-in-out;
   position: relative;
   z-index: 0;
+  margin-left: 0;
 }
 
 .mainFullWidth {
+  margin-left: 0;
+}
+
+@media (max-width: 768px) {
+
+  .main,
+  .mainFullWidth {
+    margin-left: 0;
+  }
 }

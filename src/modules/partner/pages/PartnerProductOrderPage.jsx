@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Row, Col, Typography, Input, Select, Button, Card, Space, Empty } from 'antd';
 import { ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -43,6 +44,7 @@ const MOCK_PRODUCTS = Array.from({ length: 45 }).map((_, i) => {
 });
 
 export function PartnerProductOrderPage() {
+    const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [cart, setCart] = useState({}); // { prodId: qty }
@@ -322,6 +324,7 @@ export function PartnerProductOrderPage() {
             {/* Floating Cart Button */}
             <div className="fixed bottom-8 right-8 z-50">
                 <button
+                    onClick={() => navigate('/partner/order/cart')}
                     className="w-16 h-16 bg-[#1A4B84] text-white rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(26,75,132,0.4)] hover:scale-105 hover:shadow-[0_8px_30px_rgba(26,75,132,0.5)] transition-all duration-300 border-2 border-white active:scale-95 group relative"
                 >
                     <ShoppingCart size={28} />

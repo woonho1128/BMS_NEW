@@ -457,6 +457,7 @@
     opacity: 0;
     transform: translateY(-4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -896,14 +897,23 @@
     bottom: 0;
     height: 100vh;
     z-index: 101;
-  }
-
-  .sidebar:not(.sidebarExpanded) {
-    width: 0;
-    min-width: 0;
+    /* Mobile Drawer Styles */
+    width: min(var(--sidebar-width), 85vw);
+    min-width: min(var(--sidebar-width), 85vw);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
   }
 
   .sidebarExpanded {
+    transform: translateX(0);
+    /* Width constraints maintained from base .sidebar */
+    width: min(var(--sidebar-width), 85vw);
+    min-width: min(var(--sidebar-width), 85vw);
+  }
+
+  /* Remove old width-hiding logic */
+  .sidebar:not(.sidebarExpanded) {
     width: min(var(--sidebar-width), 85vw);
     min-width: min(var(--sidebar-width), 85vw);
   }

@@ -70,10 +70,10 @@ export function ProductCard({
             <div className={styles.footer}>
                 <Button
                     type={quantity > 0 ? "primary" : "default"}
-                    fullWidth
                     className={styles.cartButton}
                     onClick={() => onAdd(product.id, 1)}
                     icon={quantity > 0 ? <Check size={14} /> : null}
+                    block
                 >
                     {quantity > 0 ? `담기 완료 (${quantity})` : '장바구니 담기'}
                 </Button>

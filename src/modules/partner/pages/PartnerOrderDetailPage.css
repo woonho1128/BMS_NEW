@@ -1,0 +1,254 @@
+/* PartnerOrderDetailPage.css */
+
+/* 1. Inline Banner */
+.order-success-banner {
+    background: #e6f4ea;
+    border: 1px solid #d3f1df;
+    padding: 16px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    color: #135200;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* 2. Meta Info Line */
+.order-meta-info {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 24px;
+    padding-left: 4px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #595959;
+}
+
+.meta-label {
+    color: #8c8c8c;
+}
+
+.meta-value {
+    font-weight: 600;
+    color: #262626;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.status-badge {
+    background: #e6f4ea;
+    color: #1e7e34;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* 3. Unified Card */
+.unified-order-card {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 32px;
+    /* Increased padding for B2B feel */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.card-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #1A4B84;
+}
+
+/* Section 1: Info Grid */
+.info-section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    /* Increased gap between major columns */
+    margin-bottom: 40px;
+}
+
+.info-column-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 16px;
+    background: #fafafa;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.info-field-grid {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    /* Fixed label width */
+    row-gap: 12px;
+    align-items: baseline;
+}
+
+.field-label {
+    font-size: 12px;
+    color: #8c8c8c;
+}
+
+.field-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #262626;
+    word-break: break-all;
+}
+
+/* Section 2: Item List (Read Only) */
+.item-list-section {
+    margin-bottom: 40px;
+}
+
+.readonly-item-row {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: #fff;
+}
+
+.item-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    background: #f5f5f5;
+    object-fit: cover;
+    margin-right: 16px;
+    border: 1px solid #f0f0f0;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-brand {
+    font-size: 12px;
+    color: #8c8c8c;
+    margin-bottom: 2px;
+}
+
+.item-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.item-model {
+    font-size: 12px;
+    color: #bfbfbf;
+}
+
+.item-qty-price {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.item-price-unit {
+    font-size: 13px;
+    color: #595959;
+}
+
+.item-total {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+}
+
+/* Section 3: Summary */
+.summary-section-bottom {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 24px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.summary-box {
+    width: 320px;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.summary-line.total {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+    margin-bottom: 0;
+}
+
+.label-text {
+    font-size: 14px;
+    color: #595959;
+}
+
+.value-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #262626;
+    font-variant-numeric: tabular-nums;
+}
+
+.label-total {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+}
+
+.value-total {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1A4B84;
+}
+
+/* 4. Receiver Info Grid (2 Rows) */
+.receiver-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 60px;
+    /* Wide gap between columns */
+    row-gap: 16px;
+}
+
+.receiver-info-item {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+}
+
+.receiver-info-item .field-label {
+    width: 80px;
+    /* Fixed label width */
+    flex-shrink: 0;
+    font-size: 12px;
+    color: #8c8c8c;
+}
+
+.receiver-info-item .field-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #262626;
+    word-break: break-all;
+}

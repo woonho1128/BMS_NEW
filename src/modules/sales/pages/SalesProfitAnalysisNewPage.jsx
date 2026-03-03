@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Steps, Descriptions, Divider } from 'antd';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody, CardFooter } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
@@ -363,515 +364,149 @@ export function SalesProfitAnalysisNewPage() {
     >
       <div className={classnames(styles.formLayout, styles.formLayoutSingle)}>
         <div className={styles.main}>
-          {/* STEP 인디케이터 */}
-          <nav className={styles.stepNav} aria-label="진행 단계">
-            {[1, 2, 3].map((step) => (
-              <button
-                key={step}
-                type="button"
-                className={classnames(styles.stepTab, currentStep === step && styles.stepTabActive)}
-                onClick={() => setCurrentStep(step)}
-              >
-                STEP {step} {STEP_TITLES[step - 1]}
-              </button>
-            ))}
-          </nav>
+          {/* STEP 인디케이터 — Ant Design Steps */}
+          <div style={{ marginBottom: '20px', background: '#fff', padding: '16px 24px', borderRadius: '8px', border: '1px solid var(--color-border, #e8e8e8)' }}>
+            <Steps
+              current={currentStep - 1}
+              onChange={(idx) => setCurrentStep(idx + 1)}
+              items={STEP_TITLES.map((title, i) => ({ title: `STEP ${i + 1}`, description: title }))}
+            />
+          </div>
 
           {/* [STEP 1] 손익분석 기본 정보 등록 */}
           {currentStep === 1 && (
-          <>
-            <Card title="[STEP 1] 손익분석 기본 정보 등록" className={styles.sectionCard}>
-              <CardBody>
-                <div className={styles.step1SummaryGrid}>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>{required('스펙구분')}</div>
-                    <select className={styles.step1SummaryInput} value={specType} onChange={(e) => setSpecType(e.target.value)}>{SPEC_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>{required('건설회사')}</div>
-                    <input type="text" className={styles.step1SummaryInput} placeholder="건설회사 검색" value={builder} onChange={(e) => setBuilder(e.target.value)} />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>{required('현장명')}</div>
-                    <input type="text" className={styles.step1SummaryInput} placeholder="현장명" value={siteName} onChange={(e) => setSiteName(e.target.value)} />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>{required('지역')}</div>
-                    <select className={styles.step1SummaryInput} value={region} onChange={(e) => setRegion(e.target.value)}><option value="">선택</option>{REGION_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>{required('수주유형')}</div>
-                    <select className={styles.step1SummaryInput} value={orderType} onChange={(e) => setOrderType(e.target.value)}>{ORDER_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>{required('사업분류')}</div>
-                    <select className={styles.step1SummaryInput} value={businessType} onChange={(e) => setBusinessType(e.target.value)}>{BUSINESS_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>{required('영업담당자')}</div>
-                    <select className={styles.step1SummaryInput} value={salesManager} onChange={(e) => setSalesManager(e.target.value)}><option value="">선택</option>{SALES_MANAGER_OPTIONS.map((m) => <option key={m} value={m}>{m}</option>)}</select>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>{required('대리점')}</div>
-                    <input type="text" className={styles.step1SummaryInput} placeholder="대리점 검색" value={partnerName} onChange={(e) => setPartnerName(e.target.value)} />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>비대일체형 진행여부</div>
-                    <select className={styles.step1SummaryInput} value={integratedProgress} onChange={(e) => setIntegratedProgress(e.target.value)}>{YES_NO_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>유상옵션 적용 여부</div>
-                    <select className={styles.step1SummaryInput} value={paidOption} onChange={(e) => setPaidOption(e.target.value)}>{APPLY_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>총세대수</div>
-                    <input type="number" min={0} className={styles.step1SummaryInput} value={totalHouseholds} onChange={(e) => setTotalHouseholds(e.target.value)} placeholder="세대" />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>적용세대수</div>
-                    <input type="number" min={0} className={styles.step1SummaryInput} value={appliedHouseholds} onChange={(e) => setAppliedHouseholds(e.target.value)} placeholder="세대" />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>원가 예상 상승률</div>
-                    <input type="number" className={styles.step1SummaryInput} placeholder="%" value={costIncreaseRate} onChange={(e) => setCostIncreaseRate(e.target.value)} />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>{required('SPEC 수주일자')}</div>
-                    <DatePicker value={specDate} onChange={setSpecDate} className={styles.step1SummaryInput} />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>예상납기일</div>
-                    <DatePicker value={expectedDeliveryDate} onChange={setExpectedDeliveryDate} className={styles.step1SummaryInput} />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>준공예정일</div>
-                    <DatePicker value={completionDate} onChange={setCompletionDate} className={styles.step1SummaryInput} />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>ORIGIN SPEC NO</div>
-                    <input type="text" className={styles.step1SummaryInput} value={originSpecNo} onChange={(e) => setOriginSpecNo(e.target.value)} placeholder="원본 문서 번호" />
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>PDF 첨부</div>
-                    <input type="file" accept=".pdf" className={styles.step1SummaryInput} onChange={(e) => setPdfFile(e.target.files?.[0] ?? null)} />
-                  </div>
-                  <div className={classnames(styles.step1SummaryCard, styles.step1SummaryCardFull)}>
-                    <div className={styles.step1SummaryLabel}>지급수수료 적용</div>
-                    <div className={styles.commissionControl}>
-                      <label className={styles.checkboxRow}>
-                        <input type="checkbox" checked={commissionEnabled} onChange={(e) => setCommissionEnabled(e.target.checked)} />
-                        <span>적용 시</span>
-                      </label>
-                      {commissionEnabled && (
-                        <span className={styles.commissionInputWrap}>
-                          <input type="number" className={styles.inputCommission} value={commissionFee} onChange={(e) => setCommissionFee(e.target.value)} placeholder="금액" min={0} />
-                          <span className={styles.unit}>원</span>
-                        </span>
-                      )}
+            <>
+              <Card title="[STEP 1] 손익분석 기본 정보 등록" className={styles.sectionCard}>
+                <CardBody>
+                  <div className={styles.step1SummaryGrid}>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>{required('스펙구분')}</div>
+                      <select className={styles.step1SummaryInput} value={specType} onChange={(e) => setSpecType(e.target.value)}>{SPEC_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>{required('건설회사')}</div>
+                      <input type="text" className={styles.step1SummaryInput} placeholder="건설회사 검색" value={builder} onChange={(e) => setBuilder(e.target.value)} />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>{required('현장명')}</div>
+                      <input type="text" className={styles.step1SummaryInput} placeholder="현장명" value={siteName} onChange={(e) => setSiteName(e.target.value)} />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>{required('지역')}</div>
+                      <select className={styles.step1SummaryInput} value={region} onChange={(e) => setRegion(e.target.value)}><option value="">선택</option>{REGION_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>{required('수주유형')}</div>
+                      <select className={styles.step1SummaryInput} value={orderType} onChange={(e) => setOrderType(e.target.value)}>{ORDER_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>{required('사업분류')}</div>
+                      <select className={styles.step1SummaryInput} value={businessType} onChange={(e) => setBusinessType(e.target.value)}>{BUSINESS_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>{required('영업담당자')}</div>
+                      <select className={styles.step1SummaryInput} value={salesManager} onChange={(e) => setSalesManager(e.target.value)}><option value="">선택</option>{SALES_MANAGER_OPTIONS.map((m) => <option key={m} value={m}>{m}</option>)}</select>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>{required('대리점')}</div>
+                      <input type="text" className={styles.step1SummaryInput} placeholder="대리점 검색" value={partnerName} onChange={(e) => setPartnerName(e.target.value)} />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>비대일체형 진행여부</div>
+                      <select className={styles.step1SummaryInput} value={integratedProgress} onChange={(e) => setIntegratedProgress(e.target.value)}>{YES_NO_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>유상옵션 적용 여부</div>
+                      <select className={styles.step1SummaryInput} value={paidOption} onChange={(e) => setPaidOption(e.target.value)}>{APPLY_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>총세대수</div>
+                      <input type="number" min={0} className={styles.step1SummaryInput} value={totalHouseholds} onChange={(e) => setTotalHouseholds(e.target.value)} placeholder="세대" />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>적용세대수</div>
+                      <input type="number" min={0} className={styles.step1SummaryInput} value={appliedHouseholds} onChange={(e) => setAppliedHouseholds(e.target.value)} placeholder="세대" />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>원가 예상 상승률</div>
+                      <input type="number" className={styles.step1SummaryInput} placeholder="%" value={costIncreaseRate} onChange={(e) => setCostIncreaseRate(e.target.value)} />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>{required('SPEC 수주일자')}</div>
+                      <DatePicker value={specDate} onChange={setSpecDate} className={styles.step1SummaryInput} />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>예상납기일</div>
+                      <DatePicker value={expectedDeliveryDate} onChange={setExpectedDeliveryDate} className={styles.step1SummaryInput} />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>준공예정일</div>
+                      <DatePicker value={completionDate} onChange={setCompletionDate} className={styles.step1SummaryInput} />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>ORIGIN SPEC NO</div>
+                      <input type="text" className={styles.step1SummaryInput} value={originSpecNo} onChange={(e) => setOriginSpecNo(e.target.value)} placeholder="원본 문서 번호" />
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>PDF 첨부</div>
+                      <input type="file" accept=".pdf" className={styles.step1SummaryInput} onChange={(e) => setPdfFile(e.target.files?.[0] ?? null)} />
+                    </div>
+                    <div className={classnames(styles.step1SummaryCard, styles.step1SummaryCardFull)}>
+                      <div className={styles.step1SummaryLabel}>지급수수료 적용</div>
+                      <div className={styles.commissionControl}>
+                        <label className={styles.checkboxRow}>
+                          <input type="checkbox" checked={commissionEnabled} onChange={(e) => setCommissionEnabled(e.target.checked)} />
+                          <span>적용 시</span>
+                        </label>
+                        {commissionEnabled && (
+                          <span className={styles.commissionInputWrap}>
+                            <input type="number" className={styles.inputCommission} value={commissionFee} onChange={(e) => setCommissionFee(e.target.value)} placeholder="금액" min={0} />
+                            <span className={styles.unit}>원</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className={classnames(styles.step1SummaryCard, styles.step1SummaryCardFull)}>
+                      <div className={styles.step1SummaryLabel}>비고</div>
+                      <textarea className={styles.step1SummaryTextarea} value={remark} onChange={(e) => setRemark(e.target.value)} placeholder="비고 사항을 입력하세요" rows={2} />
                     </div>
                   </div>
-                  <div className={classnames(styles.step1SummaryCard, styles.step1SummaryCardFull)}>
-                    <div className={styles.step1SummaryLabel}>비고</div>
-                    <textarea className={styles.step1SummaryTextarea} value={remark} onChange={(e) => setRemark(e.target.value)} placeholder="비고 사항을 입력하세요" rows={2} />
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
+                </CardBody>
+              </Card>
 
-            <div className={styles.stepActions}>
-              <Button variant="secondary" onClick={() => navigate('/profit')}>취소</Button>
-              <Button variant="primary" onClick={() => setCurrentStep(2)}>다음 단계 (품목 구성)</Button>
-            </div>
-          </>
+              <div className={styles.stepActions}>
+                <Button variant="secondary" onClick={() => navigate('/profit')}>취소</Button>
+                <Button variant="primary" onClick={() => setCurrentStep(2)}>다음 단계 (품목 구성)</Button>
+              </div>
+            </>
           )}
 
           {/* [STEP 2] 납품 품목 구성 — B(결과 테이블) 메인 + A(입력) Drawer */}
           {currentStep === 2 && (
-          <div className={styles.step2Container}>
-            <div className={styles.step2TableArea}>
-              <div className={styles.step2ActionBar}>
-                <Button variant="primary" onClick={openDrawerNew}>+ 품목 추가</Button>
-                <span className={styles.step2ActionHint}>행 클릭 시 수정 가능합니다.</span>
-              </div>
-              <div className={styles.profitTableWrap}>
-                <div className={styles.profitTableScroll}>
-                  <table className={styles.profitTable}>
-                    <colgroup>
-                      <col style={{ width: '6%' }} />
-                      <col style={{ width: '8%' }} />
-                      <col style={{ width: '8%' }} />
-                      <col style={{ width: '6%' }} />
-                      <col style={{ width: '6%' }} />
-                      <col style={{ width: '7%' }} />
-                      <col style={{ width: '7%' }} />
-                      <col style={{ width: '3.5%' }} />
-                      <col style={{ width: '7%' }} />
-                      <col style={{ width: '5%' }} />
-                      <col style={{ width: '7%' }} />
-                      <col style={{ width: '5.5%' }} />
-                      <col style={{ width: '7%' }} />
-                      <col style={{ width: '5.5%' }} />
-                      <col style={{ width: '7%' }} />
-                      <col style={{ width: '6%' }} />
-                    </colgroup>
-                    <thead>
-                      <tr className={styles.colHeader}>
-                        <th className={classnames(styles.colBasic, styles.tLeft)} scope="col">구분</th>
-                        <th className={classnames(styles.colBasic, styles.tLeft)} scope="col">SET품번</th>
-                        <th className={classnames(styles.colBasic, styles.tLeft)} scope="col">품목별<br />수주유형</th>
-                        <th className={classnames(styles.colCost, styles.tRight)} scope="col">공장도가</th>
-                        <th className={classnames(styles.colCost, styles.tRight)} scope="col">톤당단가</th>
-                        <th className={classnames(styles.colCost, styles.tRight)} scope="col">2026년(현재)<br />표준원가</th>
-                        <th className={classnames(styles.colCost, styles.tRight)} scope="col">2027년(예상)<br />표준원가</th>
-                        <th className={classnames(styles.colSale, styles.tCenter)} scope="col">수량</th>
-                        <th className={classnames(styles.colSale, styles.tRight)} scope="col">건설사<br />입찰 단가</th>
-                        <th className={classnames(styles.colSale, styles.tRight)} scope="col">대리점<br />마진율</th>
-                        <th className={classnames(styles.colSale, styles.tRight)} scope="col">대리점<br />공급가</th>
-                        <th className={classnames(styles.colSale, styles.tRight)} scope="col">공장도대비<br />할인율(%)</th>
-                        <th className={classnames(styles.colProfit, styles.tRight)} scope="col">매출총이익<br />단가</th>
-                        <th className={classnames(styles.colProfit, styles.tRight)} scope="col">매출이익(%)</th>
-                        <th className={classnames(styles.colProfit, styles.tRight)} scope="col">영업이익<br />단가</th>
-                        <th className={classnames(styles.colProfit, styles.tRight)} scope="col">영업이익(%)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {items.length === 0 ? (
-                        <tr>
-                          <td colSpan={STEP2_TABLE_COLS} className={styles.emptyRow}>데이터가 없습니다.</td>
-                        </tr>
-                      ) : (() => {
-                        const rowsWithDetail = items.filter((row) => getRowDetail(row, true));
-                        if (rowsWithDetail.length === 0) {
-                          return (
-                            <tr key="no-item">
-                              <td colSpan={STEP2_TABLE_COLS} className={styles.emptyRow}>품목을 선택해 주세요.</td>
-                            </tr>
-                          );
-                        }
-                        const toggleDetail = (e, rowId) => {
-                          e.stopPropagation();
-                          setExpandedDetailIds((prev) => {
-                            const next = new Set(prev);
-                            if (next.has(rowId)) next.delete(rowId);
-                            else next.add(rowId);
-                            return next;
-                          });
-                        };
-                        return rowsWithDetail.map((row) => {
-                          const d = getRowDetail(row, true);
-                          if (!d) return null;
-                          const isSelected = selectedRowId === row.id;
-                          const remarkText = d.remark ? String(d.remark).trim() : '';
-                          const unitCodes = Array.isArray(row.unitItemCodes) ? row.unitItemCodes : [];
-                          const hasUnitCodes = row.type === 'SET' && unitCodes.length > 0;
-                          const hasDetail = hasUnitCodes || remarkText;
-                          const isDetailOpen = expandedDetailIds.has(row.id);
-                          const unitCodesStr = unitCodes.join(',');
-                          return (
-                            <React.Fragment key={row.id}>
-                              {/* 데이터 행: 구분~영업이익% 동일 순서 16컬럼 */}
-                              <tr
-                                className={classnames(isSelected && styles.isSelected)}
-                                onClick={() => loadRowIntoForm(row)}
-                                role="button"
-                                tabIndex={0}
-                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadRowIntoForm(row); } }}
-                                aria-pressed={isSelected}
-                              >
-                                <td className={classnames(styles.tLeft, styles.colTypeWithToggles)}>
-                                  {hasDetail && (
-                                    <div className={styles.rowTogglesWrap} onClick={(e) => e.stopPropagation()}>
-                                      <button
-                                        type="button"
-                                        className={styles.remarkToggleBtn}
-                                        onClick={(e) => toggleDetail(e, row.id)}
-                                        title={isDetailOpen ? '자품번·비고 접기' : '자품번·비고 펼치기'}
-                                        aria-expanded={isDetailOpen}
-                                      >
-                                        {isDetailOpen ? '▼' : '▶'}
-                                      </button>
-                                    </div>
-                                  )}
-                                  <span className={classnames(styles.colTypeLabel, hasDetail && styles.colTypeLabelWithToggle)}>{row.type}</span>
-                                </td>
-                                <td className={classnames(styles.tLeft)}>{row.type === 'SET' ? row.itemCode : '-'}</td>
-                                <td className={classnames(styles.tLeft)}>{row.orderType ?? '-'}</td>
-                                <td className={styles.tRight}>{d.factoryPrice.toLocaleString()}</td>
-                                <td className={styles.tRight}>{d.costPerTon ? d.costPerTon.toLocaleString() : '-'}</td>
-                                <td className={styles.tRight}>{d.cost2026.toLocaleString()}</td>
-                                <td className={styles.tRight}>{d.cost2027.toLocaleString()}</td>
-                                <td className={styles.tCenter}>{row.qty}</td>
-                                <td className={styles.tRight}>{d.bidPrice.toLocaleString()}</td>
-                                <td className={styles.tRight}>{d.marginRateDealer}%</td>
-                                <td className={styles.tRight}>{d.dealerPrice.toLocaleString()}</td>
-                                <td className={styles.tRight}>{d.discountRate.toFixed(1)}%</td>
-                                <td className={styles.tRight}>{d.grossProfitPerUnit.toLocaleString()}</td>
-                                <td className={classnames(styles.tRight, d.grossRate >= 15 ? styles.rateGood : d.grossRate >= 10 ? styles.rateMid : styles.rateLow)}>{d.grossRate.toFixed(1)}%</td>
-                                <td className={styles.tRight}>{d.operatingProfitPerUnit.toLocaleString()}</td>
-                                <td className={classnames(styles.tRight, d.operatingRate >= 15 ? styles.rateGood : d.operatingRate >= 10 ? styles.rateMid : styles.rateLow)}>{d.operatingRate.toFixed(1)}%</td>
-                              </tr>
-                              {isDetailOpen && (
-                                <tr className={styles.remarkRow}>
-                                  <td colSpan={STEP2_TABLE_COLS} className={styles.remarkRowCell}>
-                                    <div className={styles.detailRowContent}>
-                                      {hasUnitCodes && <div>자품번 : {unitCodesStr}</div>}
-                                      {(hasUnitCodes || remarkText) && <div>비고 : {remarkText || '\u00A0'}</div>}
-                                    </div>
-                                  </td>
-                                </tr>
-                              )}
-                            </React.Fragment>
-                          );
-                        });
-                      })()}
-                    </tbody>
-                    <tfoot>
-                      <tr className={styles.sumRow}>
-                        <td className={classnames(styles.tLeft, styles.sumCell)}></td>
-                        <td className={classnames(styles.tLeft, styles.sumCell)}></td>
-                        <td className={classnames(styles.tLeft, styles.sumCell)}></td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
-                        <td className={classnames(styles.tCenter, styles.sumCell)}>{items.reduce((s, r) => s + (Number(r.qty) || 0), 0)}</td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}></td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>{items.reduce((s, r) => { const d = getRowDetail(r, true); return s + (d ? d.sales : 0); }, 0).toLocaleString()}</td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}></td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>{items.reduce((s, r) => { const d = getRowDetail(r, true); return s + (d ? d.grossProfit : 0); }, 0).toLocaleString()}</td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>{summary.totalSales > 0 ? `${summary.grossRate.toFixed(1)}%` : '—'}</td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>{items.reduce((s, r) => { const d = getRowDetail(r, true); return s + (d ? d.operatingProfit : 0); }, 0).toLocaleString()}</td>
-                        <td className={classnames(styles.tRight, styles.sumCell)}>{summary.totalSales > 0 ? `${summary.operatingRate.toFixed(1)}%` : '—'}</td>
-                      </tr>
-                    </tfoot>
-                    </table>
+            <div className={styles.step2Container}>
+              {/* ── 현장 요약 보드 (Step1 컨텍스트 유지용) ── */}
+              {(builder || siteName) && (
+                <div style={{ background: '#f0f5ff', border: '1px solid #adc6ff', borderRadius: '8px', padding: '12px 16px', marginBottom: '12px' }}>
+                  <Descriptions
+                    size="small"
+                    column={4}
+                    title={<span style={{ color: '#096dd9', fontSize: '13px', fontWeight: 700 }}>현장 요약 정보</span>}
+                  >
+                    <Descriptions.Item label="건설회사">{builder || '-'}</Descriptions.Item>
+                    <Descriptions.Item label="현장명" span={2}><b>{siteName || '-'}</b></Descriptions.Item>
+                    <Descriptions.Item label="영업담당자">{salesManager || '-'}</Descriptions.Item>
+                    <Descriptions.Item label="수주일자">{specDate || '-'}</Descriptions.Item>
+                    <Descriptions.Item label="예상납기일">{expectedDeliveryDate || '-'}</Descriptions.Item>
+                    <Descriptions.Item label="원가인상율"><span style={{ color: '#cf1322' }}>{costIncreaseRate ? `${costIncreaseRate}%` : '-'}</span></Descriptions.Item>
+                    <Descriptions.Item label="적용세대수">{appliedHouseholds ? `${appliedHouseholds} 세대` : '-'}</Descriptions.Item>
+                  </Descriptions>
                 </div>
-              </div>
-            </div>
-
-            <div className={styles.stepActions}>
-              <Button variant="secondary" onClick={() => setCurrentStep(1)}>이전 단계</Button>
-              <Button variant="primary" onClick={() => setCurrentStep(3)}>다음 단계 (손익 계산)</Button>
-            </div>
-
-            {/* A 영역: 품목 입력/수정 Drawer (우측 슬라이드) */}
-            {drawerOpen && (
-              <>
-                <div className={styles.drawerOverlay} onClick={closeDrawer} aria-hidden />
-                <div className={styles.drawerPanel} role="dialog" aria-label={drawerMode === 'new' ? '품목 추가' : '품목 수정'}>
-                  <div className={styles.drawerHeader}>
-                    <h3 className={styles.drawerTitle}>{drawerMode === 'new' ? '품목 추가' : '품목 수정'}</h3>
-                    <button type="button" className={styles.drawerClose} onClick={closeDrawer} aria-label="닫기">×</button>
-                  </div>
-                  <div className={styles.drawerBody}>
-                    <div className={styles.step2FormWrap}>
-                      <div className={styles.field}>
-                        <label className={styles.label}>구분</label>
-                        <select className={styles.select} value={editForm.type} onChange={(e) => setEditForm((f) => ({ ...f, type: e.target.value, itemCode: '', unitItemCodes: [] }))}>
-                          <option value="SET">SET</option>
-                          <option value="단품">단품</option>
-                        </select>
-                      </div>
-                      <div className={styles.field}>
-                        <label className={styles.label}>SET품번</label>
-                        <select
-                          className={styles.select}
-                          value={editForm.type === 'SET' ? editForm.itemCode : ''}
-                          onChange={(e) => setEditForm((f) => ({ ...f, itemCode: e.target.value }))}
-                          disabled={editForm.type !== 'SET'}
-                        >
-                          <option value="">선택</option>
-                          {setItemOptions.map(({ code, name }) => (
-                            <option key={code} value={code}>{code} · {name}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className={styles.field}>
-                        <label className={styles.label}>자품번</label>
-                        {editForm.type === 'SET' ? (
-                          <div className={styles.unitItemMultiSelect}>
-                            <div className={styles.unitItemChips}>
-                              {(Array.isArray(editForm.unitItemCodes) ? editForm.unitItemCodes : []).map((code) => {
-                                const opt = unitItemOptions.find((o) => o.code === code);
-                                return (
-                                  <span key={code} className={styles.unitItemChip}>
-                                    {opt ? `${code} · ${opt.name}` : code}
-                                    <button type="button" className={styles.unitItemChipRemove} onClick={(e) => { e.stopPropagation(); toggleUnitItem(code); }} aria-label={`${code} 제거`}>×</button>
-                                  </span>
-                                );
-                              })}
-                              {(Array.isArray(editForm.unitItemCodes) ? editForm.unitItemCodes : []).length === 0 && (
-                                <span className={styles.unitItemChipEmpty}>선택된 자품번 없음</span>
-                              )}
-                            </div>
-                            <div className={styles.unitItemCheckboxes} role="group" aria-label="자품번 다중 선택">
-                              {unitItemOptions.map(({ code, name }) => (
-                                <label key={code} className={styles.unitItemCheckLabel}>
-                                  <input
-                                    type="checkbox"
-                                    checked={(Array.isArray(editForm.unitItemCodes) ? editForm.unitItemCodes : []).includes(code)}
-                                    onChange={(e) => { e.stopPropagation(); toggleUnitItem(code); }}
-                                  />
-                                  <span>{code} · {name}</span>
-                                </label>
-                              ))}
-                            </div>
-                          </div>
-                        ) : (
-                          <select className={styles.select} value={editForm.itemCode} onChange={(e) => setEditForm((f) => ({ ...f, itemCode: e.target.value }))}>
-                            <option value="">선택</option>
-                            {unitItemOptions.map(({ code, name }) => (
-                              <option key={code} value={code}>{code} · {name}</option>
-                            ))}
-                          </select>
-                        )}
-                      </div>
-                      <div className={styles.field}>
-                        <label className={styles.label}>품목별 수주유형</label>
-                        <select className={styles.select} value={editForm.orderType} onChange={(e) => setEditForm((f) => ({ ...f, orderType: e.target.value }))}>
-                          {ORDER_TYPE_OPTIONS.map(({ value, label }) => (
-                            <option key={value} value={value}>{label}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className={styles.field}>
-                        <label className={styles.label}>수량</label>
-                        <input type="number" min={1} className={styles.inputNum} value={editForm.qty} onChange={(e) => setEditForm((f) => ({ ...f, qty: e.target.value }))} />
-                      </div>
-                      <div className={styles.field}>
-                        <label className={styles.label}>단가 (건설사 입찰 단가)</label>
-                        <input type="number" min={0} className={styles.inputBidPrice} value={editForm.bidPrice} onChange={(e) => setEditForm((f) => ({ ...f, bidPrice: e.target.value }))} placeholder="건설사 입찰가" />
-                      </div>
-                      <div className={styles.field}>
-                        <label className={styles.label}>대리점 마진율 (%)</label>
-                        <input type="number" min={0} max={100} step={0.1} className={styles.inputNum} value={editForm.marginRateDealer} onChange={(e) => setEditForm((f) => ({ ...f, marginRateDealer: e.target.value }))} placeholder="%" />
-                      </div>
-                      <div className={styles.field}>
-                        <label className={styles.label}>비고</label>
-                        <input type="text" className={styles.input} value={editForm.remark} onChange={(e) => setEditForm((f) => ({ ...f, remark: e.target.value }))} placeholder="비고" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.drawerFooter}>
-                    {drawerMode === 'new' ? (
-                      <>
-                        <Button variant="primary" onClick={handleStep2AddRow}>저장</Button>
-                        <Button variant="secondary" onClick={closeDrawer}>취소</Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button variant="primary" onClick={handleStep2SaveEdit} disabled={!selectedRowId}>수정 저장</Button>
-                        <Button variant="secondary" onClick={closeDrawer}>취소</Button>
-                      </>
-                    )}
-                  </div>
+              )}
+              <div className={styles.step2TableArea}>
+                <div className={styles.step2ActionBar}>
+                  <Button variant="primary" onClick={openDrawerNew}>+ 품목 추가</Button>
+                  <span className={styles.step2ActionHint}>행 클릭 시 수정 가능합니다.</span>
                 </div>
-              </>
-            )}
-          </div>
-          )}
-
-          {/* [STEP 3] 손익 계산 결과 요약 (읽기 전용) */}
-          {currentStep === 3 && (
-          <>
-            {/* STEP 1 내용 (읽기 전용) */}
-            <Card title="[STEP 1] 손익분석 기본 정보" className={styles.sectionCard}>
-              <CardBody>
-                <div className={styles.step1SummaryGrid}>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>스펙구분</div>
-                    <div className={styles.step1SummaryValue}>{specType}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>건설회사</div>
-                    <div className={styles.step1SummaryValue}>{builder || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>현장명</div>
-                    <div className={styles.step1SummaryValue}>{siteName || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>지역</div>
-                    <div className={styles.step1SummaryValue}>{region || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>수주유형</div>
-                    <div className={styles.step1SummaryValue}>{orderType || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>사업분류</div>
-                    <div className={styles.step1SummaryValue}>{businessType || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>영업담당자</div>
-                    <div className={styles.step1SummaryValue}>{salesManager || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>대리점</div>
-                    <div className={styles.step1SummaryValue}>{partnerName || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>비대일체형 진행여부</div>
-                    <div className={styles.step1SummaryValue}>{integratedProgress || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>유상옵션 적용 여부</div>
-                    <div className={styles.step1SummaryValue}>{paidOption || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>총세대수</div>
-                    <div className={styles.step1SummaryValue}>{totalHouseholds || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>적용세대수</div>
-                    <div className={styles.step1SummaryValue}>{appliedHouseholds || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>원가 예상 상승률</div>
-                    <div className={styles.step1SummaryValue}>{costIncreaseRate ? `${costIncreaseRate}%` : '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>SPEC 수주일자</div>
-                    <div className={styles.step1SummaryValue}>{specDate || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>예상납기일</div>
-                    <div className={styles.step1SummaryValue}>{expectedDeliveryDate || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>준공예정일</div>
-                    <div className={styles.step1SummaryValue}>{completionDate || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>ORIGIN SPEC NO</div>
-                    <div className={styles.step1SummaryValue}>{originSpecNo || '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>PDF 첨부</div>
-                    <div className={styles.step1SummaryValue}>{pdfFile ? pdfFile.name : '-'}</div>
-                  </div>
-                  <div className={styles.step1SummaryCard}>
-                    <div className={styles.step1SummaryLabel}>지급수수료 적용</div>
-                    <div className={styles.step1SummaryValue}>{commissionEnabled ? `${commissionFee || 0}원` : '미적용'}</div>
-                  </div>
-                  <div className={classnames(styles.step1SummaryCard, styles.step1SummaryCardFull)}>
-                    <div className={styles.step1SummaryLabel}>비고</div>
-                    <div className={styles.step1SummaryValue}>{remark || '-'}</div>
-                    {items.length > 0 && (
-                      <div className={styles.step1SummaryFooter}>
-                        <span>대리점 납품금액(원): {summary.totalSales.toLocaleString()}</span>
-                        <span>예상 매출총이익률(%): {summary.totalSales > 0 ? `${summary.grossRate.toFixed(1)}%` : '—'}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-
-            {/* STEP 2 테이블 (읽기 전용) */}
-            <Card title="[STEP 2] 납품 품목 구성" className={styles.sectionCard}>
-              <CardBody>
                 <div className={styles.profitTableWrap}>
                   <div className={styles.profitTableScroll}>
                     <table className={styles.profitTable}>
@@ -927,9 +562,9 @@ export function SalesProfitAnalysisNewPage() {
                               </tr>
                             );
                           }
-                          const toggleDetailStep3 = (e, rowId) => {
+                          const toggleDetail = (e, rowId) => {
                             e.stopPropagation();
-                            setExpandedDetailIdsStep3((prev) => {
+                            setExpandedDetailIds((prev) => {
                               const next = new Set(prev);
                               if (next.has(rowId)) next.delete(rowId);
                               else next.add(rowId);
@@ -939,26 +574,35 @@ export function SalesProfitAnalysisNewPage() {
                           return rowsWithDetail.map((row) => {
                             const d = getRowDetail(row, true);
                             if (!d) return null;
+                            const isSelected = selectedRowId === row.id;
                             const remarkText = d.remark ? String(d.remark).trim() : '';
                             const unitCodes = Array.isArray(row.unitItemCodes) ? row.unitItemCodes : [];
                             const hasUnitCodes = row.type === 'SET' && unitCodes.length > 0;
                             const hasDetail = hasUnitCodes || remarkText;
-                            const isDetailOpenStep3 = expandedDetailIdsStep3.has(row.id);
+                            const isDetailOpen = expandedDetailIds.has(row.id);
                             const unitCodesStr = unitCodes.join(',');
                             return (
                               <React.Fragment key={row.id}>
-                                <tr className={styles.readOnlyRow}>
+                                {/* 데이터 행: 구분~영업이익% 동일 순서 16컬럼 */}
+                                <tr
+                                  className={classnames(isSelected && styles.isSelected)}
+                                  onClick={() => loadRowIntoForm(row)}
+                                  role="button"
+                                  tabIndex={0}
+                                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadRowIntoForm(row); } }}
+                                  aria-pressed={isSelected}
+                                >
                                   <td className={classnames(styles.tLeft, styles.colTypeWithToggles)}>
                                     {hasDetail && (
                                       <div className={styles.rowTogglesWrap} onClick={(e) => e.stopPropagation()}>
                                         <button
                                           type="button"
                                           className={styles.remarkToggleBtn}
-                                          onClick={(e) => toggleDetailStep3(e, row.id)}
-                                          title={isDetailOpenStep3 ? '자품번·비고 숨기기' : '자품번·비고 보기'}
-                                          aria-expanded={isDetailOpenStep3}
+                                          onClick={(e) => toggleDetail(e, row.id)}
+                                          title={isDetailOpen ? '자품번·비고 접기' : '자품번·비고 펼치기'}
+                                          aria-expanded={isDetailOpen}
                                         >
-                                          {isDetailOpenStep3 ? '▼' : '▶'}
+                                          {isDetailOpen ? '▼' : '▶'}
                                         </button>
                                       </div>
                                     )}
@@ -980,7 +624,7 @@ export function SalesProfitAnalysisNewPage() {
                                   <td className={styles.tRight}>{d.operatingProfitPerUnit.toLocaleString()}</td>
                                   <td className={classnames(styles.tRight, d.operatingRate >= 15 ? styles.rateGood : d.operatingRate >= 10 ? styles.rateMid : styles.rateLow)}>{d.operatingRate.toFixed(1)}%</td>
                                 </tr>
-                                {hasDetail && isDetailOpenStep3 && (
+                                {isDetailOpen && (
                                   <tr className={styles.remarkRow}>
                                     <td colSpan={STEP2_TABLE_COLS} className={styles.remarkRowCell}>
                                       <div className={styles.detailRowContent}>
@@ -1018,15 +662,403 @@ export function SalesProfitAnalysisNewPage() {
                     </table>
                   </div>
                 </div>
-                <div className={styles.stepActions}>
-                  <Button variant="secondary" onClick={() => setCurrentStep(2)}>이전 단계</Button>
-                  <Button variant="secondary" onClick={() => navigate('/profit')}>취소</Button>
-                  <Button variant="secondary" onClick={handleTempSave}>임시저장</Button>
-                  <Button variant="primary" onClick={handleSubmit}>{isEditMode ? '저장' : '결재상신'}</Button>
+              </div>
+
+              <div className={styles.stepActions}>
+                <Button variant="secondary" onClick={() => setCurrentStep(1)}>이전 단계</Button>
+                <Button variant="primary" onClick={() => setCurrentStep(3)}>다음 단계 (손익 계산)</Button>
+              </div>
+
+              {/* A 영역: 품목 입력/수정 Drawer (우측 슬라이드) */}
+              {drawerOpen && (
+                <>
+                  <div className={styles.drawerOverlay} onClick={closeDrawer} aria-hidden />
+                  <div className={styles.drawerPanel} role="dialog" aria-label={drawerMode === 'new' ? '품목 추가' : '품목 수정'}>
+                    <div className={styles.drawerHeader}>
+                      <h3 className={styles.drawerTitle}>{drawerMode === 'new' ? '품목 추가' : '품목 수정'}</h3>
+                      <button type="button" className={styles.drawerClose} onClick={closeDrawer} aria-label="닫기">×</button>
+                    </div>
+                    <div className={styles.drawerBody}>
+                      <div className={styles.step2FormWrap}>
+                        <div className={styles.field}>
+                          <label className={styles.label}>구분</label>
+                          <select className={styles.select} value={editForm.type} onChange={(e) => setEditForm((f) => ({ ...f, type: e.target.value, itemCode: '', unitItemCodes: [] }))}>
+                            <option value="SET">SET</option>
+                            <option value="단품">단품</option>
+                          </select>
+                        </div>
+                        <div className={styles.field}>
+                          <label className={styles.label}>SET품번</label>
+                          <select
+                            className={styles.select}
+                            value={editForm.type === 'SET' ? editForm.itemCode : ''}
+                            onChange={(e) => setEditForm((f) => ({ ...f, itemCode: e.target.value }))}
+                            disabled={editForm.type !== 'SET'}
+                          >
+                            <option value="">선택</option>
+                            {setItemOptions.map(({ code, name }) => (
+                              <option key={code} value={code}>{code} · {name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className={styles.field}>
+                          <label className={styles.label}>자품번</label>
+                          {editForm.type === 'SET' ? (
+                            <div className={styles.unitItemMultiSelect}>
+                              <div className={styles.unitItemChips}>
+                                {(Array.isArray(editForm.unitItemCodes) ? editForm.unitItemCodes : []).map((code) => {
+                                  const opt = unitItemOptions.find((o) => o.code === code);
+                                  return (
+                                    <span key={code} className={styles.unitItemChip}>
+                                      {opt ? `${code} · ${opt.name}` : code}
+                                      <button type="button" className={styles.unitItemChipRemove} onClick={(e) => { e.stopPropagation(); toggleUnitItem(code); }} aria-label={`${code} 제거`}>×</button>
+                                    </span>
+                                  );
+                                })}
+                                {(Array.isArray(editForm.unitItemCodes) ? editForm.unitItemCodes : []).length === 0 && (
+                                  <span className={styles.unitItemChipEmpty}>선택된 자품번 없음</span>
+                                )}
+                              </div>
+                              <div className={styles.unitItemCheckboxes} role="group" aria-label="자품번 다중 선택">
+                                {unitItemOptions.map(({ code, name }) => (
+                                  <label key={code} className={styles.unitItemCheckLabel}>
+                                    <input
+                                      type="checkbox"
+                                      checked={(Array.isArray(editForm.unitItemCodes) ? editForm.unitItemCodes : []).includes(code)}
+                                      onChange={(e) => { e.stopPropagation(); toggleUnitItem(code); }}
+                                    />
+                                    <span>{code} · {name}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <select className={styles.select} value={editForm.itemCode} onChange={(e) => setEditForm((f) => ({ ...f, itemCode: e.target.value }))}>
+                              <option value="">선택</option>
+                              {unitItemOptions.map(({ code, name }) => (
+                                <option key={code} value={code}>{code} · {name}</option>
+                              ))}
+                            </select>
+                          )}
+                        </div>
+                        <div className={styles.field}>
+                          <label className={styles.label}>품목별 수주유형</label>
+                          <select className={styles.select} value={editForm.orderType} onChange={(e) => setEditForm((f) => ({ ...f, orderType: e.target.value }))}>
+                            {ORDER_TYPE_OPTIONS.map(({ value, label }) => (
+                              <option key={value} value={value}>{label}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className={styles.field}>
+                          <label className={styles.label}>수량</label>
+                          <input type="number" min={1} className={styles.inputNum} value={editForm.qty} onChange={(e) => setEditForm((f) => ({ ...f, qty: e.target.value }))} />
+                        </div>
+                        <div className={styles.field}>
+                          <label className={styles.label}>단가 (건설사 입찰 단가)</label>
+                          <input type="number" min={0} className={styles.inputBidPrice} value={editForm.bidPrice} onChange={(e) => setEditForm((f) => ({ ...f, bidPrice: e.target.value }))} placeholder="건설사 입찰가" />
+                        </div>
+                        <div className={styles.field}>
+                          <label className={styles.label}>대리점 마진율 (%)</label>
+                          <input type="number" min={0} max={100} step={0.1} className={styles.inputNum} value={editForm.marginRateDealer} onChange={(e) => setEditForm((f) => ({ ...f, marginRateDealer: e.target.value }))} placeholder="%" />
+                        </div>
+                        <div className={styles.field}>
+                          <label className={styles.label}>비고</label>
+                          <input type="text" className={styles.input} value={editForm.remark} onChange={(e) => setEditForm((f) => ({ ...f, remark: e.target.value }))} placeholder="비고" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.drawerFooter}>
+                      {drawerMode === 'new' ? (
+                        <>
+                          <Button variant="primary" onClick={handleStep2AddRow}>저장</Button>
+                          <Button variant="secondary" onClick={closeDrawer}>취소</Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button variant="primary" onClick={handleStep2SaveEdit} disabled={!selectedRowId}>수정 저장</Button>
+                          <Button variant="secondary" onClick={closeDrawer}>취소</Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* [STEP 3] 손익 계산 결과 요약 (읽기 전용) */}
+          {currentStep === 3 && (
+            <>
+              {/* ── 현장 요약 보드 (Step1 컨텍스트 유지용) ── */}
+              {(builder || siteName) && (
+                <div style={{ background: '#f0f5ff', border: '1px solid #adc6ff', borderRadius: '8px', padding: '12px 16px', marginBottom: '16px' }}>
+                  <Descriptions
+                    size="small"
+                    column={4}
+                    title={<span style={{ color: '#096dd9', fontSize: '13px', fontWeight: 700 }}>현장 요약 정보</span>}
+                  >
+                    <Descriptions.Item label="건설회사">{builder || '-'}</Descriptions.Item>
+                    <Descriptions.Item label="현장명" span={2}><b>{siteName || '-'}</b></Descriptions.Item>
+                    <Descriptions.Item label="영업담당자">{salesManager || '-'}</Descriptions.Item>
+                    <Descriptions.Item label="수주일자">{specDate || '-'}</Descriptions.Item>
+                    <Descriptions.Item label="예상납기일">{expectedDeliveryDate || '-'}</Descriptions.Item>
+                    <Descriptions.Item label="원가인상율"><span style={{ color: '#cf1322' }}>{costIncreaseRate ? `${costIncreaseRate}%` : '-'}</span></Descriptions.Item>
+                    <Descriptions.Item label="적용세대수">{appliedHouseholds ? `${appliedHouseholds} 세대` : '-'}</Descriptions.Item>
+                  </Descriptions>
                 </div>
-              </CardBody>
-            </Card>
-          </>
+              )}
+              {/* STEP 1 내용 (읽기 전용) */}
+              <Card title="[STEP 1] 손익분석 기본 정보" className={styles.sectionCard}>
+                <CardBody>
+                  <div className={styles.step1SummaryGrid}>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>스펙구분</div>
+                      <div className={styles.step1SummaryValue}>{specType}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>건설회사</div>
+                      <div className={styles.step1SummaryValue}>{builder || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>현장명</div>
+                      <div className={styles.step1SummaryValue}>{siteName || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>지역</div>
+                      <div className={styles.step1SummaryValue}>{region || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>수주유형</div>
+                      <div className={styles.step1SummaryValue}>{orderType || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>사업분류</div>
+                      <div className={styles.step1SummaryValue}>{businessType || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>영업담당자</div>
+                      <div className={styles.step1SummaryValue}>{salesManager || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>대리점</div>
+                      <div className={styles.step1SummaryValue}>{partnerName || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>비대일체형 진행여부</div>
+                      <div className={styles.step1SummaryValue}>{integratedProgress || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>유상옵션 적용 여부</div>
+                      <div className={styles.step1SummaryValue}>{paidOption || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>총세대수</div>
+                      <div className={styles.step1SummaryValue}>{totalHouseholds || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>적용세대수</div>
+                      <div className={styles.step1SummaryValue}>{appliedHouseholds || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>원가 예상 상승률</div>
+                      <div className={styles.step1SummaryValue}>{costIncreaseRate ? `${costIncreaseRate}%` : '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>SPEC 수주일자</div>
+                      <div className={styles.step1SummaryValue}>{specDate || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>예상납기일</div>
+                      <div className={styles.step1SummaryValue}>{expectedDeliveryDate || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>준공예정일</div>
+                      <div className={styles.step1SummaryValue}>{completionDate || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>ORIGIN SPEC NO</div>
+                      <div className={styles.step1SummaryValue}>{originSpecNo || '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>PDF 첨부</div>
+                      <div className={styles.step1SummaryValue}>{pdfFile ? pdfFile.name : '-'}</div>
+                    </div>
+                    <div className={styles.step1SummaryCard}>
+                      <div className={styles.step1SummaryLabel}>지급수수료 적용</div>
+                      <div className={styles.step1SummaryValue}>{commissionEnabled ? `${commissionFee || 0}원` : '미적용'}</div>
+                    </div>
+                    <div className={classnames(styles.step1SummaryCard, styles.step1SummaryCardFull)}>
+                      <div className={styles.step1SummaryLabel}>비고</div>
+                      <div className={styles.step1SummaryValue}>{remark || '-'}</div>
+                      {items.length > 0 && (
+                        <div className={styles.step1SummaryFooter}>
+                          <span>대리점 납품금액(원): {summary.totalSales.toLocaleString()}</span>
+                          <span>예상 매출총이익률(%): {summary.totalSales > 0 ? `${summary.grossRate.toFixed(1)}%` : '—'}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+
+              {/* STEP 2 테이블 (읽기 전용) */}
+              <Card title="[STEP 2] 납품 품목 구성" className={styles.sectionCard}>
+                <CardBody>
+                  <div className={styles.profitTableWrap}>
+                    <div className={styles.profitTableScroll}>
+                      <table className={styles.profitTable}>
+                        <colgroup>
+                          <col style={{ width: '6%' }} />
+                          <col style={{ width: '8%' }} />
+                          <col style={{ width: '8%' }} />
+                          <col style={{ width: '6%' }} />
+                          <col style={{ width: '6%' }} />
+                          <col style={{ width: '7%' }} />
+                          <col style={{ width: '7%' }} />
+                          <col style={{ width: '3.5%' }} />
+                          <col style={{ width: '7%' }} />
+                          <col style={{ width: '5%' }} />
+                          <col style={{ width: '7%' }} />
+                          <col style={{ width: '5.5%' }} />
+                          <col style={{ width: '7%' }} />
+                          <col style={{ width: '5.5%' }} />
+                          <col style={{ width: '7%' }} />
+                          <col style={{ width: '6%' }} />
+                        </colgroup>
+                        <thead>
+                          <tr className={styles.colHeader}>
+                            <th className={classnames(styles.colBasic, styles.tLeft)} scope="col">구분</th>
+                            <th className={classnames(styles.colBasic, styles.tLeft)} scope="col">SET품번</th>
+                            <th className={classnames(styles.colBasic, styles.tLeft)} scope="col">품목별<br />수주유형</th>
+                            <th className={classnames(styles.colCost, styles.tRight)} scope="col">공장도가</th>
+                            <th className={classnames(styles.colCost, styles.tRight)} scope="col">톤당단가</th>
+                            <th className={classnames(styles.colCost, styles.tRight)} scope="col">2026년(현재)<br />표준원가</th>
+                            <th className={classnames(styles.colCost, styles.tRight)} scope="col">2027년(예상)<br />표준원가</th>
+                            <th className={classnames(styles.colSale, styles.tCenter)} scope="col">수량</th>
+                            <th className={classnames(styles.colSale, styles.tRight)} scope="col">건설사<br />입찰 단가</th>
+                            <th className={classnames(styles.colSale, styles.tRight)} scope="col">대리점<br />마진율</th>
+                            <th className={classnames(styles.colSale, styles.tRight)} scope="col">대리점<br />공급가</th>
+                            <th className={classnames(styles.colSale, styles.tRight)} scope="col">공장도대비<br />할인율(%)</th>
+                            <th className={classnames(styles.colProfit, styles.tRight)} scope="col">매출총이익<br />단가</th>
+                            <th className={classnames(styles.colProfit, styles.tRight)} scope="col">매출이익(%)</th>
+                            <th className={classnames(styles.colProfit, styles.tRight)} scope="col">영업이익<br />단가</th>
+                            <th className={classnames(styles.colProfit, styles.tRight)} scope="col">영업이익(%)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {items.length === 0 ? (
+                            <tr>
+                              <td colSpan={STEP2_TABLE_COLS} className={styles.emptyRow}>데이터가 없습니다.</td>
+                            </tr>
+                          ) : (() => {
+                            const rowsWithDetail = items.filter((row) => getRowDetail(row, true));
+                            if (rowsWithDetail.length === 0) {
+                              return (
+                                <tr key="no-item">
+                                  <td colSpan={STEP2_TABLE_COLS} className={styles.emptyRow}>품목을 선택해 주세요.</td>
+                                </tr>
+                              );
+                            }
+                            const toggleDetailStep3 = (e, rowId) => {
+                              e.stopPropagation();
+                              setExpandedDetailIdsStep3((prev) => {
+                                const next = new Set(prev);
+                                if (next.has(rowId)) next.delete(rowId);
+                                else next.add(rowId);
+                                return next;
+                              });
+                            };
+                            return rowsWithDetail.map((row) => {
+                              const d = getRowDetail(row, true);
+                              if (!d) return null;
+                              const remarkText = d.remark ? String(d.remark).trim() : '';
+                              const unitCodes = Array.isArray(row.unitItemCodes) ? row.unitItemCodes : [];
+                              const hasUnitCodes = row.type === 'SET' && unitCodes.length > 0;
+                              const hasDetail = hasUnitCodes || remarkText;
+                              const isDetailOpenStep3 = expandedDetailIdsStep3.has(row.id);
+                              const unitCodesStr = unitCodes.join(',');
+                              return (
+                                <React.Fragment key={row.id}>
+                                  <tr className={styles.readOnlyRow}>
+                                    <td className={classnames(styles.tLeft, styles.colTypeWithToggles)}>
+                                      {hasDetail && (
+                                        <div className={styles.rowTogglesWrap} onClick={(e) => e.stopPropagation()}>
+                                          <button
+                                            type="button"
+                                            className={styles.remarkToggleBtn}
+                                            onClick={(e) => toggleDetailStep3(e, row.id)}
+                                            title={isDetailOpenStep3 ? '자품번·비고 숨기기' : '자품번·비고 보기'}
+                                            aria-expanded={isDetailOpenStep3}
+                                          >
+                                            {isDetailOpenStep3 ? '▼' : '▶'}
+                                          </button>
+                                        </div>
+                                      )}
+                                      <span className={classnames(styles.colTypeLabel, hasDetail && styles.colTypeLabelWithToggle)}>{row.type}</span>
+                                    </td>
+                                    <td className={classnames(styles.tLeft)}>{row.type === 'SET' ? row.itemCode : '-'}</td>
+                                    <td className={classnames(styles.tLeft)}>{row.orderType ?? '-'}</td>
+                                    <td className={styles.tRight}>{d.factoryPrice.toLocaleString()}</td>
+                                    <td className={styles.tRight}>{d.costPerTon ? d.costPerTon.toLocaleString() : '-'}</td>
+                                    <td className={styles.tRight}>{d.cost2026.toLocaleString()}</td>
+                                    <td className={styles.tRight}>{d.cost2027.toLocaleString()}</td>
+                                    <td className={styles.tCenter}>{row.qty}</td>
+                                    <td className={styles.tRight}>{d.bidPrice.toLocaleString()}</td>
+                                    <td className={styles.tRight}>{d.marginRateDealer}%</td>
+                                    <td className={styles.tRight}>{d.dealerPrice.toLocaleString()}</td>
+                                    <td className={styles.tRight}>{d.discountRate.toFixed(1)}%</td>
+                                    <td className={styles.tRight}>{d.grossProfitPerUnit.toLocaleString()}</td>
+                                    <td className={classnames(styles.tRight, d.grossRate >= 15 ? styles.rateGood : d.grossRate >= 10 ? styles.rateMid : styles.rateLow)}>{d.grossRate.toFixed(1)}%</td>
+                                    <td className={styles.tRight}>{d.operatingProfitPerUnit.toLocaleString()}</td>
+                                    <td className={classnames(styles.tRight, d.operatingRate >= 15 ? styles.rateGood : d.operatingRate >= 10 ? styles.rateMid : styles.rateLow)}>{d.operatingRate.toFixed(1)}%</td>
+                                  </tr>
+                                  {hasDetail && isDetailOpenStep3 && (
+                                    <tr className={styles.remarkRow}>
+                                      <td colSpan={STEP2_TABLE_COLS} className={styles.remarkRowCell}>
+                                        <div className={styles.detailRowContent}>
+                                          {hasUnitCodes && <div>자품번 : {unitCodesStr}</div>}
+                                          {(hasUnitCodes || remarkText) && <div>비고 : {remarkText || '\u00A0'}</div>}
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  )}
+                                </React.Fragment>
+                              );
+                            });
+                          })()}
+                        </tbody>
+                        <tfoot>
+                          <tr className={styles.sumRow}>
+                            <td className={classnames(styles.tLeft, styles.sumCell)}></td>
+                            <td className={classnames(styles.tLeft, styles.sumCell)}></td>
+                            <td className={classnames(styles.tLeft, styles.sumCell)}></td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
+                            <td className={classnames(styles.tCenter, styles.sumCell)}>{items.reduce((s, r) => s + (Number(r.qty) || 0), 0)}</td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>—</td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}></td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>{items.reduce((s, r) => { const d = getRowDetail(r, true); return s + (d ? d.sales : 0); }, 0).toLocaleString()}</td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}></td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>{items.reduce((s, r) => { const d = getRowDetail(r, true); return s + (d ? d.grossProfit : 0); }, 0).toLocaleString()}</td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>{summary.totalSales > 0 ? `${summary.grossRate.toFixed(1)}%` : '—'}</td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>{items.reduce((s, r) => { const d = getRowDetail(r, true); return s + (d ? d.operatingProfit : 0); }, 0).toLocaleString()}</td>
+                            <td className={classnames(styles.tRight, styles.sumCell)}>{summary.totalSales > 0 ? `${summary.operatingRate.toFixed(1)}%` : '—'}</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                  <div className={styles.stepActions}>
+                    <Button variant="secondary" onClick={() => setCurrentStep(2)}>이전 단계</Button>
+                    <Button variant="secondary" onClick={() => navigate('/profit')}>취소</Button>
+                    <Button variant="secondary" onClick={handleTempSave}>임시저장</Button>
+                    <Button variant="primary" onClick={handleSubmit}>{isEditMode ? '저장' : '결재상신'}</Button>
+                  </div>
+                </CardBody>
+              </Card>
+            </>
           )}
         </div>
       </div>

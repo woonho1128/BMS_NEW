@@ -1,0 +1,84 @@
+/* ProductDetailPanel.css */
+.detail-panel-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.detail-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.detail-panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+/* Ant Design Tabs Customization within Panel */
+.detail-panel-content .ant-tabs-nav {
+    margin: 0 !important;
+    padding: 0 24px;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-panel-content .ant-tabs-content {
+    padding: 24px;
+}
+
+/* Tab Inner Sections */
+.tab-inner-section {
+    margin-bottom: 32px;
+}
+
+.section-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.form-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-item label {
+    font-size: 12px;
+    color: #8c8c8c;
+}
+
+.form-item .ant-input,
+.form-item .ant-select,
+.form-item .ant-input-number {
+    width: 100%;
+}
