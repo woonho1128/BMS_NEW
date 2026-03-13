@@ -9,12 +9,82 @@
 }
 
 .filterBar {
-    padding: 16px;
+    padding: 16px 24px;
     background: #fff;
     border-bottom: 1px solid #f0f0f0;
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.filterGroup {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.filterItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filterLabel {
+    font-weight: 600;
+    font-size: 14px;
+    color: #262626;
+}
+
+.selectInput {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #d9d9d9;
+    font-size: 14px;
+    color: #262626;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.selectInput:hover {
+    border-color: #40a9ff;
+}
+
+.selectInput:focus {
+    border-color: #40a9ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.summaryGroup {
+    display: flex;
+    align-items: center;
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 8px 24px;
+    gap: 24px;
+}
+
+.summaryCard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.summaryTitle {
+    font-size: 13px;
+    color: #8c8c8c;
+}
+
+.summaryValue {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1890ff;
+}
+
+.summaryDivider {
+    width: 1px;
+    height: 24px;
+    background-color: #e8e8e8;
 }
 
 .tableWrapper {

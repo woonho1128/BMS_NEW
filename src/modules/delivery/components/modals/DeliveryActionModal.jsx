@@ -1,7 +1,6 @@
-import React from 'react';
 import styles from './DeliveryActionModal.module.css';
 
-export const DeliveryActionModal = ({ row, onClose, onPartial, onComplete }) => {
+export const DeliveryActionModal = ({ row, onClose, onPartial, onComplete, onCancel }) => {
     if (!row) return null;
 
     return (
@@ -43,6 +42,20 @@ export const DeliveryActionModal = ({ row, onClose, onPartial, onComplete }) => 
                             <div className={styles.btnText}>
                                 <span className={styles.btnTitle}>납품 완료</span>
                                 <span className={styles.btnDesc}>모든 물량이 납품되었음을<br />확인하고 완료 처리합니다.</span>
+                            </div>
+                        </button>
+
+                        <button
+                            className={`${styles.actionButton} ${styles.cancelButton}`}
+                            onClick={() => {
+                                onCancel(row);
+                                onClose();
+                            }}
+                        >
+                            <div className={styles.icon}>❌</div>
+                            <div className={styles.btnText}>
+                                <span className={styles.btnTitle}>납품 취소</span>
+                                <span className={styles.btnDesc}>해당 납품 계획을<br />취소 처리합니다.</span>
                             </div>
                         </button>
                     </div>

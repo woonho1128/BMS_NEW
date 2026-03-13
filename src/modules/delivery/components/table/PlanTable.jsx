@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './PlanTable.module.css';
 import { PLAN_COLUMNS } from '../../data/planDummyData';
 
-export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick }) => {
+export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick, hideManage = false }) => {
     const [expandedRows, setExpandedRows] = useState({});
 
     const toggleRow = (rowId) => {
@@ -11,6 +11,44 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick }) => {
             [rowId]: !prev[rowId]
         }));
     };
+
+    // Sorting State & Logic
+    const [sortConfig, setSortConfig] = useState(null);
+
+    const requestSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        } else if (sortConfig && sortConfig.key === key && sortConfig.direction === 'desc') {
+            setSortConfig(null);
+            return;
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const sortedRows = useMemo(() => {
+        if (!sortConfig) return rows;
+        const sorted = [...rows];
+        sorted.sort((a, b) => {
+            const aValue = a[sortConfig.key];
+            const bValue = b[sortConfig.key];
+
+            if (aValue === bValue) return 0;
+            if (aValue === null || aValue === undefined) return 1;
+            if (bValue === null || bValue === undefined) return -1;
+
+            if (typeof aValue === 'string') {
+                return sortConfig.direction === 'asc' 
+                    ? String(aValue).localeCompare(String(bValue)) 
+                    : String(bValue).localeCompare(String(aValue));
+            }
+
+            if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+        return sorted;
+    }, [rows, sortConfig]);
 
     // Helper to format numbers with commas
     const formatNumber = (val) => {
@@ -23,6 +61,7 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick }) => {
         if (status === '진행') badgeClass = styles.badgeProgress;
         else if (status === '부분납품') badgeClass = styles.badgePartial;
         else if (status === '완료') badgeClass = styles.badgeComplete;
+        else if (status === '취소') badgeClass = styles.badgeCancel;
 
         return <span className={`${styles.badge} ${badgeClass}`}>{status}</span>;
     };
@@ -35,18 +74,36 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick }) => {
                 </colgroup>
                 <thead>
                     <tr>
-                        <th className={styles.th}></th>{PLAN_COLUMNS.map(col => <th key={col.key} className={styles.th}>{col.label}</th>)}<th className={styles.th}>관리</th>
+                        <th className={styles.th}></th>
+                        {PLAN_COLUMNS.map(col => (
+                            <th 
+                                key={col.key} 
+                                className={`${styles.th} ${styles.sortableHeader}`}
+                                onClick={() => requestSort(col.key)}
+                                title={`${col.label} 정렬`}
+                            >
+                                <div className={styles.thContent}>
+                                    {col.label}
+                                    <span className={styles.sortIndicator}>
+                                        {sortConfig?.key === col.key 
+                                            ? (sortConfig.direction === 'asc' ? '▲' : '▼') 
+                                            : '↕'}
+                                    </span>
+                                </div>
+                            </th>
+                        ))}
+                        {!hideManage && <th className={styles.th}>관리</th>}
                     </tr>
                 </thead>
                 <tbody>
-                    {rows.map(row => {
-                        const isCompleted = row.status === '완료';
+                    {sortedRows.map(row => {
+                        const isCompleted = row.status === '완료' || row.status === '취소';
                         const isExpanded = expandedRows[row.id];
 
                         return (
                             <React.Fragment key={row.id}>
                                 <tr
-                                    className={`${styles.tr} ${isCompleted ? styles.trCompleted : ''} ${row.isChanged ? styles.trChanged : ''}`}
+                                    className={`${styles.tr} ${isCompleted && !hideManage ? styles.trCompleted : ''} ${row.isChanged ? styles.trChanged : ''}`}
                                 >
                                     {/* Chevron Cell */}
                                     <td
@@ -60,7 +117,7 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick }) => {
 
                                     {/* Data Cells */}
                                     {PLAN_COLUMNS.map(col => {
-                                        const isEditable = !isCompleted && ['deliveryDate', 'moveInDate', 'qty'].includes(col.key);
+                                        const isEditable = !isCompleted && ['deliveryDate', 'qty'].includes(col.key);
                                         const value = row[col.key];
                                         let displayValue = value;
 
@@ -86,18 +143,36 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick }) => {
                                             <td key={`${row.id}-${col.key}`} className={styles.td} style={{ textAlign: col.align || 'left' }}>
                                                 {isEditable ? (
                                                     <input
-                                                        type={col.key.includes('Date') ? 'date' : 'text'}
+                                                        type={col.key === 'deliveryDate' ? 'month' : col.key.includes('Date') ? 'date' : 'text'}
                                                         className={styles.input}
-                                                        value={value}
-                                                        onChange={(e) => { }}
+                                                        defaultValue={value}
+                                                        key={`${row.id}-${col.key}-${value}`}
                                                         onKeyDown={(e) => {
                                                             if (e.key === 'Enter') {
-                                                                onCellChange(row, col.label, value, e.target.value);
+                                                                if (!e.target.value) {
+                                                                    e.target.value = value;
+                                                                } else if (e.target.value !== value) {
+                                                                    onCellChange(row, col.label, value, e.target.value);
+                                                                }
+                                                                e.target.blur();
+                                                            }
+                                                            if (e.key === 'Escape') {
+                                                                e.target.value = value;
+                                                                e.target.blur();
                                                             }
                                                         }}
                                                         onBlur={(e) => {
-                                                            if (e.target.value != value) {
+                                                            if (!e.target.value) {
+                                                                e.target.value = value;
+                                                                return;
+                                                            }
+                                                            if (e.target.value !== value) {
                                                                 onCellChange(row, col.label, value, e.target.value);
+                                                            }
+                                                        }}
+                                                        onClick={(e) => {
+                                                            if (e.target.showPicker) {
+                                                                e.target.showPicker();
                                                             }
                                                         }}
                                                     />
@@ -109,23 +184,25 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick }) => {
                                     })}
 
                                     {/* Actions */}
-                                    <td className={styles.td} style={{ textAlign: 'center' }}>
-                                        {!isCompleted && (
-                                            <button
-                                                className={`${styles.actionButton} ${styles.manageButton}`}
-                                                onClick={() => onAction(row)}
-                                            >
-                                                관리
-                                            </button>
-                                        )}
-                                        {isCompleted && renderStatusBadge(row.status)}
-                                    </td>
+                                    {!hideManage && (
+                                        <td className={styles.td} style={{ textAlign: 'center' }}>
+                                            {!isCompleted && (
+                                                <button
+                                                    className={`${styles.actionButton} ${styles.manageButton}`}
+                                                    onClick={() => onAction(row)}
+                                                >
+                                                    관리
+                                                </button>
+                                            )}
+                                            {isCompleted && renderStatusBadge(row.status)}
+                                        </td>
+                                    )}
                                 </tr>
 
                                 {/* Accordion Content Row */}
                                 {isExpanded && (
                                     <tr>
-                                        <td colSpan={PLAN_COLUMNS.length + 2} className={styles.expandedRow}>
+                                        <td colSpan={PLAN_COLUMNS.length + (hideManage ? 1 : 2)} className={styles.expandedRow}>
                                             <div className={styles.expandedContent}>
                                                 {/* Detailed Info Section */}
                                                 <div className={styles.expandedSection}>
@@ -133,8 +210,9 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick }) => {
                                                     <div className={styles.detailText}>
                                                         <span className={styles.detailLabel}>색상:</span> {row.color || '-'}, &nbsp;
                                                         <span className={styles.detailLabel}>단위 중량:</span> {row.weight}kg, &nbsp;
-                                                        <span className={styles.detailLabel}>총 중량:</span> {formatNumber(row.totalWeightKg)}kg
-                                                        {/* User asked for Color, Weight, Total Weight. Ton is not explicitly asked for but could be added if needed. Keeping it simple as per request. */}
+                                                        <span className={styles.detailLabel}>총 중량:</span> {formatNumber(row.totalWeightKg)}kg, &nbsp;
+                                                        <span className={styles.detailLabel}>입주예정:</span> {row.moveInDate || '-'}, &nbsp;
+                                                        <span className={styles.detailLabel}>구분:</span> {row.category || '-'}
                                                     </div>
                                                 </div>
 

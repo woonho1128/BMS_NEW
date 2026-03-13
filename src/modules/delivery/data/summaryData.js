@@ -116,6 +116,7 @@ export const ITEM_CODE_DATA = {
             m1: 100, m2: 120, m3: 110, m4: 105, m5: 115, m6: 125,
             m7: 100, m8: 120, m9: 110, m10: 105, m11: 115, m12: 125,
             total: 1350,
+            category: '위생도기',
             isHighlighted: true, // Specific item highlight
             itemName: '일체형양변기',
         },
@@ -127,29 +128,33 @@ export const ITEM_CODE_DATA = {
             m1: 50, m2: 60, m3: 55, m4: 52, m5: 57, m6: 62,
             m7: 50, m8: 60, m9: 55, m10: 52, m11: 57, m12: 62,
             total: 672,
+            category: '위생도기',
             isHighlighted: true,
             itemName: '일체형양변기',
         },
-        // CLR999 (Normal)
-        {
-            id: 'i2_qty',
-            groupKey: 'CLR999',
-            keyLabel: 'CLR999',
-            metricLabel: '수량',
-            m1: 50, m2: 50, m3: 50, m4: 50, m5: 50, m6: 50,
-            m7: 50, m8: 50, m9: 50, m10: 50, m11: 50, m12: 50,
-            total: 600,
-            itemName: '비데일체형',
-        },
-        {
-            id: 'i2_amt',
-            groupKey: 'CLR999',
-            keyLabel: 'CLR999',
-            metricLabel: '금액',
-            m1: 10, m2: 10, m3: 10, m4: 10, m5: 10, m6: 10,
-            m7: 10, m8: 10, m9: 10, m10: 10, m11: 10, m12: 10,
-            total: 120,
-        },
+        ...Array.from({ length: 20 }, (_, i) => [
+            {
+                id: `i_dummy${i}_qty`,
+                groupKey: `DUMMY${i + 100}`,
+                keyLabel: `DUMMY${i + 100}`,
+                metricLabel: '수량',
+                m1: 10, m2: 10, m3: 10, m4: 10, m5: 10, m6: 10,
+                m7: 10, m8: 10, m9: 10, m10: 10, m11: 10, m12: 10,
+                total: 120,
+                category: ['위생도기', 'oem', '상품', '수전', '비데'][i % 5],
+                itemName: `테스트품목${i + 1}`,
+            },
+            {
+                id: `i_dummy${i}_amt`,
+                groupKey: `DUMMY${i + 100}`,
+                keyLabel: `DUMMY${i + 100}`,
+                metricLabel: '금액',
+                m1: 5, m2: 5, m3: 5, m4: 5, m5: 5, m6: 5,
+                m7: 5, m8: 5, m9: 5, m10: 5, m11: 5, m12: 5,
+                total: 60,
+                category: ['위생도기', 'oem', '상품', '수전', '비데'][i % 5],
+            }
+        ]).flat(),
     ],
 };
 
@@ -176,6 +181,7 @@ export const ITEM_NAME_DATA = {
             m1: 500, m2: 520, m3: 510, m4: 505, m5: 515, m6: 525,
             m7: 500, m8: 520, m9: 510, m10: 505, m11: 515, m12: 525,
             total: 6150,
+            category: '위생도기',
             isHighlighted: true,
         },
         {
@@ -186,8 +192,31 @@ export const ITEM_NAME_DATA = {
             m1: 100, m2: 104, m3: 102, m4: 101, m5: 103, m6: 105,
             m7: 100, m8: 104, m9: 102, m10: 101, m11: 103, m12: 105,
             total: 1230,
+            category: '위생도기',
             isHighlighted: true,
         },
+        ...Array.from({ length: 20 }, (_, i) => [
+            {
+                id: `n_dummy${i}_qty`,
+                groupKey: `테스트품목${i + 1}`,
+                keyLabel: `테스트품목${i + 1}`,
+                metricLabel: '수량',
+                m1: 20, m2: 20, m3: 20, m4: 20, m5: 20, m6: 20,
+                m7: 20, m8: 20, m9: 20, m10: 20, m11: 20, m12: 20,
+                total: 240,
+                category: ['위생도기', 'oem', '상품', '수전', '비데'][i % 5],
+            },
+            {
+                id: `n_dummy${i}_amt`,
+                groupKey: `테스트품목${i + 1}`,
+                keyLabel: `테스트품목${i + 1}`,
+                metricLabel: '금액',
+                m1: 10, m2: 10, m3: 10, m4: 10, m5: 10, m6: 10,
+                m7: 10, m8: 10, m9: 10, m10: 10, m11: 10, m12: 10,
+                total: 120,
+                category: ['위생도기', 'oem', '상품', '수전', '비데'][i % 5],
+            }
+        ]).flat(),
     ],
 };
 

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import styles from '../../pages/DeliveryPlanPage.module.css'; // Shared styles
-import { WorkSnapshotAccordion } from '../snapshot/WorkSnapshotAccordion';
+
+// styles removed as it was unused in DeliveryPlan itself
+import { ModificationPeriod } from '../snapshot/ModificationPeriod';
 import { PlanFilterBar } from '../filters/PlanFilterBar';
 import { PlanTable } from '../table/PlanTable';
 import { PartialDeliveryModal } from '../modals/PartialDeliveryModal';
@@ -9,9 +9,7 @@ import { DetailModal } from '../modals/DetailModal';
 import { SummaryModal } from '../modals/SummaryModal'; // Replaces SummarySlidePanel
 import { DeliveryActionModal } from '../modals/DeliveryActionModal'; // New Import
 
-// import { INITIAL_PLAN_ROWS, PLAN_SNAPSHOTS } from '../../data/planDummyData'; // INITIAL_PLAN_ROWS removed
-import { PLAN_SNAPSHOTS } from '../../data/planDummyData';
-
+// PLAN_SNAPSHOTS removed
 import { usePlanFilter } from '../../hooks/usePlanFilter';
 import { useModal } from '../../hooks/useModal';
 import { calculateSummary } from '../../utils/summaryUtils';
@@ -22,15 +20,14 @@ import { calculateSummary } from '../../utils/summaryUtils';
  * Uses custom hooks for state management (filters, modals).
  */
 export const DeliveryPlan = ({ rows, setRows }) => {
-    // const [rows, setRows] = useState(INITIAL_PLAN_ROWS); // Lifted up
-    const [selectedSnapshot, setSelectedSnapshot] = useState(PLAN_SNAPSHOTS[0].id);
-
-    // Custom Hooks
+    // Lifted up if needed, but no longer tracking selectedSnapshot here    // Custom Hooks
     const {
         isExpanded: isFilterExpanded,
         setIsExpanded: setIsFilterExpanded,
         showBidetsOnly,
         setShowBidetsOnly,
+        remarksSearch,
+        setRemarksSearch,
         filteredRows
     } = usePlanFilter(rows);
 
@@ -63,6 +60,11 @@ export const DeliveryPlan = ({ rows, setRows }) => {
         handleComplete(row);
     };
 
+    const handleActionCancel = (row) => {
+        actionModal.close();
+        handleCancel(row);
+    };
+
     // 2. Partial Delivery Logic
     const handleSavePartial = (rowId, qty, date) => {
         setRows(prevRows => prevRows.map(row => {
@@ -93,6 +95,15 @@ export const DeliveryPlan = ({ rows, setRows }) => {
         }
     };
 
+    // 4. Cancel Logic
+    const handleCancel = (row) => {
+        if (window.confirm('납품 계획을 취소하시겠습니까?')) {
+            setRows(prevRows => prevRows.map(r =>
+                r.id === row.id ? { ...r, status: '취소' } : r
+            ));
+        }
+    };
+
     // 4. Cell Edit (History Trigger)
     const handleCellChange = (row, fieldLabel, oldValue, newValue) => {
         if (oldValue == newValue) return;
@@ -117,13 +128,15 @@ export const DeliveryPlan = ({ rows, setRows }) => {
 
                 if (!key) return row;
 
+                const oldVal = historyModal.data?.oldValue || '';
+
                 return {
                     ...row,
                     [key]: newValue,
                     isChanged: true,
                     changeHistory: [
                         ...(row.changeHistory || []),
-                        { field, oldValue, newValue, reason, date: new Date().toISOString() }
+                        { field, oldValue: oldVal, newValue, reason, date: new Date().toISOString() }
                     ]
                 };
             }
@@ -137,20 +150,12 @@ export const DeliveryPlan = ({ rows, setRows }) => {
         detailModal.open(row);
     };
 
-    // 6. Summary Modal Trigger
-    const handleOpenSummary = (type) => {
-        summaryModal.open(type); // Store type in data
-    };
+    // Summary Modal Trigger is still available if triggered from elsewhere, otherwise no longer used by Accordion
+    // Keeping the modal itself just in case it's used by other parts, removing just the unused handler instance.
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <WorkSnapshotAccordion
-                snapshotMonth={selectedSnapshot}
-                onMonthChange={setSelectedSnapshot}
-                onCreateSnapshot={() => console.log('Create Snapshot')}
-                onSave={() => console.log('Save Snapshot')}
-                onOpenSummary={handleOpenSummary}
-            />
+            <ModificationPeriod />
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <PlanFilterBar
@@ -158,6 +163,8 @@ export const DeliveryPlan = ({ rows, setRows }) => {
                     onToggleExpand={() => setIsFilterExpanded(!isFilterExpanded)}
                     showBidetsOnly={showBidetsOnly}
                     onBidetFilterChange={setShowBidetsOnly}
+                    remarksSearch={remarksSearch}
+                    onRemarksSearchChange={setRemarksSearch}
                 />
 
                 <div style={{
@@ -191,6 +198,7 @@ export const DeliveryPlan = ({ rows, setRows }) => {
                     onClose={actionModal.close}
                     onPartial={handleActionPartial}
                     onComplete={handleActionComplete}
+                    onCancel={handleActionCancel}
                 />
             )}
 

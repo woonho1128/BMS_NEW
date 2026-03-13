@@ -8,20 +8,35 @@ import { useState, useMemo } from 'react';
 export const usePlanFilter = (rows) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [showBidetsOnly, setShowBidetsOnly] = useState(false);
+    const [remarksSearch, setRemarksSearch] = useState('');
 
     const filteredRows = useMemo(() => {
-        if (!showBidetsOnly) return rows;
-        return rows.filter(row =>
-            (row.item1 && row.item1.includes('비데')) ||
-            (row.item2 && row.item2.includes('비데'))
-        );
-    }, [rows, showBidetsOnly]);
+        let result = rows;
+
+        if (showBidetsOnly) {
+            result = result.filter(row =>
+                (row.item1 && row.item1.includes('비데')) ||
+                (row.item2 && row.item2.includes('비데'))
+            );
+        }
+
+        if (remarksSearch.trim() !== '') {
+            const keyword = remarksSearch.toLowerCase().trim();
+            result = result.filter(row => 
+                row.memo && row.memo.toLowerCase().includes(keyword)
+            );
+        }
+
+        return result;
+    }, [rows, showBidetsOnly, remarksSearch]);
 
     return {
         isExpanded,
         setIsExpanded,
         showBidetsOnly,
         setShowBidetsOnly,
+        remarksSearch,
+        setRemarksSearch,
         filteredRows
     };
 };

@@ -4,24 +4,24 @@ export const PLAN_SNAPSHOTS = [
 ];
 
 export const PLAN_COLUMNS = [
-    { key: 'company', label: '건설회사', width: 80 },
-    { key: 'site', label: '현장명', width: 200, isLink: true }, // Added flag for styling/interaction
-    { key: 'agency', label: '대리점', width: 80 },
-    { key: 'deliveryDate', label: '납품예정', width: 70, align: 'center' },
-    { key: 'moveInDate', label: '입주예정', width: 70, align: 'center' },
-    { key: 'item1', label: '품목', width: 90 },
+    { key: 'company', label: '건설회사', width: 83, align: 'center' },
+    { key: 'site', label: '현장명', width: 241, isLink: true }, // Added flag for styling/interaction
+    { key: 'agency', label: '대리점', width: 80, align: 'center' },
+    { key: 'deliveryDate', label: '납품예정', width: 49, align: 'center' },
+    // { key: 'moveInDate', label: '입주예정', width: 110, align: 'center' }, // Moved to Expanded View
+    { key: 'item1', label: '품번', width: 93, align: 'center' },
     // { key: 'color', label: '색상', width: 80, align: 'center' }, // Moved to Expanded View
     { key: 'qty', label: '수량', width: 60, align: 'right' },
     { key: 'agencyPrice', label: '대리점가', width: 80, align: 'right' },
-    { key: 'totalWeightKg', label: '총무게(KG)', width: 80, align: 'right' }, // Added back
+    { key: 'totalWeightTon', label: '총무게(TON)', width: 80, align: 'right' }, // Added back
     // { key: 'weight', label: '중량(KG)', width: 80, align: 'right' }, // Moved to Expanded View
-    // { key: 'totalWeightTon', label: '총무게(TON)', width: 100, align: 'right' }, // Moved to Expanded View
+    // { key: 'totalWeightKg', label: '총무게(KG)', width: 100, align: 'right' }, // Moved to Expanded View
     { key: 'amount', label: '금액', width: 100, align: 'right' },
     { key: 'spec', label: '특수사양', width: 100 },
     // { key: 'memo', label: '비고', width: 150 }, // REMOVED from Grid
     { key: 'manager', label: '담당자', width: 80, align: 'center' },
-    { key: 'item2', label: '품목', width: 100 },
-    { key: 'category', label: '구분', width: 80, align: 'center' },
+    { key: 'item2', label: '품목', width: 100, align: 'center' },
+    // { key: 'category', label: '구분', width: 80, align: 'center' }, // Moved to Expanded View
     { key: 'specManager', label: 'SPEC담당', width: 80, align: 'center' },
 ];
 
@@ -40,25 +40,27 @@ const generateRows = () => {
 
     // 1. In Progress (10 items)
     for (let i = 1; i <= 10; i++) {
+        const item = items[i % items.length];
         let rowData = {
             id: i,
             company: companies[i % companies.length],
-            site: `현장 ${i}`,
+            site: `테스트 현장 ${i}`,
             agency: agencies[i % agencies.length],
             deliveryDate: `2026-03-${String(i).padStart(2, '0')}`,
             moveInDate: `2026-05-${String(i).padStart(2, '0')}`,
-            item1: items[i % items.length].name,
-            color: i % 2 === 0 ? '화이트' : '아이보리',
-            qty: (i * 10) + 50,
-            agencyPrice: items[i % items.length].price,
-            weight: items[i % items.length].weight,
-            spec: i % 3 === 0 ? '절수형' : '일반',
-            memo: i % 2 === 0 ? "현장 진입로 협소하여 소형차량 배차 요망." : "",
-            manager: `담당자${i}`,
-            item2: "도기",
-            category: i % 2 === 0 ? "리테일" : "특판",
-            specManager: `SPEC${i}`,
+            item1: item.name,
+            color: '기타컬러 (주문제작)',
+            qty: 1500,
+            agencyPrice: item.price,
+            weight: item.weight,
+            spec: '분리형',
+            memo: "최초 등록",
+            manager: `영업대표${i}`,
+            item2: "비데",
+            category: "특판",
+            specManager: `스펙관리${i}`,
             status: "진행",
+            source: i % 2 === 0 ? 'spec' : 'plan', // Add dummy sources alternated
             changeHistory: [],
             partialHistory: []
         };
@@ -140,7 +142,6 @@ const generateRows = () => {
     // 2. Partial Delivery (5 items)
     for (let i = 11; i <= 15; i++) {
         const item = items[i % items.length];
-        const originalQty = 200;
         const currentQty = 100;
 
         rows.push({
@@ -495,6 +496,32 @@ export const COMPLETED_DELIVERY_DATA = [
         item1: '세면대',
         item2: '도기'
     },
+    ...Array.from({ length: 20 }, (_, i) => ({
+        id: `cd_dummy_${i}`,
+        company: ['DL건설', '현대건설', 'GS건설', '포스코건설', '대우건설'][i % 5],
+        site: `테스트 납품 완료 현장 ${i + 1}`,
+        agency: ['서울대리점', '경기대리점', '부산대리점', '인천대리점', '광주대리점'][i % 5],
+        completedMonth: `2026-${String((i % 3) + 1).padStart(2, '0')}`,
+        deliveryDate: `2026-${String((i % 3) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
+        item: ['일체형양변기', '비데일체형', '세면대', '수전'][i % 4],
+        color: '화이트',
+        qty: (i + 1) * 10,
+        price: 150000,
+        weight: 20,
+        totalWeightKg: (i + 1) * 200,
+        totalWeightTon: ((i + 1) * 200) / 1000,
+        amount: (i + 1) * 10 * 150000,
+        spec: '일반',
+        manager: `영업대표${i % 5}`,
+        category: ['특판', '리테일', '특판', '특판', '리테일'][i % 5],
+        specManager: `스펙담당${i % 3}`,
+        memo: `더미 데이터 ${i + 1}`,
+        moveInDate: `2026-06-01`,
+        agencyPrice: 150000,
+        status: '완료',
+        item1: ['일체형양변기', '비데일체형', '세면대', '수전'][i % 4],
+        item2: '도기'
+    }))
 ];
 
 export const YEARLY_PERFORMANCE_DATA = {

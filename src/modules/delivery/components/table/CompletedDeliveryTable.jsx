@@ -40,53 +40,65 @@ export const CompletedDeliveryTable = ({ rows, onSiteClick }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {rows.map(row => (
-                        <React.Fragment key={row.id}>
-                            <tr className={`${tableStyles.tr} ${expandedRows[row.id] ? tableStyles.expanded : ''}`}>
-                                <td className={tableStyles.td} style={{ textAlign: 'center' }}>
-                                    <button
-                                        className={tableStyles.expandButton}
-                                        onClick={(e) => { e.stopPropagation(); toggleRow(row.id); }}
+                    {rows.length === 0 ? (
+                        <tr>
+                            <td colSpan={18} className={tableStyles.emptyState}>
+                                데이터가 없습니다.
+                            </td>
+                        </tr>
+                    ) : (
+                        rows.map(row => (
+                            <React.Fragment key={row.id}>
+                                <tr className={tableStyles.tr}>
+                                    {/* Chevron Cell */}
+                                    <td
+                                        className={`${tableStyles.td} ${tableStyles.chevronCell}`}
+                                        onClick={() => toggleRow(row.id)}
                                     >
-                                        {expandedRows[row.id] ? '▼' : '▶'}
-                                    </button>
-                                </td>
-                                <td className={tableStyles.td}>{row.company}</td>
-                                <td className={tableStyles.td}>
-                                    <span
-                                        className={tableStyles.link}
-                                        onClick={() => onSiteClick(row)}
-                                    >
-                                        {row.site}
-                                    </span>
-                                </td>
-                                <td className={tableStyles.td}>{row.agency}</td>
-                                <td className={tableStyles.td}>{row.completedMonth}</td>
-                                <td className={tableStyles.td}>{row.deliveryDate ? row.deliveryDate.substring(0, 7) : '-'}</td>
-                                <td className={tableStyles.td}>{row.item}</td>
-                                <td className={tableStyles.td}>{row.color}</td>
-                                <td className={tableStyles.td} style={{ textAlign: 'right' }}>{formatNumber(row.qty)}</td>
-                                <td className={tableStyles.td} style={{ textAlign: 'right' }}>{formatNumber(row.price)}</td>
-                                <td className={tableStyles.td} style={{ textAlign: 'right' }}>{formatNumber(row.weight)}</td>
-                                <td className={tableStyles.td} style={{ textAlign: 'right' }}>{formatNumber(row.totalWeightKg)}</td>
-                                <td className={tableStyles.td} style={{ textAlign: 'right' }}>{row.totalWeightTon}</td>
-                                <td className={tableStyles.td} style={{ textAlign: 'right', fontWeight: 'bold' }}>{formatNumber(row.amount)}</td>
-                                <td className={tableStyles.td}>{row.spec}</td>
-                                <td className={tableStyles.td}>{row.manager}</td>
-                                <td className={tableStyles.td}>{row.category}</td>
-                                <td className={tableStyles.td}>{row.specManager}</td>
-                            </tr>
-                            {expandedRows[row.id] && (
-                                <tr className={tableStyles.detailTr}>
-                                    <td colSpan={18} className={tableStyles.detailTd}>
-                                        <div className={tableStyles.detailContent}>
-                                            <strong>비고:</strong> {row.memo || '내용 없음'}
-                                        </div>
+                                        <span className={`${tableStyles.chevronIcon} ${expandedRows[row.id] ? tableStyles.expanded : ''}`}>
+                                            ▶
+                                        </span>
                                     </td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.company}</td>
+                                    <td className={tableStyles.td}>
+                                        <span
+                                            className={tableStyles.link}
+                                            onClick={() => onSiteClick(row)}
+                                        >
+                                            {row.site}
+                                        </span>
+                                    </td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.agency}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.completedMonth}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.deliveryDate ? row.deliveryDate.substring(0, 7) : '-'}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.item}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.color}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'right' }}>{formatNumber(row.qty)}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'right' }}>{formatNumber(row.price)}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'right' }}>{formatNumber(row.weight)}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'right' }}>{formatNumber(row.totalWeightKg)}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'right' }}>{row.totalWeightTon}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'right', fontWeight: 'bold' }}>{formatNumber(row.amount)}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.spec}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.manager}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.category}</td>
+                                    <td className={tableStyles.td} style={{ textAlign: 'center' }}>{row.specManager}</td>
                                 </tr>
-                            )}
-                        </React.Fragment>
-                    ))}
+                                {expandedRows[row.id] && (
+                                    <tr className={tableStyles.expandedRow}>
+                                        <td colSpan={18}>
+                                            <div className={tableStyles.expandedContent}>
+                                                <div className={tableStyles.expandedSection}>
+                                                    <div className={tableStyles.expandedTitle}>비고</div>
+                                                    <div className={tableStyles.expandedText}>{row.memo || '내용 없음'}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

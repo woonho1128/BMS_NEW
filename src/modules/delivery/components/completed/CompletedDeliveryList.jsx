@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { CompletedDeliveryTable } from '../table/CompletedDeliveryTable';
+import { useState } from 'react';
+import { PlanTable } from '../table/PlanTable';
 import { YearlyPerformanceModal } from '../modals/YearlyPerformanceModal';
 import { DetailModal } from '../modals/DetailModal';
 import { COMPLETED_DELIVERY_DATA } from '../../data/planDummyData'; // Import mock data
@@ -28,45 +28,54 @@ export const CompletedDeliveryList = () => {
     return (
         <div className={styles.container}>
             {/* Top Bar */}
-            <div className={styles.filterBar} style={{ padding: '16px', background: '#fff', borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontWeight: 600 }}>납품완료월:</span>
+            <div className={styles.filterBar}>
+                <div className={styles.filterGroup}>
+                    <div className={styles.filterItem}>
+                        <span className={styles.filterLabel}>납품완료월</span>
                         <select
+                            className={styles.selectInput}
                             value={filterMonth}
                             onChange={(e) => setFilterMonth(e.target.value)}
-                            style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid #d9d9d9' }}
                         >
                             <option value="">전체</option>
-                            <option value="2026-01">2026-01</option>
-                            <option value="2026-02">2026-02</option>
-                            <option value="2026-03">2026-03</option>
+                            <option value="2026-01">2026.01</option>
+                            <option value="2026-02">2026.02</option>
+                            <option value="2026-03">2026.03</option>
                         </select>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '16px', background: '#f5f5f5', padding: '8px 16px', borderRadius: '4px' }}>
-                        <div>총 수량: <strong>{summary.qty.toLocaleString()}</strong></div>
-                        <div style={{ width: '1px', background: '#d9d9d9' }}></div>
-                        <div>총 TON: <strong>{summary.ton.toFixed(1)}</strong></div>
-                        <div style={{ width: '1px', background: '#d9d9d9' }}></div>
-                        <div>총 금액: <strong>{(summary.amount / 1000000).toLocaleString()} 백만원</strong></div>
+                    <div className={styles.summaryGroup}>
+                        <div className={styles.summaryCard}>
+                            <span className={styles.summaryTitle}>총 수량</span>
+                            <span className={styles.summaryValue}>{summary.qty.toLocaleString()}</span>
+                        </div>
+                        <div className={styles.summaryDivider}></div>
+                        <div className={styles.summaryCard}>
+                            <span className={styles.summaryTitle}>총 TON</span>
+                            <span className={styles.summaryValue}>{summary.ton.toFixed(1)}</span>
+                        </div>
+                        <div className={styles.summaryDivider}></div>
+                        <div className={styles.summaryCard}>
+                            <span className={styles.summaryTitle}>총 금액</span>
+                            <span className={styles.summaryValue}>{(summary.amount / 1000000).toLocaleString()} 백만원</span>
+                        </div>
                     </div>
                 </div>
 
                 <button
                     className={styles.primaryButton}
                     onClick={() => setYearModalOpen(true)}
-                    style={{ background: '#722ed1', borderColor: '#722ed1' }} // Purple accent
                 >
                     연도별 실적 보기
                 </button>
             </div>
 
             {/* Table */}
-            <div className={styles.tableWrapper} style={{ flex: 1, overflow: 'hidden' }}>
-                <CompletedDeliveryTable
+            <div className={styles.tableWrapper}>
+                <PlanTable
                     rows={filteredRows}
                     onSiteClick={handleSiteClick}
+                    hideManage={true}
                 />
             </div>
 

@@ -30,6 +30,17 @@
     cursor: pointer;
 }
 
+.monthInput {
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    font-size: 14px;
+    min-width: 150px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
 /* Summary Cards */
 .summaryContainer {
     display: flex;
@@ -71,6 +82,33 @@
 }
 
 /* Table */
+.tableTopBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.searchBox {
+    display: flex;
+    align-items: center;
+}
+
+.searchInput {
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 250px;
+}
+
+.searchInput:focus {
+    border-color: #1890ff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
 .tableContainer {
     border: 1px solid #f0f0f0;
     border-radius: 8px;

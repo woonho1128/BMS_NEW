@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './SummaryDetailModal.module.css';
 import { SummaryTable } from '../table/SummaryTable';
@@ -10,9 +10,9 @@ const modalRoot = document.getElementById('modal-root') || document.body;
 export const SummaryDetailModal = ({ isOpen, initialMode = 'itemCode', onClose }) => {
     const [activeTab, setActiveTab] = useState(initialMode);
     const [selectedYear, setSelectedYear] = useState(DEFAULT_YEAR);
+    const [selectedCategory, setSelectedCategory] = useState('전체');
 
     // Autocomplete State
-    const [selectedTargets, setSelectedTargets] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [debouncedKeyword, setDebouncedKeyword] = useState('');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -26,9 +26,9 @@ export const SummaryDetailModal = ({ isOpen, initialMode = 'itemCode', onClose }
         if (isOpen) {
             setActiveTab(initialMode);
             setSelectedYear(DEFAULT_YEAR);
+            setSelectedCategory('전체');
             setKeyword('');
             setDebouncedKeyword('');
-            setSelectedTargets([]);
             setIsDropdownOpen(false);
         }
     }, [isOpen, initialMode]);
@@ -37,9 +37,17 @@ export const SummaryDetailModal = ({ isOpen, initialMode = 'itemCode', onClose }
     useEffect(() => {
         setKeyword('');
         setDebouncedKeyword('');
-        setSelectedTargets([]);
         setIsDropdownOpen(false);
     }, [activeTab]);
+
+    // Determine Source Data based on Tab
+    const sourceData = activeTab === 'itemCode' ? ITEM_CODE_DATA : ITEM_NAME_DATA;
+
+    // Filter Rows for Table based on Category
+    const filteredRows = useMemo(() => {
+        if (selectedCategory === '전체') return sourceData.rows;
+        return sourceData.rows.filter(row => row.category === selectedCategory);
+    }, [sourceData, selectedCategory]);
 
     // Handle ESC key and Body Overflow
     useEffect(() => {
@@ -88,9 +96,6 @@ export const SummaryDetailModal = ({ isOpen, initialMode = 'itemCode', onClose }
         return () => clearTimeout(timer);
     }, [keyword]);
 
-    // Determine Source Data based on Tab
-    const sourceData = activeTab === 'itemCode' ? ITEM_CODE_DATA : ITEM_NAME_DATA;
-
     // Extract Unique Search Options
     const allOptions = useMemo(() => {
         const map = new Map();
@@ -114,12 +119,11 @@ export const SummaryDetailModal = ({ isOpen, initialMode = 'itemCode', onClose }
         const lowerTerm = debouncedKeyword.toLowerCase().trim();
         return allOptions
             .filter(opt =>
-                !selectedTargets.includes(opt.value) && // Exclude already selected
-                (opt.value.toLowerCase().includes(lowerTerm) ||
-                    opt.extraSearch.toLowerCase().includes(lowerTerm))
+                opt.value.toLowerCase().includes(lowerTerm) ||
+                opt.extraSearch.toLowerCase().includes(lowerTerm)
             )
             .slice(0, 10); // Max 10 items
-    }, [allOptions, debouncedKeyword, selectedTargets]);
+    }, [allOptions, debouncedKeyword]);
 
     // Autocomplete Handlers
     const handleInputChange = (e) => {
@@ -128,27 +132,22 @@ export const SummaryDetailModal = ({ isOpen, initialMode = 'itemCode', onClose }
     };
 
     const handleSelect = (option) => {
-        setSelectedTargets(prev => [...prev, option.value]);
-        setKeyword(''); // Clear input
+        setKeyword(option.label); // Optional: set keyword to what they picked
         setIsDropdownOpen(false);
-        if (inputRef.current) inputRef.current.focus();
-    };
-
-    const handleRemoveTag = (value) => {
-        setSelectedTargets(prev => prev.filter(v => v !== value));
-    };
-
-    // Filter Rows for Table
-    const filteredRows = useMemo(() => {
-        if (selectedTargets.length === 0) return [];
-        return sourceData.rows.filter(row => selectedTargets.includes(row.groupKey));
-    }, [sourceData, selectedTargets]);
-
-    // Get display label for tag
-    const getLabel = (value) => {
-        const opt = allOptions.find(o => o.value === value);
-        if (!opt) return value;
-        return opt.extraSearch ? `${opt.label} (${opt.extraSearch})` : opt.label;
+        
+        // Scroll to the selected group in the table
+        const rowId = `row-${option.value}`;
+        const targetElement = document.getElementById(rowId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Add a brief highlight effect
+            targetElement.style.transition = 'background-color 0.5s';
+            const originalBg = targetElement.style.backgroundColor;
+            targetElement.style.backgroundColor = '#e6f7ff';
+            setTimeout(() => {
+                targetElement.style.backgroundColor = originalBg;
+            }, 2000);
+        }
     };
 
     if (!isOpen) return null;
@@ -195,6 +194,20 @@ export const SummaryDetailModal = ({ isOpen, initialMode = 'itemCode', onClose }
                         </select>
                     </div>
 
+                    <div className={styles.filterItem}>
+                        <span className={styles.label}>카테고리</span>
+                        <select
+                            className={styles.select}
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                            style={{ minWidth: '100px' }}
+                        >
+                            {['전체', '위생도기', 'oem', '상품', '수전', '비데'].map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
+                    </div>
+
                     <div className={styles.filterItem} style={{ flex: 1 }}>
                         <span className={styles.label}>
                             {activeTab === 'itemCode' ? '품번 검색 (품명 검색 가능)' : '품목 검색'}
@@ -232,21 +245,6 @@ export const SummaryDetailModal = ({ isOpen, initialMode = 'itemCode', onClose }
                                 </div>
                             )}
                         </div>
-
-                        {/* Selected Tags */}
-                        <div className={styles.tagContainer}>
-                            {selectedTargets.map(target => (
-                                <div key={target} className={styles.tag}>
-                                    {getLabel(target)}
-                                    <span
-                                        className={styles.tagClose}
-                                        onClick={() => handleRemoveTag(target)}
-                                    >
-                                        ×
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
                     </div>
                 </div>
 
@@ -260,18 +258,6 @@ export const SummaryDetailModal = ({ isOpen, initialMode = 'itemCode', onClose }
                         rows={filteredRows}
                         loading={false}
                     />
-                    {filteredRows.length === 0 && (
-                        <div style={{
-                            padding: '40px',
-                            textAlign: 'center',
-                            color: '#8c8c8c',
-                            backgroundColor: '#fafafa',
-                            borderRadius: '8px',
-                            marginTop: '20px'
-                        }}>
-                            검색하여 항목을 선택해주세요.
-                        </div>
-                    )}
                 </div>
 
                 {/* Footer */}

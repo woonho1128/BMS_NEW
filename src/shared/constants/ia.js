@@ -123,7 +123,6 @@ const MAIN = [
         label: '대리점 지원',
         children: [
           { id: 'partner-notice', label: '공지/자료실', path: '/partner/notice', icon: Megaphone },
-          { id: 'partner-catalog', label: '카탈로그', path: '/partner/catalog' },
           { id: 'partner-as', label: 'AS 접수', path: '/partner/as' },
         ],
       },

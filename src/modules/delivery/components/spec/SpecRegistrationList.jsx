@@ -73,6 +73,7 @@ export const SpecRegistrationList = ({ rows, setRows }) => {
                     memo: item.memo,
 
                     status: '진행',
+                    source: 'spec', // Indicates added from "스펙 추가"
                     partialHistory: [],
                     changeHistory: []
                 });

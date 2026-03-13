@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
 import styles from './PlanFilterBar.module.css';
 
 export const PlanFilterBar = ({
     showBidetsOnly,
     onBidetFilterChange,
     isExpanded,
-    onToggleExpand
+    onToggleExpand,
+    remarksSearch,
+    onRemarksSearchChange
 }) => {
     // If props are not provided (e.g. usage in other parents without state), use local state fallback?
     // User requested changes in DeliveryPlanPage context, so we'll control it from there.
@@ -57,9 +58,9 @@ export const PlanFilterBar = ({
                     <div className={styles.row}>
                         <div className={styles.inputGroup}>
                             <span className={styles.label}>납품예정</span>
-                            <input type="date" className={styles.input} />
+                            <input type="month" className={styles.input} />
                             <span>~</span>
-                            <input type="date" className={styles.input} />
+                            <input type="month" className={styles.input} />
                         </div>
                         <div className={styles.inputGroup}>
                             <span className={styles.label}>입주예정</span>
@@ -76,7 +77,19 @@ export const PlanFilterBar = ({
                                 <option value="완료">완료</option>
                             </select>
                         </div>
-                        <label className={styles.checkboxLabel}>
+                        <div className={styles.inputGroup} style={{ marginLeft: '12px' }}>
+                            <span className={styles.label}>비고</span>
+                            <input 
+                                type="text" 
+                                className={styles.input} 
+                                style={{ width: '200px' }}
+                                placeholder="비고 검색" 
+                                value={remarksSearch || ''}
+                                onChange={(e) => onRemarksSearchChange?.(e.target.value)}
+                            />
+                        </div>
+
+                        <label className={styles.checkboxLabel} style={{ marginLeft: '12px' }}>
                             <input type="checkbox" />
                             일정변경만
                         </label>

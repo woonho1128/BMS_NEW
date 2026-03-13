@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ROUTES } from '../../../router/routePaths';
 import { classnames } from '../../../shared/utils/classnames';
@@ -13,10 +13,12 @@ const TAB_ALL = 'all';
 const TAB_NOTICE = 'notice';
 const TAB_PROMO = 'promo';
 const TAB_WORK = 'work';
+const TAB_CATALOG = 'catalog';
 
 const TYPE_NOTICE = 'notice';
 const TYPE_PROMO = 'promo';
 const TYPE_WORK = 'work';
+const TYPE_CATALOG = 'catalog';
 
 /** 목업 리스트 데이터 */
 const MOCK_ITEMS = [
@@ -27,6 +29,8 @@ const MOCK_ITEMS = [
   { id: '5', type: TYPE_PROMO, title: '시즌 프로모션 가이드', date: '2024-12-15', hasAttachment: true },
   { id: '6', type: TYPE_WORK, title: '정산 자료 제출 요령', date: '2024-12-01', hasAttachment: true },
   { id: '7', type: TYPE_NOTICE, title: '시스템 점검 안내', date: '2024-11-28', hasAttachment: false },
+  { id: '8', type: TYPE_CATALOG, title: '2025 종합 카탈로그 (e-book)', date: '2025-01-20', hasAttachment: true },
+  { id: '9', type: TYPE_CATALOG, title: '수전/도기 신제품 카탈로그', date: '2025-01-18', hasAttachment: true },
 ];
 
 /** 상세용 목업 (본문, 작성자, 첨부파일) */
@@ -66,6 +70,16 @@ const MOCK_DETAIL = {
     author: '시스템관리팀',
     attachments: [],
   },
+  '8': {
+    body: '2025년 최신 종합 카탈로그입니다. 대리점 영업 활동에 참고해 주세요.',
+    author: '마케팅팀',
+    attachments: [{ name: '2025_종합_카탈로그.pdf', url: '#' }],
+  },
+  '9': {
+    body: '수전 및 도기 카테고리 신제품 카탈로그입니다.',
+    author: '마케팅팀',
+    attachments: [{ name: '신제품_카탈로그_수전도기.pdf', url: '#' }],
+  },
 };
 
 function getTypeLabel(type) {
@@ -76,6 +90,8 @@ function getTypeLabel(type) {
       return '자료';
     case TYPE_WORK:
       return '자료';
+    case TYPE_CATALOG:
+      return '카탈로그';
     default:
       return type;
   }
@@ -87,6 +103,8 @@ function getTypeBadgeLabel(type) {
       return '홍보자료';
     case TYPE_WORK:
       return '업무자료';
+    case TYPE_CATALOG:
+      return '종합카탈로그';
     default:
       return null;
   }
@@ -109,6 +127,7 @@ export function PartnerNoticePage() {
     { key: TAB_NOTICE, label: '공지사항' },
     { key: TAB_PROMO, label: '홍보자료' },
     { key: TAB_WORK, label: '업무자료' },
+    { key: TAB_CATALOG, label: '카탈로그' },
   ];
 
   const handleDetail = (row) => {

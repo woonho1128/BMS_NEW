@@ -14,7 +14,7 @@
 .modal {
     background-color: #fff;
     border-radius: 8px;
-    width: 500px;
+    width: 600px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
@@ -88,6 +88,11 @@
 .completeButton:hover {
     border-color: #52c41a;
     background-color: #f6ffed;
+}
+
+.cancelButton:hover {
+    border-color: #ff4d4f;
+    background-color: #fff2f0;
 }
 
 .icon {

@@ -92,7 +92,6 @@ import { CreditCollateralPage } from '../modules/finance/pages/CreditCollateralP
 
 // ── 대리점 포털
 import { PartnerNoticePage } from '../modules/partner/pages/PartnerNoticePage';
-import { PartnerCatalogPage } from '../modules/partner/pages/PartnerCatalogPage';
 import { PartnerDeliveryPage } from '../modules/partner/pages/PartnerDeliveryPage';
 import { PartnerBasicInfoPage } from '../modules/partner/pages/PartnerBasicInfoPage';
 import { PartnerOrderPage } from '../modules/partner/pages/PartnerOrderPage';
@@ -180,7 +179,7 @@ function PublicOnlyRoute({ children }) {
  */
 export function Router() {
   return (
-    <BrowserRouter basename="/BMS_NEW">
+    <BrowserRouter>
       <Routes>
         {/* 권한 없음 */}
         <Route path={ROUTES.FORBIDDEN} element={<NoAccess />} />
@@ -284,7 +283,6 @@ export function Router() {
 
           {/* ── 대리점 포털 ── */}
           <Route path={toRelative(ROUTES.PARTNER_NOTICE)} element={<PartnerNoticePage />} />
-          <Route path={toRelative(ROUTES.PARTNER_CATALOG)} element={<PartnerCatalogPage />} />
           <Route path={toRelative(ROUTES.PARTNER_ORDER)} element={<PartnerOrderPage />} />
           <Route path={toRelative(ROUTES.PARTNER_ORDER_PRODUCT)} element={<PartnerProductOrderPage />} />
           <Route path={toRelative(ROUTES.PARTNER_ORDER_LIST)} element={<PartnerOrderListPage />} />

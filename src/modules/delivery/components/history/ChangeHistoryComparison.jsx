@@ -1,13 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import styles from './ChangeHistoryComparison.module.css';
-import { MOCKED_COMPARISON_DATA, PLAN_SNAPSHOTS } from '../../data/planDummyData';
+import { MOCKED_COMPARISON_DATA } from '../../data/planDummyData';
 
 import { DetailModal } from '../modals/DetailModal';
 
 export const ChangeHistoryComparison = () => {
-    // Mock State: In real app, these would come from props or API
-    const [snapshotA, setSnapshotA] = useState(PLAN_SNAPSHOTS[0]?.id || '2026.01');
-    const [snapshotB, setSnapshotB] = useState(PLAN_SNAPSHOTS[1]?.id || '2026.02');
+    // Current month for summary
+    const [summaryMonth, setSummaryMonth] = useState('2026-03');
+    
+    // Filters for table
+    const [searchTerm, setSearchTerm] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     const [expandedRows, setExpandedRows] = useState([]);
 
     // Detail Modal State
@@ -30,11 +34,49 @@ export const ChangeHistoryComparison = () => {
         setDetailModalOpen(true);
     };
 
-    // Calculate Stats
-    const totalChanges = rows.length;
-    const scheduleChanges = rows.filter(r => r.prevDeliveryDate !== r.currDeliveryDate).length;
-    const qtyChanges = rows.filter(r => r.prevQty !== r.currQty).length;
-    const amtChanges = rows.filter(r => r.prevAmt !== r.currAmt).length;
+    // Calculate Stats for Current Month
+    const summaryRows = useMemo(() => 
+        rows.filter(r => r.changedAt.startsWith(summaryMonth.replace('-', '.'))),
+    [rows, summaryMonth]);
+
+    const totalChanges = summaryRows.length;
+    const scheduleChanges = summaryRows.filter(r => r.prevDeliveryDate !== r.currDeliveryDate).length;
+    const qtyChanges = summaryRows.filter(r => r.prevQty !== r.currQty).length;
+    const amtChanges = summaryRows.filter(r => r.prevAmt !== r.currAmt).length;
+
+    // Filter table rows based on search
+    const filteredTableRows = useMemo(() => {
+        let result = rows;
+
+        if (startDate || endDate) {
+            result = result.filter(r => {
+                const rowDateStr = r.changedAt.split(' ')[0]; // Extract just the date part, e.g., '2026.03.04'
+                const rowDate = new Date(rowDateStr.replace(/\./g, '-'));
+                
+                let matchesStart = true;
+                let matchesEnd = true;
+
+                if (startDate) {
+                    matchesStart = rowDate >= new Date(startDate);
+                }
+                if (endDate) {
+                    matchesEnd = rowDate <= new Date(endDate);
+                }
+
+                return matchesStart && matchesEnd;
+            });
+        }
+
+        if (searchTerm) {
+            const lowerTerm = searchTerm.toLowerCase();
+            result = result.filter(r => 
+                r.company.toLowerCase().includes(lowerTerm) || 
+                r.site.toLowerCase().includes(lowerTerm)
+            );
+        }
+
+        return result;
+    }, [rows, searchTerm, startDate, endDate]);
 
     // Helper for Diff Rendering
     const renderDiff = (prev, curr, type = 'text', suffix = '') => {
@@ -80,27 +122,17 @@ export const ChangeHistoryComparison = () => {
 
     return (
         <div className={styles.container}>
-            {/* Header */}
             <div className={styles.header}>
                 <div className={styles.title}>
-                    <span>📉 변경 이력 비교</span>
+                    <span>📉 당월 변경 이력 요약</span>
                 </div>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                    <select
-                        className={styles.compareSelect}
-                        value={snapshotA}
-                        onChange={(e) => setSnapshotA(e.target.value)}
-                    >
-                        {PLAN_SNAPSHOTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
-                    </select>
-                    <span>vs</span>
-                    <select
-                        className={styles.compareSelect}
-                        value={snapshotB}
-                        onChange={(e) => setSnapshotB(e.target.value)}
-                    >
-                        {PLAN_SNAPSHOTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
-                    </select>
+                <div className={styles.filterGroup}>
+                    <input 
+                        type="month" 
+                        className={styles.monthInput}
+                        value={summaryMonth}
+                        onChange={(e) => setSummaryMonth(e.target.value)}
+                    />
                 </div>
             </div>
 
@@ -124,6 +156,42 @@ export const ChangeHistoryComparison = () => {
                 </div>
             </div>
 
+            {/* Table Header & Filters */}
+            <div className={styles.tableTopBar}>
+                <div className={styles.title}>
+                    <span>전체 변경 이력</span>
+                </div>
+                <div className={styles.searchBox} style={{ gap: '16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '13px', color: '#595959', fontWeight: 500 }}>변경 일자</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <input 
+                                type="date" 
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className={styles.searchInput}
+                                style={{ width: '130px' }}
+                            />
+                            <span style={{ color: '#8c8c8c' }}>~</span>
+                            <input 
+                                type="date" 
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className={styles.searchInput}
+                                style={{ width: '130px' }}
+                            />
+                        </div>
+                    </div>
+                    <input 
+                        type="text" 
+                        placeholder="건설회사 또는 현장명 검색"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className={styles.searchInput}
+                    />
+                </div>
+            </div>
+
             {/* Diff Table */}
             <div className={styles.tableContainer}>
                 <table className={styles.table}>
@@ -140,7 +208,7 @@ export const ChangeHistoryComparison = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {rows.map((row) => {
+                        {filteredTableRows.map((row) => {
                             const isExpanded = expandedRows.includes(row.id);
                             return (
                                 <React.Fragment key={row.id}>

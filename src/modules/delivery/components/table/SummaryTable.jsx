@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './SummaryTable.module.css';
 
 export const SummaryTable = ({ columns, rows }) => {
@@ -17,7 +16,7 @@ export const SummaryTable = ({ columns, rows }) => {
         <div className={styles.tableContainer}>
             <table className={styles.table}>
                 <colgroup>
-                    {columns.map((col, idx) => (
+                    {columns.map((col) => (
                         <col key={col.key} style={{ width: col.width || 'auto' }} />
                     ))}
                 </colgroup>
@@ -53,7 +52,7 @@ export const SummaryTable = ({ columns, rows }) => {
                             !row.groupKey;
 
                         return (
-                            <tr key={row.id}>
+                            <tr key={row.id} id={row.groupKey ? `row-${row.groupKey}` : undefined}>
                                 {columns.map((col, colIndex) => {
                                     const cellValue = row[col.key];
 

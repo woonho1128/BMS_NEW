@@ -8,6 +8,7 @@ import { CANCELLED_SPEC_DATA } from '../../data/planDummyData';
  */
 export const CancelledSpecList = () => {
     const [expandedRows, setExpandedRows] = useState([]);
+    const [cancelledSpecs, setCancelledSpecs] = useState(CANCELLED_SPEC_DATA);
 
     // Summary Calculation
     const summary = useMemo(() => {
@@ -15,7 +16,7 @@ export const CancelledSpecList = () => {
         let totalAmount = 0;
         let totalTon = 0;
 
-        CANCELLED_SPEC_DATA.forEach(spec => {
+        cancelledSpecs.forEach(spec => {
             count++;
             spec.items.forEach(item => {
                 totalAmount += (item.amount || (item.qty * item.agencyPrice));
@@ -24,12 +25,28 @@ export const CancelledSpecList = () => {
         });
 
         return { count, totalAmount, totalTon };
-    }, []);
+    }, [cancelledSpecs]);
 
     const toggleRow = (id) => {
         setExpandedRows(prev =>
             prev.includes(id) ? prev.filter(r => r !== id) : [...prev, id]
         );
+    };
+
+    const handleDelete = (id, e) => {
+        e.stopPropagation(); // prevent expanding row
+        if (window.confirm('취소된 내역을 영구적으로 삭제하시겠습니까?')) {
+            setCancelledSpecs(prev => prev.filter(spec => spec.id !== id));
+        }
+    };
+
+    const handleRestore = (id, e) => {
+        e.stopPropagation(); // prevent expanding row
+        if (window.confirm('이 취소 내역을 복원하시겠습니까? (이후 스펙 등록이나 납품 계획에서 확인 가능)')) {
+            // For now, it just removes it from this list. In a real app, it would update the backend status.
+            setCancelledSpecs(prev => prev.filter(spec => spec.id !== id));
+            alert('복원되었습니다.');
+        }
     };
 
     return (
@@ -87,10 +104,11 @@ export const CancelledSpecList = () => {
                                 <th className={styles.th}>SPEC담당</th>
                                 <th className={styles.th}>취소일</th>
                                 <th className={styles.th}>취소자</th>
+                                <th className={styles.th} style={{ textAlign: 'center', width: '130px' }}>관리</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {CANCELLED_SPEC_DATA.map(spec => {
+                            {cancelledSpecs.map(spec => {
                                 const isExpanded = expandedRows.includes(spec.id);
                                 return (
                                     <React.Fragment key={spec.id}>
@@ -111,10 +129,30 @@ export const CancelledSpecList = () => {
                                             <td className={styles.td}>{spec.specManager}</td>
                                             <td className={styles.tdCancelDate}>{spec.cancelDate}</td>
                                             <td className={styles.td}>{spec.cancelledBy}</td>
+                                            <td className={styles.td} style={{ textAlign: 'center' }}>
+                                                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                                                    <button 
+                                                        onClick={(e) => handleRestore(spec.id, e)}
+                                                        style={{
+                                                            padding: '4px 12px', backgroundColor: '#fff', border: '1px solid #d9d9d9',
+                                                            borderRadius: '16px', cursor: 'pointer', fontSize: '12px', color: '#1890ff',
+                                                            borderColor: '#91d5ff', background: '#e6f7ff', fontWeight: 500
+                                                        }}
+                                                    >복원</button>
+                                                    <button 
+                                                        onClick={(e) => handleDelete(spec.id, e)}
+                                                        style={{
+                                                            padding: '4px 12px', backgroundColor: '#fff', border: '1px solid #d9d9d9',
+                                                            borderRadius: '16px', cursor: 'pointer', fontSize: '12px', color: '#ff4d4f',
+                                                            borderColor: '#ffccc7', background: '#fff2f0', fontWeight: 500
+                                                        }}
+                                                    >삭제</button>
+                                                </div>
+                                            </td>
                                         </tr>
                                         {isExpanded && (
                                             <tr className={styles.detailRow}>
-                                                <td colSpan={11} style={{ padding: 0 }}>
+                                                <td colSpan={12} style={{ padding: 0 }}>
                                                     <div className={styles.detailWrapper}>
                                                         <table className={styles.childTable}>
                                                             <thead>
