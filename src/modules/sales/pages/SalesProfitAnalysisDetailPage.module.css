@@ -97,6 +97,10 @@
 
 .tableWrap {
   overflow-x: auto;
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .table {
@@ -109,21 +113,21 @@
 .td {
   padding: var(--space-sm) var(--space-md);
   text-align: left;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #edf2f8;
 }
 
 .thNum,
 .tdNum {
   padding: var(--space-sm) var(--space-md);
   text-align: right;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #edf2f8;
   font-variant-numeric: tabular-nums;
 }
 
 .th {
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-secondary);
-  background: var(--color-bg-page);
+  color: #3d4c64;
+  background: #f5f8ff;
 }
 
 .footer {
@@ -142,7 +146,7 @@
 }
 
 .summaryCardWarning {
-  border-color: var(--color-danger);
+  border-color: #f0b9b9;
 }
 
 .summaryList {

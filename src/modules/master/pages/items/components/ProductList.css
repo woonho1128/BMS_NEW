@@ -1,4 +1,4 @@
-/* ProductList.css */
+﻿/* ProductList.css */
 .product-list-container {
     display: flex;
     flex-direction: column;
@@ -9,11 +9,11 @@
     display: flex;
     align-items: center;
     padding: 12px 16px;
-    background: #fafafa;
-    border-bottom: 1px solid #f0f0f0;
+    background: #f5f8ff;
+    border-bottom: 1px solid #e4ebf4;
     font-size: 13px;
     font-weight: 600;
-    color: #595959;
+    color: #3d4c64;
 }
 
 .product-list-body {
@@ -25,18 +25,18 @@
     display: flex;
     align-items: center;
     padding: 16px;
-    border-bottom: 1px solid #f5f5f5;
+    border-bottom: 1px solid #edf2f8;
     cursor: pointer;
     transition: background 0.2s;
 }
 
 .product-list-row:hover {
-    background: #f8f9fa;
+    background: #f7faff;
 }
 
 .product-list-row.selected {
-    background: #e6f7ff;
-    border-left: 3px solid #1890ff;
+    background: #edf4ff;
+    border-left: 3px solid #2f7df6;
     padding-left: 13px;
     /* Compensate for border */
 }
@@ -51,14 +51,14 @@
 .thumb-placeholder {
     width: 48px;
     height: 48px;
-    background: #f5f5f5;
+    background: #f7faff;
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 10px;
     color: #bfbfbf;
-    border: 1px solid #f0f0f0;
+    border: 1px solid #dce4ef;
 }
 
 .col-info {
@@ -71,13 +71,13 @@
 
 .product-brand {
     font-size: 12px;
-    color: #8c8c8c;
+    color: #6a7991;
 }
 
 .product-name {
     font-size: 14px;
     font-weight: 600;
-    color: #262626;
+    color: #1d2a3b;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -85,7 +85,7 @@
 
 .product-model {
     font-size: 12px;
-    color: #595959;
+    color: #5f6f86;
 }
 
 .option-count-tag {
@@ -100,7 +100,7 @@
     text-align: right;
     font-size: 14px;
     font-weight: 600;
-    color: #262626;
+    color: #1d2a3b;
     font-variant-numeric: tabular-nums;
     margin-right: 16px;
 }
@@ -117,3 +117,4 @@
     align-items: center;
     height: 100%;
 }
+

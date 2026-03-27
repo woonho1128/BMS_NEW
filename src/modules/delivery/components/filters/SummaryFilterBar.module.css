@@ -3,13 +3,14 @@
     align-items: center;
     justify-content: space-between;
     background-color: #fff;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
     padding: 10px 16px;
     height: 56px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
     gap: 12px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
 }
 
 @media (max-width: 1024px) {
@@ -27,40 +28,43 @@
 .select {
     height: 32px;
     padding: 0 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    border: 1px solid #cad6e6;
+    border-radius: 8px;
     font-size: 14px;
-    color: #262626;
+    color: #1d2a3b;
     outline: none;
     cursor: pointer;
+    background: #fff;
 }
 
 .select:focus {
-    border-color: #1890ff;
+    border-color: #2f7df6;
 }
 
 .unitText {
     font-size: 13px;
-    color: #8c8c8c;
+    color: #5f6f86;
 }
 
 .refreshButton {
     height: 32px;
     padding: 0 16px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    border: 1px solid #cad6e6;
+    border-radius: 8px;
     background-color: #fff;
-    color: #595959;
+    color: #394a62;
+    font-weight: 600;
     font-size: 13px;
     transition: all 0.2s;
     cursor: pointer;
 }
 
 .refreshButton:hover {
-    border-color: #1890ff;
-    color: #1890ff;
+    border-color: #2f7df6;
+    color: #1d66da;
+    background: #f4f8ff;
 }
 
 .refreshButton:active {
-    background-color: #f5f5f5;
+    background-color: #edf4ff;
 }

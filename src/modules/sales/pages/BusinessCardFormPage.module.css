@@ -18,6 +18,9 @@
 
 .card {
   width: 100%;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .grid {
@@ -50,18 +53,18 @@
 
 .select {
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
   font-family: var(--font-family);
   font-size: var(--font-size-base);
   color: var(--color-text);
-  background: var(--color-bg-elevated);
+  background: #fff;
 }
 
 .select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px var(--color-primary-light);
+  box-shadow: 0 0 0 2px rgba(47, 125, 246, 0.18);
 }
 
 .select:disabled {
@@ -72,12 +75,12 @@
 .textarea {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
   font-family: var(--font-family);
   font-size: var(--font-size-base);
   color: var(--color-text);
-  background: var(--color-bg-elevated);
+  background: #fff;
   resize: vertical;
   min-height: 100px;
 }
@@ -85,7 +88,7 @@
 .textarea:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px var(--color-primary-light);
+  box-shadow: 0 0 0 2px rgba(47, 125, 246, 0.18);
 }
 
 .textarea:disabled {
@@ -189,7 +192,7 @@
   justify-content: flex-end;
   gap: var(--space-sm);
   padding-top: var(--space-md);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid #e4ebf4;
 }
 
 @media (max-width: 768px) {

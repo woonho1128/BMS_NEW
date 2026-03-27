@@ -21,6 +21,9 @@
 .documentCard {
   width: 100%;
   margin-bottom: var(--space-lg);
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .title {
@@ -29,7 +32,7 @@
   color: var(--color-text);
   margin: 0 0 var(--space-lg) 0;
   padding-bottom: var(--space-md);
-  border-bottom: 2px solid var(--color-border);
+  border-bottom: 1px solid #e4ebf4;
 }
 
 .metaRow {
@@ -37,7 +40,7 @@
   gap: var(--space-lg);
   margin-bottom: var(--space-xl);
   padding-bottom: var(--space-lg);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #e4ebf4;
 }
 
 @media (max-width: 768px) {
@@ -80,9 +83,9 @@
   color: var(--color-text);
   line-height: 1.6;
   padding: var(--space-md);
-  background: var(--color-bg-page);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  background: #fff;
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
   min-height: 100px;
 }
 
@@ -118,7 +121,7 @@
 .attachmentSection {
   margin-top: var(--space-xl);
   padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid #e4ebf4;
 }
 
 .attachmentList {
@@ -136,9 +139,9 @@
   justify-content: space-between;
   gap: var(--space-md);
   padding: var(--space-md);
-  background: var(--color-bg-page);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  background: #fff;
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
 }
 
 .attachmentInfo {
@@ -167,7 +170,7 @@
   display: flex;
   justify-content: flex-end;
   padding-top: var(--space-md);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid #e4ebf4;
 }
 
 @media (max-width: 768px) {

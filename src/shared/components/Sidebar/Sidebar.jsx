@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { ChevronRight, PanelLeftClose, PanelLeft, Pin, PinOff, LogOut, Star, MoreVertical } from 'lucide-react';
+import { ChevronRight, PanelLeftClose, PanelLeft, Pin, PinOff, Star, MoreVertical } from 'lucide-react';
 import { useAuth } from '../../../modules/auth/hooks/useAuth';
 import { classnames } from '../../utils/classnames';
 import styles from './Sidebar.module.css';
@@ -232,6 +232,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
               isActive && styles.active
             )
           }
+          style={{ paddingLeft: level === 0 ? undefined : `${36 + level * 16}px` }}
           title={node.label}
         >
           {(level === 0 || Icon) && Icon && (
@@ -239,7 +240,6 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
               <Icon size={18} strokeWidth={2} />
             </span>
           )}
-          {level > 0 && !Icon && <span className={styles.iconSlot} aria-hidden="true" />}
           <span className={styles.label}>{node.label}</span>
         </NavLink>
         {showStar && node.path && (
@@ -283,6 +283,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
             level === 0 ? styles.topGroupHeader : styles.middleGroupHeader,
             opened && styles.opened
           )}
+          style={{ paddingLeft: level === 0 ? undefined : `${36 + level * 16}px` }}
           onClick={() => toggleSection(node.id)}
           aria-expanded={opened}
           title={node.label}
@@ -310,11 +311,11 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
                       styles.middleGroupHeader,
                       childOpened && styles.opened
                     )}
+                    style={{ paddingLeft: '52px' }}
                     onClick={() => toggleSection(child.id)}
                     aria-expanded={childOpened}
                     title={child.label}
                   >
-                    <span className={styles.iconSlot} aria-hidden="true" />
                     <span className={styles.groupLabel}>{child.label}</span>
                     <span
                       className={classnames(styles.chev, childOpened && styles.chevOpen)}
@@ -330,7 +331,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
                     )}
                   >
                     <div className={styles.categoryItems}>
-                      {child.children.map((leaf) => renderLeafItem(leaf, 1, showStar))}
+                      {child.children.map((leaf) => renderLeafItem(leaf, 2, showStar))}
                     </div>
                   </div>
                 </div>

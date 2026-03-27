@@ -85,7 +85,7 @@ export function PartnerOrderDeliveryPage() {
     }, [orders, searchText, statusFilter]);
 
     return (
-        <PageShell title="출고 / 배송 조회" path="/partner/order/delivery">
+        <PageShell title="배차 현황" path="/partner/dispatch" className="pod-shell-wide">
             <div className="pod-container">
                 {/* Top Filter Bar */}
                 <div className="pod-filter-bar">
@@ -111,9 +111,9 @@ export function PartnerOrderDeliveryPage() {
                             onChange={e => setSearchText(e.target.value)}
                         />
                     </div>
-                    <div className="action-group" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div className="action-group">
                         {/* Mock Admin Toggle */}
-                        <div style={{ marginRight: 16, display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#666' }}>
+                        <div className="admin-toggle">
                             관리자 모드: <Switch checked={isAdmin} onChange={setIsAdmin} size="small" />
                         </div>
 

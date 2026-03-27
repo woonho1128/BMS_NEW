@@ -3,6 +3,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    background: #fff;
 }
 
 .shipment-list-empty {
@@ -18,19 +19,36 @@
 }
 
 .shipment-list-row:hover {
-    background: #f8f9fa;
+    background: #f7faff;
 }
 
 .shipment-list-row.selected {
-    background: #e6f7ff;
+    background: #edf4ff;
 }
 
 .shipment-list-row.selected td {
-    background: #e6f7ff !important;
+    background: #edf4ff !important;
 }
 
 .shipment-list-wrapper .ant-table-thead>tr>th {
-    background: #fafafa;
+    background: #f5f8ff;
     font-weight: 600;
-    color: #595959;
+    color: #3d4c64;
+    border-bottom: 1px solid #dce4ef;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+
+.shipment-list-wrapper .ant-table-tbody>tr>td {
+    border-bottom: 1px solid #edf2f8;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+}
+
+.shipment-list-wrapper .ant-table {
+    font-size: 12px;
+}
+
+.shipment-list-wrapper .ant-progress-text {
+    font-size: 11px !important;
 }

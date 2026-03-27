@@ -53,6 +53,9 @@ const MAIN = [
           { id: 'sales-report', label: '보고서 관리', path: '/sales/report' },
           { id: 'sales-card', label: '명함 관리', path: '/sales/card' },
           { id: 'sales-material', label: '영업 자료실', path: '/sales/material' },
+          { id: 'sales-delivery-request-status', label: '출고 요청 진행 현황', path: '/sales/delivery-request-status' },
+          { id: 'sales-delivery-request-detail', label: '출하 요청 상세내역 조회', path: '/sales/delivery-request-detail' },
+          { id: 'sales-delivery-approval', label: '출고 승인', path: '/sales/delivery-approval' },
         ],
       },
       /* 프로젝트팀 관리 — 손익분석·영업정보·SPEC 현황 */
@@ -70,39 +73,53 @@ const MAIN = [
         id: 'sales-retail',
         label: '리테일부문',
         children: [
-          { id: 'sales-short-project', label: '단납 프로젝트 현황', path: '/sales/short-project' },
-          { id: 'analytics-partner', label: '대리점 성과 분석', path: '/analytics/partner' },
-          { id: 'analytics-retail', label: '리테일 매출 분석', path: '/analytics/retail-sales' },
+          {
+            id: 'sales-short-project',
+            label: '단납 프로젝트 현황',
+            children: [
+              { id: 'sales-short-project-register', label: '단납 현장 등록', path: '/sales/short-project/register' },
+              { id: 'sales-short-project-approval', label: '단납 현장 결재', path: '/sales/short-project/approval' },
+              { id: 'sales-short-project-history', label: '단납 현장 내역', path: '/sales/short-project/history' },
+            ],
+          },
           { id: 'sales-support-receivable', label: '여신,수금 관리', path: '/sales/support/receivable' },
           { id: 'sales-support-discount', label: '판매단가 관리', path: '/sales/support/discount-promotion' },
-          { id: 'sales-retail-review', label: '발주 검수 리스트', path: '/sales/retail/review' },
+// { id: 'sales-retail-review', label: '발주 검수 리스트', path: '/sales/retail/review' },
         ],
       },
     ],
   },
 
-  /* ── 출고 / 납품 ── */
+  /* ── 재고 / 납품 ── */
   {
     id: 'logistics',
-    label: '출고/납품',
+    label: '재고/납품',
     icon: Truck,
     children: [
-      /* 출고 관리 */
-      {
-        id: 'logistics-shipment',
-        label: '출고 관리',
-        children: [
-          { id: 'delivery-request', label: '출고요청', path: '/delivery/request' },
-          { id: 'delivery-history', label: '출고내역', path: '/delivery/history' },
-        ],
-      },
-      /* 납품 / 재고 */
+      /* 출고 관리 (임시 비활성화) */
+      // {
+      //   id: 'logistics-shipment',
+      //   label: '출고 관리',
+      //   children: [
+      //     { id: 'delivery-request', label: '출고요청', path: '/delivery/request' },
+      //     { id: 'delivery-history', label: '출고내역', path: '/delivery/history' },
+      //   ],
+      // },
+      /* 납품 관리 */
       {
         id: 'logistics-delivery',
-        label: '납품/재고',
+        label: '납품 관리',
         children: [
           { id: 'delivery-plan', label: '납품 계획 관리', path: '/delivery/plan' },
-          { id: 'delivery-inventory', label: '실시간 재고현황', path: '/delivery/inventory' },
+        ],
+      },
+      /* 재고 관리 */
+      {
+        id: 'logistics-inventory',
+        label: '재고관리',
+        children: [
+          { id: 'delivery-inventory', label: '재고 현황 상세조회', path: '/delivery/inventory' },
+          { id: 'delivery-demand', label: '수요예측', path: '/delivery/demand-forecast' },
         ],
       },
     ],
@@ -124,26 +141,36 @@ const MAIN = [
         children: [
           { id: 'partner-notice', label: '공지/자료실', path: '/partner/notice', icon: Megaphone },
           { id: 'partner-as', label: 'AS 접수', path: '/partner/as' },
+          { id: 'partner-catalog', label: '카탈로그', path: '/partner/catalog' },
         ],
       },
-      /* 온라인 주문 */
+      /* 온라인 주문 — 대기 중(비활성화) */
+      // {
+      //   id: 'partner-order-group',
+      //   label: '온라인 주문',
+      //   children: [
+      //     { id: 'partner-order-product', label: '상품 조회/발주 등록', path: '/partner/order/product' },
+      //     { id: 'partner-order-list', label: '발주 내역 조회', path: '/partner/order/list' },
+      //     { id: 'partner-order-delivery', label: '출고 / 배송 조회', path: '/partner/order/delivery' },
+      //   ],
+      // },
+      /* 출고/배송조회 */
       {
-        id: 'partner-order-group',
-        label: '온라인 주문',
+        id: 'partner-delivery-status',
+        label: '출고/배송조회',
         children: [
-          { id: 'partner-order-product', label: '상품 조회/발주 등록', path: '/partner/order/product' },
-          { id: 'partner-order-list', label: '발주 내역 조회', path: '/partner/order/list' },
-          { id: 'partner-order-delivery', label: '출고 / 배송 조회', path: '/partner/order/delivery' },
+          { id: 'partner-delivery', label: '출고 상세 및 현황', path: '/partner/delivery' },
+          { id: 'partner-dispatch', label: '배차 현황', path: '/partner/dispatch' },
         ],
       },
-      /* 마이 페이지 */
+      /* 채권조회 */
       {
-        id: 'partner-mypage',
-        label: '마이 페이지',
+        id: 'partner-receivable-status',
+        label: '채권조회',
         children: [
           { id: 'partner-basic', label: '기본 정보 관리', path: '/partner/basic' },
-          { id: 'partner-delivery', label: '출고 정보 조회', path: '/partner/delivery' },
-          { id: 'partner-receivable', label: '거래 정보 조회', path: '/finance/receivable' },
+          { id: 'partner-receivable', label: '채권채무조회', path: '/finance/receivable' },
+          { id: 'partner-balance-confirm', label: '채권채무잔액확인서', path: '/partner/balance-confirm' },
         ],
       },
     ],
@@ -160,9 +187,10 @@ const MAIN = [
         id: 'insights-kpi',
         label: '성과 관리(KPI)',
         children: [
-          { id: 'analytics-sales', label: '개인 KPI', path: '/analytics/sales' },
-          { id: 'analytics-department', label: '부서별 실적', path: '/analytics/delivery-stock' },
-          { id: 'analytics-plan', label: '사업계획 달성률', path: '/analytics/profit' },
+          { id: 'analytics-retail', label: '리테일팀 매출 현황', path: '/analytics/retail-sales' },
+          { id: 'analytics-partner', label: '대리점별 매출 현황', path: '/analytics/partner' },
+          { id: 'analytics-personal-sales', label: '개인별 매출 현황', path: '/analytics/personal-sales' },
+          { id: 'analytics-category-sales', label: '카테고리별 판매 현황', path: '/analytics/category-sales' },
         ],
       },
       /* 시장 분석 */
@@ -170,12 +198,8 @@ const MAIN = [
         id: 'insights-market',
         label: '시장 분석',
         children: [
-          { id: 'analytics-market', label: '시황 파악', path: '/analytics/market' },
-          { id: 'analytics-trends', label: '매출 동향', path: '/analytics/trends' },
-          { id: 'analytics-org', label: '조직현황', path: '/analytics/org' },
-          { id: 'analytics-policy', label: '정책자료(제품,가격)', path: '/analytics/policy' },
-          { id: 'analytics-issue', label: '특이사항 관리', path: '/analytics/issue' },
-
+          { id: 'analytics-market', label: '시황파악', path: '/analytics/market' },
+          { id: 'analytics-data-collection', label: '자료수집', path: '/analytics/data-collection' },
         ],
       },
     ],
@@ -191,7 +215,7 @@ const MAIN = [
         id: 'master-data',
         label: '마스터 데이터',
         children: [
-          { id: 'master-items', label: '품목정보', path: '/master/items' },
+          // { id: 'master-items', label: '품목정보', path: '/master/items' },
           { id: 'master-partners', label: '대리점정보(카드)', path: '/master/partners' },
           { id: 'master-cost', label: '표준원가', path: '/master/standard-cost' },
         ],
@@ -220,17 +244,17 @@ const ADMIN = [
           { id: 'admin-code', label: '코드 관리', path: '/admin/code' },
         ],
       },
-      /* 온라인 주문 관리 */
-      {
-        id: 'admin-order',
-        label: '온라인 주문 관리',
-        children: [
-          { id: 'admin-order-total', label: '전체 발주 조회', path: '/admin/order/total' },
-          { id: 'admin-order-status-force', label: '상태 강제 변경', path: '/admin/order/status-force' },
-          { id: 'admin-order-erp', label: 'ERP 전송 관리 / 재전송', path: '/admin/order/erp' },
-          { id: 'admin-order-history-log', label: '발주 이력 / 로그', path: '/admin/order/history-log' },
-        ],
-      },
+      /* 온라인 주문 관리 — 대기 중(비활성화) */
+      // {
+      //   id: 'admin-order',
+      //   label: '온라인 주문 관리',
+      //   children: [
+      //     { id: 'admin-order-total', label: '전체 발주 조회', path: '/admin/order/total' },
+      //     { id: 'admin-order-status-force', label: '상태 강제 변경', path: '/admin/order/status-force' },
+      //     { id: 'admin-order-erp', label: 'ERP 전송 관리 / 재전송', path: '/admin/order/erp' },
+      //     { id: 'admin-order-history-log', label: '발주 이력 / 로그', path: '/admin/order/history-log' },
+      //   ],
+      // },
       /* 운영 로그 */
       {
         id: 'admin-log',

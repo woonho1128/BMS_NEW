@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { createPortal } from 'react-dom';
 import styles from './SummaryModal.module.css'; // Reusing styles
 import { YEARLY_PERFORMANCE_DATA } from '../../data/planDummyData';
@@ -34,7 +34,7 @@ export const YearlyPerformanceModal = ({ isOpen, onClose }) => {
     };
 
     const thStyle = {
-        backgroundColor: '#fafafa',
+        backgroundColor: '#f7faff',
         padding: '12px 16px',
         borderBottom: '1px solid #e8e8e8',
         fontWeight: 600,
@@ -61,8 +61,8 @@ export const YearlyPerformanceModal = ({ isOpen, onClose }) => {
         }}>
             <div className={styles.summaryModal} style={modalStyle} onClick={e => e.stopPropagation()}>
                 <div className={styles.modalHeader}>
-                    <div className={styles.title}>연도별 실적 (2026년)</div>
-                    <button className={styles.closeButton} onClick={onClose}>×</button>
+                    <div className={styles.title}>?곕룄蹂??ㅼ쟻 (2026??</div>
+                    <button className={styles.closeButton} onClick={onClose}>횞</button>
                 </div>
 
                 <div style={contentStyle}>
@@ -91,7 +91,7 @@ export const YearlyPerformanceModal = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className={styles.modalFooter}>
-                    <button className={styles.footerButton} onClick={onClose}>닫기</button>
+                    <button className={styles.footerButton} onClick={onClose}>?リ린</button>
                 </div>
             </div>
         </div>
@@ -99,3 +99,4 @@ export const YearlyPerformanceModal = ({ isOpen, onClose }) => {
 
     return createPortal(modalContent, modalRoot);
 };
+

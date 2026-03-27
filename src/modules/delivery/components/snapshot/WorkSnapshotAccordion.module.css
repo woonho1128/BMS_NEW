@@ -1,5 +1,5 @@
-.accordionContainer {
-    border: 1px solid #f0f0f0;
+﻿.accordionContainer {
+    border: 1px solid #e4ebf4;
     border-radius: 8px;
     margin-bottom: 12px;
     transition: all 0.3s ease;
@@ -12,14 +12,14 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 16px;
-    background-color: #fafafa;
+    background-color: #f7faff;
     cursor: pointer;
 }
 
 .headerTitle {
     font-size: 14px;
     font-weight: 600;
-    color: #262626;
+    color: #1d2a3b;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -27,7 +27,7 @@
 
 .chevron {
     transition: transform 0.2s ease;
-    color: #8c8c8c;
+    color: #6a7991;
     font-size: 12px;
 }
 
@@ -41,7 +41,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #e4ebf4;
 }
 
 .row {
@@ -57,23 +57,23 @@
 .label {
     font-size: 13px;
     font-weight: 500;
-    color: #595959;
+    color: #4b5b74;
 }
 
 .select {
     height: 32px;
     padding: 0 12px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid #cad6e6;
     border-radius: 4px;
     font-size: 14px;
-    color: #262626;
+    color: #1d2a3b;
     outline: none;
     cursor: pointer;
 }
 
 .infoText {
     font-size: 13px;
-    color: #8c8c8c;
+    color: #6a7991;
 }
 
 .buttonGroup {
@@ -84,30 +84,30 @@
 .actionButton {
     height: 32px;
     padding: 0 12px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid #cad6e6;
     border-radius: 4px;
     background-color: #fff;
-    color: #595959;
+    color: #4b5b74;
     font-size: 13px;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .actionButton:hover {
-    border-color: #1890ff;
-    color: #1890ff;
+    border-color: #2f7df6;
+    color: #2f7df6;
 }
 
 .primaryButton {
-    background-color: #1890ff;
+    background-color: #2f7df6;
     color: #fff;
-    border: 1px solid #1890ff;
+    border: 1px solid #2f7df6;
 }
 
 .primaryButton:hover {
-    background-color: #40a9ff;
+    background-color: #2f7df6;
     color: #fff;
-    border-color: #40a9ff;
+    border-color: #2f7df6;
 }
 
 /* Summary Dropdown */
@@ -122,7 +122,7 @@
     left: 100%;
     margin-left: 8px;
     background-color: #fff;
-    border: 1px solid #f0f0f0;
+    border: 1px solid #e4ebf4;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     z-index: 100;
@@ -133,11 +133,12 @@
 .dropdownItem {
     padding: 8px 12px;
     font-size: 13px;
-    color: #262626;
+    color: #1d2a3b;
     cursor: pointer;
 }
 
 .dropdownItem:hover {
-    background-color: #fafafa;
-    color: #1890ff;
+    background-color: #f7faff;
+    color: #2f7df6;
 }
+

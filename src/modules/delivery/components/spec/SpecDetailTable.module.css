@@ -1,0 +1,25 @@
+.detailWrapper {
+    padding: 16px 24px;
+    background-color: #f7faff;
+}
+
+.childTable {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.childTh {
+    background-color: #e4ebf4;
+    color: #4b5b74;
+    padding: 8px 12px;
+    border-bottom: 1px solid #cad6e6;
+    font-weight: 600;
+}
+
+.childTd {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e4ebf4;
+    color: #4b5b74;
+}

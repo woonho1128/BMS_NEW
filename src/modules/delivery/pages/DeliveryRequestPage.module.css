@@ -6,6 +6,9 @@
   margin: 0;
   padding: 0 var(--space-lg);
   padding-bottom: env(safe-area-inset-bottom, 0);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .section {
@@ -14,6 +17,9 @@
 
 .card {
   width: 100%;
+  border-radius: 14px;
+  border: 1px solid #dce4ef;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .cardDisabled {
@@ -49,12 +55,12 @@
 .basicLabel {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-secondary);
+  color: #52607a;
 }
 
 .basicValue {
   font-size: var(--font-size-md);
-  color: var(--color-text-primary);
+  color: #172338;
 }
 
 .basicTotal {
@@ -74,11 +80,11 @@
 }
 
 .itemTableWrap {
-  max-height: 400px;
+  max-height: 520px;
   overflow-y: auto;
   overflow-x: auto;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
   background: var(--color-bg-card);
 }
 
@@ -100,8 +106,8 @@
   position: sticky;
   top: 0;
   z-index: 1;
-  background: var(--color-bg-elevated, #f8f9fb);
-  border-bottom: 2px solid var(--color-border);
+  background: #f5f8ff;
+  border-bottom: 1px solid #e4ebf4;
 }
 
 .itemTh,
@@ -109,7 +115,7 @@
   padding: var(--space-sm) var(--space-md);
   text-align: left;
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-secondary);
+  color: #3d4c64;
   white-space: nowrap;
 }
 
@@ -122,7 +128,7 @@
 .itemTdNum,
 .itemTdAction {
   padding: var(--space-xs) var(--space-md);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #edf2f8;
   vertical-align: middle;
 }
 
@@ -136,7 +142,7 @@
 }
 
 .itemTable tbody tr:hover {
-  background: var(--color-hover-bg, #f5f7fa);
+  background: #f7faff;
 }
 
 .itemTableSelect,
@@ -144,8 +150,8 @@
   width: 100%;
   min-width: 0;
   padding: var(--space-xs) var(--space-sm);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   font-family: inherit;
   background: var(--color-bg-page);
@@ -155,7 +161,7 @@
 .itemTableSelect:focus,
 .itemTableInput:focus {
   outline: none;
-  border-color: var(--color-primary);
+  border-color: #2f7df6;
 }
 
 .itemTableInput {
@@ -167,8 +173,8 @@
   font-size: var(--font-size-xs);
   color: var(--color-danger, #dc2626);
   background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border: 1px solid #e7c2c2;
+  border-radius: 8px;
   cursor: pointer;
 }
 
@@ -188,13 +194,13 @@
   color: var(--color-text-primary);
   background: var(--color-bg-card);
   border: none;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #e4ebf4;
   cursor: pointer;
   text-align: left;
 }
 
 .collapseHeader:hover {
-  background: var(--color-hover-bg, #f5f7fa);
+  background: #f7faff;
 }
 
 .collapseHeader:focus {
@@ -238,7 +244,7 @@
 .actionBar {
   margin-top: var(--space-xl);
   padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid #e4ebf4;
 }
 
 .actionBarInner {
@@ -257,8 +263,8 @@
   background: var(--color-text-primary);
   color: #fff;
   font-size: var(--font-size-sm);
-  border-radius: var(--radius-md);
-  box-shadow: var(--card-shadow);
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
   z-index: 101;
   margin: 0;
 }
@@ -280,7 +286,7 @@
   }
 
   .itemTableWrap {
-    max-height: 320px;
+    max-height: 420px;
   }
 
   .transportGrid {
@@ -299,6 +305,6 @@
 
 @media (max-width: 480px) {
   .itemTableWrap {
-    max-height: 280px;
+    max-height: 360px;
   }
 }

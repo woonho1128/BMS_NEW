@@ -1,6 +1,9 @@
 .page {
   width: 100%;
   padding: 0 var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 @media (max-width: 768px) {
@@ -19,7 +22,7 @@
 
 .count {
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  color: #5f6f86;
   margin-bottom: var(--space-md);
 }
 
@@ -43,10 +46,15 @@
 
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .card:hover {
   transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
 }
 
 .cardBody {
@@ -59,17 +67,17 @@
   gap: var(--space-md);
   margin-bottom: var(--space-md);
   padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #e4ebf4;
 }
 
 .cardImage {
   width: 80px;
   height: 50px;
   flex-shrink: 0;
-  border: 1px solid var(--color-border);
+  border: 1px solid #dce4ef;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  background: var(--color-bg-page);
+  background: #f7faff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +93,7 @@
   width: 80px;
   height: 50px;
   flex-shrink: 0;
-  border: 1px solid var(--color-border);
+  border: 1px solid #dce4ef;
   border-radius: var(--radius-sm);
   background: var(--color-primary-light);
   display: flex;
@@ -151,7 +159,7 @@
   display: flex;
   justify-content: flex-end;
   padding-top: var(--space-md);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid #e4ebf4;
 }
 
 .empty {

@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { Table, Tabs, Tag } from 'antd';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
+import styles from './DiscountPromotionPage.module.css';
 
 // 숫자 콤마 헬퍼
 const formatNum = (num) => new Intl.NumberFormat('ko-KR').format(num || 0);
@@ -170,6 +171,7 @@ export function DiscountPromotionPage() {
                     columns={PRICE_TABLE_COLUMNS}
                     dataSource={PRICE_TABLE_DATA}
                     bordered size="small" pagination={false}
+                    className={styles.gridTable}
                 />
             ),
         },
@@ -181,6 +183,7 @@ export function DiscountPromotionPage() {
                     dataSource={PROMOTION_DATA}
                     bordered size="small" pagination={{ pageSize: 10 }}
                     scroll={{ x: 'max-content' }}
+                    className={styles.gridTable}
                 />
             ),
         },
@@ -192,6 +195,7 @@ export function DiscountPromotionPage() {
                     dataSource={CLIENT_DISCOUNT_DATA}
                     bordered size="small" pagination={{ pageSize: 10 }}
                     scroll={{ x: 'max-content' }}
+                    className={styles.gridTable}
                 />
             ),
         },
@@ -202,29 +206,33 @@ export function DiscountPromotionPage() {
                     columns={SHORT_SITE_COLUMNS}
                     dataSource={SHORT_SITE_DATA}
                     bordered size="small" pagination={false}
+                    className={styles.gridTable}
                 />
             ),
         },
     ];
 
     return (
-        <PageShell path="/sales/support/discount-promotion">
-            <ListFilter
-                fields={filterFields}
-                value={filterValue}
-                onChange={handleFilterChange}
-                onReset={handleReset}
-                onSearch={() => {/* 조회 실행 */ }}
-                searchLabel="조회"
-            />
-
-            <div style={{ marginTop: '12px' }}>
-                <Tabs
-                    activeKey={activeTab}
-                    onChange={(key) => { setActiveTab(key); handleReset(); }}
-                    items={tabItems}
-                    type="card"
+        <PageShell path="/sales/support/discount-promotion" className={styles.shellWide}>
+            <div className={styles.page}>
+                <ListFilter
+                    fields={filterFields}
+                    value={filterValue}
+                    onChange={handleFilterChange}
+                    onReset={handleReset}
+                    onSearch={() => {/* 조회 실행 */ }}
+                    searchLabel="조회"
                 />
+
+                <div className={styles.tabsWrap}>
+                    <Tabs
+                        activeKey={activeTab}
+                        onChange={(key) => { setActiveTab(key); handleReset(); }}
+                        items={tabItems}
+                        type="card"
+                        className={styles.tabs}
+                    />
+                </div>
             </div>
         </PageShell>
     );

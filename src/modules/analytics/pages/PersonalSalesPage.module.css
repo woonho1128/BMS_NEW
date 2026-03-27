@@ -1,0 +1,122 @@
+.shellWide {
+  max-width: 100% !important;
+  width: 100%;
+  margin: 0 !important;
+  padding: 8px 10px !important;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filterBar {
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.tableStage {
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.tableTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e4ebf4;
+  background: #fbfdff;
+}
+
+.tableTopLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tableTopRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tableTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #172338;
+}
+
+.performanceTable :global(.ant-table-container) {
+  border-start-start-radius: 10px !important;
+  border-start-end-radius: 10px !important;
+}
+
+.performanceTable :global(.ant-table-body) {
+  max-height: calc(100vh - 250px) !important;
+}
+
+.performanceTable :global(.ant-table-thead > tr > th) {
+  background: #f5f8ff !important;
+  color: #3d4c64 !important;
+  font-weight: 600;
+  text-align: center !important;
+  border-bottom: 1px solid #e4ebf4 !important;
+  border-inline-end: 1px solid #e4ebf4 !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+.performanceTable :global(.ant-table-tbody > tr:not(.ant-table-measure-row) > td) {
+  border-bottom: 1px solid #edf2f8;
+  font-size: 12px;
+  color: #3d4c64;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+.performanceTable :global(.ant-table-tbody > tr.table-row-light > td) {
+  background: #fff;
+}
+
+.performanceTable :global(.ant-table-tbody > tr.table-row-sub > td) {
+  background: #f7faff;
+}
+
+.performanceTable :global(.ant-table-tbody > tr.table-row-total > td) {
+  background: #f0f5ff;
+  font-weight: 600;
+}
+
+.performanceTable :global(.ant-table-tbody > tr.table-row-total-sub > td) {
+  background: #e8f1ff;
+  font-weight: 700;
+  color: #1f64d8;
+}
+
+.performanceTable :global(.ant-table-tbody > tr:hover > td) {
+  background: #eff6ff !important;
+}
+
+@media (max-width: 1024px) {
+  .shellWide {
+    padding: 8px !important;
+  }
+
+  .tableTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .performanceTable :global(.ant-table-body) {
+    max-height: calc(100vh - 220px) !important;
+  }
+}

@@ -1,0 +1,403 @@
+﻿.page {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #1f2937;
+}
+
+.filterBar {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.filterLeft,
+.filterRight {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  margin-right: 2px;
+}
+
+.input,
+.select,
+.searchInput {
+  height: 34px;
+  border: 1px solid #c7d6ea;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+.searchInput {
+  width: 220px;
+}
+
+.statusButtons {
+  display: inline-flex;
+  border: 1px solid #c7d6ea;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.statusBtn {
+  border: 0;
+  border-right: 1px solid #d8e2f2;
+  background: #fff;
+  color: #475569;
+  font-size: 12px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.statusBtn:last-child {
+  border-right: 0;
+}
+
+.statusBtnActive {
+  background: #edf4ff;
+  color: #1f64d8;
+  font-weight: 600;
+}
+
+.kpiBar {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.3fr) minmax(320px, 1fr);
+  gap: 12px;
+}
+
+.ratioCard {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.ratioCardHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #172338;
+}
+
+.cardSub {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.ratioGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ratioItem {
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #f8fbff;
+  padding: 8px;
+}
+
+.ratioItemLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #3d4c64;
+  margin-bottom: 6px;
+}
+
+.ratioInput {
+  width: 100%;
+  height: 30px;
+  border: 1px solid #c7d6ea;
+  border-radius: 6px;
+  text-align: right;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  padding: 0 6px;
+  background: #fff;
+}
+
+.kpiCardsWrap {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.kpiCards,
+.kpiRatios {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.kpiCard {
+  min-width: 116px;
+  border: 1px solid #e4ebf4;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #f8fbff;
+}
+
+.kpiLabel {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.kpiValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: #172338;
+  font-variant-numeric: tabular-nums;
+}
+
+.ratioChip {
+  border: 1px solid #d8e2f2;
+  border-radius: 999px;
+  background: #fff;
+  color: #475569;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ratioChipActive {
+  background: #edf4ff;
+  border-color: #bcd4fb;
+  color: #1f64d8;
+  font-weight: 600;
+}
+
+.tableWrap {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+}
+
+.grid th,
+.grid td {
+  border-bottom: 1px solid #edf2f8;
+  border-right: 1px solid #edf2f8;
+  padding: 8px 12px;
+  height: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+.grid thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f5f8ff;
+  color: #3d4c64;
+  font-weight: 600;
+}
+
+.rowBase {
+  cursor: pointer;
+}
+
+.rowBase:hover td {
+  background: #f7faff;
+}
+
+.rowSelected td {
+  background: #edf4ff !important;
+}
+
+.rowStripe td {
+  background: #fafafa;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.costArea {
+  background: #f5f5f5;
+}
+
+.standardArea {
+  background: #e8f0fe;
+}
+
+.saleArea {
+  background: #e6f4ea;
+}
+
+.marginLow {
+  color: #ff4d4f;
+  font-weight: 600;
+}
+
+.marginWarn {
+  color: #faad14;
+  font-weight: 600;
+}
+
+.expandRow td {
+  background: #f8fbff;
+  padding: 0;
+}
+
+.expandPanel {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 12px;
+  border-top: 1px solid #dce4ef;
+}
+
+.expandCard {
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+}
+
+.expandTitle {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #172338;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formItem label {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.valueText {
+  font-size: 13px;
+  color: #334155;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.step {
+  border: 1px solid #d8e2f2;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.stepActive {
+  background: #edf4ff;
+  border-color: #bcd4fb;
+  color: #1f64d8;
+  font-weight: 600;
+}
+
+.editableDisplay {
+  min-height: 20px;
+}
+
+.editInput {
+  width: 100%;
+  height: 28px;
+  border: 1px solid #7aa5f9;
+  border-radius: 6px;
+  padding: 0 8px;
+  font-size: 13px;
+  outline: none;
+}
+
+.cellSelected {
+  box-shadow: inset 0 0 0 2px #2f7df6;
+  background: #edf4ff !important;
+}
+
+.tableBody {
+  max-height: calc(100vh - 300px);
+  overflow: auto;
+}
+
+@media (max-width: 1280px) {
+  .kpiBar {
+    grid-template-columns: 1fr;
+  }
+
+  .ratioGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .expandPanel {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .filterBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .ratioGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

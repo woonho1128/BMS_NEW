@@ -9,30 +9,39 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 64px 24px;
+    gap: 14px;
+    padding: 72px 28px;
     text-align: center;
-    color: var(--color-text-secondary, #64748b);
+    color: var(--color-text-secondary, #5f6f86);
+    border: 1px solid #dce4ef;
+    border-radius: 16px;
+    background:
+        radial-gradient(900px 220px at 50% 0%, #f2f7ff 0%, rgba(242, 247, 255, 0) 62%),
+        #ffffff;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.05);
 }
 
 /** 대표 이모지 아이콘 */
 .icon {
-    font-size: 3rem;
+    font-size: 2.75rem;
     line-height: 1;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    filter: saturate(0.95);
 }
 
 /** "준비 중입니다" 메인 안내 문구 */
 .message {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text-primary, #1e293b);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-primary, #192537);
     margin: 0;
 }
 
 /** 부가 설명 (description prop) */
 .description {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary, #64748b);
+    font-size: 0.92rem;
+    color: var(--color-text-secondary, #5f6f86);
     margin: 0;
+    max-width: 520px;
+    line-height: 1.5;
 }

@@ -5,6 +5,9 @@
   width: 100%;
   padding: 0 var(--space-lg);
   padding-bottom: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .card {
@@ -18,9 +21,9 @@
 
 /* ----- ERP 연동 영역 (ReadOnly + 자물쇠) ----- */
 .erpBlock {
-  background: var(--color-bg-page);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  background: #f7faff;
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
   padding: var(--space-md);
 }
 
@@ -75,8 +78,8 @@
 /* ----- 담당자 입력 영역 (연한 강조 배경) ----- */
 .editableBlock {
   background: rgba(var(--color-primary-rgb, 59, 130, 246), 0.06);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
   padding: var(--space-md);
   margin-top: var(--space-md);
 }
@@ -93,12 +96,12 @@
   width: 100%;
   min-height: 80px;
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
   font-size: var(--font-size-sm);
   font-family: inherit;
   color: var(--color-text-primary);
-  background: var(--color-bg-card);
+  background: #fff;
   resize: vertical;
 }
 
@@ -110,6 +113,10 @@
 /* ----- 5년 매출 테이블 ----- */
 .tableWrap {
   overflow-x: auto;
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .table {
@@ -124,7 +131,7 @@
 .td,
 .tdNum {
   padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #edf2f8;
   text-align: left;
 }
 
@@ -138,7 +145,7 @@
 .thNum {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-secondary);
-  background: var(--color-bg-page);
+  background: #f5f8ff;
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -164,12 +171,12 @@
 .tableSelect {
   width: 100%;
   padding: var(--space-xs) var(--space-sm);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   font-family: inherit;
   color: var(--color-text-primary);
-  background: var(--color-bg-card);
+  background: #fff;
 }
 
 .tableInput:focus,
@@ -183,8 +190,8 @@
   font-size: var(--font-size-xs);
   color: var(--color-danger, #dc2626);
   background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border: 1px solid #e7c2c2;
+  border-radius: 8px;
   cursor: pointer;
 }
 
@@ -198,7 +205,7 @@
   justify-content: flex-end;
   gap: var(--space-sm);
   padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid #e4ebf4;
 }
 
 .toast {

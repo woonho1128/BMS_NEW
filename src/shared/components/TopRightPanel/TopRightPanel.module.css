@@ -1,4 +1,4 @@
-.topRightPanel {
+﻿.topRightPanel {
   position: fixed;
   top: 20px;
   right: 20px;
@@ -15,7 +15,7 @@
   width: 36px;
   height: 36px;
   background: #ffffff;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #dce4ef;
   border-radius: 4px;
   padding: 8px;
   cursor: pointer;
@@ -24,12 +24,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
+  color: #1d2a3b;
 }
 
 .notificationBtn:hover {
-  background: #f5f5f5;
-  border-color: #d0d0d0;
+  background: #f7faff;
+  border-color: #cad6e6;
 }
 
 .badge {
@@ -38,7 +38,7 @@
   right: -6px;
   width: 18px;
   height: 18px;
-  background: #ff4444;
+  background: #ef4444;
   color: #ffffff;
   border-radius: 50%;
   display: flex;
@@ -64,20 +64,20 @@
   align-items: center;
   gap: 6px;
   background: #ffffff;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #dce4ef;
   border-radius: 4px;
   padding: 8px 12px;
   font-size: 11px;
-  color: #333;
+  color: #1d2a3b;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   transition: all 0.2s ease;
 }
 
 .logoutBtn:hover {
-  background: #ffebee;
-  color: #d32f2f;
-  border-color: #ffcdd2;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecaca;
 }
 
 .logoutText {
@@ -106,7 +106,7 @@
   width: 380px;
   max-height: calc(100vh - 120px);
   background: #ffffff;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #dce4ef;
   border-radius: 6px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   z-index: 9998;
@@ -140,7 +140,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #e4ebf4;
   position: sticky;
   top: 0;
   background: #ffffff;
@@ -150,7 +150,7 @@
 .panelTitle {
   font-size: 13px;
   font-weight: 800;
-  color: #333;
+  color: #1d2a3b;
 }
 
 .markAllBtn {
@@ -160,7 +160,7 @@
   border: none;
   background: transparent;
   font-size: 11px;
-  color: #2196f3;
+  color: #2f7df6;
   cursor: pointer;
   padding: 6px 8px;
   border-radius: 4px;
@@ -168,7 +168,7 @@
 }
 
 .markAllBtn:hover {
-  color: #1976d2;
+  color: #1f64d8;
   background: rgba(33, 150, 243, 0.05);
 }
 
@@ -183,8 +183,8 @@
 }
 
 .closePanelBtn:hover {
-  color: #333;
-  background: #f5f5f5;
+  color: #1d2a3b;
+  background: #f7faff;
 }
 
 .panelContent {
@@ -204,13 +204,13 @@
   justify-content: space-between;
   gap: 10px;
   padding: 12px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #e4ebf4;
   cursor: pointer;
   min-height: 68px;
 }
 
 .noticeItem:hover {
-  background: #f5f5f5;
+  background: #f7faff;
 }
 
 .readDot {
@@ -221,8 +221,8 @@
   flex-shrink: 0;
 }
 
-.dotUnread { background: #2196f3; }
-.dotRead { background: #ccc; }
+.dotUnread { background: #2f7df6; }
+.dotRead { background: #cad6e6; }
 
 .noticeBody {
   flex: 1;
@@ -234,7 +234,7 @@
 
 .noticeTitle {
   font-size: 12px;
-  color: #333;
+  color: #1d2a3b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -242,13 +242,13 @@
 
 .noticeTime {
   font-size: 11px;
-  color: #999;
+  color: #8ea0b8;
 }
 
 .noticeRemove {
   border: none;
   background: transparent;
-  color: #999;
+  color: #8ea0b8;
   cursor: pointer;
   border-radius: 4px;
   width: 28px;
@@ -260,16 +260,16 @@
 }
 
 .noticeRemove:hover {
-  color: #333;
+  color: #1d2a3b;
   background: rgba(0, 0, 0, 0.05);
 }
 
 .panelFooter {
   height: 45px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid #e4ebf4;
   position: sticky;
   bottom: 0;
-  background: #f9f9f9;
+  background: #f7faff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -278,7 +278,7 @@
 .toCenterBtn {
   border: none;
   background: transparent;
-  color: #2196f3;
+  color: #2f7df6;
   font-size: 12px;
   cursor: pointer;
   padding: 10px 12px;
@@ -288,7 +288,7 @@
 
 .toCenterBtn:hover {
   background: rgba(33, 150, 243, 0.05);
-  color: #1976d2;
+  color: #1f64d8;
 }
 
 /* logout confirm modal */
@@ -319,9 +319,9 @@
 }
 
 .logoutConfirm {
-  border: 1px solid #ffcdd2;
-  background: #ffebee;
-  color: #d32f2f;
+  border: 1px solid #fecaca;
+  background: #fee2e2;
+  color: #b91c1c;
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
@@ -363,4 +363,7 @@
     max-height: calc(100vh - 50px);
   }
 }
+
+
+
 

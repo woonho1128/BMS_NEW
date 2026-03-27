@@ -2,9 +2,9 @@
 
 .items-page-container {
     height: calc(100vh - 140px);
-    /* Adjust based on PageShell header height */
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 /* Filter Bar */
@@ -13,7 +13,7 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #e4ebf4;
     margin-bottom: 16px;
     flex-shrink: 0;
 }
@@ -35,24 +35,26 @@
 
 /* Left Panel */
 .content-left-panel {
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
     background: #fff;
     overflow: hidden;
     /* For inner scroll */
     display: flex;
     flex-direction: column;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 /* Right Panel */
 .content-right-panel {
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
     background: #fff;
     overflow: hidden;
     position: relative;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .empty-selection-placeholder {
@@ -60,7 +62,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fafafa;
-    color: #8c8c8c;
+    background: #f7faff;
+    color: #5f6f86;
     text-align: center;
 }

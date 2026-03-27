@@ -1,39 +1,43 @@
 .page {
-  background: #f0f2f5;
-  border-radius: 12px;
-  padding: 14px;
+  border-radius: 14px;
+  padding: 0;
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 /* Tabs */
 .tabs {
   display: flex;
   align-items: flex-end;
-  gap: 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  padding: 5px;
 }
 
 .tabBtn {
   background: transparent;
   border: none;
-  padding: 10px 2px;
-  font-size: 14px;
-  font-weight: 800;
-  color: #94a3b8;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5a6b84;
+  border-radius: 10px;
   cursor: pointer;
 }
 
 .tabBtnActive {
-  color: #0f172a;
-  border-bottom: 2px solid #1890ff;
+  color: #1f64d8;
+  background: #edf4ff;
 }
 
 /* Cards */
 .card {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 14px;
+  border: 1px solid #dce4ef;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   padding: 14px 16px;
 }
 
@@ -52,9 +56,9 @@
 }
 
 .tableTitle {
-  font-size: 14px;
-  font-weight: 900;
-  color: #0f172a;
+  font-size: 13px;
+  font-weight: 700;
+  color: #172338;
 }
 
 .tableActions {
@@ -67,11 +71,11 @@
   height: 32px;
   padding: 0 10px;
   border-radius: 8px;
-  border: 1px solid var(--color-border);
+  border: 1px solid #c7d6ea;
   background: #fff;
-  color: var(--color-text);
-  font-size: 13px;
-  font-weight: 800;
+  color: #3d4c64;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -79,7 +83,7 @@
 }
 
 .actionBtn:hover:not(:disabled) {
-  background: #f8fafc;
+  background: #f7faff;
 }
 
 .actionBtn:disabled {
@@ -89,7 +93,7 @@
 
 /* Tables */
 .tableWrap {
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -99,13 +103,13 @@
 }
 
 .table thead th {
-  background: #f8f9fa;
-  font-size: 13px;
-  font-weight: 800;
+  background: #f5f8ff;
+  font-size: 12px;
+  font-weight: 600;
   color: #334155;
   padding: 10px 10px;
   text-align: left;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid #e4ebf4;
 }
 
 .table thead th.thNum {
@@ -113,10 +117,10 @@
 }
 
 .table tbody td {
-  font-size: 13px;
+  font-size: 12px;
   color: #0f172a;
   padding: 10px 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #edf2f8;
   height: 40px;
 }
 
@@ -126,7 +130,7 @@
 }
 
 .table tbody tr:hover td {
-  background: #f8fafc;
+  background: #f7faff;
 }
 
 .thNum {
@@ -136,13 +140,13 @@
 .tdNum {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .tdTotal {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  font-weight: 900;
+  font-weight: 700;
   color: #0f172a;
 }
 
@@ -150,22 +154,23 @@
   text-align: center;
   padding: 26px 12px;
   color: var(--color-text-secondary);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .hint {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 500;
   color: var(--color-text-secondary);
   margin-top: 6px;
 }
 
 @media (max-width: 900px) {
   .tabs {
-    gap: 12px;
+    gap: 6px;
+    flex-wrap: wrap;
   }
+
   .card {
     padding: 12px;
   }
 }
-

@@ -59,14 +59,17 @@ import { BusinessCardFormPage } from '../modules/sales/pages/BusinessCardFormPag
 import { SalesMaterialsPage } from '../modules/sales/pages/SalesMaterialsPage';
 import { SalesMaterialDetailPage } from '../modules/sales/pages/SalesMaterialDetailPage';
 import { SalesMaterialFormPage } from '../modules/sales/pages/SalesMaterialFormPage';
+import { DeliveryRequestStatusPage } from '../modules/sales/pages/DeliveryRequestStatusPage';
+import { DeliveryRequestDetailPage } from '../modules/sales/pages/DeliveryRequestDetailPage';
+import { DeliveryApprovalPage as SalesDeliveryApprovalPage } from '../modules/sales/pages/DeliveryApprovalPage';
 
 // ── 영업 관리 — 리테일팀
 import { ShortProjectPage } from '../modules/sales/pages/ShortProjectPage';
-import {
-  RetailOrderReviewPage,
-  RetailOrderDetailPage,
-  RetailOrderApprovalPage,
-} from '../modules/sales/pages/RetailOrderComponents';
+// import {
+//   RetailOrderReviewPage,
+//   RetailOrderDetailPage,
+//   RetailOrderApprovalPage,
+// } from '../modules/sales/pages/RetailOrderComponents';
 
 // ── 영업 관리 — 타일영업팀·영업지원팀 (임시)
 import { TileTeamPage } from '../modules/sales/pages/TileTeamPage';
@@ -94,23 +97,25 @@ import { CreditCollateralPage } from '../modules/finance/pages/CreditCollateralP
 import { PartnerNoticePage } from '../modules/partner/pages/PartnerNoticePage';
 import { PartnerDeliveryPage } from '../modules/partner/pages/PartnerDeliveryPage';
 import { PartnerBasicInfoPage } from '../modules/partner/pages/PartnerBasicInfoPage';
-import { PartnerOrderPage } from '../modules/partner/pages/PartnerOrderPage';
-import { PartnerAsRedirect } from '../modules/partner/pages/PartnerAsRedirect';
-import { PartnerProductOrderPage } from '../modules/partner/pages/PartnerProductOrderPage';
-import { PartnerOrderListPage } from '../modules/partner/pages/PartnerOrderListPage';
-import { PartnerCartPage } from '../modules/partner/pages/PartnerCartPage';
-import { PartnerOrderDetailPage } from '../modules/partner/pages/PartnerOrderDetailPage';
+import { PartnerBalanceConfirmPage } from '../modules/partner/pages/PartnerBalanceConfirmPage';
 import { PartnerOrderDeliveryPage } from '../modules/partner/pages/order-delivery/PartnerOrderDeliveryPage';
-import { PartnerOrderModificationPage } from '../modules/partner/pages/PartnerOrderComponents';
+// import { PartnerOrderPage } from '../modules/partner/pages/PartnerOrderPage';
+import { PartnerAsRedirect } from '../modules/partner/pages/PartnerAsRedirect';
+// import { PartnerProductOrderPage } from '../modules/partner/pages/PartnerProductOrderPage';
+// import { PartnerOrderListPage } from '../modules/partner/pages/PartnerOrderListPage';
+// import { PartnerCartPage } from '../modules/partner/pages/PartnerCartPage';
+// import { PartnerOrderDetailPage } from '../modules/partner/pages/PartnerOrderDetailPage';
+// import { PartnerOrderDeliveryPage } from '../modules/partner/pages/order-delivery/PartnerOrderDeliveryPage';
+// import { PartnerOrderModificationPage } from '../modules/partner/pages/PartnerOrderComponents';
 
 // ── 인사이트 / 분석
 import { SalesPerformancePage } from '../modules/analytics/pages/SalesPerformancePage';
-import { ProfitLossPage } from '../modules/analytics/pages/ProfitLossPage';
-import { DeliveryStockStatsPage } from '../modules/analytics/pages/DeliveryStockStatsPage';
 import { PartnerPerformancePage } from '../modules/analytics/pages/PartnerPerformancePage';
-import { SalesTrendsPage } from '../modules/analytics/pages/SalesTrendsPage';
 import { MarketOverviewPage } from '../modules/analytics/pages/MarketOverviewPage';
+import { DataCollectionPage } from '../modules/analytics/pages/DataCollectionPage';
 import { CustomReportPage } from '../modules/analytics/pages/CustomReportPage';
+import { PersonalSalesPage } from '../modules/analytics/pages/PersonalSalesPage';
+import { CategorySalesPage } from '../modules/analytics/pages/CategorySalesPage';
 import { PlaceholderPage } from '../shared/components/PlaceholderPage/PlaceholderPage';
 
 // ── 관리자 — 시스템 설정
@@ -121,12 +126,12 @@ import { CodesAdminPage } from '../modules/admin/pages/CodesAdminPage';
 import { LogsAdminPage } from '../modules/admin/pages/LogsAdminPage';
 
 // ── 관리자 — 온라인 주문 관리
-import {
-  AdminTotalOrderPage,
-  AdminStatusChangePage,
-  AdminErpPage,
-  AdminOrderLogPage,
-} from '../modules/admin/pages/AdminOrderComponents';
+// import {
+//   AdminTotalOrderPage,
+//   AdminStatusChangePage,
+//   AdminErpPage,
+//   AdminOrderLogPage,
+// } from '../modules/admin/pages/AdminOrderComponents';
 
 // ── 공통 (에러 페이지 / 접근제어 가드)
 import { NotFound } from '../shared/pages/NotFound';
@@ -239,11 +244,17 @@ export function Router() {
           <Route path={toRelative(ROUTES.SALES_MATERIAL_ID_EDIT)} element={<SalesMaterialFormPage />} />
           <Route path={toRelative(ROUTES.SALES_MATERIAL_ID)} element={<SalesMaterialDetailPage />} />
 
-          {/* ── 영업 관리 — 리테일팀 ── */}
+
+          {/* ── 영업 활동 (공통) — 추가 메뉴 ── */}
+          <Route path={toRelative(ROUTES.SALES_DELIVERY_REQUEST_STATUS)} element={<DeliveryRequestStatusPage />} />
+          <Route path={toRelative(ROUTES.SALES_DELIVERY_REQUEST_DETAIL)} element={<DeliveryRequestDetailPage />} />
+          <Route path={toRelative(ROUTES.SALES_DELIVERY_APPROVAL)} element={<SalesDeliveryApprovalPage />} />
+
+          {/* ── 영업 관리 — 리테일팀 (비활성화) ── */}
           <Route path={toRelative(ROUTES.SHORT_PROJECT)} element={<ShortProjectPage />} />
-          <Route path={toRelative(ROUTES.SALES_RETAIL_REVIEW_LIST)} element={<RetailOrderReviewPage />} />
-          <Route path={toRelative(ROUTES.SALES_RETAIL_ORDER_DETAIL)} element={<RetailOrderDetailPage />} />
-          <Route path={toRelative(ROUTES.SALES_RETAIL_APPROVAL)} element={<RetailOrderApprovalPage />} />
+          <Route path={toRelative(ROUTES.SHORT_PROJECT_REGISTER)} element={<PlaceholderPage path={ROUTES.SHORT_PROJECT_REGISTER} description="단납 현장 등록 메뉴 영역입니다." icon="🏗️" />} />
+          <Route path={toRelative(ROUTES.SHORT_PROJECT_APPROVAL)} element={<PlaceholderPage path={ROUTES.SHORT_PROJECT_APPROVAL} description="단납 현장 결재 메뉴 영역입니다." icon="✅" />} />
+          <Route path={toRelative(ROUTES.SHORT_PROJECT_HISTORY)} element={<PlaceholderPage path={ROUTES.SHORT_PROJECT_HISTORY} description="단납 현장 내역 메뉴 영역입니다." icon="📑" />} />
 
           {/* ── 영업 관리 — 타일영업팀·영업지원팀 (임시) ── */}
           <Route path={toRelative(ROUTES.TILE_TEAM)} element={<TileTeamPage />} />
@@ -269,11 +280,12 @@ export function Router() {
             }
           />
 
-          {/* ── 출고 / 납품 ── */}
+          {/* ── 재고 / 납품 ── */}
           <Route path={toRelative(ROUTES.DELIVERY_REQUEST)} element={<DeliveryRequestPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_HISTORY)} element={<DeliveryHistoryPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_PLAN)} element={<DeliveryPlanPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_INVENTORY)} element={<InventoryPage />} />
+          <Route path={toRelative(ROUTES.DELIVERY_DEMAND)} element={<PlaceholderPage path={ROUTES.DELIVERY_DEMAND} description="수요예측 메뉴 영역입니다." icon="📈" />} />
 
           {/* ── 재무 (채권·수금·여신·매입매출) ── */}
           <Route path={toRelative(ROUTES.FINANCE_PURCHASE_SALES)} element={<PurchaseSalesPage />} />
@@ -281,35 +293,32 @@ export function Router() {
           <Route path={toRelative(ROUTES.FINANCE_BILL)} element={<BillsDepositsPage />} />
           <Route path={toRelative(ROUTES.FINANCE_CREDIT)} element={<CreditCollateralPage />} />
 
-          {/* ── 대리점 포털 ── */}
+          {/* ── 대리점 포털 (온라인 주문 비활성화) ── */}
           <Route path={toRelative(ROUTES.PARTNER_NOTICE)} element={<PartnerNoticePage />} />
-          <Route path={toRelative(ROUTES.PARTNER_ORDER)} element={<PartnerOrderPage />} />
-          <Route path={toRelative(ROUTES.PARTNER_ORDER_PRODUCT)} element={<PartnerProductOrderPage />} />
-          <Route path={toRelative(ROUTES.PARTNER_ORDER_LIST)} element={<PartnerOrderListPage />} />
-          <Route path={toRelative(ROUTES.PARTNER_ORDER_MODIFY)} element={<PartnerOrderModificationPage />} />
-          <Route path={toRelative(ROUTES.PARTNER_ORDER_DELIVERY)} element={<PartnerOrderDeliveryPage />} />
-          <Route path={toRelative(ROUTES.PARTNER_ORDER_CART)} element={<PartnerCartPage />} />
-          <Route path={toRelative(ROUTES.PARTNER_ORDER_DETAIL)} element={<PartnerOrderDetailPage />} />
+          <Route path={toRelative(ROUTES.PARTNER_AS)} element={<PartnerAsRedirect />} />
+          <Route path={toRelative(ROUTES.PARTNER_CATALOG)} element={<PlaceholderPage path={ROUTES.PARTNER_CATALOG} description="카탈로그 메뉴 영역입니다." icon="📖" />} />
           <Route path={toRelative(ROUTES.PARTNER_DELIVERY)} element={<PartnerDeliveryPage />} />
+          <Route path={toRelative(ROUTES.PARTNER_DISPATCH)} element={<PartnerOrderDeliveryPage />} />
           {/* 하위 호환: /partner/receivable → 거래 정보 조회 페이지로 리다이렉트 */}
           <Route
             path={toRelative(ROUTES.PARTNER_RECEIVABLE)}
             element={<Navigate to={ROUTES.FINANCE_RECEIVABLE} replace />}
           />
           <Route path={toRelative(ROUTES.PARTNER_BASIC)} element={<PartnerBasicInfoPage />} />
-          <Route path={toRelative(ROUTES.PARTNER_AS)} element={<PartnerAsRedirect />} />
+          <Route path={toRelative(ROUTES.PARTNER_BALANCE_CONFIRM)} element={<PartnerBalanceConfirmPage />} />
 
           {/* ── 인사이트 — 성과 관리(KPI) ── */}
-          {/* 개인 KPI: 임시 페이지 / 리테일 매출 분석은 SalesPerformancePage 공유 */}
-          <Route path={toRelative(ROUTES.ANALYTICS_SALES)} element={<PlaceholderPage path={ROUTES.ANALYTICS_SALES} description="개인 KPI 기능 구현 예정입니다." icon="📊" />} />
           <Route path={toRelative(ROUTES.ANALYTICS_RETAIL)} element={<SalesPerformancePage />} />
-          <Route path={toRelative(ROUTES.ANALYTICS_PROFIT)} element={<ProfitLossPage />} />
-          <Route path={toRelative(ROUTES.ANALYTICS_DELIVERY_STOCK)} element={<DeliveryStockStatsPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_PARTNER)} element={<PartnerPerformancePage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_PERSONAL_SALES)} element={<PersonalSalesPage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_CATEGORY_SALES)} element={<CategorySalesPage />} />
 
           {/* ── 인사이트 — 시장 분석 ── */}
-          <Route path={toRelative(ROUTES.ANALYTICS_TRENDS)} element={<SalesTrendsPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_MARKET)} element={<MarketOverviewPage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_DATA_COLLECTION)} element={<DataCollectionPage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_DATA_PRICE)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_DATA_CATALOG)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_DATA_PROMO)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
           <Route path={toRelative(ROUTES.ANALYTICS_CUSTOM)} element={<CustomReportPage />} />
 
           {/* ── 관리자 — 시스템 설정 ── */}
@@ -318,12 +327,6 @@ export function Router() {
           <Route path={toRelative(ROUTES.ADMIN_PERMISSION)} element={<PermissionAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_CODE)} element={<CodesAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_LOG)} element={<LogsAdminPage />} />
-
-          {/* ── 관리자 — 온라인 주문 관리 ── */}
-          <Route path={toRelative(ROUTES.ADMIN_ORDER_TOTAL)} element={<AdminTotalOrderPage />} />
-          <Route path={toRelative(ROUTES.ADMIN_ORDER_STATUS_FORCE)} element={<AdminStatusChangePage />} />
-          <Route path={toRelative(ROUTES.ADMIN_ORDER_ERP)} element={<AdminErpPage />} />
-          <Route path={toRelative(ROUTES.ADMIN_ORDER_HISTORY_LOG)} element={<AdminOrderLogPage />} />
 
           {/* 404 — 매칭되지 않는 모든 경로 */}
           <Route path="*" element={<NotFound />} />

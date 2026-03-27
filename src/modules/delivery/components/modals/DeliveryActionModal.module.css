@@ -1,4 +1,4 @@
-.overlay {
+﻿.overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -22,7 +22,7 @@
 
 .header {
     padding: 16px 24px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #e4ebf4;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,7 +32,7 @@
     margin: 0;
     font-size: 16px;
     font-weight: 600;
-    color: #262626;
+    color: #1d2a3b;
 }
 
 .closeButton {
@@ -40,7 +40,7 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
-    color: #8c8c8c;
+    color: #6a7991;
     padding: 0;
     line-height: 1;
 }
@@ -52,7 +52,7 @@
 .description {
     margin: 0 0 24px 0;
     font-size: 14px;
-    color: #595959;
+    color: #4b5b74;
     text-align: center;
 }
 
@@ -67,7 +67,7 @@
     flex-direction: column;
     align-items: center;
     padding: 24px 16px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid #cad6e6;
     border-radius: 8px;
     background-color: #fff;
     cursor: pointer;
@@ -109,11 +109,12 @@
 .btnTitle {
     font-size: 16px;
     font-weight: 700;
-    color: #262626;
+    color: #1d2a3b;
 }
 
 .btnDesc {
     font-size: 12px;
-    color: #8c8c8c;
+    color: #6a7991;
     line-height: 1.5;
 }
+

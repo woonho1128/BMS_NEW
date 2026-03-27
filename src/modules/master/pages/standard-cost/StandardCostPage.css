@@ -1,55 +1,99 @@
 /* StandardCostPage.css */
+.std-cost-shell-wide {
+    max-width: 100% !important;
+    width: 100%;
+    margin: 0 !important;
+    padding: 8px 10px !important;
+}
+
 .std-cost-container {
-    height: calc(100vh - 140px);
+    height: calc(100vh - 124px);
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 .std-cost-filter-bar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0;
-    margin-bottom: 16px;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid #dce4ef;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
     flex-shrink: 0;
 }
 
 .filter-group {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
 }
 
 .action-group {
     display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
+}
+
+.std-cost-summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid #dce4ef;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.std-cost-summary-tip {
+    margin-left: 6px;
+    font-size: 12px;
+    color: #5f6f86;
+}
+
+.std-cost-filter-bar .ant-select-selector,
+.std-cost-filter-bar .ant-input-affix-wrapper,
+.std-cost-filter-bar .ant-btn {
+    border-radius: 8px !important;
 }
 
 .std-cost-split {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 24px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(520px, 1.05fr);
+    gap: 10px;
     flex: 1;
     min-height: 0;
 }
 
+.std-cost-split.detail-collapsed {
+    grid-template-columns: 1fr;
+}
+
 .split-left {
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
     background: #fff;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .split-right {
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
     background: #fff;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     position: relative;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .empty-placeholder {
@@ -57,7 +101,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #8c8c8c;
+    color: #5f6f86;
     text-align: center;
-    background: #fafafa;
+    background: #f7faff;
+}
+
+.split-left .ant-table-content {
+    overflow-x: auto;
+}
+
+.split-left .ant-table {
+    min-width: 780px;
+}
+
+@media (max-width: 1024px) {
+    .std-cost-shell-wide {
+        padding: 8px !important;
+    }
+
+    .std-cost-filter-bar {
+        padding: 8px;
+    }
+
+    .std-cost-split {
+        grid-template-columns: 1fr;
+    }
 }

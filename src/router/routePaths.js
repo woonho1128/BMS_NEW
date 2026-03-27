@@ -39,6 +39,11 @@ export const ROUTES = {
   SALES_MATERIAL_ID: '/sales/material/:id',
   SALES_MATERIAL_ID_EDIT: '/sales/material/:id/edit',
 
+  /* ── 영업 활동 (공통) — 추가 메뉴 ── */
+  SALES_DELIVERY_REQUEST_STATUS: '/sales/delivery-request-status',
+  SALES_DELIVERY_REQUEST_DETAIL: '/sales/delivery-request-detail',
+  SALES_DELIVERY_APPROVAL: '/sales/delivery-approval',
+
   /* ── 영업 관리 — 프로젝트팀 (손익분석 / 영업정보 / SPEC현황) ── */
   SALES_INFO: '/sales/info',
   SALES_INFO_NEW: '/sales/info/new',
@@ -51,6 +56,9 @@ export const ROUTES = {
 
   /* ── 영업 관리 — 리테일팀 ── */
   SHORT_PROJECT: '/sales/short-project',              /* 단납 프로젝트 현황 */
+  SHORT_PROJECT_REGISTER: '/sales/short-project/register',
+  SHORT_PROJECT_APPROVAL: '/sales/short-project/approval',
+  SHORT_PROJECT_HISTORY: '/sales/short-project/history',
   SALES_RETAIL_REVIEW_LIST: '/sales/retail/review',   /* 발주 검수 리스트 */
   SALES_RETAIL_ORDER_DETAIL: '/sales/retail/order/:id',
   SALES_RETAIL_APPROVAL: '/sales/retail/approval',    /* 발주 결재 (승인/반려/보류) */
@@ -67,11 +75,12 @@ export const ROUTES = {
   APPROVAL_SALES: '/approval/sales',
   APPROVAL_DELIVERY: '/approval/delivery',
 
-  /* ── 출고 / 납품 ── */
+  /* ── 재고 / 납품 ── */
   DELIVERY_REQUEST: '/delivery/request',
   DELIVERY_HISTORY: '/delivery/history',
   DELIVERY_PLAN: '/delivery/plan',
   DELIVERY_INVENTORY: '/delivery/inventory',
+  DELIVERY_DEMAND: '/delivery/demand-forecast', /* 수요예측 */
 
   /* ── 재무 (채권·수금·여신·매입매출) ── */
   FINANCE_PURCHASE_SALES: '/finance/purchase-sales',  /* 매입/매출 조회 */
@@ -81,6 +90,13 @@ export const ROUTES = {
 
   /* ── 대리점 포털 ── */
   PARTNER_NOTICE: '/partner/notice',
+  PARTNER_AS: '/partner/as',
+  PARTNER_CATALOG: '/partner/catalog',                 /* 카탈로그 */
+  PARTNER_DELIVERY: '/partner/delivery',               /* 출고 상세 및 현황 */
+  PARTNER_DISPATCH: '/partner/dispatch',               /* 배차 현황 */
+  PARTNER_BASIC: '/partner/basic',                     /* 기본 정보 관리 */
+  PARTNER_RECEIVABLE: '/partner/receivable',           /* 하위 호환 → /finance/receivable 리다이렉트 */
+  PARTNER_BALANCE_CONFIRM: '/partner/balance-confirm', /* 채권채무잔액확인서 */
   PARTNER_ORDER: '/partner/order',                     /* Deprecated — 호환 유지용 */
   PARTNER_ORDER_PRODUCT: '/partner/order/product',     /* 상품 조회 / 발주 등록 */
   PARTNER_ORDER_LIST: '/partner/order/list',           /* 발주 내역 조회 */
@@ -90,22 +106,19 @@ export const ROUTES = {
   PARTNER_ORDER_DETAIL: '/partner/order/detail/:orderId', /* 발주 상세 */
   PARTNER_ORDER_NEW: '/partner/order/new',
   PARTNER_ORDER_ID: '/partner/order/:orderId',
-  PARTNER_CATALOG: '/partner/catalog',
-  PARTNER_DELIVERY: '/partner/delivery',
-  PARTNER_RECEIVABLE: '/partner/receivable',           /* 하위 호환 → /finance/receivable 리다이렉트 */
-  PARTNER_BASIC: '/partner/basic',
-  PARTNER_AS: '/partner/as',
 
   /* ── 인사이트 — 성과 관리(KPI) ── */
-  ANALYTICS_SALES: '/analytics/sales',                 /* 개인 KPI */
-  ANALYTICS_RETAIL: '/analytics/retail-sales',         /* 리테일 매출 분석 */
-  ANALYTICS_PROFIT: '/analytics/profit',               /* 사업계획 달성률 */
-  ANALYTICS_DELIVERY_STOCK: '/analytics/delivery-stock', /* 부서별 실적 */
-  ANALYTICS_PARTNER: '/analytics/partner',             /* 대리점 성과 분석 */
+  ANALYTICS_RETAIL: '/analytics/retail-sales',         /* 리테일팀 매출 현황 */
+  ANALYTICS_PARTNER: '/analytics/partner',             /* 대리점별 매출 현황 */
+  ANALYTICS_PERSONAL_SALES: '/analytics/personal-sales', /* 개인별 매출 현황 */
+  ANALYTICS_CATEGORY_SALES: '/analytics/category-sales', /* 카테고리별 판매 현황 */
 
   /* ── 인사이트 — 시장 분석 ── */
-  ANALYTICS_TRENDS: '/analytics/trends',               /* 매출 동향 */
-  ANALYTICS_MARKET: '/analytics/market',               /* 시황 파악 */
+  ANALYTICS_MARKET: '/analytics/market',               /* 시황파악 */
+  ANALYTICS_DATA_COLLECTION: '/analytics/data-collection', /* 자료수집 통합 */
+  ANALYTICS_DATA_PRICE: '/analytics/data-collection/price', /* 자료수집 - 단가표 */
+  ANALYTICS_DATA_CATALOG: '/analytics/data-collection/catalog', /* 자료수집 - 카달로그 */
+  ANALYTICS_DATA_PROMO: '/analytics/data-collection/promo', /* 자료수집 - 판매자료(프로모션 등) */
   ANALYTICS_CUSTOM: '/analytics/custom',               /* 사용자 정의 리포트 */
 
   /* ── 관리자 — 시스템 설정 ── */

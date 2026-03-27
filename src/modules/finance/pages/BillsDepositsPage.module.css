@@ -1,0 +1,136 @@
+.pageTitle {
+  margin: 0;
+  color: #172338;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sectionTitle {
+  margin: 0;
+  color: #172338;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.tagBlue {
+  display: inline-block;
+  padding: 2px 8px;
+  background-color: #e6f7ff;
+  border: 1px solid #91d5ff;
+  color: #1890ff;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Base HTML Table Styles matching other UI */
+.tableCard {
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+  overflow: hidden;
+  background: #fff;
+  margin-top: 12px;
+}
+
+.tableTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e4ebf4;
+  background: #fbfdff;
+}
+
+.tableCount {
+  font-size: 13px;
+  color: #6a7991;
+}
+
+.tableContainer {
+  width: 100%;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  border: 1px solid #e4ebf4;
+}
+
+.th {
+  background-color: #f7faff;
+  color: #4b5b74;
+  font-weight: 600;
+  text-align: center;
+}
+
+.td {
+  color: #1d2a3b;
+}
+
+.tdCenter {
+  color: #1d2a3b;
+  text-align: center;
+}
+
+.tdNum {
+  color: #1d2a3b;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tr:hover {
+  background-color: #f8fbff;
+}
+
+.tfootTr td {
+  background-color: #fafafa;
+  font-weight: 600;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fbfdff;
+  border-top: 1px solid #e4ebf4;
+  font-size: 13px;
+}
+
+.pagination button {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid #cad6e6;
+  background: #fff;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination button:not(:disabled):hover {
+  border-color: #2f7df6;
+  color: #2f7df6;
+}

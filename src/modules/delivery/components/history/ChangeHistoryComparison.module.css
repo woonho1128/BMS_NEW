@@ -1,6 +1,9 @@
-.container {
+﻿.container {
     padding: 16px;
     background-color: #fff;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
     min-height: calc(100vh - 200px);
 }
 
@@ -14,7 +17,7 @@
 .title {
     font-size: 18px;
     font-weight: 700;
-    color: #262626;
+    color: #1d2a3b;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -23,8 +26,8 @@
 .compareSelect {
     height: 36px;
     padding: 0 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    border: 1px solid #cad6e6;
+    border-radius: 8px;
     font-size: 14px;
     min-width: 200px;
     cursor: pointer;
@@ -33,8 +36,8 @@
 .monthInput {
     height: 36px;
     padding: 0 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    border: 1px solid #cad6e6;
+    border-radius: 8px;
     font-size: 14px;
     min-width: 150px;
     cursor: pointer;
@@ -50,9 +53,9 @@
 
 .summaryCard {
     flex: 1;
-    background-color: #fafafa;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    background-color: #f7faff;
+    border: 1px solid #dce4ef;
+    border-radius: 12px;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -63,14 +66,14 @@
 
 .cardLabel {
     font-size: 14px;
-    color: #595959;
+    color: #52607a;
     font-weight: 500;
 }
 
 .cardValue {
     font-size: 24px;
     font-weight: 700;
-    color: #262626;
+    color: #1d2a3b;
 }
 
 .cardValue.red {
@@ -78,7 +81,7 @@
 }
 
 .cardValue.blue {
-    color: #1890ff;
+    color: #1f64d8;
 }
 
 /* Table */
@@ -97,21 +100,21 @@
 .searchInput {
     height: 32px;
     padding: 0 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    border: 1px solid #cad6e6;
+    border-radius: 8px;
     font-size: 14px;
     width: 250px;
 }
 
 .searchInput:focus {
-    border-color: #1890ff;
+    border-color: #2f7df6;
     outline: none;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(47, 125, 246, 0.2);
 }
 
 .tableContainer {
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    border: 1px solid #dce4ef;
+    border-radius: 12px;
     overflow: hidden;
 }
 
@@ -121,30 +124,30 @@
 }
 
 .th {
-    background-color: #fafafa;
-    color: #595959;
+    background-color: #f5f8ff;
+    color: #3d4c64;
     font-weight: 600;
     padding: 12px 16px;
     text-align: left;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #e4ebf4;
     font-size: 13px;
     white-space: nowrap;
 }
 
 .td {
     padding: 14px 16px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #edf2f8;
     font-size: 13px;
-    color: #262626;
+    color: #1d2a3b;
     vertical-align: middle;
 }
 
 .tr:hover {
-    background-color: #f6faff;
+    background-color: #f7faff;
 }
 
 .tr.expanded {
-    background-color: #e6f7ff;
+    background-color: #eef4ff;
 }
 
 /* Diff Styles */
@@ -155,12 +158,12 @@
 }
 
 .arrow {
-    color: #8c8c8c;
+    color: #6a7991;
     font-size: 12px;
 }
 
 .inc {
-    color: #1890ff;
+    color: #1f64d8;
     /* Blue for increase */
     font-weight: 600;
 }
@@ -173,7 +176,7 @@
 
 /* Accordion Detail */
 .detailRow {
-    background-color: #fafafa;
+    background-color: #f7faff;
 }
 
 .detailCell {
@@ -199,22 +202,23 @@
 
 .detailLabel {
     font-size: 12px;
-    color: #8c8c8c;
+    color: #6a7991;
 }
 
 .detailText {
     font-size: 13px;
-    color: #262626;
+    color: #1d2a3b;
     font-weight: 500;
 }
 
 .chevron {
     cursor: pointer;
     font-size: 12px;
-    color: #8c8c8c;
+    color: #6a7991;
     transition: transform 0.2s;
 }
 
 .chevron.open {
     transform: rotate(90deg);
 }
+

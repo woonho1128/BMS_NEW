@@ -3,7 +3,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 12px;
 }
 
 .tabsRow {
@@ -16,27 +16,34 @@
 
 .tabs {
   display: flex;
-  gap: var(--space-xs);
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
 }
 
 .tab {
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg-card);
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  color: #566481;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .tab:hover {
-  background: var(--color-hover-bg);
+  background: #f5f8ff;
+  color: #273448;
 }
 
 .tabActive {
-  border-color: var(--color-primary);
-  background: var(--color-active-bg);
-  color: var(--color-primary);
+  border-color: #bcd4fb;
+  background: #edf4ff;
+  color: #1f5fcf;
   font-weight: var(--font-weight-semibold);
 }
 
@@ -51,10 +58,10 @@
   margin-top: 4px;
   min-width: 180px;
   padding: var(--space-xs);
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  background: #fff;
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
   z-index: 100;
 }
 
@@ -80,10 +87,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: transparent;
+  padding: 12px 14px;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
 }
 
 .filters {
@@ -101,7 +109,8 @@
 
 .filterLabel {
   font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
+  color: #4f5f7a;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -109,11 +118,11 @@
 .filterSelect {
   height: 32px;
   padding: 0 var(--space-sm);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-card);
+  border-radius: 8px;
+  border: 1px solid #cad6e6;
+  background: #fff;
   font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
+  color: #1d2a3b;
   min-width: 100px;
 }
 
@@ -160,8 +169,10 @@
 
 .tableWrap {
   overflow: auto;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .table {
@@ -174,16 +185,16 @@
   padding: var(--space-sm) var(--space-md);
   text-align: left;
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+  color: #3d4c64;
+  background: #f5f8ff;
+  border-bottom: 1px solid #e4ebf4;
   white-space: nowrap;
 }
 
 .td {
   padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--color-border);
-  color: var(--color-text-primary);
+  border-bottom: 1px solid #edf2f8;
+  color: #1d2a3b;
 }
 
 .tableRow {
@@ -192,7 +203,7 @@
 }
 
 .tableRow:hover {
-  background: var(--color-hover-bg);
+  background: #f7faff;
 }
 
 .badge {

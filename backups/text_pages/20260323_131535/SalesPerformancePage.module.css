@@ -1,0 +1,81 @@
+.shellWide {
+  max-width: 100%;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tableStage {
+  margin-top: 4px;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.helperText {
+  padding: 2px 4px 0;
+}
+
+.performanceTable {
+  margin-top: 0;
+}
+
+.performanceTable :global(.ant-table-container) {
+  border-start-start-radius: 14px !important;
+  border-start-end-radius: 14px !important;
+}
+
+.performanceTable :global(.ant-table-body) {
+  max-height: calc(100vh - 250px) !important;
+}
+
+.performanceTable :global(.ant-table-thead > tr > th) {
+  background: #f5f8ff !important;
+  color: #344256 !important;
+  font-weight: 700;
+  border-bottom: 1px solid #e4ebf4 !important;
+}
+
+.performanceTable :global(.ant-table-tbody > tr > td) {
+  border-bottom: 1px solid #edf2f8;
+}
+
+.performanceTable :global(.ant-table-tbody > tr.table-row-light > td) {
+  background: #ffffff;
+}
+
+.performanceTable :global(.ant-table-tbody > tr.table-row-dark > td) {
+  background: #fbfdff;
+}
+
+.performanceTable :global(.ant-table-tbody > tr:hover > td) {
+  background: #f3f8ff !important;
+}
+
+.performanceTable :global(.ant-table-cell.total-col) {
+  background: #f7faff;
+  font-weight: 700;
+  color: #24344b;
+}
+
+@media (max-width: 1024px) {
+  .shellWide {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .page {
+    gap: 10px;
+  }
+
+  .performanceTable :global(.ant-table-body) {
+    max-height: calc(100vh - 210px) !important;
+  }
+}

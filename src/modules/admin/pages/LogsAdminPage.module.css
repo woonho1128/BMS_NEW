@@ -1,6 +1,9 @@
-.page {
+﻿.page {
   width: 100%;
   padding: 0 var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 @media (max-width: 768px) {
@@ -26,9 +29,10 @@
 .tableWrap {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-bg-card);
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .table {
@@ -46,8 +50,8 @@
 
 .th {
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-secondary);
-  background: var(--color-bg-page);
+  color: #3d4c64;
+  background: #f5f8ff;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -103,3 +107,4 @@
     overflow-y: auto;
   }
 }
+

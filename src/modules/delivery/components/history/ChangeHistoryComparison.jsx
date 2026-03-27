@@ -223,7 +223,7 @@ export const ChangeHistoryComparison = () => {
                                         <td className={styles.td}>{row.company}</td>
                                         <td
                                             className={styles.td}
-                                            style={{ fontWeight: 600, color: '#1890ff', cursor: 'pointer', textDecoration: 'underline' }}
+                                            style={{ fontWeight: 600, color: '#2f7df6', cursor: 'pointer', textDecoration: 'underline' }}
                                             onClick={(e) => handleSiteClick(e, row)}
                                         >
                                             {row.site}

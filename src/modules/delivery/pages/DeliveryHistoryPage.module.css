@@ -1,56 +1,58 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg, 20px);
+  gap: 12px;
 }
 
 /* 세그먼트 탭 */
 .tabList {
   display: flex;
   gap: 4px;
-  padding: 4px;
-  background: #f8fafc;
-  border-radius: var(--radius-md, 10px);
-  width: fit-content;
-  border: 1px solid var(--color-border, #e2e8f0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  padding: 5px;
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  border: 1px solid #dce4ef;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+  overflow-x: auto;
 }
 
 .tab {
-  padding: var(--space-sm, 12px) var(--space-lg, 20px);
+  padding: 8px 14px;
   border: none;
-  border-radius: var(--radius-sm, 6px);
-  font-size: var(--font-size-md, 14px);
-  font-weight: 500;
-  color: var(--color-text-secondary, #475569);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #566481;
   background: transparent;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
 
 .tab:hover {
-  color: var(--color-text-primary, #0f172a);
-  background: #fff;
+  color: #273448;
+  background: #f5f8ff;
 }
 
 .tabActive {
-  color: var(--color-primary, #2563eb);
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  color: #1f5fcf;
+  background: #edf4ff;
+  box-shadow: 0 2px 8px rgba(47, 125, 246, 0.18);
 }
 
 /* 테이블 컨테이너 - 가로 스크롤 */
 .tableContainer {
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-md, 10px);
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
   background: #fff;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .tableScroll {
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
 }
 
 .table {
@@ -62,13 +64,13 @@
 
 /* 헤더 - Sticky */
 .th {
-  padding: var(--space-sm, 12px) var(--space-md, 16px);
+  padding: 10px 12px;
   text-align: left;
-  font-size: var(--font-size-sm, 13px);
+  font-size: 12px;
   font-weight: 600;
-  color: var(--color-text-secondary, #475569);
-  background: #f5f7fa;
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  color: #3d4c64;
+  background: #f5f8ff;
+  border-bottom: 1px solid #e4ebf4;
   white-space: nowrap;
 }
 
@@ -76,7 +78,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: #f5f7fa;
+  background: #f5f8ff;
 }
 
 .thRight {
@@ -131,10 +133,10 @@
 
 /* 테이블 셀 */
 .td {
-  padding: var(--space-sm, 12px) var(--space-md, 16px);
-  font-size: var(--font-size-md, 14px);
-  color: var(--color-text-primary, #0f172a);
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #172338;
+  border-bottom: 1px solid #eaf0f8;
   background: #fff;
 }
 
@@ -148,7 +150,7 @@
 }
 
 .row:hover {
-  background: #f1f5f9;
+  background: #f7faff;
 }
 
 .row:last-child .td {
@@ -159,15 +161,15 @@
   padding: var(--space-xl, 24px);
   text-align: center;
   color: var(--color-text-muted, #94a3b8);
-  font-size: var(--font-size-md, 14px);
+  font-size: 12px;
 }
 
 /* 출고번호 링크 */
 .deliveryNoLink {
   background: none;
   border: none;
-  color: var(--color-primary, #2563eb);
-  font-size: var(--font-size-md, 14px);
+  color: #1e62d3;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -178,16 +180,16 @@
 }
 
 .deliveryNoLink:hover {
-  color: var(--color-primary-hover, #1d4ed8);
+  color: #0f52bf;
   text-decoration-thickness: 2px;
 }
 
 /* 상태 배지 */
 .statusBadge {
   display: inline-block;
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -218,7 +220,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-lg, 20px);
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  border-bottom: 1px solid #e4ebf4;
   background: #fff;
 }
 
@@ -243,7 +245,7 @@
 }
 
 .drawerClose:hover {
-  background: #f1f5f9;
+  background: #f4f7fc;
   color: var(--color-text-primary, #0f172a);
 }
 
@@ -251,6 +253,12 @@
   padding: var(--space-lg, 20px);
   overflow-y: auto;
   max-height: calc(100vh - 80px);
+}
+
+@media (max-width: 960px) {
+  .tableScroll {
+    max-height: calc(100vh - 200px);
+  }
 }
 
 .detailGrid {

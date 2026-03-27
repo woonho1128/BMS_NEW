@@ -2,8 +2,21 @@ import React, { useState, useCallback } from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
 import { Card, CardBody } from '../../../shared/components/Card';
+import { PERMISSIONS } from '../../../shared/constants/permissions';
 import { getPermissionGroupsList } from '../data/adminMock';
 import styles from './PermissionAdminPage.module.css';
+
+const PERMISSION_OPTIONS = [
+  'all',
+  'sales:read',
+  'sales:write',
+  'sales:approve',
+  'delivery:read',
+  'delivery:write',
+  'admin:read',
+  'admin:write',
+  PERMISSIONS.MANAGE_DATA_COLLECTION_VENDOR,
+];
 
 export function PermissionAdminPage() {
   const [groups] = useState(getPermissionGroupsList());
@@ -127,7 +140,7 @@ export function PermissionAdminPage() {
                 <div className={styles.fieldFull}>
                   <label className={styles.label}>권한 선택</label>
                   <div className={styles.permissionCheckboxes}>
-                    {['all', 'sales:read', 'sales:write', 'sales:approve', 'delivery:read', 'delivery:write', 'admin:read', 'admin:write'].map((perm) => (
+                    {PERMISSION_OPTIONS.map((perm) => (
                       <label key={perm} className={styles.checkboxLabel}>
                         <input
                           type="checkbox"

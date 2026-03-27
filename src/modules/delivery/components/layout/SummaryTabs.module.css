@@ -1,58 +1,64 @@
-.tabsContainer {
+﻿.tabsContainer {
     display: flex;
-    border-bottom: 2px solid #f0f0f0;
-    margin-bottom: 16px;
-    background-color: #fff;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    background: #ffffff;
+    padding: 6px;
+    gap: 4px;
     position: sticky;
     top: 0;
     z-index: 10;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+    overflow-x: auto;
 }
 
 .tabItem {
-    padding: 12px 24px;
-    font-size: 15px;
-    font-weight: 500;
-    color: #8c8c8c;
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #5a6780;
     cursor: pointer;
     position: relative;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    border-radius: 10px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
 }
 
 .tabItem:hover {
-    color: #595959;
+    color: #243247;
+    background: #f5f8ff;
 }
 
 .active {
-    color: #1890ff;
+    color: #1f5fcf;
     font-weight: 700;
+    background: #edf4ff;
 }
 
 .active::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #1890ff;
+    display: none;
 }
 
 .disabled {
     cursor: not-allowed;
-    color: #d9d9d9;
+    color: #cad6e6;
 }
 
 .disabled:hover {
-    color: #d9d9d9;
+    color: #cad6e6;
 }
 
 .badge {
     display: inline-block;
-    background-color: #f5f5f5;
-    color: #8c8c8c;
+    background-color: #eef2f9;
+    color: #4f5f7a;
     font-size: 11px;
     padding: 2px 6px;
     border-radius: 10px;
     margin-left: 6px;
-    font-weight: 400;
+    font-weight: 600;
 }
+

@@ -1,0 +1,147 @@
+.shellWide {
+  max-width: 100% !important;
+  width: 100%;
+  margin: 0 !important;
+  padding: 8px 10px !important;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  position: relative;
+}
+
+.filterBar {
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.tableStage {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #dce4ef;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.tableTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e8eef6;
+  background: #ffffff;
+}
+
+.tableTopLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tableTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #172338;
+}
+
+.tableMeta {
+  font-size: 12px;
+  color: #5a6b84;
+  background: #f5f8ff;
+  padding: 4px 7px;
+  border-radius: 6px;
+}
+
+.tableTopRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tableCount {
+  font-size: 12px;
+  color: #5a6b84;
+  font-weight: 500;
+}
+
+.performanceTable {
+  border-top: none;
+}
+
+.performanceTable :global(.ant-table-container) {
+  border-left: none !important;
+}
+
+.performanceTable :global(th.ant-table-cell-fix-left), 
+.performanceTable :global(td.ant-table-cell-fix-left) {
+  background-clip: padding-box;
+}
+
+.performanceTable :global(.ant-table-thead > tr > th) {
+  font-weight: 600;
+  font-size: 12px;
+  text-align: center !important;
+  border-bottom: 1px solid #dce4ef !important;
+  color: #3d4c64;
+  padding: 9px 8px !important;
+}
+
+.performanceTable :global(.ant-table-tbody > tr:not(.ant-table-measure-row) > td) {
+  font-size: 12px;
+  color: #3d4c64;
+  padding: 7px 10px !important;
+  border-bottom: 1px solid #edf2f8 !important;
+}
+
+.performanceTable :global(.table-row-light td) {
+  background-color: #ffffff;
+}
+
+.performanceTable :global(.table-row-dark td) {
+  background-color: #f7faff;
+}
+
+.performanceTable :global(.total-col) {
+  background-color: #eef4ff !important;
+  font-weight: 700;
+  color: #1f64d8;
+}
+
+.performanceTable :global(.table-row-total td) {
+  background-color: #e0f2fe; /* Light Blue for Main Teams */
+}
+
+.performanceTable :global(.table-row-total-sub td) {
+  background-color: #bae6fd; /* Darker blue row for teams */
+  font-weight: 700;
+}
+
+.performanceTable :global(.table-row-sub td) {
+  background-color: #f1f5f9; /* Gray row for individuals */
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .shellWide {
+    padding: 8px !important;
+  }
+
+  .tableTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .tableTopRight {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

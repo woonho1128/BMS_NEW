@@ -1,4 +1,4 @@
-import styles from './SummaryTable.module.css';
+﻿import styles from './SummaryTable.module.css';
 
 export const SummaryTable = ({ columns, rows }) => {
     // Calculate sticky offsets
@@ -85,7 +85,7 @@ export const SummaryTable = ({ columns, rows }) => {
                                     // For sticky columns, we must visually enforce the background color 
                                     // to prevent transparency issues
                                     if (col.fixed === 'left') {
-                                        if (row.isTotalRow) style.backgroundColor = '#fafafa';
+                                        if (row.isTotalRow) style.backgroundColor = '#f7faff';
                                         else if (row.isHighlighted) style.backgroundColor = '#fffbe6';
                                         else style.backgroundColor = '#fff';
                                     }
@@ -110,3 +110,4 @@ export const SummaryTable = ({ columns, rows }) => {
         </div>
     );
 };
+

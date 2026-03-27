@@ -1,9 +1,9 @@
-.page {
+﻿.page {
   width: 100%;
   height: calc(100vh - 180px);
   min-height: 400px;
   padding: 0 24px;
-  background: #f6f8fc;
+  background: transparent;
   box-sizing: border-box;
 }
 
@@ -30,7 +30,7 @@
   }
 }
 
-/* 좌측 트리 패널 */
+/* 醫뚯륫 ?몃━ ?⑤꼸 */
 .treePanel {
   min-width: 0;
   overflow: hidden;
@@ -50,16 +50,16 @@
   min-width: 0;
   overflow: hidden;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #dce4ef;
   border-radius: 14px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
 }
 
-/* CardBody 내부가 flex로 채워지고 트리 영역만 스크롤 */
+/* CardBody ?대?媛 flex濡?梨꾩썙吏怨??몃━ ?곸뿭留??ㅽ겕濡?*/
 .treeCard > div {
   flex: 1;
   min-height: 0;
@@ -74,14 +74,14 @@
   align-items: center;
   margin-bottom: 16px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e4ebf4;
   flex-shrink: 0;
 }
 
 .treeTitle {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  color: #111827;
+  color: #172338;
   margin: 0;
 }
 
@@ -98,10 +98,10 @@
 .searchInput {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #dce4ef;
   border-radius: 8px;
-  font-size: 14px;
-  color: #111827;
+  font-size: 12px;
+  color: #172338;
   background: #ffffff;
   height: 36px;
   box-sizing: border-box;
@@ -109,8 +109,8 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #2f7df6;
+  box-shadow: 0 0 0 3px rgba(47, 125, 246, 0.18);
 }
 
 .searchInput::placeholder {
@@ -124,7 +124,7 @@
   overflow-y: auto;
 }
 
-/* 우측 상세 패널 */
+/* ?곗륫 ?곸꽭 ?⑤꼸 */
 .detailPanel {
   min-width: 0;
   overflow: hidden;
@@ -154,9 +154,9 @@
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #dce4ef;
   border-radius: 14px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .formCard > div {
@@ -185,19 +185,19 @@
 }
 
 .label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
-  color: #111827;
+  color: #172338;
 }
 
 .input,
 .select {
   padding: 8px 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #dce4ef;
   border-radius: 8px;
   font-family: inherit;
-  font-size: 14px;
-  color: #111827;
+  font-size: 12px;
+  color: #172338;
   background: #ffffff;
   height: 36px;
   box-sizing: border-box;
@@ -206,8 +206,8 @@
 .input:focus,
 .select:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #2f7df6;
+  box-shadow: 0 0 0 3px rgba(47, 125, 246, 0.18);
 }
 
 .input:disabled,
@@ -241,7 +241,7 @@
   }
 }
 
-/* 모바일 패널 */
+/* 紐⑤컮???⑤꼸 */
 .mobileOverlay {
   display: none;
 }
@@ -282,7 +282,7 @@
     display: flex;
     justify-content: flex-end;
     padding: 12px 16px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e4ebf4;
   }
 
   .mobileCloseBtn {
@@ -327,3 +327,7 @@
     transform: translateY(0);
   }
 }
+
+
+
+

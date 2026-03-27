@@ -12,7 +12,7 @@
     align-items: center;
     padding: 16px 24px;
     background: #fff;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #e4ebf4;
     position: sticky;
     top: 0;
     z-index: 10;
@@ -21,7 +21,7 @@
 .header-title {
     font-size: 16px;
     font-weight: 700;
-    color: #111;
+    color: #1d2a3b;
 }
 
 .header-actions {
@@ -40,7 +40,7 @@
     margin: 0 !important;
     padding: 0 24px;
     background: #fff;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #e4ebf4;
 }
 
 .detail-panel-content .ant-tabs-content {
@@ -55,7 +55,7 @@
 .section-label {
     font-size: 14px;
     font-weight: 600;
-    color: #111;
+    color: #1d2a3b;
     margin-bottom: 12px;
     display: block;
 }
@@ -74,8 +74,8 @@
 
 .form-item label {
     font-size: 12px;
-    color: #8c8c8c;
-}
+    color: #5f6f86;
+    }
 
 .form-item .ant-input,
 .form-item .ant-select,

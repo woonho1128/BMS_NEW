@@ -1,0 +1,107 @@
+﻿.shellWide {
+  max-width: 100%;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pageHint {
+  text-align: right;
+  font-size: 12px;
+  color: #5a6b84;
+}
+
+.actionRow {
+  display: flex;
+  gap: 8px;
+}
+
+.processBtn,
+.cancelBtn {
+  height: 30px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.processBtn {
+  background: #ef5c97;
+}
+
+.cancelBtn {
+  background: #6f7ccf;
+}
+
+.tableCard {
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.shipNoButton {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #1f64d8;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.shipNoButton:hover {
+  color: #0f52bf;
+}
+
+.approvalTable :global(.ant-table-thead > tr > th) {
+  background: #f5f8ff !important;
+  color: #3d4c64 !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.approvalTable :global(.ant-table-tbody > tr > td) {
+  font-size: 12px;
+  border-bottom: 1px solid #edf2f8;
+}
+
+.approvalTable :global(.ant-table-tbody > tr:hover > td) {
+  background: #f7faff !important;
+}
+
+.detailModal :global(.ant-modal-content) {
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.detailTable :global(.ant-table-thead > tr > th) {
+  background: #f5f8ff !important;
+  color: #3d4c64 !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.detailTable :global(.ant-table-tbody > tr > td) {
+  font-size: 12px;
+}
+
+@media (max-width: 1024px) {
+  .shellWide {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .actionRow {
+    flex-wrap: wrap;
+  }
+}

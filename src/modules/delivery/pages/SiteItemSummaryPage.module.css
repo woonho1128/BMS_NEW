@@ -1,55 +1,91 @@
 .container {
-    padding: 16px 24px;
-    background-color: #f5f5f5;
+    padding: 20px 24px 24px;
+    background:
+        radial-gradient(1200px 280px at 20% 0%, #f3f7ff 0%, rgba(243, 247, 255, 0) 62%),
+        var(--color-bg-page, #f3f6fb);
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 24px;
+    gap: 12px;
+    margin-bottom: 2px;
+    padding: 18px 20px;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .pageTitle {
     margin: 0;
     font-size: 24px;
     font-weight: 700;
-    color: #262626;
+    color: #0f172a;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 }
 
 .subTitle {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
-    color: #8c8c8c;
+    color: #52607a;
 }
 
 .actionGroup {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .actionButton {
-    padding: 6px 12px;
-    border: 1px solid #d9d9d9;
+    padding: 8px 14px;
+    border: 1px solid #cfd8e6;
     background-color: #fff;
-    border-radius: 4px;
+    border-radius: 10px;
     font-size: 13px;
-    color: #595959;
+    font-weight: 600;
+    color: #344256;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 .actionButton:hover {
-    border-color: #1890ff;
-    color: #1890ff;
+    border-color: #2f7df6;
+    color: #165ec9;
+    background: #f4f8ff;
+    transform: translateY(-1px);
 }
 
 .content {
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+@media (max-width: 960px) {
+    .container {
+        padding: 14px 14px 18px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+    }
+
+    .pageTitle {
+        font-size: 20px;
+    }
+
+    .actionGroup {
+        justify-content: flex-start;
+    }
 }

@@ -15,18 +15,24 @@
 
 .tabs {
   display: flex;
-  gap: var(--space-xs);
+  gap: 6px;
   flex-wrap: wrap;
+  padding: 6px;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
 }
 
 .tab {
   height: 34px;
   padding: 0 var(--space-md);
-  border-radius: 999px;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-card);
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  color: #566481;
+  font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -35,14 +41,14 @@
 }
 
 .tab:hover {
-  background: var(--color-hover-bg);
-  border-color: var(--color-border);
+  background: #f5f8ff;
+  border-color: #cad6e6;
 }
 
 .tabActive {
-  border-color: var(--color-primary);
-  background: var(--color-active-bg);
-  color: var(--color-primary);
+  border-color: #bcd4fb;
+  background: #edf4ff;
+  color: #1f5fcf;
 }
 
 .tabCount {
@@ -92,18 +98,18 @@
   gap: var(--space-sm);
   width: 100%;
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-bg-card);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
   text-align: left;
   cursor: pointer;
   transition: box-shadow 0.15s, background 0.15s;
 }
 
 .rowCard:hover {
-  background: var(--color-hover-bg);
-  box-shadow: var(--shadow-md);
+  background: #f7faff;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
 }
 
 .rowCard:focus {
@@ -189,9 +195,9 @@
 
 .pageBtn {
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-card);
-  border-radius: var(--radius-sm);
+  border: 1px solid #cad6e6;
+  background: #fff;
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -199,7 +205,7 @@
 }
 
 .pageBtn:hover:not(:disabled) {
-  background: var(--color-hover-bg);
+  background: #f5f8ff;
 }
 
 .pageBtn:disabled {
@@ -215,9 +221,9 @@
 .pageNum {
   min-width: 32px;
   padding: var(--space-sm);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-card);
-  border-radius: var(--radius-sm);
+  border: 1px solid #cad6e6;
+  background: #fff;
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -225,12 +231,12 @@
 }
 
 .pageNum:hover {
-  background: var(--color-hover-bg);
+  background: #f5f8ff;
 }
 
 .pageNumActive {
-  background: var(--color-active-bg);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  background: #edf4ff;
+  border-color: #bcd4fb;
+  color: #1f5fcf;
   font-weight: var(--font-weight-semibold);
 }

@@ -38,22 +38,24 @@
 
 .stepTab {
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg-card);
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
+  background: #fff;
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  color: #566481;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .stepTab:hover {
-  background: var(--color-hover-bg);
+  background: #f5f8ff;
+  color: #273448;
 }
 
 .stepTabActive {
-  border-color: var(--color-primary);
-  background: var(--color-active-bg);
-  color: var(--color-primary);
+  border-color: #bcd4fb;
+  background: #edf4ff;
+  color: #1f5fcf;
   font-weight: var(--font-weight-semibold);
 }
 
@@ -119,7 +121,9 @@
   min-height: 0;
   min-width: 0;
   background: #ffffff;
-  border-radius: 12px;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -178,7 +182,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-lg);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #e4ebf4;
   flex-shrink: 0;
 }
 
@@ -203,7 +207,7 @@
 }
 
 .drawerClose:hover {
-  background: var(--color-hover-bg);
+  background: #f5f8ff;
   color: var(--color-text-primary);
 }
 

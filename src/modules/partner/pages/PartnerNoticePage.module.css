@@ -9,9 +9,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  padding: 4px;
-  background: var(--color-bg, #f1f5f9);
-  border-radius: var(--radius-md, 10px);
+  padding: 6px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #dce4ef;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
   width: fit-content;
 }
 
@@ -20,30 +22,31 @@
   border: none;
   border-radius: var(--radius-sm, 6px);
   font-size: var(--font-size-md, 14px);
-  font-weight: 500;
-  color: var(--color-text-secondary, #475569);
+  font-weight: 600;
+  color: #566481;
   background: transparent;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
 
 .tab:hover {
-  color: var(--color-text-primary, #0f172a);
-  background: rgba(255, 255, 255, 0.8);
+  color: #273448;
+  background: #f5f8ff;
 }
 
 .tabActive {
-  color: var(--color-primary, #2563eb);
-  background: var(--color-bg-card, #fff);
-  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.04));
+  color: #1f64d8;
+  background: #edf4ff;
+  box-shadow: 0 2px 8px rgba(47, 125, 246, 0.18);
 }
 
 /* 테이블 */
 .tableWrap {
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-md, 10px);
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
   background: var(--color-bg-card, #fff);
   overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .table {
@@ -56,16 +59,16 @@
   text-align: left;
   font-size: var(--font-size-sm, 13px);
   font-weight: 600;
-  color: var(--color-text-secondary, #475569);
-  background: var(--color-bg-page, #f8fafc);
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  color: #3d4c64;
+  background: #f5f8ff;
+  border-bottom: 1px solid #e4ebf4;
 }
 
 .td {
   padding: var(--space-sm, 12px) var(--space-md, 16px);
   font-size: var(--font-size-md, 14px);
   color: var(--color-text-primary, #0f172a);
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  border-bottom: 1px solid #edf2f8;
 }
 
 .row:last-child .td {
@@ -73,7 +76,7 @@
 }
 
 .row:hover {
-  background: var(--color-hover-bg, #f1f5f9);
+  background: #f7faff;
 }
 
 .titleCell {

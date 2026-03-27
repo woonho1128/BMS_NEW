@@ -24,7 +24,7 @@
     bottom: 0;
     width: 320px;
     background: var(--color-bg-card, #fff);
-    border-left: 1px solid var(--color-border, #e0e0e0);
+    border-left: 1px solid #dce4ef;
     box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
     z-index: 201;
     display: flex;
@@ -43,7 +43,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 20px;
-    border-bottom: 1px solid var(--color-border, #e0e0e0);
+    border-bottom: 1px solid #e4ebf4;
     flex-shrink: 0;
 }
 
@@ -58,7 +58,7 @@
     background: transparent;
     cursor: pointer;
     font-size: 16px;
-    color: #888;
+    color: #6a7991;
     padding: 4px 8px;
     border-radius: 4px;
     line-height: 1;
@@ -66,8 +66,8 @@
 }
 
 .closeBtn:hover {
-    background: #f0f0f0;
-    color: #333;
+    background: #f5f8ff;
+    color: #1d2a3b;
 }
 
 /* 바디 */
@@ -79,7 +79,7 @@
 
 .empty {
     text-align: center;
-    color: var(--color-text-muted, #999);
+    color: var(--color-text-muted, #8ea0b8);
     font-size: 13px;
     line-height: 1.7;
     padding: 40px 0;
@@ -101,9 +101,9 @@
     justify-content: space-between;
     gap: 12px;
     padding: 12px 14px;
-    border: 1px solid var(--color-border, #e0e0e0);
+    border: 1px solid #dce4ef;
     border-radius: 8px;
-    background: var(--color-bg, #fafafa);
+    background: #f7faff;
     transition: box-shadow 0.12s;
 }
 
@@ -131,7 +131,7 @@
 
 .itemDesc {
     font-size: 11px;
-    color: var(--color-text-muted, #999);
+    color: var(--color-text-muted, #8ea0b8);
     margin-top: 2px;
 }
 
@@ -139,7 +139,7 @@
     flex-shrink: 0;
     height: 30px;
     padding: 0 12px;
-    background: var(--color-primary, #4f81bd);
+    background: #2f7df6;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -151,5 +151,5 @@
 }
 
 .addBtn:hover {
-    background: var(--color-primary-hover, #3a6a9e);
+    background: #1f64d8;
 }

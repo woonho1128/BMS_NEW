@@ -3,7 +3,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 12px;
 }
 
 /* 검색 필터는 공통 ListFilter 사용 */
@@ -33,10 +33,11 @@
 }
 
 .tableWrapper {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-bg-card);
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
   overflow-x: auto;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .table {
@@ -49,10 +50,10 @@
   text-align: left;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-secondary);
-  background: var(--color-bg);
+  color: #3d4c64;
+  background: #f5f8ff;
   white-space: nowrap;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #e4ebf4;
 }
 
 .tableRow {
@@ -61,7 +62,7 @@
 }
 
 .tableRow:hover {
-  background: var(--color-hover-bg);
+  background: #f7faff;
 }
 
 .tableRowNoAnalysis {
@@ -77,8 +78,8 @@
 .td {
   padding: var(--space-sm) var(--space-md);
   font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
-  border-bottom: 1px solid var(--color-border);
+  color: #1d2a3b;
+  border-bottom: 1px solid #edf2f8;
 }
 
 /* 손익분석 여부 배지 */
@@ -142,9 +143,9 @@
 
 .pageBtn {
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-card);
-  border-radius: var(--radius-sm);
+  border: 1px solid #cad6e6;
+  background: #fff;
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -152,7 +153,7 @@
 }
 
 .pageBtn:hover:not(:disabled) {
-  background: var(--color-hover-bg);
+  background: #f5f8ff;
 }
 
 .pageBtn:disabled {
@@ -168,9 +169,9 @@
 .pageNum {
   min-width: 32px;
   padding: var(--space-sm);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-card);
-  border-radius: var(--radius-sm);
+  border: 1px solid #cad6e6;
+  background: #fff;
+  border-radius: 8px;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -178,12 +179,12 @@
 }
 
 .pageNum:hover {
-  background: var(--color-hover-bg);
+  background: #f5f8ff;
 }
 
 .pageNumActive {
-  background: var(--color-active-bg);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  background: #edf4ff;
+  border-color: #bcd4fb;
+  color: #1f5fcf;
   font-weight: var(--font-weight-semibold);
 }

@@ -30,12 +30,12 @@
 .label {
     font-size: 13px;
     font-weight: 600;
-    color: #595959;
+    color: #4b5b74;
 }
 
 .input {
     padding: 6px 10px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid #cad6e6;
     border-radius: 4px;
     font-size: 13px;
     min-width: 120px;
@@ -61,7 +61,7 @@
 
 .summaryLabel {
     font-size: 12px;
-    color: #8c8c8c;
+    color: #6a7991;
     font-weight: 500;
 }
 
@@ -104,11 +104,11 @@
 }
 
 .th {
-    background-color: #fafafa;
-    color: #595959;
+    background-color: #f7faff;
+    color: #4b5b74;
     font-weight: 600;
     padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #e4ebf4;
     text-align: left;
     position: sticky;
     top: 0;
@@ -117,19 +117,19 @@
 
 .td {
     padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
-    color: #262626;
+    border-bottom: 1px solid #e4ebf4;
+    color: #1d2a3b;
 }
 
 .tdCancelDate {
     padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #e4ebf4;
     color: #cf1322;
     font-weight: 500;
 }
 
 .tr {
-    background-color: #f7f7f7;
+    background-color: #f7faff;
     /* Light gray for cancelled items */
     border-left: 4px solid transparent;
     transition: all 0.2s;
@@ -137,11 +137,11 @@
 }
 
 .tr:hover {
-    background-color: #f0f0f0;
+    background-color: #e4ebf4;
 }
 
 .expandedRow {
-    background-color: #f0f0f0;
+    background-color: #e4ebf4;
     border-left: 4px solid #cf1322;
     /* Red accent on expand */
 }
@@ -152,7 +152,7 @@
     transition: transform 0.2s;
     font-size: 10px;
     margin-right: 8px;
-    color: #8c8c8c;
+    color: #6a7991;
 }
 
 .chevron.open {
@@ -163,30 +163,4 @@
     background-color: #fff;
 }
 
-.detailWrapper {
-    padding: 16px 24px;
-    background-color: #fff;
-    border-bottom: 1px solid #f0f0f0;
-}
 
-.childTable {
-    width: 100%;
-    margin: 0;
-    border-collapse: collapse;
-    font-size: 12px;
-}
-
-.childTh {
-    background-color: #f5f5f5;
-    color: #595959;
-    padding: 8px 12px;
-    border-bottom: 1px solid #d9d9d9;
-    font-weight: 600;
-}
-
-.childTd {
-    padding: 8px 12px;
-    border-bottom: 1px solid #f0f0f0;
-    color: #595959;
-    font-variant-numeric: tabular-nums;
-}

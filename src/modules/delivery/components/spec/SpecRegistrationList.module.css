@@ -30,20 +30,20 @@
 .label {
     font-size: 13px;
     font-weight: 600;
-    color: #595959;
+    color: #4b5b74;
 }
 
 .select,
 .input {
     padding: 6px 10px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid #cad6e6;
     border-radius: 4px;
     font-size: 13px;
     min-width: 120px;
 }
 
 .primaryButton {
-    background-color: #1890ff;
+    background-color: #2f7df6;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -58,11 +58,11 @@
 }
 
 .primaryButton:hover {
-    background-color: #40a9ff;
+    background-color: #2f7df6;
 }
 
 .primaryButton:disabled {
-    background-color: #d9d9d9;
+    background-color: #cad6e6;
     cursor: not-allowed;
 }
 
@@ -89,11 +89,11 @@
 }
 
 .th {
-    background-color: #fafafa;
-    color: #595959;
+    background-color: #f7faff;
+    color: #4b5b74;
     font-weight: 600;
     padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #e4ebf4;
     text-align: left;
     position: sticky;
     top: 0;
@@ -102,12 +102,12 @@
 
 .td {
     padding: 12px 16px;
-    border-bottom: 1px solid #f0f0f0;
-    color: #262626;
+    border-bottom: 1px solid #e4ebf4;
+    color: #1d2a3b;
 }
 
 .tr:hover {
-    background-color: #fafafa;
+    background-color: #f7faff;
 }
 
 /* Accordion */
@@ -125,7 +125,7 @@
     transition: transform 0.2s;
     font-size: 10px;
     margin-right: 8px;
-    color: #8c8c8c;
+    color: #6a7991;
 }
 
 .chevron.open {
@@ -133,29 +133,9 @@
 }
 
 .detailRow {
-    background-color: #fafafa;
+    background-color: #f7faff;
 }
 
-.childTable {
-    width: 100%;
-    margin: 0;
-    border-collapse: collapse;
-    font-size: 12px;
-}
-
-.childTh {
-    background-color: #f0f0f0;
-    color: #595959;
-    padding: 8px 12px;
-    border-bottom: 1px solid #d9d9d9;
-    font-weight: 600;
-}
-
-.childTd {
-    padding: 8px 12px;
-    border-bottom: 1px solid #f0f0f0;
-    color: #595959;
-}
 
 /* Badges */
 .badgePending {
@@ -175,3 +155,4 @@
     border-radius: 4px;
     font-size: 11px;
 }
+

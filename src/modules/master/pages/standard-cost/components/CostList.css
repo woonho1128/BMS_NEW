@@ -18,20 +18,31 @@
 }
 
 .cost-list-row:hover {
-    background: #f8f9fa;
+    background: #f7faff;
 }
 
 .cost-list-row.selected {
-    background: #e6f7ff;
+    background: #edf4ff;
 }
 
 .cost-list-row.selected td {
-    background: #e6f7ff !important;
+    background: #edf4ff !important;
 }
 
 /* Table Header Style Override */
 .cost-list-wrapper .ant-table-thead>tr>th {
-    background: #fafafa;
+    background: #f5f8ff;
     font-weight: 600;
-    color: #595959;
+    color: #3d4c64;
+    border-bottom: 1px solid #e4ebf4 !important;
+    font-size: 12px;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+
+.cost-list-wrapper .ant-table-tbody>tr>td {
+    font-size: 12px;
+    color: #3d4c64;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
 }

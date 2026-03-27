@@ -1,0 +1,271 @@
+.shellWide {
+  max-width: 100%;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mainCard {
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  padding: 20px;
+}
+
+.pageTitle {
+  margin: 0 0 16px 0;
+  color: #172338;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #e4ebf4;
+  margin-bottom: 16px;
+}
+
+.tab,
+.tabActive {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #4b5b74;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: #2f7df6;
+}
+
+.tabActive {
+  color: #2f7df6;
+  font-weight: 600;
+  border-bottom-color: #2f7df6;
+}
+
+.tabPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.sectionTitle {
+  margin: 0;
+  color: #172338;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.statusWrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: #f0f5ff;
+  border: 1px solid #adc6ff;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #2f54eb;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1890ff;
+}
+
+.tooltipWrap {
+  position: relative;
+}
+
+.logicBtn {
+  font-size: 12px;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 100;
+  background: #fff;
+  border: 1px solid #dce4ef;
+  border-radius: 8px;
+  padding: 12px;
+  width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  color: #172338;
+}
+
+.tooltipWrap:hover .tooltip {
+  display: block;
+}
+
+.tooltip p {
+  margin: 0 0 8px 0;
+}
+
+.tooltip p:last-child {
+  margin: 0;
+}
+
+.tableCard {
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+  overflow: hidden;
+  background: #fff;
+}
+
+.tableTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e4ebf4;
+  background: #fbfdff;
+}
+
+.tableCount {
+  font-size: 13px;
+  color: #6a7991;
+}
+
+.btnDanger {
+  background-color: #ff4d4f !important;
+  color: #fff !important;
+  border-color: #ff4d4f !important;
+}
+
+.tableContainer {
+  width: 100%;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  border: 1px solid #e4ebf4;
+}
+
+.thGroup {
+  background-color: #f0f5ff;
+  color: #2f54eb;
+  font-weight: 600;
+  text-align: center;
+}
+
+.th {
+  background-color: #f7faff;
+  color: #4b5b74;
+  font-weight: 600;
+  text-align: center;
+}
+
+.thSum {
+  background-color: #f2f5fa;
+  color: #172338;
+  font-weight: 700;
+  text-align: right;
+}
+
+.td {
+  color: #1d2a3b;
+}
+
+.tdCenter {
+  color: #1d2a3b;
+  text-align: center;
+}
+
+.tdNum {
+  color: #1d2a3b;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tdNumSum {
+  color: #1d2a3b;
+  text-align: right;
+  background-color: #fafafa;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.tr:hover {
+  background-color: #f8fbff;
+}
+
+.tfootTr td {
+  background-color: #f7faff;
+}
+
+.toggle {
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 48px;
+}
+
+.toggleOn {
+  background-color: #ff4d4f;
+  color: #fff;
+}
+
+.toggleOff {
+  background-color: #d9d9d9;
+  color: #fff;
+}
+
+.collectionWrap {
+  padding: 8px 0;
+}
+
+@media (max-width: 1024px) {
+  .shellWide {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}

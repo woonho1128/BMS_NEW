@@ -61,7 +61,7 @@ export function ShipmentDetailPanel({ order, isAdmin, onRegisterClick }) {
                     <div className="detail-title">{order.orderNo}</div>
                     <div className="detail-sub">{order.dealer} | {order.orderDate}</div>
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div className="detail-header-actions">
                     {isAdmin && (
                         <Button type="primary" icon={<PlusOutlined />} onClick={onRegisterClick}>
                             출고 등록
@@ -104,8 +104,8 @@ export function ShipmentDetailPanel({ order, isAdmin, onRegisterClick }) {
 
                 {/* 3. Tracking Timeline (Conditional) */}
                 {activeShipment && (
-                    <div className="section-block" style={{ marginTop: 24, padding: 16, background: '#f9f9f9', borderRadius: 8 }}>
-                        <div className="section-title" style={{ marginBottom: 16 }}>
+                    <div className="section-block tracking-block">
+                        <div className="section-title tracking-title">
                             <CarOutlined /> 배송 추적 ({activeShipment.trackingNo} - {activeShipment.carrier})
                         </div>
                         <Timeline mode="left">

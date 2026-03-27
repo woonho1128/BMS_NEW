@@ -41,7 +41,7 @@ export function login(payload) {
               role: 'HEADQUARTERS',
               department: 'IT팀',
               position: '시스템 관리자',
-              permissions: ['APPROVAL', 'VIEW_FINANCE', 'MANAGE_SALES', 'MANAGE_DELIVERY', 'VIEW_REPORT', 'MANAGE_PARTNER_NOTICE'],
+              permissions: ['APPROVAL', 'VIEW_FINANCE', 'MANAGE_SALES', 'MANAGE_DELIVERY', 'VIEW_REPORT', 'MANAGE_PARTNER_NOTICE', 'MANAGE_DATA_COLLECTION_VENDOR'],
             };
 
         resolve({ success: true, token: MOCK_TOKEN, user });

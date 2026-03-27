@@ -1,5 +1,5 @@
 /* ===============================
-   1. 전체: h-screen(100vh) 고정, sticky top-0, transition-all
+   1. ?꾩껜: h-screen(100vh) 怨좎젙, sticky top-0, transition-all
 ================================ */
 .sidebar {
   flex-shrink: 0;
@@ -28,7 +28,7 @@
 }
 
 /* ===============================
-   상단: 로고 & 컨트롤 (Toggle, Pin, Logout)
+   ?곷떒: 濡쒓퀬 & 而⑦듃濡?(Toggle, Pin, Logout)
 ================================ */
 .top {
   flex-shrink: 0;
@@ -36,7 +36,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  /* 로고(가로) + 버튼 겹침 방지 */
+  /* 濡쒓퀬(媛濡? + 踰꾪듉 寃뱀묠 諛⑹? */
   padding: 14px 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   min-width: 0;
@@ -60,13 +60,13 @@
 }
 
 .brandMark {
-  /* sidebar(기본 256px)에서 우측 버튼과 겹치지 않게 */
+  /* sidebar(湲곕낯 256px)?먯꽌 ?곗륫 踰꾪듉怨?寃뱀튂吏 ?딄쾶 */
   width: 160px;
   height: 44px;
   flex-shrink: 0;
   border-radius: 12px;
-  /* 더 밝은 회색 바탕 */
-  background: #f0f0f0;
+  /* ??諛앹? ?뚯깋 諛뷀깢 */
+  background: #e4ebf4;
   border: none;
   display: flex;
   align-items: center;
@@ -154,7 +154,7 @@
 }
 
 /* ===============================
-   하단: 사용자 패널 (Tip 대체)
+   ?섎떒: ?ъ슜???⑤꼸 (Tip ?泥?
 ================================ */
 .userPanel {
   flex-shrink: 0;
@@ -231,8 +231,8 @@
 }
 
 .sidebar:not(.sidebarExpanded) .userDropdown {
-  /* 접힌 상태(64px)에서는 왼쪽으로 밀려 화면 밖으로 나가므로,
-     사이드바 오른쪽 바깥으로 펼치기 */
+  /* ?묓엺 ?곹깭(64px)?먯꽌???쇱そ?쇰줈 諛???붾㈃ 諛뽰쑝濡??섍?誘濡?
+     ?ъ씠?쒕컮 ?ㅻⅨ履?諛붽묑?쇰줈 ?쇱튂湲?*/
   left: calc(100% + 8px);
   right: auto;
   bottom: 12px;
@@ -264,7 +264,7 @@
   color: #fecaca;
 }
 
-/* 비밀번호 변경 모달 폼 */
+/* 鍮꾨?踰덊샇 蹂寃?紐⑤떖 ??*/
 .pwForm {
   display: flex;
   flex-direction: column;
@@ -318,7 +318,7 @@
 }
 
 /* ===============================
-   중간: 메뉴 (flex-1 + overflow-y-auto), 스크롤바 슬림
+   以묎컙: 硫붾돱 (flex-1 + overflow-y-auto), ?ㅽ겕濡ㅻ컮 ?щ┝
 ================================ */
 .navWrap {
   height: calc(100vh - 45px - 60px);
@@ -353,11 +353,11 @@
   min-width: 0;
 }
 
-/* 탭 전환 UI */
+/* ???꾪솚 UI */
 .tabs {
   display: flex;
   gap: 4px;
-  /* 전체 메뉴/즐겨찾기 탭을 조금 위로 */
+  /* ?꾩껜 硫붾돱/利먭꺼李얘린 ??쓣 議곌툑 ?꾨줈 */
   padding: 0 12px 8px 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -398,7 +398,7 @@
 }
 
 /* ===============================
-   하단: 회사 정보 푸터 (60px, absolute)
+   ?섎떒: ?뚯궗 ?뺣낫 ?명꽣 (60px, absolute)
 ================================ */
 .sidebarFooter {
   position: absolute;
@@ -406,8 +406,8 @@
   left: 0;
   right: 0;
   height: 60px;
-  background: #f5f5f5;
-  border-top: 1px solid #ddd;
+  background: #f7faff;
+  border-top: 1px solid #dce4ef;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -427,7 +427,7 @@
   justify-content: center;
   font-size: 14px;
   font-weight: 800;
-  color: #333;
+  color: #1d2a3b;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -436,7 +436,7 @@
   background: transparent;
   font-size: 11px;
   font-weight: 800;
-  color: #333;
+  color: #1d2a3b;
   text-align: center;
   line-height: 1.2;
   cursor: pointer;
@@ -552,7 +552,7 @@
   flex-shrink: 0;
 }
 
-/* 접힌 상태: 아이콘만 */
+/* ?묓엺 ?곹깭: ?꾩씠肄섎쭔 */
 .collapsedNav {
   display: flex;
   flex-direction: column;
@@ -588,7 +588,7 @@
 }
 
 /* ===============================
-   Group / 카테고리 / 아이템 (IA 유지)
+   Group / 移댄뀒怨좊━ / ?꾩씠??(IA ?좎?)
 ================================ */
 .group {
   margin-bottom: 4px;
@@ -628,7 +628,6 @@
 .middleGroupHeader {
   font-size: 13px;
   font-weight: 600;
-  padding-left: 28px;
 }
 
 .groupLabel {
@@ -676,7 +675,7 @@
   margin-bottom: 0;
 }
 
-/* 2레벨 접기/펼치기 그룹 (1레벨 내부) */
+/* 2?덈꺼 ?묎린/?쇱튂湲?洹몃９ (1?덈꺼 ?대?) */
 .nestedGroup {
   margin-bottom: 8px;
   min-width: 0;
@@ -748,9 +747,6 @@
   font-weight: 600;
 }
 
-.childItem {
-  padding-left: 44px;
-}
 
 .iconSlot {
   width: var(--sidebar-icon-size, 24px);
@@ -770,7 +766,7 @@
   text-overflow: ellipsis;
 }
 
-/* 별표 버튼 */
+/* 蹂꾪몴 踰꾪듉 */
 .starBtn {
   position: absolute;
   right: 8px;
@@ -807,7 +803,7 @@
 
 
 /* ===============================
-   하단: Tip (펼침 시 전체, 접힘 시 아이콘만)
+   ?섎떒: Tip (?쇱묠 ???꾩껜, ?묓옒 ???꾩씠肄섎쭔)
 ================================ */
 .footer {
   flex-shrink: 0;
@@ -920,7 +916,7 @@
 }
 
 @media (max-width: 600px) {
-  /* keep, 480에서 더 축소 */
+  /* keep, 480?먯꽌 ??異뺤냼 */
 }
 
 @media (max-width: 480px) {
@@ -928,3 +924,4 @@
     display: none;
   }
 }
+

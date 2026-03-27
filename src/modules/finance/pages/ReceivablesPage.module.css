@@ -1,4 +1,4 @@
-.page {
+﻿.page {
   display: grid;
   gap: var(--layout-section-gap);
 }
@@ -23,8 +23,8 @@
   border: 1px solid var(--color-border);
   background: #fff;
   color: var(--color-text-secondary);
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -34,14 +34,14 @@
 }
 
 .tabActive {
-  border-color: #1890ff;
-  background: rgba(24, 144, 255, 0.12);
-  color: #1890ff;
+  border-color: #2f7df6;
+  background: #edf4ff;
+  color: #1f64d8;
 }
 
 .filterToolbar {
-  background: #f5f5f5;
-  border-color: #e8e8e8;
+  background: #f7faff;
+  border-color: #dce4ef;
   padding: 12px 14px;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .billWrap {
-  background: #f0f2f5;
+  background: transparent;
   border-radius: 14px;
   padding: 14px;
   display: grid;
@@ -70,26 +70,27 @@
 .card {
   background: #fff;
   border-radius: 14px;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid #dce4ef;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   padding: 16px;
 }
 
 .billFilterToolbar {
   background: #fff;
   border: none;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   padding: 16px;
 }
 
 .collateralFilterToolbar {
   background: #fff;
   border: none;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   padding: 16px;
 }
 
 .depositWrap {
-  background: #f0f2f5;
+  background: transparent;
   border-radius: 14px;
   padding: 14px;
   display: grid;
@@ -99,31 +100,32 @@
 .depositFilterToolbar {
   background: #fff;
   border: none;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   padding: 14px 16px;
-  border-radius: 8px;
+  border-radius: 12px;
   --listfilter-gap: 15px;
 }
 
 .depositSearchBtn {
   height: 32px;
   padding: 0 14px;
-  background: #1890ff;
-  border: 1px solid #1890ff;
+  background: #2f7df6;
+  border: 1px solid #2f7df6;
   color: #fff;
   border-radius: 8px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .depositSearchBtn:hover:not(:disabled) {
-  background: #1677ff;
-  border-color: #1677ff;
+  background: #1f64d8;
+  border-color: #1f64d8;
 }
 
 .depositCard {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 12px;
+  border: 1px solid #dce4ef;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   padding: 16px;
 }
 
@@ -137,13 +139,13 @@
 
 .depositTitle {
   font-size: 14px;
-  font-weight: 900;
+  font-weight: 700;
   color: var(--color-text);
 }
 
 .depositSum {
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--color-text-secondary);
   white-space: nowrap;
 }
@@ -159,30 +161,30 @@
 }
 
 .depositTable thead th {
-  background: #f5f7f9;
-  font-weight: 800;
+  background: #f5f8ff;
+  font-weight: 600;
   color: #334155;
   font-size: 13px;
   padding: 9px 10px;
   text-align: left;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid #e4ebf4;
 }
 
 .depositTable tbody td {
   padding: 9px 10px;
   height: 36px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #edf2f8;
   color: var(--color-text);
   font-size: 13px;
 }
 
 .depositTable tbody tr:hover td {
-  background: #f8fafc;
+  background: #f7faff;
 }
 
 .depositAmount {
   text-align: right;
-  font-weight: 900;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
@@ -196,7 +198,7 @@
 
 .gridTitle {
   font-size: 14px;
-  font-weight: 900;
+  font-weight: 700;
   color: var(--color-text);
 }
 
@@ -204,7 +206,7 @@
   margin-top: 4px;
   font-size: 12px;
   color: var(--color-text-secondary);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .collateralTable {
@@ -213,25 +215,25 @@
 }
 
 .collateralTable thead th {
-  background: #f5f7f9;
-  font-weight: 800;
+  background: #f5f8ff;
+  font-weight: 600;
   color: #334155;
   font-size: 13px;
   padding: 8px 10px;
   text-align: left;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e4ebf4;
 }
 
 .collateralTable tbody td {
   padding: 8px 10px;
   height: 36px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #edf2f8;
   color: var(--color-text);
   font-size: 13px;
 }
 
 .collateralTable tbody tr:hover td {
-  background: #f8fafc;
+  background: #f7faff;
 }
 
 .badge {
@@ -241,14 +243,14 @@
   padding: 0 10px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   border: 1px solid transparent;
 }
 
 .badgeNormal {
-  background: rgba(24, 144, 255, 0.12);
-  border-color: rgba(24, 144, 255, 0.25);
-  color: #1890ff;
+  background: #edf4ff;
+  border-color: #bcd4fb;
+  color: #1f64d8;
 }
 
 .badgeCancelled {
@@ -266,7 +268,7 @@
 .summaryCard {
   background: #fff;
   border-radius: 14px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   padding: 16px;
   display: flex;
   align-items: center;
@@ -286,8 +288,8 @@
 }
 
 .summaryIcon {
-  background: rgba(24, 144, 255, 0.14);
-  color: #1890ff;
+  background: rgba(47, 125, 246, 0.14);
+  color: #2f7df6;
 }
 
 .summaryIconAlt {
@@ -304,12 +306,12 @@
 .summaryLabel {
   font-size: 12px;
   color: var(--color-text-secondary);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .summaryValue {
   font-size: 22px;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--color-text);
 }
@@ -324,7 +326,7 @@
 
 .tableTopTitle {
   font-size: 14px;
-  font-weight: 900;
+  font-weight: 700;
   color: var(--color-text);
 }
 
@@ -335,7 +337,7 @@
 
 .billTable thead th {
   background: #f8f9fa;
-  font-weight: 800;
+  font-weight: 600;
   color: #334155;
   font-size: 13px;
   padding: 10px 12px;
@@ -352,7 +354,7 @@
 }
 
 .billTable tbody tr:hover td {
-  background: #f5f5f5;
+  background: #f7faff;
 }
 
 @media (max-width: 900px) {
@@ -374,7 +376,7 @@
 
 .placeholderTitle {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-text);
 }
 
@@ -406,12 +408,12 @@
 .carryTitle {
   font-size: 12px;
   color: var(--color-text-secondary);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .carryValue {
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--color-text);
   white-space: nowrap;
@@ -440,7 +442,7 @@
 
 .tableTitle {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-text);
 }
 
@@ -506,4 +508,5 @@
     white-space: normal;
   }
 }
+
 

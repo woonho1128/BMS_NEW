@@ -1,28 +1,28 @@
-.filterContainer {
+﻿.filterContainer {
     background-color: #fff;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
     margin-bottom: 12px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    /* For animation if added, but mainly clean look */
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 16px;
-    background-color: #fafafa;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 10px 16px;
+    background-color: #f7faff;
+    border-bottom: 1px solid #e4ebf4;
     cursor: pointer;
 }
 
 .headerTitle {
     font-size: 14px;
-    font-weight: 600;
-    color: #262626;
+    font-weight: 700;
+    color: #1d2a3b;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -30,7 +30,7 @@
 
 .toggleIcon {
     font-size: 12px;
-    color: #8c8c8c;
+    color: #6a7991;
     transition: transform 0.3s;
 }
 
@@ -42,7 +42,7 @@
     padding: 12px 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .row {
@@ -60,26 +60,28 @@
 
 .label {
     font-size: 13px;
-    color: #595959;
-    font-weight: 500;
+    color: #4b5b74;
+    font-weight: 600;
 }
 
 .input {
     height: 32px;
-    padding: 0 8px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    padding: 0 10px;
+    border: 1px solid #cad6e6;
+    border-radius: 8px;
     font-size: 13px;
     width: 120px;
+    background: #fff;
 }
 
 .select {
     height: 32px;
-    padding: 0 8px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    padding: 0 10px;
+    border: 1px solid #cad6e6;
+    border-radius: 8px;
     font-size: 13px;
     width: 120px;
+    background: #fff;
 }
 
 .checkboxLabel {
@@ -87,7 +89,7 @@
     align-items: center;
     gap: 4px;
     font-size: 13px;
-    color: #595959;
+    color: #4b5b74;
     cursor: pointer;
     user-select: none;
 }
@@ -95,15 +97,17 @@
 .searchButton {
     height: 32px;
     padding: 0 16px;
-    background-color: #262626;
+    background: linear-gradient(135deg, #1f64d8 0%, #2f7df6 100%);
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 13px;
+    font-weight: 700;
     cursor: pointer;
     margin-left: auto;
 }
 
 .searchButton:hover {
-    background-color: #404040;
+    filter: brightness(1.04);
 }
+

@@ -2,11 +2,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     background-color: #fff;
-    padding: 12px 16px;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    padding: 12px 14px;
+    border: 1px solid #e4ebf4;
+    border-radius: 12px;
     margin-bottom: 12px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
 }
 
 .leftGroup {
@@ -16,19 +18,24 @@
 }
 
 .snapshotSelect {
-    height: 32px;
+    height: 34px;
     padding: 0 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    border: 1px solid #cad6e6;
+    border-radius: 8px;
     font-size: 14px;
-    color: #262626;
+    color: #1d2a3b;
     outline: none;
     cursor: pointer;
 }
 
+.snapshotSelect:focus {
+    border-color: #2f7df6;
+    box-shadow: 0 0 0 2px rgba(47, 125, 246, 0.14);
+}
+
 .infoText {
     font-size: 13px;
-    color: #8c8c8c;
+    color: #6a7991;
 }
 
 .rightGroup {
@@ -37,30 +44,47 @@
 }
 
 .actionButton {
-    height: 32px;
+    height: 34px;
     padding: 0 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
+    border: 1px solid #cad6e6;
+    border-radius: 8px;
     background-color: #fff;
-    color: #595959;
+    color: #4b5b74;
     font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.18s;
 }
 
 .actionButton:hover {
-    border-color: #1890ff;
-    color: #1890ff;
+    border-color: #2f7df6;
+    color: #2f7df6;
 }
 
 .primaryButton {
-    background-color: #1890ff;
+    background-color: #2f7df6;
     color: #fff;
-    border: 1px solid #1890ff;
+    border: 1px solid #2f7df6;
 }
 
 .primaryButton:hover {
-    background-color: #40a9ff;
+    background-color: #1f64d8;
     color: #fff;
-    border-color: #40a9ff;
+    border-color: #1f64d8;
+}
+
+@media (max-width: 960px) {
+    .headerBarContainer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .leftGroup {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .rightGroup {
+        flex-wrap: wrap;
+    }
 }

@@ -1,6 +1,9 @@
 .page {
   padding: var(--space-lg);
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .header {
@@ -28,8 +31,10 @@
 
 .detailJson {
   font-size: var(--font-size-sm);
-  background: var(--color-bg);
+  background: #ffffff;
+  border: 1px solid #dce4ef;
   padding: var(--space-md);
-  border-radius: var(--radius-md);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   overflow: auto;
 }

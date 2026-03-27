@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import styles from '../../pages/DeliveryPlanPage.module.css'; // Shared styles
 import { SummaryFilterBar } from '../filters/SummaryFilterBar';
 import { SummarySection } from './SummarySection';
@@ -72,9 +72,9 @@ export const YearSummary = () => {
                         style={{
                             height: '40px',
                             padding: '0 24px',
-                            border: '1px solid #1890ff',
+                            border: '1px solid #2f7df6',
                             backgroundColor: '#fff',
-                            color: '#1890ff',
+                            color: '#2f7df6',
                             borderRadius: '4px',
                             fontWeight: 600,
                             cursor: 'pointer',
@@ -84,7 +84,7 @@ export const YearSummary = () => {
                         }}
                         onClick={() => handleOpenDetail('itemCode')}
                     >
-                        <span>📊</span> 품번, 품목 요약 보기
+                        <span>📊</span> 품번/품목 요약 보기
                     </button>
                 </div>
             </div>
@@ -98,3 +98,4 @@ export const YearSummary = () => {
         </>
     );
 };
+
