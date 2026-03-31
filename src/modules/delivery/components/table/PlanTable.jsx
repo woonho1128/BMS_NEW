@@ -1,13 +1,20 @@
-﻿import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './PlanTable.module.css';
-import { PLAN_COLUMNS } from '../../data/planDummyData';
+import { PLAN_COLUMNS } from '../../data/planColumns';
+
+const ROW_HEIGHT = 49;
+const OVERSCAN = 16;
 
 export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick, hideManage = false }) => {
+  const tableContainerRef = useRef(null);
+  const rafRef = useRef(null);
   const [expandedRows, setExpandedRows] = useState({});
   const [sortConfig, setSortConfig] = useState(null);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(600);
 
   const toggleRow = (rowId) => {
-    setExpandedRows((prev) => ({ ...prev, [rowId]: !prev[rowId] }));
+    setExpandedRows((prev) => (prev[rowId] ? {} : { [rowId]: true }));
   };
 
   const requestSort = (key) => {
@@ -45,6 +52,44 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick, hideManag
     return sorted;
   }, [rows, sortConfig]);
 
+  const enableVirtualization = sortedRows.length > 200;
+
+  useEffect(() => {
+    const container = tableContainerRef.current;
+    if (!container) return undefined;
+
+    const handleResize = () => {
+      setViewportHeight(container.clientHeight || 600);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const container = tableContainerRef.current;
+    if (!container) return;
+    container.scrollTop = 0;
+    setScrollTop(0);
+  }, [rows, sortConfig]);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  const totalRows = sortedRows.length;
+  const visibleCount = Math.ceil(viewportHeight / ROW_HEIGHT) + OVERSCAN * 2;
+  const startIndex = enableVirtualization ? Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - OVERSCAN) : 0;
+  const endIndex = enableVirtualization ? Math.min(totalRows, startIndex + visibleCount) : totalRows;
+  const topSpacerHeight = enableVirtualization ? startIndex * ROW_HEIGHT : 0;
+  const bottomSpacerHeight = enableVirtualization ? Math.max(0, (totalRows - endIndex) * ROW_HEIGHT) : 0;
+  const renderRows = enableVirtualization ? sortedRows.slice(startIndex, endIndex) : sortedRows;
+
   const formatNumber = (val) => {
     if (val === 0 || val == null) return '-';
     return val.toLocaleString();
@@ -61,14 +106,25 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick, hideManag
   };
 
   return (
-    <div className={styles.tableContainer}>
+    <div
+      ref={tableContainerRef}
+      className={styles.tableContainer}
+      onScroll={(e) => {
+        if (!enableVirtualization) return;
+        const nextTop = e.currentTarget.scrollTop;
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        rafRef.current = requestAnimationFrame(() => {
+          setScrollTop(nextTop);
+        });
+      }}
+    >
       <table className={styles.table}>
         <colgroup>
           <col style={{ width: 40 }} />
           {PLAN_COLUMNS.map((col) => (
             <col key={col.key} style={{ width: col.width }} />
           ))}
-          <col style={{ width: 68 }} />
+          {!hideManage && <col style={{ width: 68 }} />}
         </colgroup>
         <thead>
           <tr>
@@ -92,7 +148,13 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick, hideManag
           </tr>
         </thead>
         <tbody>
-          {sortedRows.map((row) => {
+          {topSpacerHeight > 0 && (
+            <tr aria-hidden="true">
+              <td colSpan={PLAN_COLUMNS.length + (hideManage ? 1 : 2)} className={styles.virtualSpacerCell} style={{ height: `${topSpacerHeight}px` }} />
+            </tr>
+          )}
+
+          {renderRows.map((row) => {
             const isCompleted = row.status === '완료' || row.status === '취소';
             const isExpanded = expandedRows[row.id];
 
@@ -235,6 +297,12 @@ export const PlanTable = ({ rows, onCellChange, onAction, onSiteClick, hideManag
               </React.Fragment>
             );
           })}
+
+          {bottomSpacerHeight > 0 && (
+            <tr aria-hidden="true">
+              <td colSpan={PLAN_COLUMNS.length + (hideManage ? 1 : 2)} className={styles.virtualSpacerCell} style={{ height: `${bottomSpacerHeight}px` }} />
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

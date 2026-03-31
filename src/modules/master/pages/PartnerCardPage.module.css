@@ -1,17 +1,14 @@
-/* 대리점 관리카드 - 거래처 관리카드 문서 톤, ERP vs 담당자 구분 */
-
-/* 웹: 전체 너비 사용 */
 .page {
   width: 100%;
   padding: 0 var(--space-lg);
   padding-bottom: var(--space-xl);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .card {
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-sm);
 }
 
 .notFound {
@@ -19,7 +16,6 @@
   color: var(--color-text-secondary);
 }
 
-/* ----- ERP 연동 영역 (ReadOnly + 자물쇠) ----- */
 .erpBlock {
   background: #f7faff;
   border: 1px solid #dce4ef;
@@ -75,9 +71,8 @@
   margin-bottom: 0;
 }
 
-/* ----- 담당자 입력 영역 (연한 강조 배경) ----- */
 .editableBlock {
-  background: rgba(var(--color-primary-rgb, 59, 130, 246), 0.06);
+  background: rgba(var(--color-primary-rgb, 59, 130, 246), 0.05);
   border: 1px solid #dce4ef;
   border-radius: 10px;
   padding: var(--space-md);
@@ -110,18 +105,20 @@
   border-color: var(--color-primary);
 }
 
-/* ----- 5년 매출 테이블 ----- */
 .tableWrap {
   overflow-x: auto;
   border: 1px solid #dce4ef;
   border-radius: 12px;
   background: #fff;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.brandTableWrap {
+  overflow-x: auto;
 }
 
 .table {
   width: 100%;
-  min-width: 200px;
+  min-width: 760px;
   border-collapse: collapse;
   font-size: var(--font-size-sm);
 }
@@ -132,13 +129,15 @@
 .tdNum {
   padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid #edf2f8;
+  border-right: 1px solid #edf2f8;
   text-align: left;
 }
 
-.thNum,
-.tdNum {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+.th:last-child,
+.td:last-child,
+.thNum:last-child,
+.tdNum:last-child {
+  border-right: none;
 }
 
 .th,
@@ -150,14 +149,15 @@
   vertical-align: middle;
 }
 
+.thNum,
+.tdNum {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .th > span {
   display: inline-block;
   margin-right: var(--space-xs);
-}
-
-.thAction {
-  width: 80px;
-  text-align: center;
 }
 
 .emptyCell {
@@ -166,7 +166,6 @@
   padding: var(--space-md);
 }
 
-/* ----- 담당자 입력 테이블 (5번) ----- */
 .tableInput,
 .tableSelect {
   width: 100%;
@@ -179,10 +178,96 @@
   background: #fff;
 }
 
+.tableInput:disabled {
+  color: #8a9ab0;
+  background: #f3f6fb;
+  border-color: #d9e2ef;
+}
+
 .tableInput:focus,
-.tableSelect:focus {
+.tableSelect:focus,
+.inlineInput:focus {
   outline: none;
   border-color: var(--color-primary);
+}
+
+.mapToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.inlineField {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #5f7088;
+  font-weight: 600;
+}
+
+.inlineInput {
+  width: 120px;
+  height: 32px;
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
+  padding: 0 8px;
+  font-size: 13px;
+  background: #fff;
+}
+
+.mapPreview {
+  border: 1px dashed #bfd0e8;
+  border-radius: 10px;
+  background: #f8fbff;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.mapPreviewTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2c3f5b;
+}
+
+.mapPreviewSub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6a7d97;
+}
+
+.pinList {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pinChip {
+  border: 1px solid #cddaf0;
+  background: #fff;
+  color: #2f4766;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.pinEmpty {
+  color: #8092ab;
+  font-size: 12px;
+}
+
+.pointsActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.summaryLine {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #4d617f;
 }
 
 .deleteBtn {
@@ -199,7 +284,6 @@
   background: rgba(220, 38, 38, 0.08);
 }
 
-/* ----- 푸터 ----- */
 .footer {
   display: flex;
   justify-content: flex-end;
@@ -223,7 +307,6 @@
   margin: 0;
 }
 
-/* ----- 반응형: 모바일만 카드형 유지 ----- */
 @media (max-width: 768px) {
   .page {
     padding: 0 var(--space-sm);
@@ -236,19 +319,5 @@
 
   .footer {
     flex-wrap: wrap;
-  }
-
-  .footer button {
-    min-height: 44px;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer {
-    flex-direction: column;
-  }
-
-  .footer button {
-    width: 100%;
   }
 }

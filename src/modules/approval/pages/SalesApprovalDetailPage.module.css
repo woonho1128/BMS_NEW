@@ -1,0 +1,265 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.card {
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
+  padding: var(--space-lg);
+}
+
+.metaRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #edf4ff;
+  color: #1f64d8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f3f6fb;
+  color: #4a5c77;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.authorText {
+  font-size: 14px;
+  color: #1f2f47;
+  font-weight: 700;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: var(--font-size-xl);
+  color: var(--color-text-primary);
+}
+
+.metaText {
+  margin: 0 0 10px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.bodyText {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.sectionTitle {
+  margin: 0 0 10px;
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.grid div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.weeklyView {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.weeklyTopMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.readOnlyField {
+  margin-bottom: 0;
+}
+
+.readOnlyLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2a3d59;
+  margin-bottom: 8px;
+}
+
+.readOnlyValue {
+  margin: 0;
+  font-size: var(--font-size-md);
+  color: #1f2f47;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.weekValue {
+  margin: 0;
+  font-size: var(--font-size-md);
+  line-height: 1.55;
+  font-weight: var(--font-weight-semibold);
+  color: #132949;
+}
+
+.weeklySplitSection {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.weeklyColumn {
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #f9fbff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.weeklyColumnHeader {
+  margin: 0;
+  font-size: var(--font-size-md);
+  line-height: 1.5;
+  font-weight: var(--font-weight-semibold);
+  color: #132949;
+}
+
+.readOnlyList {
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: var(--font-size-md);
+  color: #1f2f47;
+  line-height: 1.55;
+}
+
+.readOnlyList li {
+  margin: 0 0 4px;
+}
+
+.tableWrap {
+  border: 1px solid #e4ebf4;
+  border-radius: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #edf2f8;
+  font-size: var(--font-size-sm);
+  vertical-align: middle;
+}
+
+.table th {
+  background: #f5f8ff;
+  text-align: left;
+}
+
+.thCenter {
+  text-align: center !important;
+}
+
+.cellRight {
+  text-align: right;
+}
+
+.cellCenter {
+  text-align: center;
+}
+
+.metricRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.metricBox {
+  border: 1px solid #e4ebf4;
+  border-radius: 10px;
+  background: #f8fbff;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metricLabel {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.metricValue {
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+}
+
+.textarea {
+  width: 100%;
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: var(--font-size-md);
+  resize: vertical;
+  font-family: inherit;
+}
+
+.actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .weeklySplitSection {
+    grid-template-columns: 1fr;
+  }
+
+  .metricRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}

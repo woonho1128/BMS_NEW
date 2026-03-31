@@ -5,7 +5,7 @@ import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { Modal } from '../../../shared/components/Modal/Modal';
 import { ROUTES } from '../../../router/routePaths';
-import { getMyWeeklyReportList, getMyWeeklyReportById, getMyLatestWeeklyReport } from '../data/reportMock';
+import { getMyWeeklyReportList, getMyWeeklyReportById } from '../data/reportMock';
 import styles from './WeeklyReportFormPage.module.css';
 
 const DEFAULT_TASK = { text: '' };

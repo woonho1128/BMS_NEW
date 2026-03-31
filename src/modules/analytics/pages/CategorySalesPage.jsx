@@ -5,15 +5,13 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { useKpiTableData } from '../hooks/useKpiTableData';
+import { createYearOptions, getCurrentYear } from '../../../shared/utils/dateOptions';
 import styles from './PartnerPerformancePage.module.css';
 
 const { Text } = Typography;
 
-const currentYear = new Date().getFullYear();
-const yearOptions = Array.from({ length: 5 }, (_, i) => {
-  const y = String(currentYear - i);
-  return { value: y, label: `${y}년` };
-});
+const currentYear = getCurrentYear();
+const yearOptions = createYearOptions();
 
 const baseMockRows = [
   { key: 1, category1: '바닥재', category2: '포세린', itemCode: 'FT-1001', derivCode: '-', itemName: '600x600 유광 포세린', isDeliveryPossible: false },

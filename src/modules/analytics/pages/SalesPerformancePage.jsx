@@ -1,288 +1,326 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Table, ConfigProvider, Typography } from 'antd';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
+import { createMonthOptions, createYearOptions, getCurrentYear } from '../../../shared/utils/dateOptions';
 import styles from './SalesPerformancePage.module.css';
 
-const { Text } = Typography;
+const now = new Date();
+const currentYear = getCurrentYear();
+const currentMonth = now.getMonth() + 1;
 
-const formatNumber = (num) => new Intl.NumberFormat('ko-KR').format(num || 0);
+const yearOptions = createYearOptions();
+const monthOptions = createMonthOptions();
 
-const currentYear = new Date().getFullYear();
-const yearOptions = Array.from({ length: 5 }, (_, i) => {
-  const y = String(currentYear - i);
-  return { value: y, label: `${y}년` };
-});
+const teamOptions = [
+  { value: 'retail-1', label: '리테일1팀' },
+  { value: 'retail-2', label: '리테일2팀' },
+  { value: 'retail-3', label: '리테일3팀' },
+  { value: 'tile-team', label: '타일영업팀' },
+  { value: 'support-team', label: '영업지원팀' },
+];
 
-const monthOptions = Array.from({ length: 12 }, (_, i) => {
-  const m = String(i + 1).padStart(2, '0');
-  return { value: m, label: `${i + 1}월` };
-});
+const typeRows = ['도소매출고', '납품출고', '계'];
+const monthKeys = [1, 2, 3, 4];
 
-function buildMonthData(startYear, startMonth, endYear, endMonth, seed = 1) {
-  const result = {};
-  let y = parseInt(startYear, 10);
-  let m = parseInt(startMonth, 10);
-  const ey = parseInt(endYear, 10);
-  const em = parseInt(endMonth, 10);
-
-  let idx = 0;
-  while (y < ey || (y === ey && m <= em)) {
-    const mm = String(m).padStart(2, '0');
-    const key = `${y}${mm}`;
-    const sales = Math.max(1000000, 12000000 + seed * 2300000 + idx * 1700000);
-    const cost = Math.floor(sales * 0.72);
-    result[`${key}_sales`] = sales;
-    result[`${key}_cost`] = cost;
-    result[`${key}_profit`] = sales - cost;
-    idx += 1;
-    m += 1;
-    if (m > 12) {
-      y += 1;
-      m = 1;
-    }
-  }
-
-  return result;
+function n(value) {
+  return Number(value || 0);
 }
 
-function sumBySuffix(row, suffix) {
-  return Object.entries(row)
-    .filter(([key]) => key.endsWith(suffix) && /^\d{6}_/.test(key))
-    .reduce((acc, [, val]) => acc + (Number(val) || 0), 0);
+function formatAmount(value) {
+  return n(value).toLocaleString('ko-KR');
+}
+
+function formatRate(value) {
+  return `${Math.round(n(value))}%`;
+}
+
+function baseMonth(plan, actual) {
+  return {
+    plan,
+    actual,
+    rate: plan > 0 ? (actual / plan) * 100 : 0,
+  };
+}
+
+function buildTeamBlock(team, wholesale, delivery) {
+  const total = monthKeys.reduce(
+    (acc, month) => {
+      const wp = wholesale.monthly[month].plan;
+      const wa = wholesale.monthly[month].actual;
+      const dp = delivery.monthly[month].plan;
+      const da = delivery.monthly[month].actual;
+      acc.monthly[month] = baseMonth(wp + dp, wa + da);
+      acc.cumulative.plan += wp + dp;
+      acc.cumulative.actual += wa + da;
+      return acc;
+    },
+    { monthly: {}, cumulative: { plan: 0, actual: 0, rate: 0 } }
+  );
+  total.cumulative.rate =
+    total.cumulative.plan > 0 ? (total.cumulative.actual / total.cumulative.plan) * 100 : 0;
+
+  return {
+    team,
+    rows: {
+      도소매출고: wholesale,
+      납품출고: delivery,
+      계: total,
+    },
+  };
+}
+
+const teamBlocks = [
+  buildTeamBlock(
+    '리테일1팀',
+    {
+      cumulative: { plan: 29040, actual: 30240, rate: 104.1 },
+      monthly: { 1: baseMonth(2146, 2258), 2: baseMonth(2240, 2340), 3: baseMonth(2334, 2422), 4: baseMonth(2266, 2378) },
+    },
+    {
+      cumulative: { plan: 17040, actual: 16440, rate: 96.5 },
+      monthly: { 1: baseMonth(1152, 1114), 2: baseMonth(1240, 1190), 3: baseMonth(1328, 1266), 4: baseMonth(1272, 1234) },
+    }
+  ),
+  buildTeamBlock(
+    '리테일2팀',
+    {
+      cumulative: { plan: 33840, actual: 33240, rate: 98.2 },
+      monthly: { 1: baseMonth(2546, 2508), 2: baseMonth(2640, 2590), 3: baseMonth(2734, 2672), 4: baseMonth(2666, 2628) },
+    },
+    {
+      cumulative: { plan: 20640, actual: 21840, rate: 105.8 },
+      monthly: { 1: baseMonth(1452, 1564), 2: baseMonth(1540, 1640), 3: baseMonth(1628, 1716), 4: baseMonth(1572, 1684) },
+    }
+  ),
+  buildTeamBlock(
+    '리테일3팀',
+    {
+      cumulative: { plan: 31440, actual: 32640, rate: 103.8 },
+      monthly: { 1: baseMonth(2346, 2458), 2: baseMonth(2440, 2540), 3: baseMonth(2534, 2622), 4: baseMonth(2466, 2578) },
+    },
+    {
+      cumulative: { plan: 18240, actual: 15840, rate: 86.8 },
+      monthly: { 1: baseMonth(1252, 1064), 2: baseMonth(1340, 1140), 3: baseMonth(1428, 1216), 4: baseMonth(1372, 1182) },
+    }
+  ),
+  buildTeamBlock(
+    '타일영업팀',
+    {
+      cumulative: { plan: 14860, actual: 15120, rate: 101.7 },
+      monthly: { 1: baseMonth(1110, 1142), 2: baseMonth(1180, 1216), 3: baseMonth(1250, 1272), 4: baseMonth(1180, 1208) },
+    },
+    {
+      cumulative: { plan: 10920, actual: 11340, rate: 103.8 },
+      monthly: { 1: baseMonth(780, 812), 2: baseMonth(840, 878), 3: baseMonth(900, 928), 4: baseMonth(860, 894) },
+    }
+  ),
+  buildTeamBlock(
+    '영업지원팀',
+    {
+      cumulative: { plan: 2694, actual: 2682, rate: 99.6 },
+      monthly: { 1: baseMonth(0, 0), 2: baseMonth(40, 40), 3: baseMonth(134, 122), 4: baseMonth(66, 78) },
+    },
+    {
+      cumulative: { plan: 25440, actual: 27840, rate: 109.4 },
+      monthly: { 1: baseMonth(1852, 2064), 2: baseMonth(1940, 2140), 3: baseMonth(2028, 2216), 4: baseMonth(1972, 2184) },
+    }
+  ),
+];
+
+function buildDivisionTotal(blocks) {
+  const initLine = {
+    cumulative: { plan: 0, actual: 0, rate: 0 },
+    monthly: monthKeys.reduce((acc, month) => ({ ...acc, [month]: baseMonth(0, 0) }), {}),
+  };
+  const map = {
+    도소매출고: { ...initLine, monthly: { ...initLine.monthly } },
+    납품출고: { ...initLine, monthly: { ...initLine.monthly } },
+    계: { ...initLine, monthly: { ...initLine.monthly } },
+  };
+
+  blocks.forEach((block) => {
+    typeRows.forEach((type) => {
+      map[type].cumulative.plan += block.rows[type].cumulative.plan;
+      map[type].cumulative.actual += block.rows[type].cumulative.actual;
+      monthKeys.forEach((month) => {
+        map[type].monthly[month].plan += block.rows[type].monthly[month].plan;
+        map[type].monthly[month].actual += block.rows[type].monthly[month].actual;
+      });
+    });
+  });
+
+  typeRows.forEach((type) => {
+    const line = map[type];
+    line.cumulative.rate = line.cumulative.plan > 0 ? (line.cumulative.actual / line.cumulative.plan) * 100 : 0;
+    monthKeys.forEach((month) => {
+      const row = line.monthly[month];
+      row.rate = row.plan > 0 ? (row.actual / row.plan) * 100 : 0;
+    });
+  });
+
+  return {
+    team: '리테일부문(타일제외)',
+    rows: map,
+  };
 }
 
 export function SalesPerformancePage() {
   const { pathname } = useLocation();
-  const [filterValue, setFilterValue] = useState({
-    startYear: String(currentYear),
-    startMonth: '09',
-    endYear: String(currentYear),
-    endMonth: '11',
-    outputType: 'client',
-    searchCategory: 'transactionType',
-    salesGroup: 'S112',
-    itemGroup: '',
+  const [filters, setFilters] = useState({
+    year: String(currentYear),
+    month: String(currentMonth),
+    teams: teamOptions.map((team) => team.value),
   });
 
-  const searchCategoryOptions = useMemo(() => {
-    switch (filterValue.outputType) {
-      case 'item':
-        return [{ label: '품목별', value: 'item' }];
-      case 'org':
-        return [
-          { label: '영업사원', value: 'manager' },
-          { label: '영업조직', value: 'org' },
-        ];
-      case 'client':
-        return [
-          { label: '거래유형', value: 'transactionType' },
-          { label: '품목계정', value: 'itemAccount' },
-        ];
-      default:
-        return [];
-    }
-  }, [filterValue.outputType]);
+  const filterFields = useMemo(
+    () => [
+      { id: 'year', label: '기준년도', type: 'select', options: yearOptions, width: 116, row: 0 },
+      { id: 'month', label: '기준월', type: 'select', options: monthOptions, width: 90, row: 0 },
+      { id: 'teams', label: '팀', type: 'checkbox', options: teamOptions, row: 0 },
+    ],
+    []
+  );
 
-  const groupColumns = useMemo(() => {
-    const key = `${filterValue.outputType}__${filterValue.searchCategory}`;
-    switch (key) {
-      case 'item__item':
-        return [
-          { title: '대분류', dataIndex: 'category1', width: 110, fixed: 'left' },
-          { title: '중분류', dataIndex: 'category2', width: 110, fixed: 'left' },
-          { title: '품목코드', dataIndex: 'itemCode', width: 120, fixed: 'left' },
-          { title: '품목명', dataIndex: 'itemName', width: 180, fixed: 'left' },
-        ];
-      case 'org__manager':
-        return [
-          { title: '영업조직', dataIndex: 'orgName', width: 140, fixed: 'left' },
-          { title: '영업사원', dataIndex: 'managerName', width: 120, fixed: 'left' },
-        ];
-      case 'org__org':
-        return [{ title: '영업조직', dataIndex: 'orgName', width: 160, fixed: 'left' }];
-      case 'client__transactionType':
-        return [
-          { title: '거래처', dataIndex: 'clientName', width: 180, fixed: 'left' },
-          { title: '거래유형', dataIndex: 'transactionType', width: 120, fixed: 'left' },
-        ];
-      case 'client__itemAccount':
-        return [
-          { title: '거래처', dataIndex: 'clientName', width: 180, fixed: 'left' },
-          { title: '품목구분', dataIndex: 'itemAccount', width: 120, fixed: 'left' },
-        ];
-      default:
-        return [{ title: '거래처', dataIndex: 'clientName', width: 180, fixed: 'left' }];
-    }
-  }, [filterValue.outputType, filterValue.searchCategory]);
+  const visibleTeamBlocks = useMemo(() => {
+    const selectedTeams = Array.isArray(filters.teams) ? filters.teams : [];
+    if (selectedTeams.length === 0) return [];
+    return teamBlocks.filter((teamBlock) =>
+      selectedTeams.includes(teamOptions.find((item) => item.label === teamBlock.team)?.value)
+    );
+  }, [filters.teams]);
 
-  useEffect(() => {
-    setFilterValue((prev) => ({ ...prev, searchCategory: searchCategoryOptions[0]?.value ?? '' }));
-  }, [filterValue.outputType]); // eslint-disable-line react-hooks/exhaustive-deps
+  const allBlocks = useMemo(() => [buildDivisionTotal(visibleTeamBlocks), ...visibleTeamBlocks], [visibleTeamBlocks]);
 
-  const handleFilterChange = useCallback((id, value) => {
-    setFilterValue((prev) => ({ ...prev, [id]: value }));
-  }, []);
+  const summary = useMemo(() => {
+    const target = allBlocks.reduce(
+      (acc, block) => {
+        acc.plan += block.rows.계.cumulative.plan;
+        acc.actual += block.rows.계.cumulative.actual;
+        return acc;
+      },
+      { plan: 0, actual: 0, rate: 0 }
+    );
+    target.rate = target.plan > 0 ? (target.actual / target.plan) * 100 : 0;
+    return target;
+  }, [allBlocks]);
 
-  const handleReset = useCallback(() => {
-    setFilterValue({
-      startYear: String(currentYear),
-      startMonth: '09',
-      endYear: String(currentYear),
-      endMonth: '11',
-      outputType: 'client',
-      searchCategory: 'transactionType',
-      salesGroup: 'S112',
-      itemGroup: '',
-    });
-  }, []);
-
-  const filterFields = useMemo(() => [
-    { id: 'startYear', label: '조회 시작', type: 'select', options: yearOptions, width: 90, row: 0 },
-    { id: 'startMonth', label: '', type: 'select', options: monthOptions, width: 72, row: 0 },
-    { id: 'endYear', label: '~ 종료', type: 'select', options: yearOptions, width: 90, row: 0 },
-    { id: 'endMonth', label: '', type: 'select', options: monthOptions, width: 72, row: 0 },
-    {
-      id: 'outputType', label: '출력물', type: 'radio', row: 0,
-      options: [
-        { value: 'item', label: '품목별' },
-        { value: 'org', label: '조직별' },
-        { value: 'client', label: '거래처별' },
-      ],
-    },
-    {
-      id: 'salesGroup', label: '영업그룹', type: 'select', row: 1, width: 180,
-      options: [{ label: 'S112 | 리테일팀', value: 'S112' }],
-    },
-    {
-      id: 'searchCategory', label: '조회구분', type: 'select', row: 1, width: 130,
-      options: searchCategoryOptions,
-    },
-    {
-      id: 'itemGroup', label: '품목그룹', type: 'select', row: 1, width: 130,
-      options: [{ label: '전체', value: '' }],
-    },
-  ], [searchCategoryOptions]);
-
-  const tableColumns = useMemo(() => {
-    const columns = [{
-      title: '구분',
-      fixed: 'left',
-      children: [
-        { title: 'No.', dataIndex: 'key', width: 60, align: 'center', fixed: 'left' },
-        ...groupColumns,
-      ],
-    }];
-
-    const sy = parseInt(filterValue.startYear, 10);
-    const sm = parseInt(filterValue.startMonth, 10);
-    const ey = parseInt(filterValue.endYear, 10);
-    const em = parseInt(filterValue.endMonth, 10);
-
-    let y = sy;
-    let m = sm;
-    while (y < ey || (y === ey && m <= em)) {
-      const mm = String(m).padStart(2, '0');
-      const keyPrefix = `${y}${mm}`;
-      columns.push({
-        title: `${m}월`,
-        children: [
-          { title: '매출', dataIndex: `${keyPrefix}_sales`, width: 120, align: 'right', render: formatNumber },
-          { title: '원가', dataIndex: `${keyPrefix}_cost`, width: 120, align: 'right', render: formatNumber },
-          {
-            title: '이익',
-            dataIndex: `${keyPrefix}_profit`,
-            width: 120,
-            align: 'right',
-            render: (val) => <span style={{ color: val < 0 ? '#d43030' : 'inherit' }}>{formatNumber(val)}</span>,
-          },
-        ],
+  const tableRows = useMemo(() => {
+    const rows = [];
+    allBlocks.forEach((block) => {
+      typeRows.forEach((type, idx) => {
+        const line = block.rows[type];
+        rows.push({
+          id: `${block.team}-${type}`,
+          team: block.team,
+          type,
+          teamRowSpan: idx === 0 ? 3 : 0,
+          isTotalType: type === '계',
+          cumulative: line.cumulative,
+          monthly: line.monthly,
+        });
       });
-      m += 1;
-      if (m > 12) {
-        m = 1;
-        y += 1;
-      }
-    }
-
-    columns.push({
-      title: '합계',
-      children: [
-        { title: '매출', dataIndex: 'total_sales', width: 130, align: 'right', render: formatNumber, className: 'total-col' },
-        { title: '원가', dataIndex: 'total_cost', width: 130, align: 'right', render: formatNumber, className: 'total-col' },
-        { title: '이익', dataIndex: 'total_profit', width: 130, align: 'right', render: formatNumber, className: 'total-col' },
-      ],
     });
-
-    return columns;
-  }, [filterValue.startYear, filterValue.startMonth, filterValue.endYear, filterValue.endMonth, groupColumns]);
-
-  const baseRows = useMemo(() => [
-    { key: 1, clientName: '가온인테리어', transactionType: '매출', itemAccount: '바닥재', orgName: '리테일팀', managerName: '김민수', category1: '바닥재', category2: '포세린', itemCode: 'FT-1001', itemName: '600x600 포세린' },
-    { key: 2, clientName: '대성세라믹', transactionType: '매출', itemAccount: '위생도기', orgName: '리테일팀', managerName: '이서현', category1: '벽재', category2: '타일', itemCode: 'WT-2001', itemName: '300x600 글레이즈' },
-    { key: 3, clientName: '현대종합건설', transactionType: '반품', itemAccount: '타일', orgName: '프로젝트팀', managerName: '박지훈', category1: '천연석', category2: '마감재', itemCode: 'NS-3001', itemName: '천연석 슬랩' },
-  ], []);
-
-  const mockData = useMemo(() => {
-    return baseRows.map((row, idx) => {
-      const monthData = buildMonthData(
-        filterValue.startYear,
-        filterValue.startMonth,
-        filterValue.endYear,
-        filterValue.endMonth,
-        idx + 1,
-      );
-      const merged = { ...row, ...monthData };
-      return {
-        ...merged,
-        total_sales: sumBySuffix(merged, '_sales'),
-        total_cost: sumBySuffix(merged, '_cost'),
-        total_profit: sumBySuffix(merged, '_profit'),
-      };
-    });
-  }, [baseRows, filterValue.startYear, filterValue.startMonth, filterValue.endYear, filterValue.endMonth]);
+    return rows;
+  }, [allBlocks]);
 
   return (
-    <PageShell path={pathname} className={styles.shellWide}>
+    <PageShell path={pathname} title="리테일팀 매출 현황" className={styles.shellWide}>
       <div className={styles.page}>
         <ListFilter
           className={styles.filterBar}
           fields={filterFields}
-          value={filterValue}
-          onChange={handleFilterChange}
-          onReset={handleReset}
+          value={filters}
+          onChange={(id, value) => setFilters((prev) => ({ ...prev, [id]: value }))}
+          onReset={() =>
+            setFilters({
+              year: String(currentYear),
+              month: String(currentMonth),
+              teams: teamOptions.map((team) => team.value),
+            })
+          }
           onSearch={() => {}}
-          searchLabel="조회"
         />
 
-        <div className={styles.tableStage}>
-          <div className={styles.tableTop}>
-            <div className={styles.tableTopLeft}>
-              <span className={styles.tableTitle}>리테일 매출 분석 결과</span>
-              <span className={styles.tableMeta}>
-                조회기간: {filterValue.startYear}.{filterValue.startMonth} ~ {filterValue.endYear}.{filterValue.endMonth}
-              </span>
-            </div>
-            <span className={styles.tableCount}>총 {mockData.length}건</span>
-          </div>
-          <ConfigProvider theme={{ components: { Table: { headerBg: '#f5f8ff', headerColor: '#344256' } } }}>
-            <Table
-              columns={tableColumns}
-              dataSource={mockData}
-              bordered
-              size="small"
-              pagination={false}
-              scroll={{ x: 'max-content', y: 620 }}
-              rowClassName={(_, index) => (index % 2 === 0 ? 'table-row-light' : 'table-row-dark')}
-              className={styles.performanceTable}
-            />
-          </ConfigProvider>
-        </div>
+        <section className={styles.kpiRow}>
+          <article className={styles.kpiCard}>
+            <span className={styles.kpiLabel}>누계 계획</span>
+            <strong className={styles.kpiValue}>{formatAmount(summary.plan)}</strong>
+          </article>
+          <article className={styles.kpiCard}>
+            <span className={styles.kpiLabel}>누계 실적</span>
+            <strong className={styles.kpiValue}>{formatAmount(summary.actual)}</strong>
+          </article>
+          <article className={styles.kpiCard}>
+            <span className={styles.kpiLabel}>누계 달성률</span>
+            <strong className={styles.kpiValueRate}>{formatRate(summary.rate)}</strong>
+          </article>
+        </section>
 
-        <div className={styles.helperText}>
-          <Text type="secondary">품목별 조회 시 속도가 느릴 수 있습니다.</Text>
-        </div>
+        <section className={styles.tableCard}>
+          <div className={styles.tableHeader}>
+            <div className={styles.tableTitle}>팀별 계획 vs 실적</div>
+            <div className={styles.tableMeta}>
+              {filters.year}년 / 기준월 {filters.month}월 / 선택 팀: {visibleTeamBlocks.length}개
+            </div>
+            <div className={styles.tableCount}>총 {tableRows.length}행</div>
+          </div>
+
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th rowSpan={2}>팀</th>
+                  <th rowSpan={2}>구분</th>
+                  <th colSpan={3}>1~12월 누계</th>
+                  {monthKeys.map((month) => (
+                    <th key={`group-${month}`} colSpan={3}>
+                      {month}월
+                    </th>
+                  ))}
+                </tr>
+                <tr>
+                  <th>계획</th>
+                  <th>실적</th>
+                  <th>달성률</th>
+                  {monthKeys.map((month) => (
+                    <React.Fragment key={`detail-${month}`}>
+                      <th>계획</th>
+                      <th>실적</th>
+                      <th>달성률</th>
+                    </React.Fragment>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tableRows.map((row) => (
+                  <tr key={row.id} className={row.isTotalType ? styles.totalRow : undefined}>
+                    {row.teamRowSpan > 0 && (
+                      <th rowSpan={row.teamRowSpan} className={styles.teamCell}>
+                        {row.team}
+                      </th>
+                    )}
+                    <td className={styles.typeCell}>{row.type}</td>
+                    <td className={styles.numCell}>{formatAmount(row.cumulative.plan)}</td>
+                    <td className={styles.numCell}>{formatAmount(row.cumulative.actual)}</td>
+                    <td className={styles.rateCell}>{formatRate(row.cumulative.rate)}</td>
+                    {monthKeys.map((month) => (
+                      <React.Fragment key={`${row.id}-${month}`}>
+                        <td className={styles.numCell}>{formatAmount(row.monthly[month].plan)}</td>
+                        <td className={styles.numCell}>{formatAmount(row.monthly[month].actual)}</td>
+                        <td className={styles.rateCell}>{formatRate(row.monthly[month].rate)}</td>
+                      </React.Fragment>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className={styles.footNote}>
+            계획은 입력 데이터, 실적은 ERP 연동 예정이며 현재는 Mock ERP 데이터로 표시됩니다.
+          </p>
+        </section>
       </div>
     </PageShell>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+﻿import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
@@ -8,7 +8,6 @@ import {
   MOCK_REPORT_LIST,
   REPORT_TYPE,
   getStatusLabel,
-  getReportById,
   MOCK_DEPTS,
   MOCK_TEAMS,
   MOCK_AUTHORS,
@@ -17,13 +16,6 @@ import styles from './SalesReportsPage.module.css';
 
 const TAB_KEYS = { WEEKLY: 'weekly', TRIP: 'trip' };
 const TAB_LABELS = { [TAB_KEYS.WEEKLY]: '주간보고', [TAB_KEYS.TRIP]: '출장보고' };
-const STATUS_OPTIONS = [
-  { value: '', label: '전체' },
-  { value: 'draft', label: '임시저장' },
-  { value: 'submitted', label: '제출완료' },
-  { value: 'confirmed', label: '확인완료' },
-];
-
 export function SalesReportsPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(TAB_KEYS.WEEKLY);
@@ -33,7 +25,6 @@ export function SalesReportsPage() {
   const [dept, setDept] = useState('');
   const [team, setTeam] = useState('');
   const [author, setAuthor] = useState('');
-  const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -45,13 +36,12 @@ export function SalesReportsPage() {
     if (dept) list = list.filter((r) => r.dept === dept);
     if (team) list = list.filter((r) => r.team === team);
     if (author) list = list.filter((r) => r.author === author);
-    if (status) list = list.filter((r) => r.status === status);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter((r) => (r.summary && r.summary.toLowerCase().includes(q)) || (r.author && r.author.toLowerCase().includes(q)));
     }
     return list;
-  }, [activeTab, periodFrom, periodTo, dept, team, author, status, search]);
+  }, [activeTab, periodFrom, periodTo, dept, team, author, search]);
 
   const paginatedList = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -74,7 +64,6 @@ export function SalesReportsPage() {
     setDept('');
     setTeam('');
     setAuthor('');
-    setStatus('');
     setSearch('');
     setCurrentPage(1);
   }, []);
@@ -199,14 +188,6 @@ export function SalesReportsPage() {
                   </select>
                 </div>
                 <div className={styles.filterItem}>
-                  <span className={styles.filterLabel}>상태</span>
-                  <select className={styles.filterSelect} value={status} onChange={(e) => setStatus(e.target.value)} aria-label="상태">
-                    {STATUS_OPTIONS.map((o) => (
-                      <option key={o.value || 'all'} value={o.value}>{o.label}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className={styles.filterItem}>
                   <span className={styles.filterLabel}>검색</span>
                   <input
                     type="text"
@@ -240,13 +221,12 @@ export function SalesReportsPage() {
                   <th className={styles.th}>핵심요약</th>
                   <th className={styles.th}>작성자</th>
                   <th className={styles.th}>상태</th>
-                  <th className={styles.th} style={{ width: 80 }}>상세</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedList.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className={styles.empty}>
+                    <td colSpan={5} className={styles.empty}>
                       조건에 맞는 보고가 없습니다.
                     </td>
                   </tr>
@@ -273,11 +253,6 @@ export function SalesReportsPage() {
                           {getStatusLabel(row.status)}
                         </span>
                       </td>
-                      <td className={styles.td}>
-                        <Button variant="secondary" className={styles.detailBtn} onClick={(e) => { e.stopPropagation(); navigate(`/sales/report/${row.id}`); }}>
-                          상세
-                        </Button>
-                      </td>
                     </tr>
                   ))
                 )}
@@ -296,3 +271,4 @@ export function SalesReportsPage() {
     </PageShell>
   );
 }
+

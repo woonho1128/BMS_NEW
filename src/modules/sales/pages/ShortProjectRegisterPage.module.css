@@ -1,0 +1,277 @@
+.shellWide {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-bottom: var(--space-xl);
+}
+
+.sectionCard {
+  flex-shrink: 0;
+}
+
+.searchRow {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
+  gap: var(--space-md);
+  align-items: end;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1.8fr 1.1fr 1.1fr 1.6fr;
+  gap: var(--space-md);
+  align-items: start;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.required {
+  color: var(--color-danger);
+}
+
+.helper {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.inlineField {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.inlineField button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.input,
+.textarea,
+.tableInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccd8e8;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus,
+.textarea:focus,
+.tableInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
+.dateRange {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.rangeDivider {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid #dbe6f4;
+  border-radius: 14px;
+}
+
+.listTable,
+.itemTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.itemTable {
+  min-width: 1280px;
+  table-layout: fixed;
+}
+
+.listTable th,
+.listTable td,
+.itemTable th,
+.itemTable td,
+.itemTable tfoot td {
+  padding: 11px 12px;
+  border-bottom: 1px solid #e8eef7;
+  font-size: var(--font-size-sm);
+  vertical-align: middle;
+}
+
+.listTable th,
+.itemTable th {
+  background: #f6f9fe;
+  text-align: left;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.itemTable th {
+  text-align: center;
+}
+
+.itemTable td {
+  text-align: center;
+}
+
+.itemTable td:first-child,
+.itemTable td:nth-child(9) {
+  text-align: left;
+}
+
+.expandedRow td {
+  background: #fbfdff;
+}
+
+.itemPreviewWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.itemChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #eaf2ff;
+  color: #0a4fa4;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.textButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border: 1px solid #c9d8ec;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.numberCell {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.deleteRowButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d6e0ee;
+  border-radius: 8px;
+  background: #fff;
+  color: #65758b;
+  padding: 7px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.deleteRowButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.itemTable tfoot td {
+  background: #f8fbff;
+  font-weight: var(--font-weight-semibold);
+}
+
+.textarea {
+  min-height: 170px;
+  resize: vertical;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid #dce6f3;
+}
+
+@media (max-width: 1200px) {
+  .searchRow,
+  .formRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .shellWide {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .searchRow,
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .inlineField {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dateRange {
+    grid-template-columns: 1fr;
+  }
+
+  .rangeDivider {
+    display: none;
+  }
+
+  .listTable th,
+  .listTable td,
+  .itemTable th,
+  .itemTable td,
+  .itemTable tfoot td {
+    font-size: 12px;
+    padding: 9px 10px;
+  }
+
+  .footer {
+    flex-direction: column;
+  }
+
+  .footer button {
+    width: 100%;
+  }
+}

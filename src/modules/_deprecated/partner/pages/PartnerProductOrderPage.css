@@ -1,0 +1,8 @@
+.section-card {
+    border-radius: 10px;
+}
+
+.section-card .ant-card-body {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}

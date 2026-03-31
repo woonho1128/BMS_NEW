@@ -1,10 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { getPartnerById } from '../data/partnersMock';
-import { classnames } from '../../../shared/utils/classnames';
 import styles from './PartnerCardPage.module.css';
 
 function LockIcon() {
@@ -30,67 +29,71 @@ function ReadOnlyRow({ label, value, withLock }) {
   );
 }
 
+const DEFAULT_COMPETITOR_BRANDS = {
+  계림요업: { isHandling: false, scale: '' },
+  이누스: { isHandling: false, scale: '' },
+  대림통상: { isHandling: false, scale: '' },
+  ASK: { isHandling: false, scale: '' },
+  'R&CO': { isHandling: false, scale: '' },
+  VOVO: { isHandling: false, scale: '' },
+};
+
+const COMPETITOR_NAMES = Object.keys(DEFAULT_COMPETITOR_BRANDS);
+const YEARS = [2020, 2021, 2022, 2023, 2024];
+
+function createInitialEditable(partner, isNew) {
+  if (!partner && isNew) {
+    return {
+      partnerMemo: '',
+      competitorBrands: { ...DEFAULT_COMPETITOR_BRANDS },
+      competitorWithin3km: '',
+      historyNotes: '',
+      mapCenter: { lat: 37.5665, lng: 126.978, radiusKm: 3 },
+      nearbyPoints: [],
+    };
+  }
+
+  const mergedBrands = { ...DEFAULT_COMPETITOR_BRANDS, ...(partner?.competitorBrands || {}) };
+  const points = Array.isArray(partner?.nearbyPoints) ? partner.nearbyPoints : [];
+
+  return {
+    partnerMemo: partner?.partnerMemo ?? '',
+    competitorBrands: mergedBrands,
+    competitorWithin3km: partner?.competitorWithin3km ?? '',
+    historyNotes: partner?.historyNotes ?? '',
+    mapCenter: partner?.mapCenter || { lat: 37.5665, lng: 126.978, radiusKm: 3 },
+    nearbyPoints:
+      points.length > 0
+        ? points
+        : [
+            {
+              id: 'nearby-1',
+              name: '',
+              type: 'competitor',
+              lat: 37.5665,
+              lng: 126.978,
+              note: partner?.competitorWithin3km ?? '',
+            },
+          ],
+  };
+}
+
 export function PartnerCardPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isNew = id === 'new';
   const partner = isNew ? null : getPartnerById(id);
 
-  const [editable, setEditable] = useState({
-    partnerMemo: '',
-    competitorBrands: {},
-    competitorWithin3km: '',
-    historyNotes: '',
-  });
+  const [editable, setEditable] = useState(() => createInitialEditable(partner, isNew));
   const [saved, setSaved] = useState(false);
 
-  const DEFAULT_COMPETITOR_BRANDS = {
-    '계림요업': { isHandling: false, scale: '' },
-    '이누스': { isHandling: false, scale: '' },
-    '대림통상': { isHandling: false, scale: '' },
-    'ASK': { isHandling: false, scale: '' },
-    'R&CO': { isHandling: false, scale: '' },
-    'VOVO': { isHandling: false, scale: '' },
-  };
-
   useEffect(() => {
-    if (partner) {
-      const partnerBrands = partner.competitorBrands || {};
-      setEditable({
-        partnerMemo: partner.partnerMemo ?? '',
-        competitorBrands: { ...DEFAULT_COMPETITOR_BRANDS, ...partnerBrands },
-        competitorWithin3km: partner.competitorWithin3km ?? '',
-        historyNotes: partner.historyNotes ?? '',
-      });
-    } else if (isNew) {
-      setEditable({
-        partnerMemo: '',
-        competitorBrands: { ...DEFAULT_COMPETITOR_BRANDS },
-        competitorWithin3km: '',
-        historyNotes: '',
-      });
-    }
-  }, [partner?.id, isNew]);
+    setEditable(createInitialEditable(partner, isNew));
+  }, [partner, isNew]);
 
   const handleEditableChange = useCallback((field, value) => {
     setEditable((prev) => ({ ...prev, [field]: value }));
   }, []);
-
-  const handleSave = useCallback(() => {
-    setSaved(true);
-    console.log('담당자 수정 영역 저장', editable);
-  }, [editable]);
-
-  const handleCancel = useCallback(() => {
-    if (partner) {
-      setEditable({
-        partnerMemo: partner.partnerMemo ?? '',
-        competitorBrands: partner.competitorBrands ? { ...partner.competitorBrands } : {},
-        competitorWithin3km: partner.competitorWithin3km ?? '',
-        historyNotes: partner.historyNotes ?? '',
-      });
-    }
-  }, [partner]);
 
   const handleCompetitorChange = useCallback((compName, field, value) => {
     setEditable((prev) => ({
@@ -105,18 +108,87 @@ export function PartnerCardPage() {
     }));
   }, []);
 
-  const YEARS = [2020, 2021, 2022, 2023, 2024];
-  const COMPETITOR_NAMES = ['계림요업', '이누스', '대림통상', 'ASK', 'R&CO', 'VOVO'];
+  const handleMapCenterChange = useCallback((field, value) => {
+    setEditable((prev) => ({
+      ...prev,
+      mapCenter: {
+        ...prev.mapCenter,
+        [field]: value === '' ? '' : Number(value),
+      },
+    }));
+  }, []);
+
+  const handleAddPoint = useCallback(() => {
+    setEditable((prev) => ({
+      ...prev,
+      nearbyPoints: [
+        ...prev.nearbyPoints,
+        {
+          id: `nearby-${Date.now()}`,
+          name: '',
+          type: 'competitor',
+          lat: Number(prev.mapCenter?.lat) || 37.5665,
+          lng: Number(prev.mapCenter?.lng) || 126.978,
+          note: '',
+        },
+      ],
+    }));
+  }, []);
+
+  const handlePointChange = useCallback((pointId, field, value) => {
+    setEditable((prev) => ({
+      ...prev,
+      nearbyPoints: prev.nearbyPoints.map((row) =>
+        row.id === pointId
+          ? {
+              ...row,
+              [field]:
+                field === 'lat' || field === 'lng'
+                  ? value === ''
+                    ? ''
+                    : Number(value)
+                  : value,
+            }
+          : row
+      ),
+    }));
+  }, []);
+
+  const handleRemovePoint = useCallback((pointId) => {
+    setEditable((prev) => ({
+      ...prev,
+      nearbyPoints: prev.nearbyPoints.filter((row) => row.id !== pointId),
+    }));
+  }, []);
+
+  const handleSave = useCallback(() => {
+    setSaved(true);
+    console.log('partner-card-editable', editable);
+  }, [editable]);
+
+  const handleCancel = useCallback(() => {
+    setEditable(createInitialEditable(partner, isNew));
+  }, [partner, isNew]);
 
   const handleList = useCallback(() => {
     navigate('/master/partners');
   }, [navigate]);
 
+  const nearbySummary = useMemo(() => {
+    if (editable.nearbyPoints.length === 0) return editable.competitorWithin3km || '-';
+    return editable.nearbyPoints
+      .filter((it) => it.name)
+      .map((it) => `${it.name}(${it.type === 'daelim' ? '당사' : '경쟁사'})`)
+      .join(', ');
+  }, [editable.nearbyPoints, editable.competitorWithin3km]);
+
   if (!isNew && !partner) {
     return (
       <PageShell path="/master/partners" title="대리점 관리카드">
         <p className={styles.notFound}>대리점을 찾을 수 없습니다.</p>
-        <Button variant="secondary" onClick={handleList}>목록</Button>
+        <Button variant="secondary" onClick={handleList}>
+          목록
+        </Button>
       </PageShell>
     );
   }
@@ -131,7 +203,6 @@ export function PartnerCardPage() {
   return (
     <PageShell path="/master/partners" title={title}>
       <div className={styles.page}>
-        {/* 1) 대리점 정보 (ERP ReadOnly + 담당자 입력) */}
         <Card title="1) 대리점 정보" className={styles.card}>
           <CardBody>
             <div className={styles.erpBlock}>
@@ -162,7 +233,6 @@ export function PartnerCardPage() {
           </CardBody>
         </Card>
 
-        {/* 2) 대표자 인적사항 (ERP ReadOnly) */}
         <Card title="2) 대표자 인적사항" className={styles.card}>
           <CardBody>
             <div className={styles.erpBlock}>
@@ -177,7 +247,6 @@ export function PartnerCardPage() {
           </CardBody>
         </Card>
 
-        {/* 3) 최근 5년간 매출실적 (ERP ReadOnly) */}
         <Card title="3) 최근 5년간 매출실적" className={styles.card}>
           <CardBody>
             <div className={styles.erpBlock}>
@@ -192,7 +261,9 @@ export function PartnerCardPage() {
                   <tbody>
                     {salesByYear.length === 0 ? (
                       <tr>
-                        <td colSpan={2} className={styles.emptyCell}>데이터 없음</td>
+                        <td colSpan={2} className={styles.emptyCell}>
+                          데이터 없음
+                        </td>
                       </tr>
                     ) : (
                       salesByYear.map((row) => (
@@ -209,7 +280,6 @@ export function PartnerCardPage() {
           </CardBody>
         </Card>
 
-        {/* 4) 대리점 담당 영업직원 (ERP ReadOnly 테이블 - 가로형) */}
         <Card title="4) 대리점 담당 영업직원" className={styles.card}>
           <CardBody>
             <div className={styles.erpBlock}>
@@ -236,26 +306,20 @@ export function PartnerCardPage() {
                   <tbody>
                     <tr>
                       <td className={styles.td}>담당자</td>
-                      {YEARS.map((year) => {
-                        const staff = staffByYear[year];
-                        return (
-                          <td key={year} className={styles.td}>
-                            {staff?.name || ''}
-                          </td>
-                        );
-                      })}
+                      {YEARS.map((year) => (
+                        <td key={year} className={styles.td}>
+                          {staffByYear[year]?.name || ''}
+                        </td>
+                      ))}
                       <td className={styles.td}></td>
                     </tr>
                     <tr>
                       <td className={styles.td}>재직유무</td>
-                      {YEARS.map((year) => {
-                        const staff = staffByYear[year];
-                        return (
-                          <td key={year} className={styles.td}>
-                            {staff?.isActive === true ? '재직' : staff?.isActive === false ? '퇴직' : ''}
-                          </td>
-                        );
-                      })}
+                      {YEARS.map((year) => (
+                        <td key={year} className={styles.td}>
+                          {staffByYear[year]?.isActive === true ? '재직' : staffByYear[year]?.isActive === false ? '퇴직' : ''}
+                        </td>
+                      ))}
                       <td className={styles.td}></td>
                     </tr>
                   </tbody>
@@ -265,11 +329,10 @@ export function PartnerCardPage() {
           </CardBody>
         </Card>
 
-        {/* 5) 경쟁사 취급 브랜드 (담당자 입력 테이블 - 가로형) */}
         <Card title="5) 경쟁사 취급 브랜드 (단위:억원)" className={styles.card}>
           <CardBody>
             <div className={styles.editableBlock}>
-              <div className={styles.tableWrap}>
+              <div className={styles.brandTableWrap}>
                 <table className={styles.table}>
                   <thead>
                     <tr>
@@ -279,7 +342,6 @@ export function PartnerCardPage() {
                           {name}
                         </th>
                       ))}
-                      <th className={styles.th}>비고</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -288,13 +350,11 @@ export function PartnerCardPage() {
                       {COMPETITOR_NAMES.map((compName) => {
                         const comp = editable.competitorBrands[compName] || { isHandling: false, scale: '' };
                         return (
-                          <td key={compName} className={styles.td}>
+                          <td key={`${compName}-yn`} className={styles.td}>
                             <select
                               className={styles.tableSelect}
                               value={comp.isHandling ? 'Y' : 'N'}
-                              onChange={(e) =>
-                                handleCompetitorChange(compName, 'isHandling', e.target.value === 'Y')
-                              }
+                              onChange={(e) => handleCompetitorChange(compName, 'isHandling', e.target.value === 'Y')}
                               aria-label={`${compName} 취급여부`}
                             >
                               <option value="N">X</option>
@@ -303,26 +363,25 @@ export function PartnerCardPage() {
                           </td>
                         );
                       })}
-                      <td className={styles.td}></td>
                     </tr>
                     <tr>
                       <td className={styles.td}>취급규모</td>
                       {COMPETITOR_NAMES.map((compName) => {
                         const comp = editable.competitorBrands[compName] || { isHandling: false, scale: '' };
                         return (
-                          <td key={compName} className={styles.td}>
+                          <td key={`${compName}-scale`} className={styles.td}>
                             <input
                               type="text"
                               className={styles.tableInput}
                               value={comp.scale || ''}
                               onChange={(e) => handleCompetitorChange(compName, 'scale', e.target.value)}
                               placeholder="억원"
+                              disabled={!comp.isHandling}
                               aria-label={`${compName} 취급규모`}
                             />
                           </td>
                         );
                       })}
-                      <td className={styles.td}></td>
                     </tr>
                   </tbody>
                 </table>
@@ -331,7 +390,6 @@ export function PartnerCardPage() {
           </CardBody>
         </Card>
 
-        {/* 6) 거래처 최근 5년 재무/매출 현황 (ERP ReadOnly) */}
         <Card title="6) 거래처 최근 5년 재무/매출 현황" className={styles.card}>
           <CardBody>
             <div className={styles.erpBlock}>
@@ -349,7 +407,9 @@ export function PartnerCardPage() {
                   <tbody>
                     {financialByYear.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className={styles.emptyCell}>데이터 없음</td>
+                        <td colSpan={5} className={styles.emptyCell}>
+                          데이터 없음
+                        </td>
                       </tr>
                     ) : (
                       financialByYear.map((row) => (
@@ -369,23 +429,151 @@ export function PartnerCardPage() {
           </CardBody>
         </Card>
 
-        {/* 7) 반경 3Km 내 당사/경쟁사 현황 (담당자 입력) */}
         <Card title="7) 반경 3Km 내 당사/경쟁사 현황" className={styles.card}>
           <CardBody>
             <div className={styles.editableBlock}>
-              <textarea
-                className={styles.textarea}
-                value={editable.competitorWithin3km}
-                onChange={(e) => handleEditableChange('competitorWithin3km', e.target.value)}
-                placeholder="반경 3Km 내 당사/경쟁사 현황 입력"
-                rows={3}
-                aria-label="반경 3Km 내 당사/경쟁사 현황"
-              />
+              <div className={styles.mapToolbar}>
+                <label className={styles.inlineField}>
+                  중심 위도
+                  <input
+                    type="number"
+                    step="0.0001"
+                    className={styles.inlineInput}
+                    value={editable.mapCenter?.lat ?? ''}
+                    onChange={(e) => handleMapCenterChange('lat', e.target.value)}
+                  />
+                </label>
+                <label className={styles.inlineField}>
+                  중심 경도
+                  <input
+                    type="number"
+                    step="0.0001"
+                    className={styles.inlineInput}
+                    value={editable.mapCenter?.lng ?? ''}
+                    onChange={(e) => handleMapCenterChange('lng', e.target.value)}
+                  />
+                </label>
+                <label className={styles.inlineField}>
+                  반경(km)
+                  <input
+                    type="number"
+                    step="0.1"
+                    className={styles.inlineInput}
+                    value={editable.mapCenter?.radiusKm ?? ''}
+                    onChange={(e) => handleMapCenterChange('radiusKm', e.target.value)}
+                  />
+                </label>
+              </div>
+
+              <div className={styles.mapPreview}>
+                <div className={styles.mapPreviewTitle}>지도 API 연동 준비 뷰</div>
+                <div className={styles.mapPreviewSub}>
+                  현재는 목업 입력 단계입니다. 이후 지도 API 연결 시 좌표 기반으로 핀을 렌더링합니다.
+                </div>
+                <div className={styles.pinList}>
+                  {editable.nearbyPoints.length === 0 ? (
+                    <span className={styles.pinEmpty}>등록된 포인트가 없습니다.</span>
+                  ) : (
+                    editable.nearbyPoints.map((point) => (
+                      <span key={point.id} className={styles.pinChip}>
+                        {point.name || '미입력'} · {point.type === 'daelim' ? '당사' : '경쟁사'}
+                      </span>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.pointsActions}>
+                <Button variant="secondary" onClick={handleAddPoint}>
+                  포인트 추가
+                </Button>
+              </div>
+
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th className={styles.th}>구분</th>
+                      <th className={styles.th}>명칭</th>
+                      <th className={styles.th}>위도</th>
+                      <th className={styles.th}>경도</th>
+                      <th className={styles.th}>비고</th>
+                      <th className={styles.th}>삭제</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {editable.nearbyPoints.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className={styles.emptyCell}>
+                          데이터 없음
+                        </td>
+                      </tr>
+                    ) : (
+                      editable.nearbyPoints.map((point) => (
+                        <tr key={point.id}>
+                          <td className={styles.td}>
+                            <select
+                              className={styles.tableSelect}
+                              value={point.type}
+                              onChange={(e) => handlePointChange(point.id, 'type', e.target.value)}
+                            >
+                              <option value="daelim">당사</option>
+                              <option value="competitor">경쟁사</option>
+                            </select>
+                          </td>
+                          <td className={styles.td}>
+                            <input
+                              className={styles.tableInput}
+                              value={point.name || ''}
+                              onChange={(e) => handlePointChange(point.id, 'name', e.target.value)}
+                              placeholder="예: 동종사 A"
+                            />
+                          </td>
+                          <td className={styles.td}>
+                            <input
+                              type="number"
+                              step="0.0001"
+                              className={styles.tableInput}
+                              value={point.lat ?? ''}
+                              onChange={(e) => handlePointChange(point.id, 'lat', e.target.value)}
+                            />
+                          </td>
+                          <td className={styles.td}>
+                            <input
+                              type="number"
+                              step="0.0001"
+                              className={styles.tableInput}
+                              value={point.lng ?? ''}
+                              onChange={(e) => handlePointChange(point.id, 'lng', e.target.value)}
+                            />
+                          </td>
+                          <td className={styles.td}>
+                            <input
+                              className={styles.tableInput}
+                              value={point.note || ''}
+                              onChange={(e) => handlePointChange(point.id, 'note', e.target.value)}
+                              placeholder="비고"
+                            />
+                          </td>
+                          <td className={styles.td}>
+                            <button type="button" className={styles.deleteBtn} onClick={() => handleRemovePoint(point.id)}>
+                              삭제
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className={styles.summaryLine}>
+                요약: {nearbySummary || '-'}
+              </div>
             </div>
           </CardBody>
         </Card>
 
-        {/* 8) 거래처 이력 및 특이사항 (담당자 입력) */}
         <Card title="8) 거래처 이력 및 특이사항" className={styles.card}>
           <CardBody>
             <div className={styles.editableBlock}>
@@ -402,16 +590,26 @@ export function PartnerCardPage() {
         </Card>
 
         <div className={styles.footer}>
-          <Button variant="secondary" onClick={handleList}>목록</Button>
+          <Button variant="secondary" onClick={handleList}>
+            목록
+          </Button>
           {!isNew && (
             <>
-              <Button variant="secondary" onClick={handleCancel}>취소</Button>
-              <Button variant="primary" onClick={handleSave}>저장</Button>
+              <Button variant="secondary" onClick={handleCancel}>
+                취소
+              </Button>
+              <Button variant="primary" onClick={handleSave}>
+                저장
+              </Button>
             </>
           )}
         </div>
 
-        {saved && <p className={styles.toast} role="status">저장되었습니다.</p>}
+        {saved && (
+          <p className={styles.toast} role="status">
+            저장되었습니다.
+          </p>
+        )}
       </div>
     </PageShell>
   );

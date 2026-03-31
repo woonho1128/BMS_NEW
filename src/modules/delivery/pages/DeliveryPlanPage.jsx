@@ -1,25 +1,68 @@
-﻿import { useState } from 'react';
+import { lazy, startTransition, Suspense, useEffect, useState } from 'react';
 import styles from './DeliveryPlanPage.module.css';
 import { SummaryTabs } from '../components/layout/SummaryTabs';
-import { YearSummary } from '../components/summary/YearSummary';
 import { DeliveryPlan } from '../components/plan/DeliveryPlan';
-import { CompletedDeliveryList } from '../components/completed/CompletedDeliveryList';
-import { ChangeHistoryComparison } from '../components/history/ChangeHistoryComparison';
-import { INITIAL_PLAN_ROWS } from '../data/planDummyData';
-import { SpecRegistrationList } from '../components/spec/SpecRegistrationList';
-import { CancelledSpecList } from '../components/spec/CancelledSpecList';
 import { useModal } from '../hooks/useModal';
 import { AddPlanModal } from '../components/modals/AddPlanModal';
 
+const YearSummary = lazy(() =>
+  import('../components/summary/YearSummary').then((module) => ({ default: module.YearSummary }))
+);
+const CompletedDeliveryList = lazy(() =>
+  import('../components/completed/CompletedDeliveryList').then((module) => ({ default: module.CompletedDeliveryList }))
+);
+const ChangeHistoryComparison = lazy(() =>
+  import('../components/history/ChangeHistoryComparison').then((module) => ({ default: module.ChangeHistoryComparison }))
+);
+const SpecRegistrationList = lazy(() =>
+  import('../components/spec/SpecRegistrationList').then((module) => ({ default: module.SpecRegistrationList }))
+);
+const CancelledSpecList = lazy(() =>
+  import('../components/spec/CancelledSpecList').then((module) => ({ default: module.CancelledSpecList }))
+);
+
+const TabLoadingFallback = () => <div className={styles.loadingBox}>데이터를 불러오는 중입니다...</div>;
+
 export const DeliveryPlanPage = () => {
   const [activeTab, setActiveTab] = useState('plan');
-  const [planRows, setPlanRows] = useState(INITIAL_PLAN_ROWS);
+  const [planRows, setPlanRows] = useState([]);
+  const [isPlanRowsLoading, setIsPlanRowsLoading] = useState(true);
+  const [isPlanRowsLoaded, setIsPlanRowsLoaded] = useState(false);
   const addPlanModal = useModal(null);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadPlanRows = async () => {
+      try {
+        const module = await import('../data/deliveryPlanRows.json');
+        if (ignore) return;
+        startTransition(() => {
+          setPlanRows(module.default || []);
+        });
+      } catch (error) {
+        console.error('납품 계획 데이터를 불러오지 못했습니다.', error);
+      } finally {
+        if (!ignore) {
+          setIsPlanRowsLoading(false);
+          setIsPlanRowsLoaded(true);
+        }
+      }
+    };
+
+    loadPlanRows();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const handleSaveNewPlan = (newPlan) => {
     setPlanRows((prev) => [newPlan, ...prev]);
     addPlanModal.close();
   };
+
+  const shouldShowPlanLoading = (activeTab === 'plan' || activeTab === 'spec') && !isPlanRowsLoaded && isPlanRowsLoading;
 
   return (
     <div className={styles.container}>
@@ -56,16 +99,16 @@ export const DeliveryPlanPage = () => {
 
       <SummaryTabs activeTab={activeTab} onChange={setActiveTab} />
 
-      {activeTab === 'summary' && <YearSummary />}
-      {activeTab === 'plan' && <DeliveryPlan rows={planRows} setRows={setPlanRows} />}
-      {activeTab === 'completed' && <CompletedDeliveryList />}
-      {activeTab === 'history' && <ChangeHistoryComparison />}
-      {activeTab === 'spec' && <SpecRegistrationList rows={planRows} setRows={setPlanRows} />}
-      {activeTab === 'cancelled' && <CancelledSpecList />}
+      <Suspense fallback={<TabLoadingFallback />}>
+        {activeTab === 'summary' && <YearSummary />}
+        {activeTab === 'plan' && (shouldShowPlanLoading ? <TabLoadingFallback /> : <DeliveryPlan rows={planRows} setRows={setPlanRows} />)}
+        {activeTab === 'completed' && <CompletedDeliveryList />}
+        {activeTab === 'history' && <ChangeHistoryComparison />}
+        {activeTab === 'spec' && (shouldShowPlanLoading ? <TabLoadingFallback /> : <SpecRegistrationList rows={planRows} setRows={setPlanRows} />)}
+        {activeTab === 'cancelled' && <CancelledSpecList />}
+      </Suspense>
 
-      {addPlanModal.isOpen && (
-        <AddPlanModal onClose={addPlanModal.close} onSave={handleSaveNewPlan} />
-      )}
+      {addPlanModal.isOpen && <AddPlanModal onClose={addPlanModal.close} onSave={handleSaveNewPlan} />}
     </div>
   );
 };

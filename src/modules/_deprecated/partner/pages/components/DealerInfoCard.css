@@ -1,0 +1,42 @@
+.dealer-info-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    margin-bottom: 24px;
+}
+
+.dealer-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item.full-width {
+    grid-column: span 2;
+}
+
+.info-label {
+    font-size: 12px;
+    color: #8c8c8c;
+    margin-bottom: 4px;
+}
+
+.info-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #262626;
+}
+
+.readonly-note {
+    padding: 12px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #595959;
+    min-height: 80px;
+}

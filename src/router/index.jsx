@@ -20,6 +20,7 @@
  */
 
 // ── 라이브러리
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../modules/auth/hooks/useAuth';
 import { ROUTES, toRelative } from './routePaths';
@@ -65,6 +66,7 @@ import { DeliveryApprovalPage as SalesDeliveryApprovalPage } from '../modules/sa
 
 // ── 영업 관리 — 리테일팀
 import { ShortProjectPage } from '../modules/sales/pages/ShortProjectPage';
+import { ShortProjectRegisterPage } from '../modules/sales/pages/ShortProjectRegisterPage';
 // import {
 //   RetailOrderReviewPage,
 //   RetailOrderDetailPage,
@@ -79,12 +81,12 @@ import { DiscountPromotionPage } from '../modules/sales/pages/DiscountPromotionP
 
 // ── 영업 결재
 import { SalesApprovalPage } from '../modules/approval/pages/SalesApprovalPage';
+import { SalesApprovalDetailPage } from '../modules/approval/pages/SalesApprovalDetailPage';
 import { DeliveryApprovalPage } from '../modules/approval/pages/DeliveryApprovalPage';
 
 // ── 출고 / 납품
 import { DeliveryRequestPage } from '../modules/delivery/pages/DeliveryRequestPage';
 import { DeliveryHistoryPage } from '../modules/delivery/pages/DeliveryHistoryPage';
-import { DeliveryPlanPage } from '../modules/delivery/pages/DeliveryPlanPage';
 import { InventoryPage } from '../modules/delivery/pages/InventoryPage';
 
 // ── 재무 (채권·여신·어음·매입매출)
@@ -138,6 +140,10 @@ import { NotFound } from '../shared/pages/NotFound';
 import { NoAccess } from '../shared/pages/NoAccess';
 import { Guard } from '../shared/components/Guard';
 import { PERMISSIONS } from '../shared/constants/permissions';
+
+const DeliveryPlanPage = lazy(() =>
+  import('../modules/delivery/pages/DeliveryPlanPage').then((module) => ({ default: module.DeliveryPlanPage }))
+);
 
 // ─────────────────────────────────────────────
 // 라우트 가드 컴포넌트
@@ -252,8 +258,7 @@ export function Router() {
 
           {/* ── 영업 관리 — 리테일팀 (비활성화) ── */}
           <Route path={toRelative(ROUTES.SHORT_PROJECT)} element={<ShortProjectPage />} />
-          <Route path={toRelative(ROUTES.SHORT_PROJECT_REGISTER)} element={<PlaceholderPage path={ROUTES.SHORT_PROJECT_REGISTER} description="단납 현장 등록 메뉴 영역입니다." icon="🏗️" />} />
-          <Route path={toRelative(ROUTES.SHORT_PROJECT_APPROVAL)} element={<PlaceholderPage path={ROUTES.SHORT_PROJECT_APPROVAL} description="단납 현장 결재 메뉴 영역입니다." icon="✅" />} />
+          <Route path={toRelative(ROUTES.SHORT_PROJECT_REGISTER)} element={<ShortProjectRegisterPage />} />
           <Route path={toRelative(ROUTES.SHORT_PROJECT_HISTORY)} element={<PlaceholderPage path={ROUTES.SHORT_PROJECT_HISTORY} description="단납 현장 내역 메뉴 영역입니다." icon="📑" />} />
 
           {/* ── 영업 관리 — 타일영업팀·영업지원팀 (임시) ── */}
@@ -272,6 +277,14 @@ export function Router() {
             }
           />
           <Route
+            path={toRelative(ROUTES.APPROVAL_SALES_ID)}
+            element={
+              <Guard permission={PERMISSIONS.APPROVAL} fallback={<Navigate to={ROUTES.FORBIDDEN} replace />}>
+                <SalesApprovalDetailPage />
+              </Guard>
+            }
+          />
+          <Route
             path={toRelative(ROUTES.APPROVAL_DELIVERY)}
             element={
               <Guard permission={PERMISSIONS.APPROVAL} fallback={<Navigate to={ROUTES.FORBIDDEN} replace />}>
@@ -283,7 +296,14 @@ export function Router() {
           {/* ── 재고 / 납품 ── */}
           <Route path={toRelative(ROUTES.DELIVERY_REQUEST)} element={<DeliveryRequestPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_HISTORY)} element={<DeliveryHistoryPage />} />
-          <Route path={toRelative(ROUTES.DELIVERY_PLAN)} element={<DeliveryPlanPage />} />
+          <Route
+            path={toRelative(ROUTES.DELIVERY_PLAN)}
+            element={(
+              <Suspense fallback={<div style={{ padding: '20px' }}>로딩 중...</div>}>
+                <DeliveryPlanPage />
+              </Suspense>
+            )}
+          />
           <Route path={toRelative(ROUTES.DELIVERY_INVENTORY)} element={<InventoryPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_DEMAND)} element={<PlaceholderPage path={ROUTES.DELIVERY_DEMAND} description="수요예측 메뉴 영역입니다." icon="📈" />} />
 

@@ -73,6 +73,7 @@ export const ROUTES = {
 
   /* ── 영업 결재 ── */
   APPROVAL_SALES: '/approval/sales',
+  APPROVAL_SALES_ID: '/approval/sales/:id',
   APPROVAL_DELIVERY: '/approval/delivery',
 
   /* ── 재고 / 납품 ── */

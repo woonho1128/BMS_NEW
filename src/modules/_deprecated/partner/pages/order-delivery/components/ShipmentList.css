@@ -1,0 +1,36 @@
+/* ShipmentList.css */
+.shipment-list-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.shipment-list-empty {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shipment-list-row {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.shipment-list-row:hover {
+    background: #f8f9fa;
+}
+
+.shipment-list-row.selected {
+    background: #e6f7ff;
+}
+
+.shipment-list-row.selected td {
+    background: #e6f7ff !important;
+}
+
+.shipment-list-wrapper .ant-table-thead>tr>th {
+    background: #fafafa;
+    font-weight: 600;
+    color: #595959;
+}

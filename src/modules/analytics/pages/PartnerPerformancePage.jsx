@@ -5,13 +5,11 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { useKpiTableData } from '../hooks/useKpiTableData';
+import { createYearOptions, getCurrentYear } from '../../../shared/utils/dateOptions';
 import styles from './PartnerPerformancePage.module.css';
 
-const currentYear = new Date().getFullYear();
-const yearOptions = Array.from({ length: 5 }, (_, i) => {
-  const y = String(currentYear - i);
-  return { value: y, label: `${y}년` };
-});
+const currentYear = getCurrentYear();
+const yearOptions = createYearOptions();
 
 const baseMockRows = [
   { key: 1, orgName: '리테일1팀', managerName: '김혜림', clientCode: '092895', clientName: '(유)선진', isDeliveryPossible: false },

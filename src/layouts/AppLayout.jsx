@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from '../shared/components/Sidebar/Sidebar';
 import { classnames } from '../shared/utils/classnames';
 import styles from './AppLayout.module.css';
 import { Menu } from 'lucide-react';
 
+const OutletContent = memo(function OutletContent() {
+  return <Outlet />;
+});
 
 export function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -81,7 +84,7 @@ export function AppLayout() {
           onClose={() => !sidebarPinned && setSidebarOpen(false)}
         />
         <main className={classnames(styles.main, !effectiveOpen && styles.mainFullWidth)}>
-          <Outlet />
+          <OutletContent />
         </main>
       </div>
     </div>

@@ -6,7 +6,6 @@ import { useAuth } from '../../auth/hooks/useAuth';
 import {
   MOCK_DELIVERY_HISTORY,
   DELIVERY_STATUS,
-  getDeliveryHistoryById,
   FACTORY_OPTIONS,
   SHIPPING_TYPE_OPTIONS,
   TRANSPORT_METHOD_OPTIONS,
@@ -74,7 +73,6 @@ export function DeliveryHistoryPage() {
   // 실제 연동 시 user.name 또는 user.id와 inputUser를 매칭
   const defaultFiltered = useMemo(() => {
     if (!user) return MOCK_DELIVERY_HISTORY;
-    const userName = user.name || '사용자';
     // MOCK_USER의 name이 '사용자'이므로, Mock 데이터의 '김영업'과 매칭되도록 임시 처리
     // 실제 연동 시: return MOCK_DELIVERY_HISTORY.filter((item) => item.inputUser === userName);
     return MOCK_DELIVERY_HISTORY.filter((item) => {

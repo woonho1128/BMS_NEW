@@ -20,7 +20,7 @@ export const useModal = (initialData = null) => {
         setIsOpen(false);
         // Optional: Reset data on close if needed, but keeping it might be useful for animations
         // setData(initialData); 
-    }, [initialData]);
+    }, []);
 
     return { isOpen, data, open, close };
 };

@@ -7,6 +7,7 @@
  * 기존 내용: DataTable + Modal을 사용하는 간단한 영업 목록 시범 UI (영문)
  */
 
+import { useState } from 'react';
 import { DataTable } from '../../../shared/components/DataTable/DataTable';
 import { Button } from '../../../shared/components/Button/Button';
 import { Modal } from '../../../shared/components/Modal/Modal';

@@ -5,13 +5,11 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { usePersonalSalesData } from '../hooks/usePersonalSalesData';
+import { createYearOptions, getCurrentYear } from '../../../shared/utils/dateOptions';
 import styles from './PersonalSalesPage.module.css';
 
-const currentYear = new Date().getFullYear();
-const yearOptions = Array.from({ length: 5 }, (_, i) => {
-  const y = String(currentYear - i);
-  return { value: y, label: `${y}년` };
-});
+const currentYear = getCurrentYear();
+const yearOptions = createYearOptions();
 
 export function PersonalSalesPage() {
   const { pathname } = useLocation();

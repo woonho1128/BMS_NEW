@@ -1,21 +1,75 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Button } from '../../../shared/components/Button/Button';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
-import { Button } from '../../../shared/components/Button/Button';
-import { BillsDepositsPage } from './BillsDepositsPage';
 import styles from './SupportReceivablePage.module.css';
 
 const formatNum = (num) => new Intl.NumberFormat('ko-KR').format(num || 0);
 
-const ToggleSwitch = ({ checked, onChange }) => (
-  <button 
-    type="button" 
-    className={`${styles.toggle} ${checked ? styles.toggleOn : styles.toggleOff}`} 
-    onClick={() => onChange(!checked)}
-  >
-    {checked ? 'Y' : 'N'}
-  </button>
+const TAB = {
+  RECEIVABLE: 'receivable',
+  COLLECTION: 'collection',
+  NOTE: 'note',
+  OUTSTANDING: 'outstanding'
+};
+
+const TABLES = {
+  [TAB.COLLECTION]: {
+    columns: ['거래처', '거래처명', '대표자명', '수금구분', '어음구분', '수금일자', '반제결의번호', '수금액', '어음번호', '어음발행은행', '발행인', '어음발행일', '어음만기일', '어음상태', '입금은행', '입금계좌번호'],
+    rows: [
+      ['050006', '한사회대리점', '이경호', '통장입금', '-', '2026-03-27', 'UX202603270005', 90588939, '-', '-', '-', '-', '-', '-', '우리은행', '082-037021-13-001'],
+      ['050007', '대원타일위생기사', '김성진', '어음', '자수', '2026-03-11', 'UX202603110022', 40358615, '전자0000278', '신한은행', '코리아아트', '2026-03-11', '2026-04-10', '발생', '우리은행', '082-037021-13-001']
+    ]
+  },
+  [TAB.NOTE]: {
+    columns: ['상태', '어음번호', '차수/단수', '어음금액', '발행일', '만기일', '부서코드', '부서명', '거래처코드', '거래처명', '은행', '발행인', '비고'],
+    rows: [
+      ['결제', '자가30217984', '타수', 42200000, '2025-10-22', '2026-01-09', '7100', '리테일1팀', '101266', '(주)세양도기', '우리은행', '한일도기사', '-'],
+      ['결제', '전자00001442', '타수', 4000000, '2025-12-31', '2026-03-01', '7100', '리테일1팀', '051800', '(주)에스티유중', '신한은행', '풍림상인(주)', '-']
+    ]
+  },
+  [TAB.OUTSTANDING]: {
+    columns: ['거래처', '거래처명', '영업담당(코드)', '영업담당자', '영업조직', '매출일자', '매출번호', '매출금액', '수금액', '미수금액'],
+    rows: [
+      ['050016', '디에스대성하우징(주)', 'G814', '이해규', '리테일3팀', '2025-12-31', 'BN202512310536', 213852980, 157965320, 55887660],
+      ['050090', '강남타이룸상사', 'G814', '이해규', '리테일3팀', '2026-02-28', 'BN202602280487', 11587224, 0, 11587224]
+    ]
+  }
+};
+
+const SummaryTable = ({ columns, rows }) => (
+  <div className={styles.tableCard}>
+    <div className={styles.tableTop}>
+      <span className={styles.tableCount}>조회 결과: {rows.length} 건</span>
+    </div>
+    <div className={styles.tableContainer}>
+      <div className={styles.tableWrap}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              {columns.map((col) => (
+                <th key={col} className={styles.th}>
+                  {col}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, idx) => (
+              <tr key={`${idx}-${row[0]}`} className={styles.tr}>
+                {row.map((cell, cellIdx) => (
+                  <td key={`${idx}-${cellIdx}`} className={typeof cell === 'number' ? styles.tdNum : styles.tdCenter}>
+                    {typeof cell === 'number' ? formatNum(cell) : cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 );
 
 const ReceivableStatusTab = () => {
@@ -42,32 +96,41 @@ const ReceivableStatusTab = () => {
         options: [
           { label: '전체', value: '' },
           { label: '통합', value: 'integrated' },
-          { label: '인테리어부문', value: 'sales' },
-          { label: '바스플랜부문', value: 'bath' },
-        ],
+          { label: '인테리어부문', value: 'interior' },
+          { label: '바스플랜부문', value: 'bathplan' }
+        ]
       },
-      { id: 'bpCd', label: '거래처 코드', type: 'text', placeholder: '코드 입력', row: 0 },
-      { id: 'bpNm', label: '거래처명', type: 'text', placeholder: '거래처명 검색', wide: true, row: 0 },
+      { id: 'bpCd', label: '거래처코드', type: 'text', placeholder: '코드 입력', row: 0 },
+      { id: 'bpNm', label: '거래처명', type: 'text', placeholder: '거래처명 검색', wide: true, row: 0 }
     ],
     []
   );
 
+  const dataSource = [
+    {
+      bpCd: '050006',
+      bpNm: '효자대리점',
+      repreNm: '김경호',
+      gb: '인테리어부문',
+      salesNm: '권순희',
+      estAmt: 200000000,
+      noteAmt: 109941691,
+      ext4Cd: 'Y',
+      swPrevAmt: 69719309,
+      tiPrevAmt: 704000,
+      prevAmt: 70423309,
+      swBillAmt: 90058309,
+      tiBillAmt: 0,
+      billAmt: 90058309,
+      swOverdue: 0,
+      tiOverdue: 0,
+      totOverdue: 0
+    }
+  ];
+
   const handleLimitChange = (bpCd, newVal) => {
     setChangedData((prev) => [...prev.filter((item) => item.bpCd !== bpCd), { bpCd, newVal }]);
   };
-
-  const dataSource = [
-    {
-      key: '1', bpCd: '050006', bpNm: '효자타일 대리점', repreNm: '김경호', gb: '인테리어부문', salesNm: '권순호',
-      estAmt: 200000000, noteAmt: 109941691, ext4Cd: 'Y', swPrevAmt: 69719309, tiPrevAmt: 704000, prevAmt: 70423309,
-      swBillAmt: 90058309, tiBillAmt: 0, billAmt: 90058309, swOverdue: 0, tiOverdue: 0, totOverdue: 0,
-    },
-    {
-      key: '2', bpCd: '050024', bpNm: '이화대리점', repreNm: '김보라', gb: '인테리어부문', salesNm: '유득진',
-      estAmt: 190000000, noteAmt: -17138380, ext4Cd: 'N', swPrevAmt: 115245714, tiPrevAmt: 32861620, prevAmt: 148107334,
-      swBillAmt: 90673561, tiBillAmt: 19298400, billAmt: 109971961, swOverdue: 30000000, tiOverdue: 8107334, totOverdue: 38107334,
-    },
-  ];
 
   return (
     <div className={styles.tabPanel}>
@@ -77,24 +140,13 @@ const ReceivableStatusTab = () => {
           <span className={styles.statusBadge}>
             <span className={styles.dot}></span> 마감상태: 테스트 / 마감일시: 2026-02-27 18:00
           </span>
-          <div className={styles.tooltipWrap}>
-            <Button variant="secondary" className={styles.logicBtn}>계산 로직 안내</Button>
-            <div className={styles.tooltip}>
-              <p><b>계산로직:</b> 당월 미수매출금 = 전월미수 + 당월매출 - 당월수금</p>
-              <p><b>채신한도:</b> 거래한도 - 당월 미수매출금 - 미결제어음</p>
-            </div>
-          </div>
+          <Button variant="secondary" className={styles.logicBtn}>
+            계산 로직 안내
+          </Button>
         </div>
       </div>
 
-      <ListFilter
-        fields={filterFields}
-        value={filterValue}
-        onChange={handleFilterChange}
-        onReset={handleReset}
-        onSearch={() => {}}
-        searchLabel="조회"
-      />
+      <ListFilter fields={filterFields} value={filterValue} onChange={handleFilterChange} onReset={handleReset} onSearch={() => {}} searchLabel="조회" />
 
       <div className={styles.tableCard}>
         <div className={styles.tableTop}>
@@ -103,17 +155,26 @@ const ReceivableStatusTab = () => {
             {changedData.length > 0 ? `${changedData.length}건 변경 저장` : '변경사항 없음'}
           </Button>
         </div>
-
         <div className={styles.tableContainer}>
           <div className={styles.tableWrap}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th colSpan="5" className={styles.thGroup}>거래처정보</th>
-                  <th colSpan="3" className={styles.thGroup}>채신한도</th>
-                  <th colSpan="3" className={styles.thGroup}>전월 미수매출금액</th>
-                  <th colSpan="3" className={styles.thGroup}>당월 출고금액</th>
-                  <th colSpan="3" className={styles.thGroup}>당월 연체금액</th>
+                  <th colSpan="5" className={styles.thGroup}>
+                    거래처정보
+                  </th>
+                  <th colSpan="3" className={styles.thGroup}>
+                    채신한도
+                  </th>
+                  <th colSpan="3" className={styles.thGroup}>
+                    전월 미수매출금액
+                  </th>
+                  <th colSpan="3" className={styles.thGroup}>
+                    당월 출고금액
+                  </th>
+                  <th colSpan="3" className={styles.thGroup}>
+                    당월 연체금액
+                  </th>
                 </tr>
                 <tr>
                   <th className={styles.th}>코드</th>
@@ -121,37 +182,37 @@ const ReceivableStatusTab = () => {
                   <th className={styles.th}>대표자</th>
                   <th className={styles.th}>채신구분</th>
                   <th className={styles.th}>영업그룹</th>
-                  <th className={styles.th} style={{ textAlign: 'right' }}>거래한도</th>
-                  <th className={styles.th} style={{ textAlign: 'right' }}>채신여신한도</th>
+                  <th className={styles.th}>거래한도</th>
+                  <th className={styles.th}>채신여신한도</th>
                   <th className={styles.th}>한도제한</th>
-                  <th className={styles.th} style={{ textAlign: 'right' }}>위생기기</th>
-                  <th className={styles.th} style={{ textAlign: 'right' }}>타일</th>
-                  <th className={styles.thSum} style={{ textAlign: 'right' }}>합계</th>
-                  <th className={styles.th} style={{ textAlign: 'right' }}>위생기기</th>
-                  <th className={styles.th} style={{ textAlign: 'right' }}>타일</th>
-                  <th className={styles.thSum} style={{ textAlign: 'right' }}>합계</th>
-                  <th className={styles.th} style={{ textAlign: 'right' }}>위생기기</th>
-                  <th className={styles.th} style={{ textAlign: 'right' }}>타일</th>
-                  <th className={styles.thSum} style={{ textAlign: 'right' }}>합계</th>
+                  <th className={styles.th}>위생기기</th>
+                  <th className={styles.th}>타일</th>
+                  <th className={styles.thSum}>합계</th>
+                  <th className={styles.th}>위생기기</th>
+                  <th className={styles.th}>타일</th>
+                  <th className={styles.thSum}>합계</th>
+                  <th className={styles.th}>위생기기</th>
+                  <th className={styles.th}>타일</th>
+                  <th className={styles.thSum}>합계</th>
                 </tr>
               </thead>
               <tbody>
                 {dataSource.map((row) => {
-                  const changedLimit = changedData.find(c => c.bpCd === row.bpCd)?.newVal;
-                  const currentLimit = changedLimit !== undefined ? changedLimit : row.ext4Cd;
+                  const changedLimit = changedData.find((c) => c.bpCd === row.bpCd)?.newVal;
+                  const currentLimit = changedLimit ?? row.ext4Cd;
                   return (
                     <tr key={row.bpCd} className={styles.tr}>
                       <td className={styles.tdCenter}>{row.bpCd}</td>
-                      <td className={styles.td}>{row.bpNm}</td>
+                      <td className={styles.tdCenter}>{row.bpNm}</td>
                       <td className={styles.tdCenter}>{row.repreNm}</td>
                       <td className={styles.tdCenter}>{row.gb}</td>
                       <td className={styles.tdCenter}>{row.salesNm}</td>
                       <td className={styles.tdNum}>{formatNum(row.estAmt)}</td>
-                      <td className={styles.tdNum}>
-                         <strong style={{ color: row.noteAmt < 0 ? '#cf1322' : '#096dd9' }}>{formatNum(row.noteAmt)}</strong>
-                      </td>
+                      <td className={styles.tdNum}>{formatNum(row.noteAmt)}</td>
                       <td className={styles.tdCenter}>
-                        <ToggleSwitch checked={currentLimit === 'Y'} onChange={(val) => handleLimitChange(row.bpCd, val ? 'Y' : 'N')} />
+                        <button type="button" className={`${styles.toggle} ${currentLimit === 'Y' ? styles.toggleOn : styles.toggleOff}`} onClick={() => handleLimitChange(row.bpCd, currentLimit === 'Y' ? 'N' : 'Y')}>
+                          {currentLimit}
+                        </button>
                       </td>
                       <td className={styles.tdNum}>{formatNum(row.swPrevAmt)}</td>
                       <td className={styles.tdNum}>{formatNum(row.tiPrevAmt)}</td>
@@ -161,22 +222,11 @@ const ReceivableStatusTab = () => {
                       <td className={styles.tdNumSum}>{formatNum(row.billAmt)}</td>
                       <td className={styles.tdNum}>{formatNum(row.swOverdue)}</td>
                       <td className={styles.tdNum}>{formatNum(row.tiOverdue)}</td>
-                      <td className={styles.tdNumSum}>
-                        <span style={{ color: row.totOverdue > 0 ? '#cf1322' : 'inherit' }}>{formatNum(row.totOverdue)}</span>
-                      </td>
+                      <td className={styles.tdNumSum}>{formatNum(row.totOverdue)}</td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
-              <tfoot>
-                <tr className={styles.tfootTr}>
-                  <td colSpan="5" className={styles.tdCenter} style={{ fontWeight: 600 }}>총 합계</td>
-                  <td className={styles.tdNum} style={{ fontWeight: 600 }}>3,372,993,161,116</td>
-                  <td className={styles.tdNum} style={{ fontWeight: 600 }}>3,331,621,425,825</td>
-                  <td className={styles.tdCenter}></td>
-                  <td colSpan="9" className={styles.tdNum} style={{ fontWeight: 600 }}>26,106,000,247</td>
-                </tr>
-              </tfoot>
             </table>
           </div>
         </div>
@@ -186,16 +236,99 @@ const ReceivableStatusTab = () => {
 };
 
 const CollectionStatusTab = () => {
+  const [filterValue, setFilterValue] = useState({
+    dateFrom: '',
+    dateTo: '',
+    customer: '',
+    dept: '',
+    type: '',
+    dueDate: '',
+    settleNo: ''
+  });
+
+  const fields = useMemo(
+    () => [
+      { id: 'dateRange', type: 'dateRange', label: '수금일자', fromKey: 'dateFrom', toKey: 'dateTo', row: 0 },
+      { id: 'customer', label: '거래처', type: 'text', row: 0 },
+      { id: 'dept', label: '부서', type: 'text', row: 0 },
+      { id: 'type', label: '수금구분', type: 'select', row: 1, options: [{ label: '전체', value: '' }, { label: '통장입금', value: 'bank' }, { label: '어음', value: 'note' }] },
+      { id: 'dueDate', label: '만기일자', type: 'date', row: 1 },
+      { id: 'settleNo', label: '계좌번호', type: 'text', row: 1 }
+    ],
+    []
+  );
+
   return (
-    <div className={styles.collectionWrap}>
-      <BillsDepositsPage isTabMode={true} />
+    <div className={styles.tabPanel}>
+      <ListFilter fields={fields} value={filterValue} onChange={(id, v) => setFilterValue((prev) => ({ ...prev, [id]: v }))} onReset={() => setFilterValue({ dateFrom: '', dateTo: '', customer: '', dept: '', type: '', dueDate: '', settleNo: '' })} onSearch={() => {}} searchLabel="조회" />
+      <SummaryTable columns={TABLES[TAB.COLLECTION].columns} rows={TABLES[TAB.COLLECTION].rows} />
+    </div>
+  );
+};
+
+const NoteStatusTab = () => {
+  const [filterValue, setFilterValue] = useState({
+    dueFrom: '',
+    dueTo: '',
+    issueFrom: '',
+    issueTo: '',
+    noteType: '',
+    noteStatus: '',
+    stepType: '',
+    customer: '',
+    bank: '',
+    noteNo: '',
+    issuer: '',
+    memo: ''
+  });
+
+  const fields = useMemo(
+    () => [
+      { id: 'dueRange', type: 'dateRange', label: '만기일', fromKey: 'dueFrom', toKey: 'dueTo', row: 0 },
+      { id: 'issueRange', type: 'dateRange', label: '발행일', fromKey: 'issueFrom', toKey: 'issueTo', row: 0 },
+      { id: 'noteType', label: '어음구분', type: 'select', row: 0, options: [{ label: '전체', value: '' }, { label: '받은어음', value: 'received' }] },
+      { id: 'noteStatus', label: '어음상태', type: 'select', row: 0, options: [{ label: '전체', value: '' }, { label: '결제', value: 'paid' }, { label: '발생', value: 'issued' }] },
+      { id: 'stepType', label: '차수/단수', type: 'select', row: 0, options: [{ label: '전체', value: '' }, { label: '타수', value: 'multi' }, { label: '단수', value: 'single' }] },
+      { id: 'customer', label: '거래처', type: 'text', row: 1 },
+      { id: 'bank', label: '은행', type: 'text', row: 1 },
+      { id: 'noteNo', label: '어음번호(Like)', type: 'text', row: 1 },
+      { id: 'issuer', label: '발행인(Like)', type: 'text', row: 1 },
+      { id: 'memo', label: '비고(Like)', type: 'text', row: 1 }
+    ],
+    []
+  );
+
+  return (
+    <div className={styles.tabPanel}>
+      <ListFilter fields={fields} value={filterValue} onChange={(id, v) => setFilterValue((prev) => ({ ...prev, [id]: v }))} onReset={() => setFilterValue({ dueFrom: '', dueTo: '', issueFrom: '', issueTo: '', noteType: '', noteStatus: '', stepType: '', customer: '', bank: '', noteNo: '', issuer: '', memo: '' })} onSearch={() => {}} searchLabel="조회" />
+      <SummaryTable columns={TABLES[TAB.NOTE].columns} rows={TABLES[TAB.NOTE].rows} />
+    </div>
+  );
+};
+
+const OutstandingStatusTab = () => {
+  const [filterValue, setFilterValue] = useState({ customer: '', salesGroupName: '', salesGroupCode: '' });
+
+  const fields = useMemo(
+    () => [
+      { id: 'customer', label: '거래처', type: 'text', row: 0 },
+      { id: 'salesGroupName', label: '영업그룹(이름)', type: 'text', row: 0 },
+      { id: 'salesGroupCode', label: '영업그룹(코드)', type: 'text', row: 0 }
+    ],
+    []
+  );
+
+  return (
+    <div className={styles.tabPanel}>
+      <ListFilter fields={fields} value={filterValue} onChange={(id, v) => setFilterValue((prev) => ({ ...prev, [id]: v }))} onReset={() => setFilterValue({ customer: '', salesGroupName: '', salesGroupCode: '' })} onSearch={() => {}} searchLabel="조회" />
+      <SummaryTable columns={TABLES[TAB.OUTSTANDING].columns} rows={TABLES[TAB.OUTSTANDING].rows} />
     </div>
   );
 };
 
 const SupportReceivablePage = () => {
   const { pathname } = useLocation();
-  const [activeTab, setActiveTab] = useState('receivable');
+  const [activeTab, setActiveTab] = useState(TAB.RECEIVABLE);
 
   return (
     <PageShell path={pathname} className={styles.shellWide}>
@@ -203,29 +336,25 @@ const SupportReceivablePage = () => {
         <div className={styles.mainCard}>
           <h2 className={styles.pageTitle}>채신/수금 관리</h2>
           <div className={styles.tabs} role="tablist">
-            <button 
-              type="button" 
-              role="tab" 
-              aria-selected={activeTab === 'receivable'} 
-              className={activeTab === 'receivable' ? styles.tabActive : styles.tab} 
-              onClick={() => setActiveTab('receivable')}
-            >
+            <button type="button" role="tab" aria-selected={activeTab === TAB.RECEIVABLE} className={activeTab === TAB.RECEIVABLE ? styles.tabActive : styles.tab} onClick={() => setActiveTab(TAB.RECEIVABLE)}>
               채권 및 채신 현황
             </button>
-            <button 
-              type="button" 
-              role="tab" 
-              aria-selected={activeTab === 'collection'} 
-              className={activeTab === 'collection' ? styles.tabActive : styles.tab} 
-              onClick={() => setActiveTab('collection')}
-            >
-              어음 및 수금 현황
+            <button type="button" role="tab" aria-selected={activeTab === TAB.COLLECTION} className={activeTab === TAB.COLLECTION ? styles.tabActive : styles.tab} onClick={() => setActiveTab(TAB.COLLECTION)}>
+              수금 현황
+            </button>
+            <button type="button" role="tab" aria-selected={activeTab === TAB.NOTE} className={activeTab === TAB.NOTE ? styles.tabActive : styles.tab} onClick={() => setActiveTab(TAB.NOTE)}>
+              어음 현황
+            </button>
+            <button type="button" role="tab" aria-selected={activeTab === TAB.OUTSTANDING} className={activeTab === TAB.OUTSTANDING ? styles.tabActive : styles.tab} onClick={() => setActiveTab(TAB.OUTSTANDING)}>
+              미수금 현황
             </button>
           </div>
-          
+
           <div className={styles.tabContent}>
-            {activeTab === 'receivable' && <ReceivableStatusTab />}
-            {activeTab === 'collection' && <CollectionStatusTab />}
+            {activeTab === TAB.RECEIVABLE && <ReceivableStatusTab />}
+            {activeTab === TAB.COLLECTION && <CollectionStatusTab />}
+            {activeTab === TAB.NOTE && <NoteStatusTab />}
+            {activeTab === TAB.OUTSTANDING && <OutstandingStatusTab />}
           </div>
         </div>
       </div>

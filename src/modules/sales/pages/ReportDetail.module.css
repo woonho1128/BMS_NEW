@@ -1,68 +1,109 @@
-/* 보고 상세 (ReadOnly + 코멘트) */
-
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
-  padding-bottom: var(--space-lg);
-  max-width: 100%;
+  gap: var(--space-md);
 }
 
 .sectionCard {
-  flex-shrink: 0;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #fff;
 }
 
 .metaRow {
   display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  margin-bottom: var(--space-lg);
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .badge {
-  padding: 4px var(--space-sm);
-  border-radius: 999px;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  background: var(--color-primary);
-  color: #fff;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #edf4ff;
+  color: #1f64d8;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .status {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f3f6fb;
+  color: #4a5c77;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .author {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
+  font-size: 14px;
+  color: #1f2f47;
+  font-weight: 700;
 }
 
 .readOnlyField {
-  margin-bottom: var(--space-md);
+  margin-bottom: 0;
 }
 
 .readOnlyLabel {
   display: block;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-xs);
+  font-size: 14px;
+  font-weight: 700;
+  color: #2a3d59;
+  margin-bottom: 8px;
 }
 
 .readOnlyValue {
+  margin: 0;
   font-size: var(--font-size-md);
-  color: var(--color-text-primary);
+  color: #1f2f47;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.weekValue {
+  margin: 0;
+  font-size: var(--font-size-md);
+  line-height: 1.55;
+  font-weight: var(--font-weight-semibold);
+  color: #132949;
+}
+
+.weeklySplitSection {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.weeklyColumn {
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  background: #f9fbff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.weeklyColumnHeader {
+  margin: 0;
+  font-size: var(--font-size-md);
   line-height: 1.5;
+  font-weight: var(--font-weight-semibold);
+  color: #132949;
 }
 
 .readOnlyList {
   margin: 0;
-  padding-left: var(--space-lg);
+  padding-left: 1.2em;
   font-size: var(--font-size-md);
-  color: var(--color-text-primary);
-  line-height: 1.6;
+  color: #1f2f47;
+  line-height: 1.55;
+}
+
+.readOnlyList li {
+  margin: 0 0 4px;
 }
 
 .commentList {
@@ -128,32 +169,16 @@
   justify-content: flex-end;
   gap: var(--space-sm);
   padding-top: var(--space-md);
-  border-top: 1px solid #e4ebf4;
 }
 
-/* 모바일 최적화 */
 @media (max-width: 768px) {
-  .page {
-    padding-bottom: var(--space-md);
-    gap: var(--space-md);
-  }
-
-  .metaRow {
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-  }
-
-  .readOnlyField {
-    margin-bottom: var(--space-sm);
+  .weeklySplitSection {
+    grid-template-columns: 1fr;
   }
 
   .commentInputRow {
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .commentInput {
-    min-height: 80px;
   }
 
   .footer {

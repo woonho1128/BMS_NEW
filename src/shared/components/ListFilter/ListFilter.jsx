@@ -126,6 +126,34 @@ export function ListFilter({
       );
     }
     if (field.type === 'checkbox') {
+      if (Array.isArray(field.options) && field.options.length > 0) {
+        const selectedValues = Array.isArray(val) ? val : [];
+        return (
+          <div className={styles.checkboxGroup} style={widthStyle}>
+            {field.options.map((opt) => {
+              const checked = selectedValues.includes(opt.value);
+              return (
+                <label key={opt.value} className={styles.checkboxItem}>
+                  <input
+                    type="checkbox"
+                    className={styles.filterCheckbox}
+                    checked={checked}
+                    onChange={(e) => {
+                      const next = e.target.checked
+                        ? [...selectedValues, opt.value]
+                        : selectedValues.filter((item) => item !== opt.value);
+                      onChange(field.id, next);
+                    }}
+                    aria-label={`${field.label} ${opt.label}`}
+                    disabled={Boolean(field.disabled)}
+                  />
+                  <span>{opt.label}</span>
+                </label>
+              );
+            })}
+          </div>
+        );
+      }
       return (
         <label className={styles.filterItem}>
           <input
@@ -173,7 +201,7 @@ export function ListFilter({
       {byRow.map(([rowIndex, rowFields]) => (
         <div key={rowIndex} className={styles.filters}>
           {rowFields.map((field) => {
-            if (field.type === 'checkbox') {
+            if (field.type === 'checkbox' && !(Array.isArray(field.options) && field.options.length > 0)) {
               return <React.Fragment key={field.id}>{renderField(field)}</React.Fragment>;
             }
             if (field.type === 'dateRange') {

@@ -4,7 +4,6 @@ import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
 import { ListFilter } from '../../../shared/components/ListFilter';
 import { Card, CardBody } from '../../../shared/components/Card';
-import { classnames } from '../../../shared/utils/classnames';
 import {
   MOCK_MANAGER_OPTIONS,
   MOCK_DEPARTMENT_OPTIONS,
