@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Input, Select, Tag, message } from 'antd';
+import { Button, Input, Select, message } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { PageShell } from '../../../../shared/components/PageShell/PageShell';
 import { ProductList } from './components/ProductList';

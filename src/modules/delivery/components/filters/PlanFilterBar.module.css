@@ -1,113 +1,185 @@
-﻿.filterContainer {
-    background-color: #fff;
-    border: 1px solid #dce4ef;
-    border-radius: 14px;
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+.filterContainer {
+  background-color: #fff;
+  border: 1px solid #dce4ef;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 16px;
-    background-color: #f7faff;
-    border-bottom: 1px solid #e4ebf4;
-    cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: #f7faff;
+  border-bottom: 1px solid #e4ebf4;
+  cursor: pointer;
 }
 
 .headerTitle {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1d2a3b;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1d2a3b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .toggleIcon {
-    font-size: 12px;
-    color: #6a7991;
-    transition: transform 0.3s;
+  font-size: 12px;
+  color: #6a7991;
+  transition: transform 0.3s;
 }
 
 .toggleIcon.expanded {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .content {
-    padding: 12px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    align-items: center;
+.rowTop,
+.rowBottom {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.rowTop {
+  flex-wrap: nowrap;
+}
+
+.rowBottom {
+  flex-wrap: nowrap;
 }
 
 .inputGroup {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .label {
-    font-size: 13px;
-    color: #4b5b74;
-    font-weight: 600;
+  font-size: 13px;
+  color: #4b5b74;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .input {
-    height: 32px;
-    padding: 0 10px;
-    border: 1px solid #cad6e6;
-    border-radius: 8px;
-    font-size: 13px;
-    width: 120px;
-    background: #fff;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
+  font-size: 13px;
+  width: 118px;
+  background: #fff;
 }
 
 .select {
-    height: 32px;
-    padding: 0 10px;
-    border: 1px solid #cad6e6;
-    border-radius: 8px;
-    font-size: 13px;
-    width: 120px;
-    background: #fff;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
+  font-size: 13px;
+  width: 102px;
+  background: #fff;
+}
+
+.remarkGroup {
+  flex: 1;
+}
+
+.remarkInput {
+  width: 100%;
+  min-width: 200px;
 }
 
 .checkboxLabel {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 13px;
-    color: #4b5b74;
-    cursor: pointer;
-    user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #4b5b74;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.bidetOnlyLabel {
+  font-weight: 700;
+  color: #2f7df6;
+}
+
+.rangeDash {
+  color: #6a7991;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.actions {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .searchButton {
-    height: 32px;
-    padding: 0 16px;
-    background: linear-gradient(135deg, #1f64d8 0%, #2f7df6 100%);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-left: auto;
+  height: 32px;
+  padding: 0 16px;
+  background: linear-gradient(135deg, #1f64d8 0%, #2f7df6 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.resetButton {
+  height: 32px;
+  padding: 0 14px;
+  background: #fff;
+  color: #4b5b74;
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.resetButton:hover {
+  background: #f8fbff;
 }
 
 .searchButton:hover {
-    filter: brightness(1.04);
+  filter: brightness(1.04);
 }
 
+@media (max-width: 1680px) {
+  .rowTop,
+  .rowBottom {
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .rowTop::-webkit-scrollbar,
+  .rowBottom::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .rowTop::-webkit-scrollbar-thumb,
+  .rowBottom::-webkit-scrollbar-thumb {
+    background: #c7d3e3;
+    border-radius: 6px;
+  }
+}

@@ -42,15 +42,6 @@ export function OrgDetailPanel({ org, onAddChild, onEdit, onDelete, onSave, onCa
     }
   }, [org]);
 
-  const getParentName = useCallback(
-    (parentId) => {
-      if (!parentId) return null;
-      const parent = allOrgs.find((o) => o.id === parentId);
-      return parent ? parent.name : null;
-    },
-    [allOrgs]
-  );
-
   const getBreadcrumb = useCallback(() => {
     if (!org) return [];
     const breadcrumb = [];

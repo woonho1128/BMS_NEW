@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useMemo, useState } from 'react';
 import { PageShell } from '../../../../../../shared/components/PageShell/PageShell';
 import { CostTable } from './CostTable';
@@ -75,10 +76,6 @@ function makeRows() {
       note: '',
     };
   });
-}
-
-function toCellId(rowId, colKey) {
-  return `${rowId}:${colKey}`;
 }
 
 export function CostPage() {
@@ -179,8 +176,6 @@ export function CostPage() {
       if (rowStart != null && rowEnd != null && colStart != null && colEnd != null) {
         const minRow = Math.min(rowStart, rowEnd);
         const maxRow = Math.max(rowStart, rowEnd);
-        const minCol = Math.min(colStart, colEnd);
-        const maxCol = Math.max(colStart, colEnd);
         const rowIds = filteredRows.slice(minRow, maxRow + 1).map((r) => r.id);
         setSelectedRows([...new Set(rowIds)]);
       }

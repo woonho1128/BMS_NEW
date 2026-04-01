@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Tag, Progress, Empty } from 'antd';
+import { Table, Progress, Empty } from 'antd';
 import { SHIPMENT_STATUS, DELIVERY_STATUS } from '../mockOrderData';
 import './ShipmentList.css';
 

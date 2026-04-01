@@ -1,6 +1,5 @@
 import React from 'react';
-import { Steps, Button, message, Popconfirm } from 'antd';
-import { CheckCircleOutlined, SyncOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Steps, Button, Popconfirm } from 'antd';
 import { STATUS_CODES } from '../mockCostData';
 
 const { Step } = Steps;

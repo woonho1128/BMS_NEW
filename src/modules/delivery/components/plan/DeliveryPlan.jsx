@@ -1,4 +1,5 @@
-﻿import { ModificationPeriod } from '../snapshot/ModificationPeriod';
+import { useMemo, useState } from 'react';
+import { ModificationPeriod } from '../snapshot/ModificationPeriod';
 import { PlanFilterBar } from '../filters/PlanFilterBar';
 import { PlanTable } from '../table/PlanTable';
 import { PartialDeliveryModal } from '../modals/PartialDeliveryModal';
@@ -14,12 +15,31 @@ export const DeliveryPlan = ({ rows, setRows }) => {
   const {
     isExpanded: isFilterExpanded,
     setIsExpanded: setIsFilterExpanded,
-    showBidetsOnly,
-    setShowBidetsOnly,
-    remarksSearch,
-    setRemarksSearch,
-    filteredRows
+    filters,
+    handleFilterChange,
+    handleSearch,
+    handleReset,
+    filteredRows,
   } = usePlanFilter(rows);
+
+  const [tableView, setTableView] = useState({
+    category: '',
+    periodType: 'monthly',
+    year: '',
+    month: '',
+    sortBy: 'item1',
+    sortOrder: 'asc',
+  });
+
+  const yearOptions = useMemo(() => {
+    return Array.from(
+      new Set(
+        rows
+          .map((row) => String(row.deliveryDate || '').slice(0, 4))
+          .filter((year) => /^\d{4}$/.test(year))
+      )
+    ).sort((a, b) => Number(b) - Number(a));
+  }, [rows]);
 
   const partialModal = useModal(null);
   const historyModal = useModal({ field: '', oldValue: '', newValue: '' });
@@ -61,7 +81,7 @@ export const DeliveryPlan = ({ rows, setRows }) => {
             ...row,
             qty: remaining > 0 ? remaining : 0,
             status: newStatus,
-            partialHistory: [...(row.partialHistory || []), { date, qty, note: '추가 납품' }]
+            partialHistory: [...(row.partialHistory || []), { date, qty, note: '추가 납품' }],
           };
         }
         return row;
@@ -89,7 +109,7 @@ export const DeliveryPlan = ({ rows, setRows }) => {
       row,
       field: fieldLabel,
       oldValue,
-      newValue
+      newValue,
     });
   };
 
@@ -113,8 +133,8 @@ export const DeliveryPlan = ({ rows, setRows }) => {
             isChanged: true,
             changeHistory: [
               ...(row.changeHistory || []),
-              { field, oldValue: oldVal, newValue, reason, date: new Date().toISOString() }
-            ]
+              { field, oldValue: oldVal, newValue, reason, date: new Date().toISOString() },
+            ],
           };
         }
         return row;
@@ -135,10 +155,10 @@ export const DeliveryPlan = ({ rows, setRows }) => {
         <PlanFilterBar
           isExpanded={isFilterExpanded}
           onToggleExpand={() => setIsFilterExpanded(!isFilterExpanded)}
-          showBidetsOnly={showBidetsOnly}
-          onBidetFilterChange={setShowBidetsOnly}
-          remarksSearch={remarksSearch}
-          onRemarksSearchChange={setRemarksSearch}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onSearch={handleSearch}
+          onReset={handleReset}
         />
 
         <div
@@ -151,14 +171,23 @@ export const DeliveryPlan = ({ rows, setRows }) => {
             border: '1px solid #bcd4fb',
             fontSize: '13px',
             fontWeight: 600,
-            color: '#1f64d8'
+            color: '#1f64d8',
           }}
         >
-          총 수량: {totalQty.toLocaleString()}&nbsp;|&nbsp;총 TON: {totalTon.toFixed(1)}&nbsp;|&nbsp;총 금액: {totalAmt.toLocaleString()}
+          총 수량: {totalQty.toLocaleString()}&nbsp;|&nbsp;총 TON: {totalTon.toFixed(1)}&nbsp;|&nbsp;총 금액:{' '}
+          {totalAmt.toLocaleString()}
         </div>
       </div>
 
-      <PlanTable rows={filteredRows} onCellChange={handleCellChange} onAction={handleOpenAction} onSiteClick={handleSiteClick} />
+      <PlanTable
+        rows={filteredRows}
+        tableView={tableView}
+        yearOptions={yearOptions}
+        onTableViewChange={(key, value) => setTableView((prev) => ({ ...prev, [key]: value }))}
+        onCellChange={handleCellChange}
+        onAction={handleOpenAction}
+        onSiteClick={handleSiteClick}
+      />
 
       {actionModal.isOpen && (
         <DeliveryActionModal

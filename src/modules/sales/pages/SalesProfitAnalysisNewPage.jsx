@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Steps, Descriptions, Divider } from 'antd';
+import { Steps, Descriptions } from 'antd';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
-import { Card, CardBody, CardFooter } from '../../../shared/components/Card';
+import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { DatePicker } from '../../../shared/components/DatePicker/DatePicker';
 import { classnames } from '../../../shared/utils/classnames';
@@ -245,12 +245,10 @@ export function SalesProfitAnalysisNewPage() {
     specDate, setSpecDate, expectedDeliveryDate, setExpectedDeliveryDate, completionDate, setCompletionDate,
     originSpecNo, setOriginSpecNo, pdfFile, setPdfFile, commissionEnabled, setCommissionEnabled, commissionFee, setCommissionFee,
     remark, setRemark,
-    items, addRow, addRowWithData, removeRow, updateRow, updateRowType, summary,
+    items, addRowWithData, updateRow, updateRowType, summary,
   } = form;
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [expandedRowId, setExpandedRowId] = useState(null);
-
   /** STEP2: 입력 폼 상태 (Drawer 내 편집용). 자품번 다중 선택: unitItemCodes (SET일 때) */
   const [editForm, setEditForm] = useState({ type: 'SET', itemCode: '', unitItemCodes: [], orderType: '정식수주', qty: 1, bidPrice: '', marginRateDealer: '', remark: '' });
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -324,8 +322,6 @@ export function SalesProfitAnalysisNewPage() {
   }, [selectedRowId, editForm, updateRow, updateRowType, resetStep2Form]);
 
   /** 자품번 표시: SET 선택 시 다중 선택, 단품이면 단일 품번 */
-  const displayUnitCode = editForm.type === 'SET' ? '-' : (editForm.itemCode || '-');
-
   /** 자품번 다중 선택 토글 (SET일 때만 사용) — 항상 새 배열로 갱신해 선택 목록이 확실히 반영되도록 */
   const toggleUnitItem = useCallback((code) => {
     setEditForm((f) => {

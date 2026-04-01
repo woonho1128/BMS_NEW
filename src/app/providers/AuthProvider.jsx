@@ -1,11 +1,11 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useMemo, useState } from 'react';
 import { useLocalStorage } from '../../shared/hooks/useLocalStorage';
 import { login as loginApi } from '../../modules/auth/api/auth.api';
+import { AuthContext } from './AuthContext';
 
 const TOKEN_KEY = 'bms-token';
 const USER_KEY = 'bms-user';
-
-export const AuthContext = React.createContext(null);
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useLocalStorage(TOKEN_KEY, null);

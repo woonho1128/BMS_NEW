@@ -22,7 +22,6 @@ function getRowDetail(row) {
   const master = row.itemCode ? MOCK_ITEM_MASTER[row.itemCode] : null;
   if (!master) return null;
   const qty = Number(row.qty) || 1;
-  const marginRateDealer = Number(row.marginRateDealer) || 0;
   const dealerPrice = calcDealerPrice(row.bidPrice, row.marginRateDealer);
   const costUnit = master.cost2027 ?? master.cost2026 ?? 0;
   const sales = qty * dealerPrice;

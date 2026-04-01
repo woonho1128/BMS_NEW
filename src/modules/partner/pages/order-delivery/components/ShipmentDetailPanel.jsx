@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Button, Table, Tag, Descriptions, Badge, Timeline, Card, Empty, Divider } from 'antd';
-import { CarOutlined, PlusOutlined, ClockCircleOutlined, CheckCircleOutlined, SyncOutlined } from '@ant-design/icons';
-import { SHIPMENT_STATUS, DELIVERY_STATUS } from '../mockOrderData';
+import React from 'react';
+import { Button, Table, Tag, Badge, Timeline, Empty, Divider } from 'antd';
+import { CarOutlined, PlusOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { DELIVERY_STATUS } from '../mockOrderData';
 import './ShipmentDetailPanel.css';
 
 export function ShipmentDetailPanel({ order, isAdmin, onRegisterClick }) {

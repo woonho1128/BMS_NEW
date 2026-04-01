@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Table, Input, InputNumber, Switch, Tag, Space } from 'antd';
+import { Button, Table, Input, InputNumber, Switch } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
 export function OptionTab({ data, onChange }) {

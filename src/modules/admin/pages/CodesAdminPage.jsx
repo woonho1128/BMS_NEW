@@ -3,7 +3,7 @@ import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
 import { ListFilter } from '../../../shared/components/ListFilter';
 import { Card, CardBody } from '../../../shared/components/Card';
-import { getCodesList, getCodeById } from '../data/adminMock';
+import { getCodesList } from '../data/adminMock';
 import styles from './CodesAdminPage.module.css';
 
 const CODE_FILTER_FIELDS = [

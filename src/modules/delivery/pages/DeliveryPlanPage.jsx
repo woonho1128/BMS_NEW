@@ -57,6 +57,10 @@ export const DeliveryPlanPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [activeTab]);
+
   const handleSaveNewPlan = (newPlan) => {
     setPlanRows((prev) => [newPlan, ...prev]);
     addPlanModal.close();

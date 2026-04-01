@@ -113,6 +113,13 @@
   background: #fff;
 }
 
+.profitTable {
+  width: 100%;
+  min-width: 1400px;
+  border-collapse: collapse;
+  background: #fff;
+}
+
 .itemTable {
   min-width: 1280px;
   table-layout: fixed;
@@ -127,6 +134,20 @@
   border-bottom: 1px solid #e8eef7;
   font-size: var(--font-size-sm);
   vertical-align: middle;
+}
+
+.listTable th:last-child,
+.listTable td:last-child {
+  display: none;
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.clickableRow:focus {
+  outline: 2px solid #9ec3ff;
+  outline-offset: -2px;
 }
 
 .listTable th,
@@ -214,6 +235,38 @@
   font-weight: var(--font-weight-semibold);
 }
 
+.profitTable th,
+.profitTable td,
+.profitTable tfoot td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e8eef7;
+  border-right: 1px solid #eef2f8;
+  font-size: var(--font-size-sm);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.profitTable th {
+  background: #eef5ff;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.profitTable tbody td:first-child {
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+}
+
+.profitTable tfoot td {
+  background: #f8fbff;
+  font-weight: var(--font-weight-semibold);
+}
+
+.centerCell {
+  text-align: center;
+}
+
 .textarea {
   min-height: 170px;
   resize: vertical;
@@ -224,6 +277,7 @@
   justify-content: flex-end;
   gap: var(--space-sm);
   padding-top: var(--space-md);
+  padding-right: var(--space-md);
   border-top: 1px solid #dce6f3;
 }
 

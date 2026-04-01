@@ -47,8 +47,6 @@ export function SalesProfitAnalysisDetailPage() {
 
   const isDraft = data.status === 'draft';
   const isApproved = data.status === 'approved';
-  const readOnly = !isDraft;
-
   const handleEdit = () => {
     // TODO: 수정 시 동일 폼으로 이동 또는 인라인 편집
     navigate(`/profit/${id}/edit`);

@@ -5,6 +5,11 @@ import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { ROUTES } from '../../../router/routePaths';
 import { createShortProjectApproval } from '../../approval/data/salesApprovalMock';
+import {
+  BASE_DISCOUNT_RATE,
+  computeShortProjectItem,
+  computeShortProjectProfitRow,
+} from '../utils/shortProjectPricing';
 import styles from './ShortProjectRegisterPage.module.css';
 
 const VIEW_MODE = {
@@ -76,25 +81,6 @@ function formatNumber(value) {
   return (Number(value) || 0).toLocaleString('ko-KR');
 }
 
-function computeItem(row) {
-  const qty = Number(row.qty) || 0;
-  const standardPrice = Number(row.standardPrice) || 0;
-  const discountRate = Number(row.discountRate) || 0;
-  const standardAmount = qty * standardPrice;
-  const unitPriceAfterDiscount = Math.round(standardPrice * (1 - discountRate / 100));
-  const amountAfterDiscount = qty * unitPriceAfterDiscount;
-
-  return {
-    ...row,
-    qty,
-    standardPrice,
-    discountRate,
-    standardAmount,
-    unitPriceAfterDiscount,
-    amountAfterDiscount,
-  };
-}
-
 function parseDate(value) {
   if (!value) return '';
   const d = new Date(value);
@@ -138,6 +124,7 @@ export function ShortProjectRegisterPage() {
       note: '비고',
     }),
   ]);
+  const [extraDiscountDisabledByItemId, setExtraDiscountDisabledByItemId] = useState({});
 
   const filteredSites = useMemo(() => {
     const from = parseDate(deliveryFromFilter);
@@ -152,7 +139,28 @@ export function ShortProjectRegisterPage() {
     });
   }, [dealerFilter, builderFilter, siteFilter, deliveryFromFilter, deliveryToFilter]);
 
-  const computedItems = useMemo(() => majorItems.map(computeItem), [majorItems]);
+  const computedItems = useMemo(() => majorItems.map(computeShortProjectItem), [majorItems]);
+  const profitRows = useMemo(
+    () =>
+      computedItems.map((item) =>
+        computeShortProjectProfitRow(item, Boolean(extraDiscountDisabledByItemId[item.id]))
+      ),
+    [computedItems, extraDiscountDisabledByItemId]
+  );
+  const hasProfitRows = useMemo(() => profitRows.some((row) => row.itemCode.trim()), [profitRows]);
+  const profitTotal = useMemo(
+    () =>
+      profitRows.reduce(
+        (acc, row) => ({
+          costAmount: acc.costAmount + row.costAmount,
+          factoryAmount: acc.factoryAmount + row.factoryAmount,
+          baseDiscountAmount: acc.baseDiscountAmount + row.baseDiscountAmount,
+          appliedDiscountAmount: acc.appliedDiscountAmount + row.appliedDiscountAmount,
+        }),
+        { costAmount: 0, factoryAmount: 0, baseDiscountAmount: 0, appliedDiscountAmount: 0 }
+      ),
+    [profitRows]
+  );
 
   const total = useMemo(
     () =>
@@ -188,6 +196,11 @@ export function ShortProjectRegisterPage() {
 
   const removeItemRow = useCallback((id) => {
     setMajorItems((prev) => prev.filter((item) => item.id !== id));
+    setExtraDiscountDisabledByItemId((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   }, []);
 
   const updateItem = useCallback((id, field, value) => {
@@ -222,6 +235,7 @@ export function ShortProjectRegisterPage() {
         })
       )
     );
+    setExtraDiscountDisabledByItemId({});
     setMode(VIEW_MODE.FORM);
   }, []);
 
@@ -370,7 +384,18 @@ export function ShortProjectRegisterPage() {
                     <tbody>
                       {filteredSites.map((site) => (
                         <Fragment key={site.id}>
-                          <tr>
+                          <tr
+                            className={styles.clickableRow}
+                            onClick={() => loadSiteToForm(site)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                loadSiteToForm(site);
+                              }
+                            }}
+                            role="button"
+                            tabIndex={0}
+                          >
                             <td>{site.dealer}</td>
                             <td>{site.siteName}</td>
                             <td>{site.builder}</td>
@@ -380,7 +405,10 @@ export function ShortProjectRegisterPage() {
                               <button
                                 type="button"
                                 className={styles.textButton}
-                                onClick={() => setExpandedSiteId((prev) => (prev === site.id ? '' : site.id))}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setExpandedSiteId((prev) => (prev === site.id ? '' : site.id));
+                                }}
                               >
                                 보기
                               </button>
@@ -569,6 +597,112 @@ export function ShortProjectRegisterPage() {
                 </div>
               </CardBody>
             </Card>
+
+            {hasProfitRows && (
+              <Card title="자동 계산 테이블" className={styles.sectionCard}>
+                <CardBody tight>
+                  <div className={styles.tableWrap}>
+                    <table className={styles.profitTable}>
+                      <thead>
+                        <tr>
+                          <th rowSpan={2}>구분</th>
+                          <th rowSpan={2}>단위</th>
+                          <th rowSpan={2}>수량</th>
+                          <th rowSpan={2}>제조원가(기준단가)</th>
+                          <th colSpan={2}>공장도가(25년 06월)</th>
+                          <th colSpan={4}>{`기본 할인가(${BASE_DISCOUNT_RATE}%)`}</th>
+                          <th colSpan={4}>할인 적용가</th>
+                          <th rowSpan={2}>매출 총 이익율</th>
+                          <th rowSpan={2}>추가 할인 미적용</th>
+                        </tr>
+                        <tr>
+                          <th>단가</th>
+                          <th>금액</th>
+                          <th>단가</th>
+                          <th>금액</th>
+                          <th>차액</th>
+                          <th>공장도대비</th>
+                          <th>단가</th>
+                          <th>금액</th>
+                          <th>차액</th>
+                          <th>실질할인율</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {profitRows
+                          .filter((row) => row.itemCode.trim())
+                          .map((row) => (
+                            <tr key={row.id}>
+                              <td>{row.itemCode}</td>
+                              <td>{row.unit || '-'}</td>
+                              <td className={styles.numberCell}>{formatNumber(row.qty)}</td>
+                              <td className={styles.numberCell}>{formatNumber(row.costUnitPrice)}</td>
+                              <td className={styles.numberCell}>{formatNumber(row.factoryUnitPrice)}</td>
+                              <td className={styles.numberCell}>{formatNumber(row.factoryAmount)}</td>
+                              <td className={styles.numberCell}>{formatNumber(row.baseDiscountUnitPrice)}</td>
+                              <td className={styles.numberCell}>{formatNumber(row.baseDiscountAmount)}</td>
+                              <td className={styles.numberCell}>{formatNumber(row.baseDiscountDiff)}</td>
+                              <td className={styles.numberCell}>{row.baseVsFactoryRate.toFixed(2)}%</td>
+                              <td className={styles.numberCell}>{formatNumber(row.appliedDiscountUnitPrice)}</td>
+                              <td className={styles.numberCell}>{formatNumber(row.appliedDiscountAmount)}</td>
+                              <td className={styles.numberCell}>{formatNumber(row.appliedDiscountDiff)}</td>
+                              <td className={styles.numberCell}>{row.effectiveDiscountRate.toFixed(2)}%</td>
+                              <td className={styles.numberCell}>{row.grossProfitRate.toFixed(2)}%</td>
+                              <td className={styles.centerCell}>
+                                <input
+                                  type="checkbox"
+                                  checked={Boolean(extraDiscountDisabledByItemId[row.id])}
+                                  onChange={(e) =>
+                                    setExtraDiscountDisabledByItemId((prev) => ({
+                                      ...prev,
+                                      [row.id]: e.target.checked,
+                                    }))
+                                  }
+                                />
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td colSpan={5}>합계</td>
+                          <td className={styles.numberCell}>{formatNumber(profitTotal.factoryAmount)}</td>
+                          <td />
+                          <td className={styles.numberCell}>{formatNumber(profitTotal.baseDiscountAmount)}</td>
+                          <td className={styles.numberCell}>
+                            {formatNumber(profitTotal.baseDiscountAmount - profitTotal.factoryAmount)}
+                          </td>
+                          <td className={styles.numberCell}>
+                            {profitTotal.factoryAmount
+                              ? (((profitTotal.baseDiscountAmount - profitTotal.factoryAmount) / profitTotal.factoryAmount) * 100).toFixed(2)
+                              : '0.00'}
+                            %
+                          </td>
+                          <td />
+                          <td className={styles.numberCell}>{formatNumber(profitTotal.appliedDiscountAmount)}</td>
+                          <td className={styles.numberCell}>
+                            {formatNumber(profitTotal.appliedDiscountAmount - profitTotal.factoryAmount)}
+                          </td>
+                          <td className={styles.numberCell}>
+                            {profitTotal.factoryAmount
+                              ? (((profitTotal.appliedDiscountAmount - profitTotal.factoryAmount) / profitTotal.factoryAmount) * 100).toFixed(2)
+                              : '0.00'}
+                            %
+                          </td>
+                          <td className={styles.numberCell}>
+                            {profitTotal.appliedDiscountAmount
+                              ? (((profitTotal.appliedDiscountAmount - profitTotal.costAmount) / profitTotal.appliedDiscountAmount) * 100).toFixed(2)
+                              : '0.00'}
+                            %
+                          </td>
+                          <td />
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </CardBody>
+              </Card>
+            )}
 
             <Card title="특이사항" className={styles.sectionCard}>
               <CardBody>

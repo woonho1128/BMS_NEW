@@ -12,8 +12,6 @@ export function BusinessCardFormPage() {
   const navigate = useNavigate();
   const isNew = id === 'new';
   const card = isNew ? null : getBusinessCardById(id);
-  const isReadOnly = !isNew && !id; // 상세보기 모드 (수정 버튼 클릭 전)
-
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
