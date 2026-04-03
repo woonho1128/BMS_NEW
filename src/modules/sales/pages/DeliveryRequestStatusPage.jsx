@@ -207,11 +207,11 @@ export function DeliveryRequestStatusPage() {
   const fields = useMemo(
     () => [
       { id: 'dateRange', label: '출고예정일', type: 'dateRange', fromKey: 'dateFrom', toKey: 'dateTo', row: 0 },
-      { id: 'shippingType', label: '출하형태', type: 'select', options: SHIPPING_TYPE_OPTIONS, row: 0 },
-      { id: 'customerCode', label: '거래처코드', type: 'text', row: 0 },
-      { id: 'customerName', label: '거래처', type: 'text', wide: true, row: 0 },
-      { id: 'factory', label: '공장', type: 'select', options: FACTORY_OPTIONS, row: 1 },
-      { id: 'salesGroup', label: '영업그룹', type: 'select', options: SALES_GROUP_OPTIONS, row: 1 },
+      { id: 'shippingType', label: '출하형태', type: 'select', options: SHIPPING_TYPE_OPTIONS, row: 0, width: 130 },
+      { id: 'factory', label: '공장', type: 'select', options: FACTORY_OPTIONS, row: 0, width: 140 },
+      { id: 'salesGroup', label: '영업그룹', type: 'select', options: SALES_GROUP_OPTIONS, row: 0, width: 120 },
+      { id: 'customerCode', label: '거래처코드', type: 'text', row: 1, width: 120 },
+      { id: 'customerName', label: '거래처', type: 'text', row: 1, width: 220 },
       { id: 'status', label: '출하상태', type: 'radio', options: STATUS_OPTIONS, row: 1 },
     ],
     []
@@ -303,6 +303,7 @@ export function DeliveryRequestStatusPage() {
     <PageShell path={pathname} className={styles.shellWide}>
       <div className={styles.page}>
         <ListFilter
+          className={styles.toolbar}
           fields={fields}
           value={filterValue}
           onChange={onChange}

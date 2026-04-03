@@ -150,10 +150,10 @@ export function DeliveryRequestDetailPage() {
     () => [
       { id: 'shipResult', label: '출고여부', type: 'radio', options: SHIP_RESULT_OPTIONS, row: 0 },
       { id: 'dateRange', label: '출고예정일', type: 'dateRange', fromKey: 'dateFrom', toKey: 'dateTo', row: 0 },
-      { id: 'salesOrg', label: '영업조직', type: 'select', options: ORG_OPTIONS, row: 0 },
-      { id: 'factory', label: '공장', type: 'select', options: FACTORY_OPTIONS, row: 1 },
-      { id: 'customerCode', label: '거래처코드', type: 'text', row: 1 },
-      { id: 'customerName', label: '거래처', type: 'text', wide: true, row: 1 },
+      { id: 'salesOrg', label: '영업조직', type: 'select', options: ORG_OPTIONS, row: 0, width: 130 },
+      { id: 'factory', label: '공장', type: 'select', options: FACTORY_OPTIONS, row: 0, width: 140 },
+      { id: 'customerCode', label: '거래처코드', type: 'text', row: 1, width: 120 },
+      { id: 'customerName', label: '거래처', type: 'text', row: 1, width: 240 },
     ],
     []
   );
@@ -226,6 +226,7 @@ export function DeliveryRequestDetailPage() {
     <PageShell path={pathname} className={styles.shellWide}>
       <div className={styles.page}>
         <ListFilter
+          className={styles.toolbar}
           fields={fields}
           value={filterValue}
           onChange={onChange}

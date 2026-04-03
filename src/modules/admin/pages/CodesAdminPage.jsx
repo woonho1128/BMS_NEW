@@ -15,6 +15,7 @@ const CODE_FILTER_FIELDS = [
       { value: '', label: '전체' },
       { value: 'PROGRESS', label: '진행상태' },
       { value: 'STATUS', label: '거래상태' },
+      { value: 'PARTNER_TRAIT', label: '대리점 성격' },
     ],
     row: 0,
   },

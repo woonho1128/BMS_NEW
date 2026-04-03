@@ -72,6 +72,22 @@
   color: #0f52bf;
 }
 
+.amountLink {
+  border: none;
+  background: transparent;
+  color: #1f64d8;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 0;
+}
+
+.amountLink:hover {
+  color: #0f52bf;
+}
+
 .mainTable :global(.ant-table-thead > tr > th) {
   background: #f5f8ff !important;
   color: #3d4c64 !important;

@@ -30,5 +30,22 @@ export const PARTNER_BASIC_MOCK = {
     { id: 'h4', date: '2026-02-03', type: '공지', note: '정책 안내 확인' },
     { id: 'h5', date: '2026-02-04', type: '정보변경', note: '주소 변경' },
   ],
+  erpInsights: {
+    monthlyDiscountRate: 7.2,
+    lastMonthSalesAmount: 38500000,
+    amountToUpgradeDiscountTier: 6200000,
+    collateralRenewalDday: 30,
+  },
+  purchaseBest5: [
+    { rank: 1, itemCode: 'CC-735', itemName: '원피스세면기', amount: 11200000 },
+    { rank: 2, itemCode: 'CL-384', itemName: '비데일체형', amount: 9650000 },
+    { rank: 3, itemCode: 'BC310', itemName: '수전금구', amount: 8210000 },
+    { rank: 4, itemCode: 'TSC417D', itemName: '타일(600x600)', amount: 7560000 },
+    { rank: 5, itemCode: 'OEM-220', itemName: 'OEM 부자재', amount: 5320000 },
+  ],
+  salesMix: {
+    deliveryAmount: 24800000,
+    retailAmount: 13700000,
+  },
 };
 

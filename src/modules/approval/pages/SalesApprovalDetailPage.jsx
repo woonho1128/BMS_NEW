@@ -6,6 +6,7 @@ import { ROUTES } from '../../../router/routePaths';
 import { getReportById, REPORT_TYPE } from '../../sales/data/reportMock';
 import { getSalesInfoById } from '../../sales/data/salesInfoMock';
 import { getProfitDetail, getRowDetail } from '../../sales/data/profitAnalysisMock';
+import { formatNumber } from '../../../shared/utils/formatters';
 import {
   APPROVAL_CATEGORY,
   APPROVAL_CATEGORY_LABEL,
@@ -22,7 +23,7 @@ const STATUS_LABEL = {
 };
 
 function formatNum(value) {
-  return (Number(value) || 0).toLocaleString('ko-KR');
+  return formatNumber(value);
 }
 
 function toMonthWeekLabel(report) {

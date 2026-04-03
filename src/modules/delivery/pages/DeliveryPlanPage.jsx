@@ -35,10 +35,12 @@ export const DeliveryPlanPage = () => {
 
     const loadPlanRows = async () => {
       try {
-        const module = await import('../data/deliveryPlanRows.json');
+        const response = await fetch('/data/deliveryPlanRows.json', { cache: 'force-cache' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const rows = await response.json();
         if (ignore) return;
         startTransition(() => {
-          setPlanRows(module.default || []);
+          setPlanRows(Array.isArray(rows) ? rows : []);
         });
       } catch (error) {
         console.error('납품 계획 데이터를 불러오지 못했습니다.', error);

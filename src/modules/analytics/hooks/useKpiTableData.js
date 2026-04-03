@@ -1,15 +1,18 @@
 import { useMemo } from 'react';
 
+function createMonthValue(seed, month, min, range) {
+  return ((seed * 37 + month * 19) % range) + min;
+}
+
 /**
- * 1월부터 12월까지의 매출 데이터를 랜덤 생성하고, 도소매/납품/전체 데이터를 구성합니다.
- * @param {Array} baseRows 기초 정보 배열 (고정 컬럼들)
- * @param {string} viewType 조회 모드 ('TOTAL' | 'RETAIL' | 'DELIVERY')
- * @returns {Array} 생성된 Table Row 배열
+ * KPI 테이블 목업 데이터/동적 컬럼 생성 훅
+ * @param {Array} baseRows 고정 컬럼 데이터
+ * @param {'TOTAL'|'RETAIL'|'DELIVERY'} viewType 조회 모드
  */
 export function useKpiTableData(baseRows, viewType) {
-  // 실제 앱에서는 API에서 받아오지만, 여기서는 시안 구성을 위해 Mock 생성
   const mockData = useMemo(() => {
-    return baseRows.map((row) => {
+    return baseRows.map((row, index) => {
+      const seed = Number(row.key ?? index + 1);
       const metrics = {
         retail: {},
         delivery: {},
@@ -20,19 +23,19 @@ export function useKpiTableData(baseRows, viewType) {
       let deliverySum = 0;
       let totalSum = 0;
 
-      // 1월 ~ 12월 렌더링
-      for (let i = 1; i <= 12; i++) {
-        const monthKey = String(i).padStart(2, '0');
-        const rVal = Math.floor(Math.random() * 50) + 10; // 임의 단위(백만원 등)
-        const dVal = row.isDeliveryPossible === false ? 0 : Math.floor(Math.random() * 40);
-        
-        metrics.retail[`m_${monthKey}`] = rVal;
-        metrics.delivery[`m_${monthKey}`] = dVal;
-        metrics.total[`m_${monthKey}`] = rVal + dVal;
+      for (let month = 1; month <= 12; month += 1) {
+        const monthKey = `m_${String(month).padStart(2, '0')}`;
+        const retail = createMonthValue(seed, month, 25, 95);
+        const delivery = row.isDeliveryPossible === false ? 0 : createMonthValue(seed + 7, month, 10, 75);
+        const total = retail + delivery;
 
-        retailSum += rVal;
-        deliverySum += dVal;
-        totalSum += (rVal + dVal);
+        metrics.retail[monthKey] = retail;
+        metrics.delivery[monthKey] = delivery;
+        metrics.total[monthKey] = total;
+
+        retailSum += retail;
+        deliverySum += delivery;
+        totalSum += total;
       }
 
       metrics.retail.sum = retailSum;
@@ -41,35 +44,37 @@ export function useKpiTableData(baseRows, viewType) {
 
       return {
         ...row,
-        metrics, // 렌더링 시 metrics[viewType.toLowerCase()] 에서 접근
+        metrics,
       };
     });
   }, [baseRows]);
 
-  // 테이블 컬럼 동적 구성을 위한 배열 반환 (1월~12월 + 계)
   const dynamicColumns = useMemo(() => {
-    const cols = [];
-    for (let i = 1; i <= 12; i++) {
-      const monthStr = String(i).padStart(2, '0');
-      cols.push({
-        title: `${i}월`,
+    const columns = [];
+
+    for (let month = 1; month <= 12; month += 1) {
+      const monthStr = String(month).padStart(2, '0');
+      columns.push({
+        title: `${month}월`,
         dataIndex: ['metrics', viewType.toLowerCase(), `m_${monthStr}`],
-        width: 80,
+        width: 84,
         align: 'right',
-        render: (val) => val === 0 ? '-' : new Intl.NumberFormat('ko-KR').format(val),
+        render: (value) => (value === 0 ? '-' : Number(value || 0).toLocaleString('ko-KR')),
       });
     }
-    cols.push({
-      title: '계',
+
+    columns.push({
+      title: '합계',
       dataIndex: ['metrics', viewType.toLowerCase(), 'sum'],
-      width: 100,
+      width: 104,
       align: 'right',
       className: 'total-col',
-      render: (val) => new Intl.NumberFormat('ko-KR').format(val),
+      render: (value) => Number(value || 0).toLocaleString('ko-KR'),
     });
 
-    return cols;
+    return columns;
   }, [viewType]);
 
   return { mockData, dynamicColumns };
 }
+

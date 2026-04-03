@@ -17,7 +17,6 @@ export function SalesMaterialDetailPage() {
 
   const handleDelete = useCallback(() => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
-      // 실제로는 API 호출
       console.log('삭제:', id);
       alert('삭제되었습니다.');
       navigate('/sales/material');
@@ -25,7 +24,6 @@ export function SalesMaterialDetailPage() {
   }, [navigate, id]);
 
   const handleDownload = useCallback((attachment) => {
-    // 실제로는 파일 다운로드 처리
     console.log('다운로드:', attachment);
     alert(`다운로드: ${attachment.name}`);
   }, []);
@@ -64,10 +62,6 @@ export function SalesMaterialDetailPage() {
             <h1 className={styles.title}>{material.title}</h1>
 
             <div className={styles.metaRow}>
-              <div className={styles.metaItem}>
-                <span className={styles.metaLabel}>거래처</span>
-                <span className={styles.metaValue}>{material.partner || '—'}</span>
-              </div>
               <div className={styles.metaItem}>
                 <span className={styles.metaLabel}>등록자</span>
                 <span className={styles.metaValue}>{material.registrant}</span>

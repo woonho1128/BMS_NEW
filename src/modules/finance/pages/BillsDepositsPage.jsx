@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { Button } from '../../../shared/components/Button/Button';
+import { formatNumber } from '../../../shared/utils/formatters';
 import styles from './BillsDepositsPage.module.css';
-
-const formatNum = (num) => new Intl.NumberFormat('ko-KR').format(num || 0);
+const formatNum = (num) => formatNumber(num);
 
 const CollectionStatus = ({ isTabMode = false }) => {
   const [filterValue, setFilterValue] = useState({
@@ -73,7 +73,7 @@ const CollectionStatus = ({ isTabMode = false }) => {
     []
   );
 
-  const dataSource = useMemo(() => [
+  const dataSource = [
     {
       key: '1', bpCd: '050006', bpNm: '효자타일 대리점', repreNm: '김경호', type: '통장입금', colDate: '2026-01-29',
       manager: '이해규', salesNo: 'BN202512310535', salesDate: '2025-12-31', clearNo: 'UX202601290010',
@@ -94,7 +94,7 @@ const CollectionStatus = ({ isTabMode = false }) => {
       manager: '조동윤', salesNo: 'BN202512310576', salesDate: '2025-12-31', clearNo: 'UX202601300051',
       swAmt: 10000000, tileAmt: 0, totalAmt: 10000000, bank: '우리은행 주식회사',
     },
-  ], []);
+  ];
 
   const paginatedRows = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;

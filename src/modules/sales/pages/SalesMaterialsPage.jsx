@@ -3,23 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
 import { ListFilter } from '../../../shared/components/ListFilter';
-import {
-  MOCK_REGISTRANT_OPTIONS,
-  MOCK_PARTNER_OPTIONS,
-  getSalesMaterialsList,
-} from '../data/salesMaterialMock';
+import { MOCK_REGISTRANT_OPTIONS, getSalesMaterialsList } from '../data/salesMaterialMock';
 import styles from './SalesMaterialsPage.module.css';
 
 const MATERIAL_FILTER_FIELDS = [
   { id: 'title', label: '제목', type: 'text', placeholder: '제목 검색', wide: true, row: 0 },
-  { id: 'partner', label: '거래처', type: 'select', options: MOCK_PARTNER_OPTIONS, row: 0 },
   { id: 'registrant', label: '등록자', type: 'select', options: MOCK_REGISTRANT_OPTIONS, row: 0 },
-  { id: 'dateRange', label: '등록일', type: 'dateRange', fromKey: 'dateFrom', toKey: 'dateTo', row: 1 },
+  { id: 'dateRange', label: '등록일', type: 'dateRange', fromKey: 'dateFrom', toKey: 'dateTo', row: 0 },
 ];
 
 const INITIAL_FILTER = {
   title: '',
-  partner: '',
   registrant: '',
   dateFrom: '',
   dateTo: '',
@@ -68,6 +62,7 @@ export function SalesMaterialsPage() {
           value={filterValue}
           onChange={handleFilterChange}
           onReset={handleReset}
+          singleLine
         />
 
         <section className={styles.section} aria-label="영업자료 목록">
@@ -77,7 +72,6 @@ export function SalesMaterialsPage() {
               <thead>
                 <tr>
                   <th className={styles.th}>제목</th>
-                  <th className={styles.th}>거래처</th>
                   <th className={styles.th}>등록자</th>
                   <th className={styles.th}>등록일</th>
                   <th className={styles.thAction}>첨부</th>
@@ -86,7 +80,7 @@ export function SalesMaterialsPage() {
               <tbody>
                 {list.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className={styles.empty}>
+                    <td colSpan={4} className={styles.empty}>
                       조건에 맞는 영업자료가 없습니다.
                     </td>
                   </tr>
@@ -100,7 +94,6 @@ export function SalesMaterialsPage() {
                       <td className={styles.td}>
                         <span className={styles.titleLink}>{material.title}</span>
                       </td>
-                      <td className={styles.td}>{material.partner || '—'}</td>
                       <td className={styles.td}>{material.registrant}</td>
                       <td className={styles.td}>{material.registeredAt}</td>
                       <td className={styles.tdAction}>
@@ -109,7 +102,6 @@ export function SalesMaterialsPage() {
                             className={styles.downloadBtn}
                             onClick={(e) => {
                               e.stopPropagation();
-                              // 실제로는 파일 다운로드 처리
                               console.log('다운로드:', material.attachments);
                             }}
                             aria-label="첨부파일 다운로드"
@@ -131,7 +123,7 @@ export function SalesMaterialsPage() {
                             </span>
                           </button>
                         ) : (
-                          <span className={styles.noAttachment}>—</span>
+                          <span className={styles.noAttachment}>-</span>
                         )}
                       </td>
                     </tr>

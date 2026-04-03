@@ -10,6 +10,7 @@ import {
   computeShortProjectItem,
   computeShortProjectProfitRow,
 } from '../utils/shortProjectPricing';
+import { getPartnersList } from '../../master/data/partnersMock';
 import styles from './ShortProjectRegisterPage.module.css';
 
 const VIEW_MODE = {
@@ -91,6 +92,7 @@ function parseDate(value) {
 export function ShortProjectRegisterPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState(VIEW_MODE.LIST);
+  const [selectedSiteIds, setSelectedSiteIds] = useState([]);
 
   const [dealerFilter, setDealerFilter] = useState('');
   const [builderFilter, setBuilderFilter] = useState('');
@@ -98,6 +100,7 @@ export function ShortProjectRegisterPage() {
   const [deliveryFromFilter, setDeliveryFromFilter] = useState('');
   const [deliveryToFilter, setDeliveryToFilter] = useState('');
   const [expandedSiteId, setExpandedSiteId] = useState('');
+  const [commonDiscountRate, setCommonDiscountRate] = useState('7');
 
   const [siteName, setSiteName] = useState('제주 미지정 현장');
   const [builder, setBuilder] = useState('제주개발');
@@ -125,6 +128,7 @@ export function ShortProjectRegisterPage() {
     }),
   ]);
   const [extraDiscountDisabledByItemId, setExtraDiscountDisabledByItemId] = useState({});
+  const partnerOptions = useMemo(() => getPartnersList({ status: 'all' }), []);
 
   const filteredSites = useMemo(() => {
     const from = parseDate(deliveryFromFilter);
@@ -138,6 +142,28 @@ export function ShortProjectRegisterPage() {
       return dealerOk && builderOk && siteOk && fromOk && toOk;
     });
   }, [dealerFilter, builderFilter, siteFilter, deliveryFromFilter, deliveryToFilter]);
+
+  const listSites = useMemo(
+    () =>
+      filteredSites.map((site, index) => ({
+        ...site,
+        baseDiscountAmount: site.baseDiscountAmount ?? ((index + 1) * 1800000 + 5400000),
+        shortDiscountAmount: site.shortDiscountAmount ?? ((index + 1) * 1450000 + 4100000),
+        author: site.author ?? ['김영업', '이순희', '박준호'][index % 3],
+        status: site.status ?? ['결재 진행', '임시 저장', '결재 완료'][index % 3],
+      })),
+    [filteredSites]
+  );
+
+  const allVisibleSelected = useMemo(
+    () => listSites.length > 0 && listSites.every((site) => selectedSiteIds.includes(site.id)),
+    [listSites, selectedSiteIds]
+  );
+
+  const hasAnyVisibleSelected = useMemo(
+    () => listSites.some((site) => selectedSiteIds.includes(site.id)),
+    [listSites, selectedSiteIds]
+  );
 
   const computedItems = useMemo(() => majorItems.map(computeShortProjectItem), [majorItems]);
   const profitRows = useMemo(
@@ -176,20 +202,6 @@ export function ShortProjectRegisterPage() {
 
   const isFormValid = Boolean(siteName.trim() && dealer.trim() && deliveryFrom && computedItems.length > 0);
 
-  const runDuplicateSearch = useCallback(() => {
-    const query = siteName.trim().toLowerCase();
-    if (!query) {
-      setDuplicateHint('현장명을 입력 후 중복검사를 눌러주세요');
-      return;
-    }
-    const hit = MOCK_SITES.find((s) => s.siteName.toLowerCase().includes(query));
-    if (hit) {
-      setDuplicateHint(`같은 현장(${hit.siteName}) 이력이 있습니다. 동시견적 가능여부를 확인하세요`);
-      return;
-    }
-    setDuplicateHint('중복된 현장 이력이 없습니다.');
-  }, [siteName]);
-
   const addItemRow = useCallback(() => {
     setMajorItems((prev) => [...prev, createItem()]);
   }, []);
@@ -207,6 +219,13 @@ export function ShortProjectRegisterPage() {
     setMajorItems((prev) =>
       prev.map((item) => {
         if (item.id !== id) return item;
+        if (field === 'amount') {
+          const amountRaw = sanitizeNumber(value);
+          const amount = Number(amountRaw) || 0;
+          const qty = Number(item.qty) || 0;
+          const derivedPrice = qty > 0 ? Math.floor(amount / qty) : 0;
+          return { ...item, standardPrice: String(derivedPrice) };
+        }
         if (field === 'qty' || field === 'standardPrice' || field === 'discountRate') {
           return { ...item, [field]: sanitizeNumber(value) };
         }
@@ -214,6 +233,16 @@ export function ShortProjectRegisterPage() {
       })
     );
   }, []);
+
+  const applyCommonDiscountRate = useCallback(() => {
+    const nextRate = sanitizeNumber(commonDiscountRate);
+    const numeric = Number(nextRate);
+    if (!Number.isFinite(numeric)) return;
+    const clamped = Math.min(11, Math.max(1, numeric));
+    const normalized = String(clamped);
+    setCommonDiscountRate(normalized);
+    setMajorItems((prev) => prev.map((item) => ({ ...item, discountRate: normalized })));
+  }, [commonDiscountRate]);
 
   const loadSiteToForm = useCallback((site) => {
     setSiteName(site.siteName);
@@ -230,14 +259,14 @@ export function ShortProjectRegisterPage() {
           qty: String(item.qty),
           unit: item.unit,
           standardPrice: '300000',
-          discountRate: '0',
+          discountRate: commonDiscountRate,
           note: '',
         })
       )
     );
     setExtraDiscountDisabledByItemId({});
     setMode(VIEW_MODE.FORM);
-  }, []);
+  }, [commonDiscountRate]);
 
   const openForm = useCallback(() => {
     setMode(VIEW_MODE.FORM);
@@ -258,6 +287,24 @@ export function ShortProjectRegisterPage() {
       majorItems,
     });
   }, [siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, majorItems]);
+
+  const toggleSiteSelection = useCallback((siteId, checked) => {
+    setSelectedSiteIds((prev) => {
+      if (checked) return prev.includes(siteId) ? prev : [...prev, siteId];
+      return prev.filter((id) => id !== siteId);
+    });
+  }, []);
+
+  const toggleAllVisibleSelection = useCallback(
+    (checked) => {
+      const visibleIds = listSites.map((site) => site.id);
+      setSelectedSiteIds((prev) => {
+        if (checked) return Array.from(new Set([...prev, ...visibleIds]));
+        return prev.filter((id) => !visibleIds.includes(id));
+      });
+    },
+    [listSites]
+  );
 
   const submitForm = useCallback(() => {
     if (!isFormValid) return;
@@ -285,6 +332,38 @@ export function ShortProjectRegisterPage() {
     });
     navigate(`${ROUTES.APPROVAL_SALES}?category=shortProject`);
   }, [isFormValid, siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, computedItems, navigate]);
+
+  const submitSelectedSites = useCallback(() => {
+    const selectedSites = listSites.filter((site) => selectedSiteIds.includes(site.id));
+    if (!selectedSites.length) return;
+
+    selectedSites.forEach((site) => {
+      createShortProjectApproval({
+        siteName: site.siteName,
+        builder: site.builder,
+        dealer: site.dealer,
+        deliveryFrom: site.deliveryFrom,
+        deliveryTo: site.deliveryTo,
+        specialNote: site.notes,
+        items: (site.majorItems || []).map((item) => ({
+          itemCode: item.code,
+          qty: Number(item.qty) || 0,
+          unit: item.unit || 'EA',
+          standardPrice: 300000,
+          discountRate: 0,
+          standardAmount: (Number(item.qty) || 0) * 300000,
+          unitPrice: 300000,
+          amount: (Number(item.qty) || 0) * 300000,
+          discountAmount: 0,
+          note: '',
+        })),
+        grossRate: '-',
+        drafter: site.author || '영업담당',
+      });
+    });
+
+    navigate(`${ROUTES.APPROVAL_SALES}?category=shortProject`);
+  }, [listSites, navigate, selectedSiteIds]);
 
   const listActions = (
     <Button variant="primary" onClick={openForm}>
@@ -365,24 +444,38 @@ export function ShortProjectRegisterPage() {
               </CardBody>
             </Card>
 
-            <Card title={`조회 결과 (${filteredSites.length}건)`} className={styles.sectionCard}>
+            <Card title={`조회 결과 (${listSites.length}건)`} className={styles.sectionCard}>
               <CardBody tight>
                 <div className={styles.tableWrap}>
                   <table className={styles.listTable}>
                     <thead>
                       <tr>
+                        <th className={styles.checkboxCol}>
+                          <input
+                            type="checkbox"
+                            checked={allVisibleSelected}
+                            ref={(el) => {
+                              if (el) el.indeterminate = hasAnyVisibleSelected && !allVisibleSelected;
+                            }}
+                            onChange={(e) => toggleAllVisibleSelection(e.target.checked)}
+                            aria-label="전체 선택"
+                          />
+                        </th>
                         <th>대리점</th>
                         <th>현장명</th>
                         <th>건설사</th>
                         <th>납품예정일</th>
                         <th>특이사항</th>
+                        <th>기본 할인 금액</th>
+                        <th>단납 할인 금액</th>
                         <th>대표품번</th>
+                        <th>작성자</th>
                         <th>등록일자</th>
-                        <th>등록</th>
+                        <th>상태</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredSites.map((site) => (
+                      {listSites.map((site) => (
                         <Fragment key={site.id}>
                           <tr
                             className={styles.clickableRow}
@@ -396,11 +489,21 @@ export function ShortProjectRegisterPage() {
                             role="button"
                             tabIndex={0}
                           >
+                            <td className={styles.checkboxCol} onClick={(e) => e.stopPropagation()}>
+                              <input
+                                type="checkbox"
+                                checked={selectedSiteIds.includes(site.id)}
+                                onChange={(e) => toggleSiteSelection(site.id, e.target.checked)}
+                                aria-label={`${site.siteName} 선택`}
+                              />
+                            </td>
                             <td>{site.dealer}</td>
                             <td>{site.siteName}</td>
                             <td>{site.builder}</td>
                             <td>{formatDateRange(site.deliveryFrom, site.deliveryTo)}</td>
                             <td>{site.notes}</td>
+                            <td className={styles.numberCell}>{formatNumber(site.baseDiscountAmount)}</td>
+                            <td className={styles.numberCell}>{formatNumber(site.shortDiscountAmount)}</td>
                             <td>
                               <button
                                 type="button"
@@ -413,16 +516,13 @@ export function ShortProjectRegisterPage() {
                                 보기
                               </button>
                             </td>
+                            <td>{site.author}</td>
                             <td>{site.createdAt}</td>
-                            <td>
-                              <Button variant="secondary" onClick={() => loadSiteToForm(site)}>
-                                등록하기
-                              </Button>
-                            </td>
+                            <td>{site.status}</td>
                           </tr>
                           {expandedSiteId === site.id && (
                             <tr className={styles.expandedRow}>
-                              <td colSpan={8}>
+                              <td colSpan={12}>
                                 <div className={styles.itemPreviewWrap}>
                                   {site.majorItems.map((item) => (
                                     <span key={`${site.id}-${item.code}`} className={styles.itemChip}>
@@ -438,6 +538,11 @@ export function ShortProjectRegisterPage() {
                     </tbody>
                   </table>
                 </div>
+                <div className={styles.listFooter}>
+                  <Button variant="primary" onClick={submitSelectedSites} disabled={selectedSiteIds.length === 0}>
+                    상신하기
+                  </Button>
+                </div>
               </CardBody>
             </Card>
           </>
@@ -450,12 +555,7 @@ export function ShortProjectRegisterPage() {
                     <label className={styles.label}>
                       현장명<span className={styles.required}>*</span>
                     </label>
-                    <div className={styles.inlineField}>
-                      <input className={styles.input} value={siteName} onChange={(e) => setSiteName(e.target.value)} />
-                      <Button variant="secondary" onClick={runDuplicateSearch}>
-                        중복검사
-                      </Button>
-                    </div>
+                    <input className={styles.input} value={siteName} onChange={(e) => setSiteName(e.target.value)} />
                     <p className={styles.helper}>{duplicateHint || '같은 현장 이력 여부를 먼저 확인하세요'}</p>
                   </div>
 
@@ -468,7 +568,18 @@ export function ShortProjectRegisterPage() {
                     <label className={styles.label}>
                       대리점 <span className={styles.required}>*</span>
                     </label>
-                    <input className={styles.input} value={dealer} onChange={(e) => setDealer(e.target.value)} />
+                    <select
+                      className={styles.input}
+                      value={dealer}
+                      onChange={(e) => setDealer(e.target.value)}
+                    >
+                      <option value="">대리점 카드 목록에서 선택</option>
+                      {partnerOptions.map((partner) => (
+                        <option key={partner.id} value={partner.name}>
+                          {partner.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className={styles.field}>
@@ -484,11 +595,11 @@ export function ShortProjectRegisterPage() {
             </Card>
 
             <Card
-              title="대표품번"
+              title="단납 품목"
               className={styles.sectionCard}
               actions={
                 <Button variant="secondary" onClick={addItemRow}>
-                  대표품번 추가
+                  단납 품목 추가
                 </Button>
               }
             >
@@ -496,26 +607,16 @@ export function ShortProjectRegisterPage() {
                 <div className={styles.tableWrap}>
                   <table className={styles.itemTable}>
                     <colgroup>
-                      <col style={{ width: '12%' }} />
-                      <col style={{ width: '6%' }} />
-                      <col style={{ width: '6%' }} />
+                      <col style={{ width: '18%' }} />
                       <col style={{ width: '10%' }} />
-                      <col style={{ width: '9%' }} />
-                      <col style={{ width: '6%' }} />
-                      <col style={{ width: '10%' }} />
-                      <col style={{ width: '9%' }} />
-                      <col style={{ width: '20%' }} />
+                      <col style={{ width: '14%' }} />
+                      <col style={{ width: '50%' }} />
                       <col style={{ width: '8%' }} />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>항목명</th>
+                        <th>품목</th>
                         <th>수량</th>
-                        <th>단위</th>
-                        <th>기준단가</th>
-                        <th>금액</th>
-                        <th>할인율(%)</th>
-                        <th>기본 할인단가</th>
                         <th>금액</th>
                         <th>특이사항</th>
                         <th />
@@ -541,27 +642,14 @@ export function ShortProjectRegisterPage() {
                             />
                           </td>
                           <td>
-                            <input className={styles.tableInput} value={item.unit} onChange={(e) => updateItem(item.id, 'unit', e.target.value)} />
-                          </td>
-                          <td>
                             <input
                               className={styles.tableInput}
                               inputMode="numeric"
-                              value={item.standardPrice}
-                              onChange={(e) => updateItem(item.id, 'standardPrice', e.target.value)}
+                              value={String(item.standardAmount || 0)}
+                              onChange={(e) => updateItem(item.id, 'amount', e.target.value)}
+                              placeholder="금액 입력"
                             />
                           </td>
-                          <td className={styles.numberCell}>{formatNumber(item.standardAmount)}</td>
-                          <td>
-                            <input
-                              className={styles.tableInput}
-                              inputMode="decimal"
-                              value={item.discountRate}
-                              onChange={(e) => updateItem(item.id, 'discountRate', e.target.value)}
-                            />
-                          </td>
-                          <td className={styles.numberCell}>{formatNumber(item.unitPriceAfterDiscount)}</td>
-                          <td className={styles.numberCell}>{formatNumber(item.amountAfterDiscount)}</td>
                           <td>
                             <input
                               className={styles.tableInput}
@@ -585,12 +673,10 @@ export function ShortProjectRegisterPage() {
                     </tbody>
                     <tfoot>
                       <tr>
-                        <td colSpan={4}>합계</td>
+                        <td colSpan={2}>합계</td>
                         <td className={styles.numberCell}>{formatNumber(total.standard)}</td>
                         <td />
                         <td />
-                        <td className={styles.numberCell}>{formatNumber(total.discounted)}</td>
-                        <td colSpan={2} />
                       </tr>
                     </tfoot>
                   </table>
@@ -601,6 +687,18 @@ export function ShortProjectRegisterPage() {
             {hasProfitRows && (
               <Card title="자동 계산 테이블" className={styles.sectionCard}>
                 <CardBody tight>
+                  <div className={styles.bulkDiscountBar}>
+                    <span className={styles.bulkDiscountLabel}>실질할인율 일괄 적용(1~11%)</span>
+                    <input
+                      className={styles.bulkDiscountInput}
+                      inputMode="decimal"
+                      value={commonDiscountRate}
+                      onChange={(e) => setCommonDiscountRate(sanitizeNumber(e.target.value))}
+                    />
+                    <Button variant="secondary" onClick={applyCommonDiscountRate}>
+                      전체 적용
+                    </Button>
+                  </div>
                   <div className={styles.tableWrap}>
                     <table className={styles.profitTable}>
                       <thead>
@@ -612,6 +710,7 @@ export function ShortProjectRegisterPage() {
                           <th colSpan={2}>공장도가(25년 06월)</th>
                           <th colSpan={4}>{`기본 할인가(${BASE_DISCOUNT_RATE}%)`}</th>
                           <th colSpan={4}>할인 적용가</th>
+                          <th rowSpan={2}>매출총이익 금액</th>
                           <th rowSpan={2}>매출 총 이익율</th>
                           <th rowSpan={2}>추가 할인 미적용</th>
                         </tr>
@@ -646,7 +745,21 @@ export function ShortProjectRegisterPage() {
                               <td className={styles.numberCell}>{formatNumber(row.appliedDiscountUnitPrice)}</td>
                               <td className={styles.numberCell}>{formatNumber(row.appliedDiscountAmount)}</td>
                               <td className={styles.numberCell}>{formatNumber(row.appliedDiscountDiff)}</td>
-                              <td className={styles.numberCell}>{row.effectiveDiscountRate.toFixed(2)}%</td>
+                              <td className={styles.centerCell}>
+                                <input
+                                  className={styles.rateInput}
+                                  inputMode="decimal"
+                                  value={String(Math.min(11, Math.max(1, Number(row.discountRate ?? 0) || 1)))}
+                                  onChange={(e) => {
+                                    const next = sanitizeNumber(e.target.value);
+                                    const numeric = Number(next);
+                                    if (!Number.isFinite(numeric)) return;
+                                    const clamped = String(Math.min(11, Math.max(1, numeric)));
+                                    updateItem(row.id, 'discountRate', clamped);
+                                  }}
+                                />
+                              </td>
+                              <td className={styles.numberCell}>{formatNumber(row.grossProfitAmount)}</td>
                               <td className={styles.numberCell}>{row.grossProfitRate.toFixed(2)}%</td>
                               <td className={styles.centerCell}>
                                 <input
@@ -688,6 +801,9 @@ export function ShortProjectRegisterPage() {
                               ? (((profitTotal.appliedDiscountAmount - profitTotal.factoryAmount) / profitTotal.factoryAmount) * 100).toFixed(2)
                               : '0.00'}
                             %
+                          </td>
+                          <td className={styles.numberCell}>
+                            {formatNumber(profitTotal.appliedDiscountAmount - profitTotal.costAmount)}
                           </td>
                           <td className={styles.numberCell}>
                             {profitTotal.appliedDiscountAmount

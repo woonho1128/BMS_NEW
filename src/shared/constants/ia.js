@@ -78,7 +78,7 @@ const MAIN = [
             label: '단납 프로젝트 현황',
             children: [
               { id: 'sales-short-project-register', label: '단납 현장 등록', path: '/sales/short-project/register' },
-              { id: 'sales-short-project-history', label: '단납 현장 내역', path: '/sales/short-project/history' },
+              { id: 'sales-short-project-list', label: '단납 현장 내역', path: '/sales/short-project' },
             ],
           },
           { id: 'sales-support-receivable', label: '여신,수금 관리', path: '/sales/support/receivable' },

@@ -1,4 +1,4 @@
-﻿.shellWide {
+.shellWide {
   max-width: 100%;
   padding-left: 12px;
   padding-right: 12px;
@@ -60,6 +60,16 @@
 
 .gridTable :global(.ant-pagination) {
   margin: 10px 8px 4px !important;
+}
+
+.tabTableSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pagination {
+  padding: 0 4px 4px;
 }
 
 @media (max-width: 1024px) {

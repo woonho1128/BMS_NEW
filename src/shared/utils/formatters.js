@@ -1,23 +1,37 @@
-/**
- * 공통 포맷터 유틸
- * - 화면에서 금액/수량 표시를 일관되게 하기 위해 사용
- */
+const DEFAULT_LOCALE = 'ko-KR';
 
 /**
- * @param {any} v
+ * Format number with Korean locale by default.
+ * Returns '-' for null/invalid values to keep table rendering stable.
+ * @param {any} value
+ * @param {Intl.NumberFormatOptions} [options]
  * @returns {string}
  */
-export function formatNumber(v) {
-  if (v == null || Number.isNaN(Number(v))) return '—';
-  return Number(v).toLocaleString();
+export function formatNumber(value, options) {
+  if (value == null || value === '') return '-';
+  const num = Number(value);
+  if (Number.isNaN(num)) return '-';
+  return new Intl.NumberFormat(DEFAULT_LOCALE, options).format(num);
 }
 
 /**
- * 금액 표시(천단위 콤마). 숫자 아니면 '—'
- * @param {any} v
+ * Alias for monetary values.
+ * @param {any} value
  * @returns {string}
  */
-export function formatMoney(v) {
-  return formatNumber(v);
+export function formatMoney(value) {
+  return formatNumber(value);
 }
 
+/**
+ * Format percent value (e.g. 12.34 -> "12.34%")
+ * @param {any} value
+ * @param {number} [digits=2]
+ * @returns {string}
+ */
+export function formatPercent(value, digits = 2) {
+  if (value == null || value === '') return '-';
+  const num = Number(value);
+  if (Number.isNaN(num)) return '-';
+  return `${num.toFixed(digits)}%`;
+}

@@ -1,8 +1,8 @@
 .page {
   width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 var(--space-lg);
+  max-width: none;
+  margin: 0;
+  padding: 0;
   padding-bottom: var(--space-xl);
   display: flex;
   flex-direction: column;
@@ -11,7 +11,7 @@
 
 @media (max-width: 768px) {
   .page {
-    padding: 0 var(--space-sm);
+    padding: 0;
     padding-bottom: var(--space-lg);
   }
 }

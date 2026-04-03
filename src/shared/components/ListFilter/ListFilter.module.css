@@ -141,3 +141,20 @@
   background: #f8fbff;
   border-color: #c7d6ea;
 }
+
+.singleLine {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.singleLine .filters {
+  flex-wrap: nowrap;
+  flex: 0 0 auto;
+}
+
+.singleLine .filterItem {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}

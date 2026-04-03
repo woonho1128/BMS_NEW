@@ -11,6 +11,27 @@ const __dirname = path.dirname(__filename);
 export default defineConfig({
   base: '/BMS_NEW/',
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (
+              id.includes('/antd/') ||
+              id.includes('/@ant-design/') ||
+              id.includes('/rc-') ||
+              id.includes('/@rc-component/') ||
+              id.includes('/dayjs/')
+            ) {
+              return 'vendor-ui';
+            }
+            return 'vendor';
+          }
+          return undefined;
+        },
+      },
+    },
+  },
   css: {
     postcss: {
       plugins: [tailwindcss, autoprefixer],

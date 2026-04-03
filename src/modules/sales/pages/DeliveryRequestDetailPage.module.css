@@ -10,6 +10,11 @@
   gap: 12px;
 }
 
+.toolbar {
+  --listfilter-gap: 6px;
+  padding: 8px 10px;
+}
+
 .summaryBand {
   padding: 12px 14px;
   border: 1px solid #cddfc4;

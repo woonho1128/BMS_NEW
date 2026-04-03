@@ -5,11 +5,11 @@ import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { Input } from '../../../shared/components/Input/Input';
 import { RichTextEditor } from '../../../shared/components/RichTextEditor';
-import { getSalesMaterialById, MOCK_PARTNER_OPTIONS, formatFileSize } from '../data/salesMaterialMock';
+import { getSalesMaterialById, formatFileSize } from '../data/salesMaterialMock';
 import styles from './SalesMaterialFormPage.module.css';
 
 const CONTENT_PLACEHOLDER =
-  '영업자료의 내용을 작성해 주세요. (굵게, 목록, 링크, 이미지, 표 등을 활용할 수 있습니다.)';
+  '영업자료의 내용을 작성해 주세요. (굵게, 목록, 링크, 이미지, 표 기능 사용 가능)';
 
 export function SalesMaterialFormPage() {
   const { id } = useParams();
@@ -19,16 +19,13 @@ export function SalesMaterialFormPage() {
   const material = isEdit ? getSalesMaterialById(id) : null;
 
   const [title, setTitle] = useState('');
-  const [partner, setPartner] = useState('');
   const [contentHtml, setContentHtml] = useState('');
   const [attachments, setAttachments] = useState([]);
 
   useEffect(() => {
     if (material) {
       setTitle(material.title || '');
-      setPartner(material.partner || '');
       setContentHtml(material.contentHtml || '');
-      // 첨부파일은 편집 시에는 유지하지 않음 (새로 업로드 필요)
     }
   }, [material]);
 
@@ -46,7 +43,6 @@ export function SalesMaterialFormPage() {
       })),
     ]);
 
-    // input 초기화
     e.target.value = '';
   }, []);
 
@@ -56,24 +52,22 @@ export function SalesMaterialFormPage() {
 
   const handleSave = useCallback(() => {
     if (!title.trim()) {
-      alert('제목을 입력해주세요.');
+      alert('제목을 입력해 주세요.');
       return;
     }
 
-    // 실제로는 API 호출
-    console.log('저장:', {
+    console.log('저장', {
       title,
-      partner,
       contentHtml,
       attachments,
     });
 
     alert(isNew ? '영업자료가 등록되었습니다.' : '영업자료가 수정되었습니다.');
     navigate('/sales/material');
-  }, [title, partner, contentHtml, attachments, isNew, navigate]);
+  }, [title, contentHtml, attachments, isNew, navigate]);
 
   const handleCancel = useCallback(() => {
-    if (window.confirm('작성 중인 내용이 저장되지 않습니다. 정말 취소하시겠습니까?')) {
+    if (window.confirm('작성 중인 내용은 저장되지 않습니다. 취소하시겠습니까?')) {
       navigate('/sales/material');
     }
   }, [navigate]);
@@ -85,7 +79,6 @@ export function SalesMaterialFormPage() {
       description={isNew ? '새 영업자료를 등록합니다' : '영업자료를 수정합니다'}
     >
       <div className={styles.page}>
-        {/* 기본 정보 카드 */}
         <Card title="기본 정보" className={styles.card}>
           <CardBody>
             <div className={styles.grid}>
@@ -98,26 +91,10 @@ export function SalesMaterialFormPage() {
                   required
                 />
               </div>
-              <div className={styles.field}>
-                <label className={styles.label}>거래처</label>
-                <select
-                  className={styles.select}
-                  value={partner}
-                  onChange={(e) => setPartner(e.target.value)}
-                >
-                  <option value="">거래처 선택 (선택사항)</option>
-                  {MOCK_PARTNER_OPTIONS.filter((opt) => opt.value).map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
             </div>
           </CardBody>
         </Card>
 
-        {/* 내용 카드 */}
         <Card title="내용 요약" className={styles.card}>
           <CardBody className={styles.contentCardBody}>
             <RichTextEditor
@@ -130,7 +107,6 @@ export function SalesMaterialFormPage() {
           </CardBody>
         </Card>
 
-        {/* 첨부 파일 카드 */}
         <Card title="첨부 파일" className={styles.card}>
           <CardBody>
             <div className={styles.uploadArea}>
@@ -157,9 +133,9 @@ export function SalesMaterialFormPage() {
                       type="button"
                       className={styles.removeBtn}
                       onClick={() => removeAttachment(index)}
-                      aria-label="첨부 삭제"
+                      aria-label="첨부 제거"
                     >
-                      삭제
+                      제거
                     </button>
                   </li>
                 ))}
@@ -168,7 +144,6 @@ export function SalesMaterialFormPage() {
           </CardBody>
         </Card>
 
-        {/* 액션 버튼 */}
         <div className={styles.actions}>
           <Button variant="secondary" onClick={handleCancel}>
             취소

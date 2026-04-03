@@ -1,0 +1,406 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search {
+  height: 34px;
+  width: 280px;
+  border: 1px solid #c9d7ea;
+  border-radius: 10px;
+  padding: 0 10px;
+}
+
+.checkWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #3c4c63;
+}
+
+.actions {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  height: 34px;
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryBtn {
+  border: 1px solid #2f6ee5;
+  background: #2f6ee5;
+  color: #fff;
+}
+
+.secondaryBtn {
+  border: 1px solid #c9d7ea;
+  background: #fff;
+  color: #3c4c63;
+}
+
+.saveMeta {
+  margin-top: 8px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 12px;
+  color: #6b809c;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.resultTabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid #dce6f3;
+  border-radius: 12px;
+  background: #f8fbff;
+  margin-bottom: 10px;
+}
+
+.resultTabBtn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #4b6280;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.resultTabBtnActive {
+  border-color: #c9d7ea;
+  background: #fff;
+  color: #2f6ee5;
+}
+
+.filterState {
+  margin: 2px 0 10px;
+  font-size: 13px;
+  color: #4f6481;
+}
+
+.filterState strong {
+  color: #2f6ee5;
+}
+
+.metric {
+  border: 1px solid #dce6f3;
+  border-radius: 12px;
+  background: #f8fbff;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.metricClickable {
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.metricClickable:hover {
+  border-color: #9fb8de;
+}
+
+.metricActive {
+  border-color: #2f6ee5;
+  box-shadow: 0 0 0 2px rgba(47, 110, 229, 0.12);
+}
+
+.metricLabel {
+  font-size: 12px;
+  color: #7389a7;
+}
+
+.metricValue {
+  margin-top: 2px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #223b5b;
+}
+
+.metricValueDanger {
+  color: #ef4444;
+}
+
+.metricValueWarning {
+  color: #b45309;
+}
+
+.metricHint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b809c;
+}
+
+.tableWrap {
+  border: 1px solid #dce6f3;
+  border-radius: 14px;
+  overflow: auto;
+  background: #fff;
+}
+
+.table {
+  width: 100%;
+  min-width: 1120px;
+  border-collapse: collapse;
+}
+
+.modalTable {
+  min-width: 0;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #e8eef7;
+  border-right: 1px solid #edf2f8;
+  padding: 10px 10px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.table th {
+  background: #f5f9ff;
+  color: #41556f;
+  font-weight: 700;
+}
+
+.left {
+  text-align: left !important;
+}
+
+.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.historyBtn {
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #c9d7ea;
+  background: #fff;
+  color: #3c4c63;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.historyBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.factorInput {
+  width: 70px;
+  height: 30px;
+  border: 1px solid #c9d7ea;
+  border-radius: 8px;
+  padding: 0 8px;
+  text-align: right;
+}
+
+.reasonInput {
+  width: 160px;
+  height: 30px;
+  border: 1px solid #c9d7ea;
+  border-radius: 8px;
+  padding: 0 8px;
+}
+
+.reasonInputDisabled {
+  background: #f6f9ff;
+  color: #8ea0ba;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2aa65a;
+}
+
+.dotDanger {
+  background: #ef4444;
+}
+
+.dotWarning {
+  background: #f59e0b;
+}
+
+.dangerText {
+  color: #ef4444;
+}
+
+.warningText {
+  color: #b45309;
+}
+
+.empty {
+  text-align: center;
+  color: #6b809c;
+}
+
+.pagination {
+  margin-top: 12px;
+}
+
+.guideCard {
+  border: 1px solid #dce6f3;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  padding: 18px 20px;
+}
+
+.guideTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #223b5b;
+}
+
+.guideLine {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #4f6481;
+}
+
+.guideFormula {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px dashed #b8cbea;
+  border-radius: 10px;
+  background: #f3f8ff;
+  font-size: 15px;
+  font-weight: 700;
+  color: #24456d;
+}
+
+.guideFormula span {
+  color: #2f6ee5;
+  margin: 0 6px;
+}
+
+.guideResult {
+  margin-top: 14px;
+  font-size: 14px;
+  color: #405874;
+}
+
+.guideResult strong {
+  color: #ef4444;
+}
+
+.guideStatusGrid {
+  margin-top: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.guideStatusItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #405874;
+}
+
+.dotNormal {
+  background: #2aa65a;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 24px;
+}
+
+.modal {
+  width: min(1180px, 100%);
+  max-height: 92vh;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.28);
+  border: 1px solid #dce6f3;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e8eef7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 800;
+  color: #223b5b;
+}
+
+.modalSubTitle {
+  margin-top: 3px;
+  font-size: 13px;
+  color: #6b809c;
+}
+
+.modalHeaderActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modalOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #4f6481;
+}
+
+.modalBody {
+  padding: 12px;
+  overflow: hidden;
+}

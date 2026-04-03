@@ -46,6 +46,7 @@ export function ListFilter({
   actionsAddon,
   onKeyDownEnter,
   className,
+  singleLine = false,
 }) {
   const byRow = React.useMemo(() => {
     const map = new Map();
@@ -197,7 +198,7 @@ export function ListFilter({
   };
 
   return (
-    <div className={classnames(styles.toolbar, className)}>
+    <div className={classnames(styles.toolbar, singleLine && styles.singleLine, className)}>
       {byRow.map(([rowIndex, rowFields]) => (
         <div key={rowIndex} className={styles.filters}>
           {rowFields.map((field) => {

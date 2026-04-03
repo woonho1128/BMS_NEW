@@ -10,6 +10,11 @@
   gap: 12px;
 }
 
+.toolbar {
+  --listfilter-gap: 6px;
+  padding: 8px 10px;
+}
+
 .chartCard,
 .tableCard {
   border: 1px solid #dce4ef;

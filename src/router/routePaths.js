@@ -58,7 +58,6 @@ export const ROUTES = {
   SHORT_PROJECT: '/sales/short-project',              /* 단납 프로젝트 현황 */
   SHORT_PROJECT_REGISTER: '/sales/short-project/register',
   SHORT_PROJECT_APPROVAL: '/sales/short-project/approval',
-  SHORT_PROJECT_HISTORY: '/sales/short-project/history',
   SALES_RETAIL_REVIEW_LIST: '/sales/retail/review',   /* 발주 검수 리스트 */
   SALES_RETAIL_ORDER_DETAIL: '/sales/retail/order/:id',
   SALES_RETAIL_APPROVAL: '/sales/retail/approval',    /* 발주 결재 (승인/반려/보류) */

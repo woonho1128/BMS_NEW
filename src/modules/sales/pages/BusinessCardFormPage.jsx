@@ -158,6 +158,7 @@ export function BusinessCardFormPage() {
                 onChange={(e) => handleChange('email', e.target.value)}
                 disabled={!canEdit}
                 placeholder="email@example.com"
+                className={styles.fullWidth}
               />
             </div>
           </CardBody>

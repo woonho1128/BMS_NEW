@@ -17,8 +17,8 @@ const CARD_FILTER_FIELDS = [
   { id: 'name', label: '이름', type: 'text', placeholder: '이름 검색', row: 0 },
   { id: 'department', label: '부서', type: 'select', options: MOCK_DEPARTMENT_OPTIONS, row: 0 },
   { id: 'manager', label: '담당자', type: 'select', options: MOCK_MANAGER_OPTIONS, row: 0 },
-  { id: 'dateRange', label: '등록일', type: 'dateRange', fromKey: 'dateFrom', toKey: 'dateTo', row: 1 },
-  { id: 'myCardsOnly', label: '본인 담당', type: 'checkbox', row: 1 },
+  { id: 'dateRange', label: '등록일', type: 'dateRange', fromKey: 'dateFrom', toKey: 'dateTo', row: 0 },
+  { id: 'myCardsOnly', label: '본인 담당', type: 'checkbox', row: 0 },
 ];
 
 const INITIAL_FILTER = {
@@ -74,6 +74,7 @@ export function BusinessCardPage() {
           value={filterValue}
           onChange={handleFilterChange}
           onReset={handleReset}
+          singleLine
         />
 
         <section className={styles.section} aria-label="명함 목록">

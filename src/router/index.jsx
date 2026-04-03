@@ -36,10 +36,6 @@ import { LoginPage } from '../modules/auth/pages/LoginPage';
 import { DashboardHome } from '../modules/dashboard/pages/DashboardHome';
 
 // ── 기준 정보 (마스터)
-import { ItemsPage } from '../modules/master/pages/items/ItemsPage';
-import { PartnersPage } from '../modules/master/pages/PartnersPage';
-import { PartnerCardPage } from '../modules/master/pages/PartnerCardPage';
-import { StandardCostPage } from '../modules/master/pages/standard-cost/StandardCostPage';
 
 // ── 영업 관리 — 프로젝트팀 (손익분석)
 import { SalesProfitAnalysisPage } from '../modules/sales/pages/SalesProfitAnalysisPage';
@@ -76,31 +72,14 @@ import { ShortProjectRegisterPage } from '../modules/sales/pages/ShortProjectReg
 // ── 영업 관리 — 타일영업팀·영업지원팀 (임시)
 import { TileTeamPage } from '../modules/sales/pages/TileTeamPage';
 import { SalesSupportPage } from '../modules/sales/pages/SalesSupportPage';
-import { SupportReceivablePage } from '../modules/finance/pages/SupportReceivablePage';
-import { DiscountPromotionPage } from '../modules/sales/pages/DiscountPromotionPage';
 
 // ── 영업 결재
-import { SalesApprovalPage } from '../modules/approval/pages/SalesApprovalPage';
-import { SalesApprovalDetailPage } from '../modules/approval/pages/SalesApprovalDetailPage';
-import { DeliveryApprovalPage } from '../modules/approval/pages/DeliveryApprovalPage';
 
 // ── 출고 / 납품
-import { DeliveryRequestPage } from '../modules/delivery/pages/DeliveryRequestPage';
-import { DeliveryHistoryPage } from '../modules/delivery/pages/DeliveryHistoryPage';
-import { InventoryPage } from '../modules/delivery/pages/InventoryPage';
 
 // ── 재무 (채권·여신·어음·매입매출)
-import { PurchaseSalesPage } from '../modules/finance/pages/PurchaseSalesPage';
-import { ReceivablesPage } from '../modules/finance/pages/ReceivablesPage';
-import { BillsDepositsPage } from '../modules/finance/pages/BillsDepositsPage';
-import { CreditCollateralPage } from '../modules/finance/pages/CreditCollateralPage';
 
 // ── 대리점 포털
-import { PartnerNoticePage } from '../modules/partner/pages/PartnerNoticePage';
-import { PartnerDeliveryPage } from '../modules/partner/pages/PartnerDeliveryPage';
-import { PartnerBasicInfoPage } from '../modules/partner/pages/PartnerBasicInfoPage';
-import { PartnerBalanceConfirmPage } from '../modules/partner/pages/PartnerBalanceConfirmPage';
-import { PartnerOrderDeliveryPage } from '../modules/partner/pages/order-delivery/PartnerOrderDeliveryPage';
 // import { PartnerOrderPage } from '../modules/partner/pages/PartnerOrderPage';
 import { PartnerAsRedirect } from '../modules/partner/pages/PartnerAsRedirect';
 // import { PartnerProductOrderPage } from '../modules/partner/pages/PartnerProductOrderPage';
@@ -111,21 +90,9 @@ import { PartnerAsRedirect } from '../modules/partner/pages/PartnerAsRedirect';
 // import { PartnerOrderModificationPage } from '../modules/partner/pages/PartnerOrderComponents';
 
 // ── 인사이트 / 분석
-import { SalesPerformancePage } from '../modules/analytics/pages/SalesPerformancePage';
-import { PartnerPerformancePage } from '../modules/analytics/pages/PartnerPerformancePage';
-import { MarketOverviewPage } from '../modules/analytics/pages/MarketOverviewPage';
-import { DataCollectionPage } from '../modules/analytics/pages/DataCollectionPage';
-import { CustomReportPage } from '../modules/analytics/pages/CustomReportPage';
-import { PersonalSalesPage } from '../modules/analytics/pages/PersonalSalesPage';
-import { CategorySalesPage } from '../modules/analytics/pages/CategorySalesPage';
 import { PlaceholderPage } from '../shared/components/PlaceholderPage/PlaceholderPage';
 
 // ── 관리자 — 시스템 설정
-import { UsersAdminPage } from '../modules/admin/pages/UsersAdminPage';
-import { OrgAdminPage } from '../modules/admin/pages/OrgAdminPage';
-import { PermissionAdminPage } from '../modules/admin/pages/PermissionAdminPage';
-import { CodesAdminPage } from '../modules/admin/pages/CodesAdminPage';
-import { LogsAdminPage } from '../modules/admin/pages/LogsAdminPage';
 
 // ── 관리자 — 온라인 주문 관리
 // import {
@@ -141,8 +108,73 @@ import { NoAccess } from '../shared/pages/NoAccess';
 import { Guard } from '../shared/components/Guard';
 import { PERMISSIONS } from '../shared/constants/permissions';
 
+const lazyNamed = (importer, exportName) =>
+  lazy(() => importer().then((module) => ({ default: module[exportName] })));
+
+const ItemsPage = lazyNamed(() => import('../modules/master/pages/items/ItemsPage'), 'ItemsPage');
+const PartnersPage = lazyNamed(() => import('../modules/master/pages/PartnersPage'), 'PartnersPage');
+const PartnerCardPage = lazyNamed(() => import('../modules/master/pages/PartnerCardPage'), 'PartnerCardPage');
+const PartnerRegisterPage = lazyNamed(() => import('../modules/master/pages/PartnerRegisterPage'), 'PartnerRegisterPage');
+const StandardCostPage = lazyNamed(() => import('../modules/master/pages/standard-cost/StandardCostPage'), 'StandardCostPage');
+
+const SalesApprovalPage = lazyNamed(() => import('../modules/approval/pages/SalesApprovalPage'), 'SalesApprovalPage');
+const SalesApprovalDetailPage = lazyNamed(() => import('../modules/approval/pages/SalesApprovalDetailPage'), 'SalesApprovalDetailPage');
+const DeliveryApprovalPage = lazyNamed(() => import('../modules/approval/pages/DeliveryApprovalPage'), 'DeliveryApprovalPage');
+
+const DeliveryRequestPage = lazyNamed(() => import('../modules/delivery/pages/DeliveryRequestPage'), 'DeliveryRequestPage');
+const DeliveryHistoryPage = lazyNamed(() => import('../modules/delivery/pages/DeliveryHistoryPage'), 'DeliveryHistoryPage');
+const InventoryPage = lazyNamed(() => import('../modules/delivery/pages/InventoryPage'), 'InventoryPage');
+const DemandForecastPage = lazyNamed(() => import('../modules/delivery/pages/DemandForecastPage'), 'DemandForecastPage');
+
+const PurchaseSalesPage = lazyNamed(() => import('../modules/finance/pages/PurchaseSalesPage'), 'PurchaseSalesPage');
+const ReceivablesPage = lazyNamed(() => import('../modules/finance/pages/ReceivablesPage'), 'ReceivablesPage');
+const BillsDepositsPage = lazyNamed(() => import('../modules/finance/pages/BillsDepositsPage'), 'BillsDepositsPage');
+const CreditCollateralPage = lazyNamed(() => import('../modules/finance/pages/CreditCollateralPage'), 'CreditCollateralPage');
+
+const PartnerNoticePage = lazyNamed(() => import('../modules/partner/pages/PartnerNoticePage'), 'PartnerNoticePage');
+const PartnerDeliveryPage = lazyNamed(() => import('../modules/partner/pages/PartnerDeliveryPage'), 'PartnerDeliveryPage');
+const PartnerBasicInfoPage = lazyNamed(() => import('../modules/partner/pages/PartnerBasicInfoPage'), 'PartnerBasicInfoPage');
+const PartnerBalanceConfirmPage = lazyNamed(() => import('../modules/partner/pages/PartnerBalanceConfirmPage'), 'PartnerBalanceConfirmPage');
+const PartnerOrderDeliveryPage = lazyNamed(
+  () => import('../modules/partner/pages/order-delivery/PartnerOrderDeliveryPage'),
+  'PartnerOrderDeliveryPage'
+);
+
+const UsersAdminPage = lazyNamed(() => import('../modules/admin/pages/UsersAdminPage'), 'UsersAdminPage');
+const OrgAdminPage = lazyNamed(() => import('../modules/admin/pages/OrgAdminPage'), 'OrgAdminPage');
+const PermissionAdminPage = lazyNamed(() => import('../modules/admin/pages/PermissionAdminPage'), 'PermissionAdminPage');
+const CodesAdminPage = lazyNamed(() => import('../modules/admin/pages/CodesAdminPage'), 'CodesAdminPage');
+const LogsAdminPage = lazyNamed(() => import('../modules/admin/pages/LogsAdminPage'), 'LogsAdminPage');
+
 const DeliveryPlanPage = lazy(() =>
   import('../modules/delivery/pages/DeliveryPlanPage').then((module) => ({ default: module.DeliveryPlanPage }))
+);
+const SupportReceivablePage = lazy(() =>
+  import('../modules/finance/pages/SupportReceivablePage').then((module) => ({ default: module.SupportReceivablePage }))
+);
+const DiscountPromotionPage = lazy(() =>
+  import('../modules/sales/pages/DiscountPromotionPage').then((module) => ({ default: module.DiscountPromotionPage }))
+);
+const SalesPerformancePage = lazy(() =>
+  import('../modules/analytics/pages/SalesPerformancePage').then((module) => ({ default: module.SalesPerformancePage }))
+);
+const PartnerPerformancePage = lazy(() =>
+  import('../modules/analytics/pages/PartnerPerformancePage').then((module) => ({ default: module.PartnerPerformancePage }))
+);
+const MarketOverviewPage = lazy(() =>
+  import('../modules/analytics/pages/MarketOverviewPage').then((module) => ({ default: module.MarketOverviewPage }))
+);
+const DataCollectionPage = lazy(() =>
+  import('../modules/analytics/pages/DataCollectionPage').then((module) => ({ default: module.DataCollectionPage }))
+);
+const CustomReportPage = lazy(() =>
+  import('../modules/analytics/pages/CustomReportPage').then((module) => ({ default: module.CustomReportPage }))
+);
+const PersonalSalesPage = lazy(() =>
+  import('../modules/analytics/pages/PersonalSalesPage').then((module) => ({ default: module.PersonalSalesPage }))
+);
+const CategorySalesPage = lazy(() =>
+  import('../modules/analytics/pages/CategorySalesPage').then((module) => ({ default: module.CategorySalesPage }))
 );
 
 // ─────────────────────────────────────────────
@@ -191,6 +223,7 @@ function PublicOnlyRoute({ children }) {
 export function Router() {
   return (
     <BrowserRouter basename="/BMS_NEW">
+      <Suspense fallback={<div style={{ padding: '20px' }}>로딩 중...</div>}>
       <Routes>
         {/* 권한 없음 */}
         <Route path={ROUTES.FORBIDDEN} element={<NoAccess />} />
@@ -223,7 +256,7 @@ export function Router() {
           {/* ── 기준 정보 (마스터) ── */}
           <Route path={toRelative(ROUTES.MASTER_ITEMS)} element={<ItemsPage />} />
           <Route path={toRelative(ROUTES.MASTER_PARTNERS)} element={<PartnersPage />} />
-          <Route path={toRelative(ROUTES.MASTER_PARTNERS_NEW)} element={<PartnerCardPage />} />
+          <Route path={toRelative(ROUTES.MASTER_PARTNERS_NEW)} element={<PartnerRegisterPage />} />
           <Route path={toRelative(ROUTES.MASTER_PARTNERS_ID)} element={<PartnerCardPage />} />
           <Route path={toRelative(ROUTES.MASTER_STANDARD_COST)} element={<StandardCostPage />} />
 
@@ -259,7 +292,6 @@ export function Router() {
           {/* ── 영업 관리 — 리테일팀 (비활성화) ── */}
           <Route path={toRelative(ROUTES.SHORT_PROJECT)} element={<ShortProjectPage />} />
           <Route path={toRelative(ROUTES.SHORT_PROJECT_REGISTER)} element={<ShortProjectRegisterPage />} />
-          <Route path={toRelative(ROUTES.SHORT_PROJECT_HISTORY)} element={<PlaceholderPage path={ROUTES.SHORT_PROJECT_HISTORY} description="단납 현장 내역 메뉴 영역입니다." icon="📑" />} />
 
           {/* ── 영업 관리 — 타일영업팀·영업지원팀 (임시) ── */}
           <Route path={toRelative(ROUTES.TILE_TEAM)} element={<TileTeamPage />} />
@@ -305,7 +337,7 @@ export function Router() {
             )}
           />
           <Route path={toRelative(ROUTES.DELIVERY_INVENTORY)} element={<InventoryPage />} />
-          <Route path={toRelative(ROUTES.DELIVERY_DEMAND)} element={<PlaceholderPage path={ROUTES.DELIVERY_DEMAND} description="수요예측 메뉴 영역입니다." icon="📈" />} />
+          <Route path={toRelative(ROUTES.DELIVERY_DEMAND)} element={<DemandForecastPage />} />
 
           {/* ── 재무 (채권·수금·여신·매입매출) ── */}
           <Route path={toRelative(ROUTES.FINANCE_PURCHASE_SALES)} element={<PurchaseSalesPage />} />
@@ -352,6 +384,7 @@ export function Router() {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

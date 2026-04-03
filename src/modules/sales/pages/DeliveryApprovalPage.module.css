@@ -10,6 +10,11 @@
   gap: 12px;
 }
 
+.toolbar {
+  --listfilter-gap: 6px;
+  padding: 8px 10px;
+}
+
 .pageHint {
   text-align: right;
   font-size: 12px;

@@ -1,9 +1,12 @@
 ﻿import React, { useMemo, useState, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Modal, Table } from 'antd';
 import { Download } from 'lucide-react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
+import { useAuth } from '../../auth/hooks/useAuth';
+import { formatNumber } from '../../../shared/utils/formatters';
+import { ROUTES } from '../../../router/routePaths';
 import styles from './PartnerBalanceConfirmPage.module.css';
 
 const YEAR_OPTIONS = [
@@ -26,6 +29,7 @@ const CREDIT_GROUP_OPTIONS = [
 const MAIN_ROWS = [
   {
     key: '1',
+    partnerId: '1',
     code: '050005',
     clientName: '영일타일도기상사',
     ceo: '백재홍',
@@ -51,9 +55,11 @@ const MAIN_ROWS = [
     noteJa: 0,
     noteTa: 0,
     noteTotal: 0,
+    salesManagerKey: 'sales-kim',
   },
   {
     key: '2',
+    partnerId: '2',
     code: '050006',
     clientName: '한경사사다대리점',
     ceo: '이경훈',
@@ -79,9 +85,11 @@ const MAIN_ROWS = [
     noteJa: 0,
     noteTa: 0,
     noteTotal: 0,
+    salesManagerKey: 'sales-kim',
   },
   {
     key: '3',
+    partnerId: '3',
     code: '050007',
     clientName: '디엔타일위생기상사',
     ceo: '김성길',
@@ -107,6 +115,7 @@ const MAIN_ROWS = [
     noteJa: 40358615,
     noteTa: 0,
     noteTotal: 40358615,
+    salesManagerKey: 'sales-lee',
   },
 ];
 
@@ -117,10 +126,12 @@ const MONTHLY_DETAIL = [
 ];
 
 function fmt(v) {
-  return Number(v || 0).toLocaleString('ko-KR');
+  return formatNumber(v);
 }
 
 export function PartnerBalanceConfirmPage() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const [selectedClient, setSelectedClient] = useState(null);
   const [filterValue, setFilterValue] = useState({
@@ -149,13 +160,58 @@ export function PartnerBalanceConfirmPage() {
     { id: 'clientLike', label: '거래처(like)', type: 'text', wide: true, row: 1 },
   ], []);
 
-  const filteredRows = useMemo(() => MAIN_ROWS.filter((r) => {
-    if (filterValue.creditGroup !== 'ALL' && r.creditGroup !== (filterValue.creditGroup === 'SALES' ? '세일즈부문' : '바스플랜부문')) return false;
-    if (filterValue.clientCode && !r.code.includes(filterValue.clientCode)) return false;
-    if (filterValue.clientName && !r.clientName.includes(filterValue.clientName)) return false;
-    if (filterValue.clientLike && !r.clientName.includes(filterValue.clientLike)) return false;
-    return true;
-  }), [filterValue]);
+  const isAgencyRole = user?.role === 'AGENCY' || user?.role === 'PARTNER' || user?.role === 'DEALER';
+  const userKey = String(user?.name || '').toLowerCase();
+  const isSalesManagerAccount =
+    !isAgencyRole &&
+    (String(user?.position || '').includes('영업') || userKey.includes('sales') || userKey.includes('영업'));
+
+  const rowsByAccount = useMemo(() => {
+    if (isAgencyRole) {
+      return MAIN_ROWS.filter((row) => row.partnerId === String(user?.partnerId || ''));
+    }
+    if (isSalesManagerAccount) {
+      const key = userKey.trim();
+      return MAIN_ROWS.filter(
+        (row) =>
+          String(row.salesManagerKey || '').toLowerCase().includes(key) ||
+          (key.includes('sales') && row.salesManagerKey === 'sales-kim')
+      );
+    }
+    return MAIN_ROWS;
+  }, [isAgencyRole, isSalesManagerAccount, user?.partnerId, userKey]);
+
+  const filteredRows = useMemo(
+    () =>
+      rowsByAccount.filter((r) => {
+        if (
+          filterValue.creditGroup !== 'ALL' &&
+          r.creditGroup !== (filterValue.creditGroup === 'SALES' ? '세일즈부문' : '바스플랜부문')
+        )
+          return false;
+        if (filterValue.clientCode && !r.code.includes(filterValue.clientCode)) return false;
+        if (filterValue.clientName && !r.clientName.includes(filterValue.clientName)) return false;
+        if (filterValue.clientLike && !r.clientName.includes(filterValue.clientLike)) return false;
+        return true;
+      }),
+    [filterValue, rowsByAccount]
+  );
+
+  const goToCollectionTab = useCallback(
+    (row, amount, itemType) => {
+      const params = new URLSearchParams({
+        tab: 'collection',
+        customerCode: row.code,
+        customerName: row.clientName,
+        dateFrom: `${filterValue.year}-${filterValue.month}-01`,
+        dateTo: `${filterValue.year}-${filterValue.month}-31`,
+        shipAmount: String(amount || 0),
+        shipType: itemType,
+      });
+      navigate(`${ROUTES.SALES_SUPPORT_RECEIVABLE}?${params.toString()}`);
+    },
+    [filterValue.month, filterValue.year, navigate]
+  );
 
   const mainColumns = [
     {
@@ -191,9 +247,39 @@ export function PartnerBalanceConfirmPage() {
     {
       title: '당월 출고금액',
       children: [
-        { title: '위생도기', dataIndex: 'shipSanitary', width: 110, align: 'right', render: fmt },
-        { title: '타일', dataIndex: 'shipTile', width: 90, align: 'right', render: fmt },
-        { title: '합계', dataIndex: 'shipTotal', width: 110, align: 'right', render: fmt },
+        {
+          title: '위생도기',
+          dataIndex: 'shipSanitary',
+          width: 110,
+          align: 'right',
+          render: (value, row) => (
+            <button type="button" className={styles.amountLink} onClick={() => goToCollectionTab(row, value, 'sanitary')}>
+              {fmt(value)}
+            </button>
+          ),
+        },
+        {
+          title: '타일',
+          dataIndex: 'shipTile',
+          width: 90,
+          align: 'right',
+          render: (value, row) => (
+            <button type="button" className={styles.amountLink} onClick={() => goToCollectionTab(row, value, 'tile')}>
+              {fmt(value)}
+            </button>
+          ),
+        },
+        {
+          title: '합계',
+          dataIndex: 'shipTotal',
+          width: 110,
+          align: 'right',
+          render: (value, row) => (
+            <button type="button" className={styles.amountLink} onClick={() => goToCollectionTab(row, value, 'total')}>
+              {fmt(value)}
+            </button>
+          ),
+        },
       ],
     },
     {
@@ -242,6 +328,17 @@ export function PartnerBalanceConfirmPage() {
   return (
     <PageShell path={pathname} className={styles.shellWide}>
       <div className={styles.page}>
+        <div className={styles.logicCard}>
+          <div className={styles.logicTitle}>조회 권한(목업)</div>
+          <div className={styles.logicText}>
+            {isAgencyRole
+              ? '대리점 계정: 본인 대리점 내역만 표시됩니다.'
+              : isSalesManagerAccount
+                ? '영업 담당자 계정: 내가 담당 중인 거래처만 표시됩니다.'
+                : '본사 계정: 전체 거래처 내역이 표시됩니다.'}
+          </div>
+        </div>
+
         <ListFilter
           fields={fields}
           value={filterValue}

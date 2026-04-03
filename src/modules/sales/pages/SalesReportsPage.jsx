@@ -1,4 +1,4 @@
-﻿import { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
@@ -8,6 +8,7 @@ import {
   MOCK_REPORT_LIST,
   REPORT_TYPE,
   getStatusLabel,
+  getReportById,
   MOCK_DEPTS,
   MOCK_TEAMS,
   MOCK_AUTHORS,
@@ -16,6 +17,13 @@ import styles from './SalesReportsPage.module.css';
 
 const TAB_KEYS = { WEEKLY: 'weekly', TRIP: 'trip' };
 const TAB_LABELS = { [TAB_KEYS.WEEKLY]: '주간보고', [TAB_KEYS.TRIP]: '출장보고' };
+const STATUS_OPTIONS = [
+  { value: '', label: '전체' },
+  { value: 'draft', label: '임시저장' },
+  { value: 'submitted', label: '제출완료' },
+  { value: 'confirmed', label: '확인완료' },
+];
+
 export function SalesReportsPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(TAB_KEYS.WEEKLY);
@@ -25,6 +33,7 @@ export function SalesReportsPage() {
   const [dept, setDept] = useState('');
   const [team, setTeam] = useState('');
   const [author, setAuthor] = useState('');
+  const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -36,12 +45,13 @@ export function SalesReportsPage() {
     if (dept) list = list.filter((r) => r.dept === dept);
     if (team) list = list.filter((r) => r.team === team);
     if (author) list = list.filter((r) => r.author === author);
+    if (status) list = list.filter((r) => r.status === status);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter((r) => (r.summary && r.summary.toLowerCase().includes(q)) || (r.author && r.author.toLowerCase().includes(q)));
     }
     return list;
-  }, [activeTab, periodFrom, periodTo, dept, team, author, search]);
+  }, [activeTab, periodFrom, periodTo, dept, team, author, status, search]);
 
   const paginatedList = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -64,13 +74,13 @@ export function SalesReportsPage() {
     setDept('');
     setTeam('');
     setAuthor('');
+    setStatus('');
     setSearch('');
     setCurrentPage(1);
   }, []);
 
   const handleRowClick = useCallback(
-    (id, e) => {
-      if (e.target.closest('button')) return;
+    (id) => {
       navigate(`/sales/report/${id}`);
     },
     [navigate]
@@ -188,6 +198,14 @@ export function SalesReportsPage() {
                   </select>
                 </div>
                 <div className={styles.filterItem}>
+                  <span className={styles.filterLabel}>상태</span>
+                  <select className={styles.filterSelect} value={status} onChange={(e) => setStatus(e.target.value)} aria-label="상태">
+                    {STATUS_OPTIONS.map((o) => (
+                      <option key={o.value || 'all'} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className={styles.filterItem}>
                   <span className={styles.filterLabel}>검색</span>
                   <input
                     type="text"
@@ -235,10 +253,10 @@ export function SalesReportsPage() {
                     <tr
                       key={row.id}
                       className={styles.tableRow}
-                      onClick={(e) => handleRowClick(row.id, e)}
+                      onClick={() => handleRowClick(row.id)}
                       role="button"
                       tabIndex={0}
-                      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleRowClick(row.id, e)}
+                      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleRowClick(row.id)}
                     >
                       <td className={styles.td}>
                         <span className={classnames(styles.badge, row.type === REPORT_TYPE.WEEKLY ? styles.badgeWeekly : styles.badgeTrip)}>
@@ -271,4 +289,3 @@ export function SalesReportsPage() {
     </PageShell>
   );
 }
-

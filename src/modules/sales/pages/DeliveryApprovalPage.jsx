@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Modal, Table } from 'antd';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
+import { formatNumber } from '../../../shared/utils/formatters';
 import styles from './DeliveryApprovalPage.module.css';
 
 const FACTORY_OPTIONS = [
@@ -102,7 +103,7 @@ const DETAIL_BY_SHIPNO = {
 };
 
 function fmt(n) {
-  return Number(n || 0).toLocaleString('ko-KR');
+  return formatNumber(n);
 }
 
 export function DeliveryApprovalPage() {
@@ -145,14 +146,14 @@ export function DeliveryApprovalPage() {
   const fields = useMemo(
     () => [
       { id: 'dateRange', label: '출고예정일', type: 'dateRange', fromKey: 'dateFrom', toKey: 'dateTo', row: 0 },
-      { id: 'factory', label: '공장', type: 'select', options: FACTORY_OPTIONS, row: 0 },
-      { id: 'customerCode', label: '거래처코드', type: 'text', row: 1 },
-      { id: 'customerName', label: '거래처', type: 'text', wide: true, row: 1 },
-      { id: 'salesOrg', label: '영업조직', type: 'select', options: SALES_ORG_OPTIONS, row: 1 },
-      { id: 'shippingType', label: '출하형태', type: 'select', options: SHIPPING_TYPE_OPTIONS, row: 2 },
-      { id: 'salesGroupCode', label: '영업그룹코드', type: 'text', row: 2 },
-      { id: 'salesGroupName', label: '영업그룹명', type: 'text', row: 2 },
-      { id: 'priceKind', label: '유/무상 구분', type: 'radio', options: PRICE_KIND_OPTIONS, row: 3 },
+      { id: 'factory', label: '공장', type: 'select', options: FACTORY_OPTIONS, row: 0, width: 140 },
+      { id: 'salesOrg', label: '영업조직', type: 'select', options: SALES_ORG_OPTIONS, row: 0, width: 130 },
+      { id: 'shippingType', label: '출하형태', type: 'select', options: SHIPPING_TYPE_OPTIONS, row: 0, width: 180 },
+      { id: 'priceKind', label: '유/무상 구분', type: 'radio', options: PRICE_KIND_OPTIONS, row: 0 },
+      { id: 'customerCode', label: '거래처코드', type: 'text', row: 1, width: 120 },
+      { id: 'customerName', label: '거래처', type: 'text', row: 1, width: 220 },
+      { id: 'salesGroupCode', label: '영업그룹코드', type: 'text', row: 1, width: 120 },
+      { id: 'salesGroupName', label: '영업그룹명', type: 'text', row: 1, width: 160 },
     ],
     []
   );
@@ -245,6 +246,7 @@ export function DeliveryApprovalPage() {
         <div className={styles.pageHint}>팀장 &gt; 출고대기 일괄승인</div>
 
         <ListFilter
+          className={styles.toolbar}
           fields={fields}
           value={filterValue}
           onChange={onChange}

@@ -254,6 +254,33 @@ export const MOCK_CODES = [
     sortOrder: 2,
     useYn: true,
   },
+  {
+    id: '6',
+    groupCode: 'PARTNER_TRAIT',
+    groupName: '대리점 성격',
+    code: 'PARTNER_TRAIT_DELIVERY',
+    codeName: '납품',
+    sortOrder: 1,
+    useYn: true,
+  },
+  {
+    id: '7',
+    groupCode: 'PARTNER_TRAIT',
+    groupName: '대리점 성격',
+    code: 'PARTNER_TRAIT_RETAIL',
+    codeName: '도소매',
+    sortOrder: 2,
+    useYn: true,
+  },
+  {
+    id: '8',
+    groupCode: 'PARTNER_TRAIT',
+    groupName: '대리점 성격',
+    code: 'PARTNER_TRAIT_TILE',
+    codeName: '타일',
+    sortOrder: 3,
+    useYn: true,
+  },
 ];
 
 // 로그 목록

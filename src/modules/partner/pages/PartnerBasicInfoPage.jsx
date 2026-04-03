@@ -20,6 +20,22 @@ export function PartnerBasicInfoPage() {
     return info.history.slice(start, start + pageSize);
   }, [info.history, page]);
 
+  const salesMix = useMemo(() => {
+    const delivery = Number(info.salesMix?.deliveryAmount || 0);
+    const retail = Number(info.salesMix?.retailAmount || 0);
+    const total = delivery + retail;
+    const deliveryRatio = total ? (delivery / total) * 100 : 0;
+    const retailRatio = total ? (retail / total) * 100 : 0;
+    return { delivery, retail, total, deliveryRatio, retailRatio };
+  }, [info.salesMix]);
+
+  const doughnutStyle = useMemo(
+    () => ({
+      background: `conic-gradient(#2f7df6 0% ${salesMix.deliveryRatio}%, #8bb8ff ${salesMix.deliveryRatio}% 100%)`,
+    }),
+    [salesMix.deliveryRatio]
+  );
+
   return (
     <PageShell
       path="/partner/basic"
@@ -154,6 +170,67 @@ export function PartnerBasicInfoPage() {
             >
               다음
             </button>
+          </div>
+
+          <div className={styles.insightSection}>
+            <div className={styles.sectionTitle}>ERP 연동 예정 인사이트 (목업)</div>
+            <div className={styles.insightGrid}>
+              <article className={styles.insightCard}>
+                <div className={styles.insightLabel}>할인 적용 현황</div>
+                <div className={styles.insightValue}>월 {info.erpInsights.monthlyDiscountRate}% 할인 적용 중입니다.</div>
+              </article>
+              <article className={styles.insightCard}>
+                <div className={styles.insightLabel}>전월 매출</div>
+                <div className={styles.insightValue}>
+                  저번 달 대림바스 {Number(info.erpInsights.lastMonthSalesAmount).toLocaleString('ko-KR')}원 매출 달성
+                </div>
+              </article>
+              <article className={styles.insightCard}>
+                <div className={styles.insightLabel}>할인구간 업그레이드</div>
+                <div className={styles.insightValue}>
+                  이번달 {Number(info.erpInsights.amountToUpgradeDiscountTier).toLocaleString('ko-KR')}원 더 매입 시 구간 업그레이드
+                </div>
+              </article>
+              <article className={styles.insightCard}>
+                <div className={styles.insightLabel}>담보 갱신</div>
+                <div className={styles.insightValue}>담보 갱신 D-{info.erpInsights.collateralRenewalDday}일</div>
+              </article>
+            </div>
+
+            <div className={styles.analyticsGrid}>
+              <article className={styles.bestCard}>
+                <div className={styles.bestHeader}>
+                  <div className={styles.bestTitle}>대리점 매입품목 BEST 5</div>
+                  <div className={styles.valueMuted}>ERP 연동 예정 · 현재 목업</div>
+                </div>
+                <ol className={styles.bestList}>
+                  {info.purchaseBest5.map((item) => (
+                    <li key={item.rank} className={styles.bestRow}>
+                      <span className={styles.rank}>{item.rank}</span>
+                      <span className={styles.itemName}>{item.itemName} ({item.itemCode})</span>
+                      <strong className={styles.itemAmount}>{item.amount.toLocaleString('ko-KR')}원</strong>
+                    </li>
+                  ))}
+                </ol>
+              </article>
+
+              <article className={styles.mixCard}>
+                <div className={styles.bestTitle}>납품/도소매 매입 비율</div>
+                <div className={styles.mixSummary}>
+                  납품 {salesMix.delivery.toLocaleString('ko-KR')}원 · 도소매 {salesMix.retail.toLocaleString('ko-KR')}원
+                </div>
+                <div className={styles.mixRatio}>납품 비율 {salesMix.deliveryRatio.toFixed(1)}%</div>
+                <div className={styles.doughnutWrap}>
+                  <div className={styles.doughnut} style={doughnutStyle}>
+                    <span className={styles.doughnutCenter}>{salesMix.deliveryRatio.toFixed(0)}%</span>
+                  </div>
+                </div>
+                <div className={styles.legend}>
+                  <span><i className={`${styles.legendDot} ${styles.legendDelivery}`} />납품</span>
+                  <span><i className={`${styles.legendDot} ${styles.legendRetail}`} />도소매</span>
+                </div>
+              </article>
+            </div>
           </div>
         </section>
       </div>
