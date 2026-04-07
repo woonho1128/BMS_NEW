@@ -1,8 +1,9 @@
-import { useMemo, useState, useCallback, useEffect } from 'react';
+﻿import { lazy, Suspense, useMemo, useState, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
+import { Modal } from '../../../shared/components/Modal/Modal';
 import { getPartnerById, getPartnersList } from '../data/partnersMock';
 import { getCodesList } from '../../admin/data/adminMock';
 import { getBusinessCardsList } from '../../sales/data/businessCardMock';
@@ -12,16 +13,116 @@ import { COLLATERAL_MOCK } from '../../finance/data/collateralMock';
 import { classnames } from '../../../shared/utils/classnames';
 import styles from './PartnerRegisterPage.module.css';
 
-function createDefaultCompetitorBrands(names) {
-  return names.reduce((acc, name) => {
-    acc[name] = { isHandling: false, scale: '' };
-    return acc;
-  }, {});
+const EditHistoryModalContent = lazy(() => import('./components/EditHistoryModalContent'));
+const PartnerMapCard = lazy(() => import('./components/PartnerMapCard'));
+
+function createEmptyCompetitorBrand(name = '') {
+  return {
+    id: `competitor-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    name,
+    isHandling: false,
+    scale: '',
+  };
+}
+
+function normalizeCompetitorBrands(source) {
+  if (Array.isArray(source)) {
+    return source.map((row, index) => ({
+      id: row?.id || `competitor-loaded-${index}-${Math.random().toString(36).slice(2, 6)}`,
+      name: String(row?.name || row?.brandName || ''),
+      isHandling: Boolean(row?.isHandling),
+      scale: row?.scale != null ? String(row.scale) : '',
+    }));
+  }
+  if (source && typeof source === 'object') {
+    return Object.entries(source).map(([name, row], index) => ({
+      id: `competitor-loaded-${index}-${Math.random().toString(36).slice(2, 6)}`,
+      name: String(name || ''),
+      isHandling: Boolean(row?.isHandling),
+      scale: row?.scale != null ? String(row.scale) : '',
+    }));
+  }
+  return [];
 }
 
 const EMAIL_DOMAIN_OPTIONS = ['naver.com', 'gmail.com', 'daum.net', 'nate.com', 'hanmail.net'];
 const ADDRESS_SELECTION_OPTIONS = ['서울', '경기', '인천', '부산', '대구', '광주', '대전', '울산', '세종', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'];
-const COMPETITOR_BRAND_OPTIONS = ['계림요업', '아메리칸스탠다드', '대림통상', 'ASK', 'R&CO', 'VOVO'];
+const SALES_CATEGORY_COLORS = ['#2563eb', '#0ea5e9', '#f59e0b', '#16a34a', '#ef4444', '#8b5cf6'];
+function formatHistoryTimestamp(date = new Date()) {
+  const pad = (num) => String(num).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function createHistorySnapshot(formData) {
+  const competitorSummary = (formData.competitorBrands || [])
+    .map((row) => `${row.name || '-'}:${row.isHandling ? 'Y' : 'N'}:${row.scale || '-'}`)
+    .join('|');
+  const staffSummary = (formData.staffMembers || [])
+    .map((row) => `${row.name || '-'}:${row.mobile || '-'}:${row.email || '-'}`)
+    .join('|');
+
+  return {
+    partnerName: formData.basic?.companyName || '',
+    ceoName: formData.basic?.ceoName || '',
+    basicAddress: formData.basic?.address || '',
+    basicPhone: formData.basic?.phone || '',
+    representativeName: formData.representative?.name || '',
+    representativeMobile: formData.representative?.mobile || '',
+    representativeEmail: formData.representative?.email || '',
+    representativeAddress: formData.representative?.address || '',
+    region: formData.region || '',
+    partnerMemo: formData.partnerMemo || '',
+    partnerTraits: (formData.partnerTraits || []).join(','),
+    competitorSummary,
+    staffSummary,
+    nearbyCount: String((formData.nearbyPoints || []).length),
+    historyNotes: formData.historyNotes || '',
+  };
+}
+
+function buildHistoryChanges(beforeSnapshot, afterSnapshot) {
+  const fields = [
+    { key: 'partnerName', label: '대리점명' },
+    { key: 'ceoName', label: '대표자' },
+    { key: 'basicAddress', label: '기본 주소' },
+    { key: 'basicPhone', label: '기본 전화번호' },
+    { key: 'representativeName', label: '대표자 성명' },
+    { key: 'representativeMobile', label: '대표자 휴대전화' },
+    { key: 'representativeEmail', label: '대표자 이메일' },
+    { key: 'representativeAddress', label: '대표자 주소' },
+    { key: 'region', label: '지역' },
+    { key: 'partnerMemo', label: '대리점 메모' },
+    { key: 'partnerTraits', label: '성격 코드' },
+    { key: 'competitorSummary', label: '경쟁사 취급 브랜드' },
+    { key: 'staffSummary', label: '담당 영업직원' },
+    { key: 'nearbyCount', label: '반경 내 지점 수' },
+    { key: 'historyNotes', label: '거래처 이력/특이사항' },
+  ];
+
+  return fields
+    .map(({ key, label }) => ({
+      field: label,
+      before: String(beforeSnapshot?.[key] || '-'),
+      after: String(afterSnapshot?.[key] || '-'),
+    }))
+    .filter((row) => row.before !== row.after);
+}
+
+function buildInitialPartnerHistory(partnerDetail) {
+  const partnerName = partnerDetail?.name || partnerDetail?.basic?.companyName || '대리점';
+  return [
+    {
+      id: `${partnerDetail?.id || 'new'}-history-initial`,
+      changedAt: '2026-01-10 09:30',
+      changedBy: '시스템',
+      reason: '최초 등록',
+      changes: [
+        { field: '대리점명', before: '-', after: partnerName },
+        { field: '등록 상태', before: '-', after: '등록 완료' },
+      ],
+    },
+  ];
+}
 
 function parseEmail(email) {
   const raw = String(email || '');
@@ -48,12 +149,7 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
   const { id: routePartnerId } = useParams();
   const resolvedPartnerId = initialPartnerId || routePartnerId || '';
   const isDetailMode = mode === 'detail';
-  const competitorNames = useMemo(() => COMPETITOR_BRAND_OPTIONS, []);
   const businessCards = useMemo(() => getBusinessCardsList({}), []);
-  const defaultCompetitorBrands = useMemo(
-    () => createDefaultCompetitorBrands(competitorNames),
-    [competitorNames]
-  );
 
   const [formData, setFormData] = useState({
     basic: {
@@ -81,7 +177,7 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     region: '',
     partnerTraits: [],
     partnerTraitRatios: {},
-    competitorBrands: defaultCompetitorBrands,
+    competitorBrands: [createEmptyCompetitorBrand()],
     mapCenter: { lat: 37.5665, lng: 126.978, radiusKm: 3 },
     nearbyPoints: [],
     historyNotes: '',
@@ -112,6 +208,11 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     billRows: [],
     collateralRows: [],
   });
+  const [salesChartMode, setSalesChartMode] = useState('single');
+  const [selectedSalesCategory, setSelectedSalesCategory] = useState('total');
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [editHistoryRows, setEditHistoryRows] = useState([]);
+  const [editStartSnapshot, setEditStartSnapshot] = useState(null);
 
   const partnerCandidates = useMemo(() => getPartnersList({}), []);
   const partnerTraitCodes = useMemo(
@@ -260,17 +361,30 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
 
-  const handleCompetitorChange = useCallback((brandName, field, value) => {
+  const handleCompetitorChange = useCallback((id, field, value) => {
     setFormData((prev) => ({
       ...prev,
-      competitorBrands: {
-        ...prev.competitorBrands,
-        [brandName]: {
-          ...prev.competitorBrands[brandName],
-          [field]: value,
-        },
-      },
+      competitorBrands: (prev.competitorBrands || []).map((row) =>
+        row.id === id ? { ...row, [field]: value } : row
+      ),
     }));
+  }, []);
+
+  const handleAddCompetitorBrand = useCallback(() => {
+    setFormData((prev) => ({
+      ...prev,
+      competitorBrands: [...(prev.competitorBrands || []), createEmptyCompetitorBrand()],
+    }));
+  }, []);
+
+  const handleRemoveCompetitorBrand = useCallback((id) => {
+    setFormData((prev) => {
+      const next = (prev.competitorBrands || []).filter((row) => row.id !== id);
+      return {
+        ...prev,
+        competitorBrands: next.length > 0 ? next : [createEmptyCompetitorBrand()],
+      };
+    });
   }, []);
 
   const handleCardSelect = useCallback(
@@ -380,7 +494,10 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
         partnerTraits: Array.isArray(partnerDetail.partnerTraits) ? partnerDetail.partnerTraits : prev.partnerTraits,
         partnerTraitRatios: partnerDetail.partnerTraitRatios || prev.partnerTraitRatios || {},
         partnerMemo: partnerDetail.partnerMemo || prev.partnerMemo,
-        competitorBrands: partnerDetail.competitorBrands || prev.competitorBrands,
+        competitorBrands: (() => {
+          const normalized = normalizeCompetitorBrands(partnerDetail.competitorBrands);
+          return normalized.length > 0 ? normalized : prev.competitorBrands;
+        })(),
         historyNotes: partnerDetail.historyNotes || prev.historyNotes,
       }));
       setFinanceTab('receivable');
@@ -441,7 +558,7 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
       region: '',
       partnerTraits: [],
       partnerTraitRatios: {},
-      competitorBrands: defaultCompetitorBrands,
+      competitorBrands: [createEmptyCompetitorBrand()],
       mapCenter: { lat: 37.5665, lng: 126.978, radiusKm: 3 },
       nearbyPoints: [],
       historyNotes: '',
@@ -460,6 +577,7 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     setEmailDomainDirect('');
     setRepresentativeAddressType('');
     setRepresentativeAddressDirect('');
+    setEditStartSnapshot(null);
     setFinanceSearchMessage('');
     setFinanceLoaded(false);
     setFinancePreview({
@@ -467,7 +585,7 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
       billRows: [],
       collateralRows: [],
     });
-  }, [defaultCompetitorBrands]);
+  }, []);
 
   const handleManualRepresentative = useCallback(() => {
     setIsRepresentativeEditable(true);
@@ -534,12 +652,28 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     setSaved(true);
     console.log('partner register payload', formData);
     if (isDetailMode) {
+      const afterSnapshot = createHistorySnapshot(formData);
+      const beforeSnapshot = editStartSnapshot || afterSnapshot;
+      const changes = buildHistoryChanges(beforeSnapshot, afterSnapshot);
+      if (changes.length > 0) {
+        setEditHistoryRows((prev) => [
+          {
+            id: `history-${Date.now()}`,
+            changedAt: formatHistoryTimestamp(),
+            changedBy: '현재 사용자',
+            reason: '상세 화면 수정 저장',
+            changes,
+          },
+          ...prev,
+        ]);
+      }
+      setEditStartSnapshot(null);
       setIsEditMode(false);
       setIsRepresentativeEditable(false);
       return;
     }
     setTimeout(() => navigate('/master/partners'), 500);
-  }, [formData, isDetailMode, navigate]);
+  }, [editStartSnapshot, formData, isDetailMode, navigate]);
 
   const handleLoadFinanceMock = useCallback(() => {
     const q = financePartnerQuery.trim().toLowerCase();
@@ -638,7 +772,6 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     }));
   }, []);
 
-  const emptyRows = useMemo(() => [2024, 2023, 2022, 2021, 2020], []);
   const mapPins = useMemo(() => formData.nearbyPoints || [], [formData.nearbyPoints]);
   const handlePartnerTraitToggle = useCallback((traitCode, checked) => {
     setFormData((prev) => {
@@ -671,10 +804,81 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     () => (selectedPartnerDetail?.salesByYear || []).slice().sort((a, b) => a.year - b.year),
     [selectedPartnerDetail]
   );
-  const maxSalesAmount = useMemo(
-    () => salesByYearRows.reduce((max, row) => Math.max(max, Number(row.amount || 0)), 0),
+  const salesCategoryOptions = useMemo(() => {
+    const options = [{ key: 'total', label: '총 매출' }];
+    const keys = new Set();
+    salesByYearRows.forEach((row) => {
+      Object.keys(row.categories || {}).forEach((key) => {
+        if (!key || keys.has(key)) return;
+        keys.add(key);
+        options.push({ key, label: key });
+      });
+    });
+    return options;
+  }, [salesByYearRows]);
+  const visibleSalesSeries = useMemo(() => {
+    const categoryMap = salesCategoryOptions.reduce((acc, category, index) => {
+      acc[category.key] = {
+        ...category,
+        color: SALES_CATEGORY_COLORS[index % SALES_CATEGORY_COLORS.length],
+      };
+      return acc;
+    }, {});
+    if (salesChartMode === 'compare') {
+      return salesCategoryOptions.map((category) => categoryMap[category.key]);
+    }
+    return categoryMap[selectedSalesCategory] ? [categoryMap[selectedSalesCategory]] : [categoryMap.total];
+  }, [salesCategoryOptions, salesChartMode, selectedSalesCategory]);
+  const salesChartData = useMemo(
+    () =>
+      salesByYearRows.map((row) => {
+        const categories = row.categories || {};
+        return {
+          year: Number(row.year),
+          total: Number(row.amount || 0),
+          ...Object.keys(categories).reduce((acc, key) => {
+            acc[key] = Number(categories[key] || 0);
+            return acc;
+          }, {}),
+        };
+      }),
     [salesByYearRows]
   );
+  const salesChartModel = useMemo(() => {
+    const chartWidth = 760;
+    const chartHeight = 280;
+    const padding = { top: 24, right: 24, bottom: 40, left: 74 };
+    const plotWidth = chartWidth - padding.left - padding.right;
+    const plotHeight = chartHeight - padding.top - padding.bottom;
+    const maxValue = salesChartData.reduce((max, row) => {
+      return Math.max(max, ...visibleSalesSeries.map((series) => Number(row[series.key] || 0)));
+    }, 0);
+    const roundedMax = maxValue > 0 ? Math.ceil(maxValue / 100000000) * 100000000 : 100000000;
+    const yTicks = Array.from({ length: 5 }, (_, index) => {
+      const ratio = index / 4;
+      return {
+        value: Math.round(roundedMax * (1 - ratio)),
+        y: padding.top + plotHeight * ratio,
+      };
+    });
+    const series = visibleSalesSeries.map((item) => {
+      const points = salesChartData.map((row, index) => {
+        const x =
+          salesChartData.length === 1
+            ? padding.left + plotWidth / 2
+            : padding.left + (plotWidth * index) / (salesChartData.length - 1);
+        const value = Number(row[item.key] || 0);
+        const y = padding.top + (plotHeight * (roundedMax - value)) / roundedMax;
+        return { x, y, value, year: row.year };
+      });
+      return {
+        ...item,
+        points,
+        polyline: points.map((point) => `${point.x},${point.y}`).join(' '),
+      };
+    });
+    return { chartWidth, chartHeight, yTicks, series };
+  }, [salesChartData, visibleSalesSeries]);
   const staffByYearRows = useMemo(() => {
     const source = selectedPartnerDetail?.staffByYear || {};
     return Object.entries(source)
@@ -686,11 +890,6 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
       .sort((a, b) => b.year - a.year)
       .slice(0, 4);
   }, [selectedPartnerDetail]);
-  const competitorBrandRows = useMemo(
-    () => Object.entries(selectedPartnerDetail?.competitorBrands || formData.competitorBrands || {}),
-    [selectedPartnerDetail, formData.competitorBrands]
-  );
-
   const receivableTabRows = useMemo(
     () =>
       (financePreview.receivableRows || []).map((row) => [
@@ -741,9 +940,57 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
       }),
     [financePreview.receivableRows, selectedPartnerDetail]
   );
-
+  const financeCumulative = useMemo(() => {
+    const receivableTradeLimit = (financePreview.receivableRows || []).reduce(
+      (sum, row) => sum + Number(row.tradeLimit || 0),
+      0
+    );
+    const receivableSales = (financePreview.receivableRows || []).reduce(
+      (sum, row) => sum + Number(row.salesThisMonth || 0),
+      0
+    );
+    const receivableDeposit = (financePreview.receivableRows || []).reduce(
+      (sum, row) => sum + Number(row.depositThisMonth || 0),
+      0
+    );
+    const billAmount = (financePreview.billRows || []).reduce(
+      (sum, row) => sum + Number(row.amount || 0),
+      0
+    );
+    const collateralAmount = (financePreview.collateralRows || []).reduce(
+      (sum, row) => sum + Number(row.companySetAmount || 0),
+      0
+    );
+    const outstandingAmount = outstandingTabRows.reduce(
+      (sum, row) => sum + Number(row[5] || 0),
+      0
+    );
+    return {
+      receivableTradeLimit,
+      receivableSales,
+      receivableDeposit,
+      billAmount,
+      collateralAmount,
+      outstandingAmount,
+    };
+  }, [financePreview.receivableRows, financePreview.billRows, financePreview.collateralRows, outstandingTabRows]);
   const hasBusinessCardLinked = isBusinessCardLinked;
   const isEditableMode = !isDetailMode || isEditMode;
+  const handleOpenHistory = useCallback(() => {
+    setHistoryModalOpen(true);
+  }, []);
+  const handleStartEditMode = useCallback(() => {
+    setEditStartSnapshot(createHistorySnapshot(formData));
+    setIsEditMode(true);
+    setIsRepresentativeEditable(true);
+  }, [formData]);
+
+  useEffect(() => {
+    if (!salesCategoryOptions.length) return;
+    if (!salesCategoryOptions.some((category) => category.key === selectedSalesCategory)) {
+      setSelectedSalesCategory(salesCategoryOptions[0].key);
+    }
+  }, [salesCategoryOptions, selectedSalesCategory]);
 
   useEffect(() => {
     if (!isDetailMode || !resolvedPartnerId) return;
@@ -760,7 +1007,9 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     setIsCardDropdownOpen(false);
     setIsRepresentativeEditable(false);
     setIsEditMode(false);
+    setEditStartSnapshot(null);
     setIsBusinessCardLinked(Boolean(partnerDetail.businessCardLinked));
+    setEditHistoryRows(buildInitialPartnerHistory(partnerDetail));
 
     const representative = partnerDetail.representative || {};
     const parsedEmail = parseEmail(representative.email || '');
@@ -779,7 +1028,10 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
       region: partnerDetail.region || '',
       partnerTraits: Array.isArray(partnerDetail.partnerTraits) ? partnerDetail.partnerTraits : [],
       partnerTraitRatios: partnerDetail.partnerTraitRatios || {},
-      competitorBrands: partnerDetail.competitorBrands || prev.competitorBrands,
+      competitorBrands: (() => {
+        const normalized = normalizeCompetitorBrands(partnerDetail.competitorBrands);
+        return normalized.length > 0 ? normalized : prev.competitorBrands;
+      })(),
       mapCenter: partnerDetail.mapCenter || prev.mapCenter,
       nearbyPoints: Array.isArray(partnerDetail.nearbyPoints) ? partnerDetail.nearbyPoints : [],
       historyNotes: partnerDetail.historyNotes || '',
@@ -1270,41 +1522,135 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
         <Card title="3) 최근 5년간 매출 실적(연도별)" className={styles.card}>
           <CardBody>
             <div className={styles.erpBlock}>
-              <div className={styles.tableWrap}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>연도</th>
-                      <th className={styles.right}>매출액(원)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {salesByYearRows.length === 0 ? (
-                      <tr>
-                        <td colSpan={2} className={styles.right}>대리점을 먼저 선택해 주세요.</td>
-                      </tr>
-                    ) : (
-                      salesByYearRows.map((row) => {
-                        const amount = Number(row.amount || 0);
-                        const ratio = maxSalesAmount > 0 ? (amount / maxSalesAmount) * 100 : 0;
-                        return (
+              {salesByYearRows.length === 0 ? (
+                <p className={styles.hint}>대리점을 먼저 선택하면 최근 5개년 매출 그래프를 볼 수 있습니다.</p>
+              ) : (
+                <>
+                  <div className={styles.salesChartToolbar}>
+                    <div className={styles.salesModeButtons}>
+                      <button
+                        type="button"
+                        className={classnames(
+                          styles.salesModeButton,
+                          salesChartMode === 'single' && styles.salesModeButtonActive,
+                          isDetailMode && !isEditMode && styles.allowAction
+                        )}
+                        onClick={() => setSalesChartMode('single')}
+                      >
+                        단일 카테고리
+                      </button>
+                      <button
+                        type="button"
+                        className={classnames(
+                          styles.salesModeButton,
+                          salesChartMode === 'compare' && styles.salesModeButtonActive,
+                          isDetailMode && !isEditMode && styles.allowAction
+                        )}
+                        onClick={() => setSalesChartMode('compare')}
+                      >
+                        카테고리 비교
+                      </button>
+                    </div>
+                    <div className={styles.salesCategorySelector}>
+                      <label htmlFor="salesCategorySelect">그래프 항목</label>
+                      <select
+                        id="salesCategorySelect"
+                        className={classnames(
+                          styles.select,
+                          styles.salesCategorySelect,
+                          isDetailMode && !isEditMode && styles.allowAction
+                        )}
+                        value={selectedSalesCategory}
+                        onChange={(e) => setSelectedSalesCategory(e.target.value)}
+                        disabled={salesChartMode === 'compare'}
+                      >
+                        {salesCategoryOptions.map((category) => (
+                          <option key={category.key} value={category.key}>
+                            {category.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className={styles.salesChartCard}>
+                    <svg
+                      className={styles.salesChartSvg}
+                      viewBox={`0 0 ${salesChartModel.chartWidth} ${salesChartModel.chartHeight}`}
+                      role="img"
+                      aria-label="최근 5년 매출 실적 그래프"
+                    >
+                      {salesChartModel.yTicks.map((tick) => (
+                        <g key={`tick-${tick.value}`}>
+                          <line x1={74} y1={tick.y} x2={736} y2={tick.y} stroke="#dbe6f5" strokeDasharray="4 4" />
+                          <text x={68} y={tick.y + 4} textAnchor="end" className={styles.salesChartTickLabel}>
+                            {tick.value.toLocaleString()}
+                          </text>
+                        </g>
+                      ))}
+                      {salesChartModel.series.map((series) => (
+                        <g key={series.key}>
+                          <polyline
+                            fill="none"
+                            stroke={series.color}
+                            strokeWidth="3"
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                            points={series.polyline}
+                          />
+                          {series.points.map((point) => (
+                            <circle
+                              key={`${series.key}-${point.year}`}
+                              cx={point.x}
+                              cy={point.y}
+                              r="4"
+                              fill="#fff"
+                              stroke={series.color}
+                              strokeWidth="2"
+                            />
+                          ))}
+                        </g>
+                      ))}
+                      {salesChartModel.series[0]?.points.map((point) => (
+                        <text key={`year-${point.year}`} x={point.x} y={252} textAnchor="middle" className={styles.salesChartYearLabel}>
+                          {point.year}
+                        </text>
+                      ))}
+                    </svg>
+                    <div className={styles.salesChartLegend}>
+                      {visibleSalesSeries.map((series) => (
+                        <span key={`legend-${series.key}`} className={styles.salesChartLegendItem}>
+                          <span className={styles.salesChartLegendColor} style={{ backgroundColor: series.color }} />
+                          {series.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className={styles.tableWrap}>
+                    <table className={styles.table}>
+                      <thead>
+                        <tr>
+                          <th>연도</th>
+                          {visibleSalesSeries.map((series) => (
+                            <th key={`head-${series.key}`} className={styles.right}>{series.label}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {salesChartData.map((row) => (
                           <tr key={row.year}>
                             <td>{row.year}</td>
-                            <td className={styles.right}>
-                              <div className={styles.inlineBarCell}>
-                                <div className={styles.inlineBarTrack}>
-                                  <div className={styles.inlineBarFill} style={{ width: `${Math.max(4, ratio)}%` }} />
-                                </div>
-                                <span>{amount.toLocaleString()}</span>
-                              </div>
-                            </td>
+                            {visibleSalesSeries.map((series) => (
+                              <td key={`${row.year}-${series.key}`} className={styles.right}>
+                                {Number(row[series.key] || 0).toLocaleString()}
+                              </td>
+                            ))}
                           </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
             </div>
           </CardBody>
         </Card>
@@ -1342,66 +1688,77 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
 
         <Card title="5) 경쟁사 취급 브랜드 (단위: 천원)" className={classnames(styles.card, styles.competitorCard)}>
           <CardBody>
-            <div className={classnames(styles.editableBlock, !isEditableMode && styles.readonlyBlock)}>
-              <div className={styles.tableWrap}>
+            <div className={classnames(styles.competitorPanel, !isEditableMode && styles.readonlyBlock)}>
+              <div className={styles.competitorHeader}>
+                <span className={styles.hint}>대리점별로 경쟁사 항목을 직접 추가해 관리합니다.</span>
+                {isEditableMode && (
+                  <Button variant="secondary" onClick={handleAddCompetitorBrand}>
+                    + 경쟁사 추가
+                  </Button>
+                )}
+              </div>
+              <div className={classnames(styles.tableWrap, styles.competitorTableWrap)}>
                 <table className={classnames(styles.table, styles.competitorTable)}>
                 <thead>
                   <tr>
-                    <th>경쟁사</th>
-                    {competitorNames.map((name) => (
-                      <th key={name}>{name}</th>
-                    ))}
+                    <th>경쟁사명</th>
+                    <th>취급여부</th>
+                    <th>취급규모(천원)</th>
                     <th>비고</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className={styles.competitorRowHeader}>취급여부</td>
-                    {competitorNames.map((name) => {
-                      const comp = formData.competitorBrands[name] || { isHandling: false, scale: '' };
-                      return (
-                        <td key={`${name}-yn`}>
-                          {isEditableMode ? (
-                            <select
-                              className={classnames(styles.select, styles.competitorSelect)}
-                              value={comp.isHandling ? 'Y' : 'N'}
-                              onChange={(e) => handleCompetitorChange(name, 'isHandling', e.target.value === 'Y')}
-                            >
-                              <option value="N">X</option>
-                              <option value="Y">O</option>
-                            </select>
-                          ) : (
-                            <span className={classnames(styles.readonlyBadge, comp.isHandling ? styles.readonlyYes : styles.readonlyNo)}>
-                              {comp.isHandling ? 'O' : 'X'}
-                            </span>
+                  {(formData.competitorBrands || []).map((row) => (
+                    <tr key={row.id}>
+                      <td>
+                        <input
+                          className={styles.input}
+                          value={row.name || ''}
+                          onChange={(e) => handleCompetitorChange(row.id, 'name', e.target.value)}
+                          disabled={!isEditableMode}
+                          placeholder="경쟁사명 입력"
+                        />
+                      </td>
+                      <td>
+                        {isEditableMode ? (
+                          <select
+                            className={classnames(styles.select, styles.competitorToggle)}
+                            value={row.isHandling ? 'Y' : 'N'}
+                            onChange={(e) => handleCompetitorChange(row.id, 'isHandling', e.target.value === 'Y')}
+                          >
+                            <option value="N">X</option>
+                            <option value="Y">O</option>
+                          </select>
+                        ) : (
+                          <span className={classnames(styles.readonlyBadge, row.isHandling ? styles.readonlyYes : styles.readonlyNo)}>
+                            {row.isHandling ? 'O' : 'X'}
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        <input
+                          className={classnames(
+                            styles.input,
+                            styles.competitorInput,
+                            !row.isHandling && styles.competitorInputDisabled
                           )}
-                        </td>
-                      );
-                    })}
-                    <td />
-                  </tr>
-                  <tr>
-                    <td className={styles.competitorRowHeader}>취급규모</td>
-                    {competitorNames.map((name) => {
-                      const comp = formData.competitorBrands[name] || { isHandling: false, scale: '' };
-                      return (
-                        <td key={`${name}-scale`}>
-                          <input
-                            className={classnames(
-                              styles.input,
-                              styles.competitorInput,
-                              !comp.isHandling && styles.competitorInputDisabled
-                            )}
-                            value={comp.scale}
-                            onChange={(e) => handleCompetitorChange(name, 'scale', e.target.value)}
-                            disabled={!isEditableMode || !comp.isHandling}
-                            placeholder={comp.isHandling ? '천원' : 'O 선택 시 입력'}
-                          />
-                        </td>
-                      );
-                    })}
-                    <td />
-                  </tr>
+                          value={row.scale || ''}
+                          onChange={(e) => handleCompetitorChange(row.id, 'scale', e.target.value)}
+                          disabled={!isEditableMode || !row.isHandling}
+                          placeholder={row.isHandling ? '천원' : 'O 선택 시 입력'}
+                        />
+                      </td>
+                      <td>
+                        {isEditableMode ? (
+                          <button type="button" className={styles.deleteBtn} onClick={() => handleRemoveCompetitorBrand(row.id)}>
+                            삭제
+                          </button>
+                        ) : (
+                          '-'
+                        )}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
                 </table>
               </div>
@@ -1493,6 +1850,18 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
                     <span>담보</span>
                     <strong>{financePreview.collateralRows.length}건</strong>
                   </div>
+                  <div className={styles.financeChip}>
+                    <span>누계매출</span>
+                    <strong>{financeCumulative.receivableSales.toLocaleString()}</strong>
+                  </div>
+                  <div className={styles.financeChip}>
+                    <span>누계수금</span>
+                    <strong>{financeCumulative.receivableDeposit.toLocaleString()}</strong>
+                  </div>
+                  <div className={styles.financeChip}>
+                    <span>누계미수</span>
+                    <strong>{financeCumulative.outstandingAmount.toLocaleString()}</strong>
+                  </div>
                 </div>
 
                 <div className={styles.financeTables}>
@@ -1517,6 +1886,14 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
                           </tr>
                         ))}
                       </tbody>
+                      <tfoot>
+                        <tr>
+                          <th>누계</th>
+                          <th className={styles.right}>{financeCumulative.receivableTradeLimit.toLocaleString()}</th>
+                          <th className={styles.right}>{financeCumulative.receivableSales.toLocaleString()}</th>
+                          <th className={styles.right}>{financeCumulative.receivableDeposit.toLocaleString()}</th>
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
                   )}
@@ -1540,6 +1917,12 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
                           </tr>
                         ))}
                       </tbody>
+                      <tfoot>
+                        <tr>
+                          <th colSpan={2}>누계</th>
+                          <th className={styles.right}>{financeCumulative.billAmount.toLocaleString()}</th>
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
                   )}
@@ -1563,6 +1946,12 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
                           </tr>
                         ))}
                       </tbody>
+                      <tfoot>
+                        <tr>
+                          <th colSpan={2}>누계</th>
+                          <th className={styles.right}>{financeCumulative.collateralAmount.toLocaleString()}</th>
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
                   )}
@@ -1591,6 +1980,14 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
                           </tr>
                         ))}
                       </tbody>
+                      <tfoot>
+                        <tr>
+                          <th colSpan={3}>누계</th>
+                          <th className={styles.right}>{financeCumulative.receivableSales.toLocaleString()}</th>
+                          <th className={styles.right}>{financeCumulative.receivableDeposit.toLocaleString()}</th>
+                          <th className={styles.right}>{financeCumulative.outstandingAmount.toLocaleString()}</th>
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
                   )}
@@ -1600,197 +1997,16 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
           </CardBody>
         </Card>
 
-        <Card title="7) 반경 3Km 내 당사/경쟁사 현황" className={styles.card}>
-          <CardBody>
-            <div className={styles.editableBlock}>
-              <div className={styles.mapControlBar}>
-                <div className={styles.mapControlGrid}>
-                  <label className={styles.inlineField}>
-                    <span>중심 위도</span>
-                    <input
-                      type="number"
-                      step="0.0001"
-                      className={styles.inlineInput}
-                      value={formData.mapCenter?.lat ?? ''}
-                      onChange={(e) => handleMapCenterChange('lat', e.target.value)}
-                    />
-                  </label>
-                  <label className={styles.inlineField}>
-                    <span>중심 경도</span>
-                    <input
-                      type="number"
-                      step="0.0001"
-                      className={styles.inlineInput}
-                      value={formData.mapCenter?.lng ?? ''}
-                      onChange={(e) => handleMapCenterChange('lng', e.target.value)}
-                    />
-                  </label>
-                  <label className={styles.inlineField}>
-                    <span>반경(Km)</span>
-                    <input
-                      type="number"
-                      min="1"
-                      max="20"
-                      className={styles.inlineInput}
-                      value={formData.mapCenter?.radiusKm ?? 3}
-                      onChange={(e) => handleMapCenterChange('radiusKm', e.target.value)}
-                    />
-                  </label>
-                </div>
-                <Button variant="secondary" onClick={handleAddPoint}>
-                  점 추가
-                </Button>
-              </div>
-
-              <div className={styles.mapSection}>
-                <div className={styles.mapCanvas} role="img" aria-label="반경 지도 미리보기">
-                  <div className={styles.mapRadius} />
-                  <div className={classnames(styles.mapMarker, styles.mapCenterMarker)} style={{ left: '50%', top: '50%' }}>
-                    <span className={styles.mapPinLabel}>대리점</span>
-                  </div>
-                  {mapPins.map((pin) => (
-                    <div
-                      key={pin.id}
-                      className={classnames(styles.mapMarker, pin.type === 'our' ? styles.mapMarkerOur : styles.mapMarkerCompetitor)}
-                      style={{
-                        left: `${Math.min(92, Math.max(8, 50 + ((Number(pin.lng) - Number(formData.mapCenter?.lng || 126.978)) * 260) / (Number(formData.mapCenter?.radiusKm || 3) * 2)))}%`,
-                        top: `${Math.min(92, Math.max(8, 50 - ((Number(pin.lat) - Number(formData.mapCenter?.lat || 37.5665)) * 260) / (Number(formData.mapCenter?.radiusKm || 3) * 2)))}%`,
-                      }}
-                    >
-                      <span className={styles.mapPinLabel}>{pin.name || '-'}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className={styles.mapMeta}>
-                  <div className={styles.mapMetaRow}>
-                    <span className={styles.mapMetaLabel}>중심 좌표</span>
-                    <strong>{Number(formData.mapCenter?.lat || 37.5665).toFixed(4)}, {Number(formData.mapCenter?.lng || 126.978).toFixed(4)}</strong>
-                  </div>
-                  <div className={styles.mapMetaRow}>
-                    <span className={styles.mapMetaLabel}>반경</span>
-                    <strong>{Number(formData.mapCenter?.radiusKm || 3)}Km</strong>
-                  </div>
-                  <div className={styles.mapLegend}>
-                    <span><i className={classnames(styles.legendDot, styles.legendCenter)} />대리점</span>
-                    <span><i className={classnames(styles.legendDot, styles.legendOur)} />당사</span>
-                    <span><i className={classnames(styles.legendDot, styles.legendCompetitor)} />경쟁사</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.placeTableWrap}>
-                <table className={styles.placeTable}>
-                  <thead>
-                    <tr>
-                      <th>구분</th>
-                      <th>지점명</th>
-                      <th>위도</th>
-                      <th>경도</th>
-                      <th>메모</th>
-                      <th>삭제</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {formData.nearbyPoints.length === 0 ? (
-                      <tr>
-                        <td colSpan={6} className={styles.emptyCell}>점을 추가해 주세요.</td>
-                      </tr>
-                    ) : (
-                      formData.nearbyPoints.map((point) => (
-                        <tr key={point.id}>
-                          <td>
-                            <select
-                              className={styles.select}
-                              value={point.type}
-                              onChange={(e) => handlePointChange(point.id, 'type', e.target.value)}
-                            >
-                              <option value="our">당사</option>
-                              <option value="competitor">경쟁사</option>
-                            </select>
-                          </td>
-                          <td>
-                            <input
-                              className={styles.input}
-                              value={point.name || ''}
-                              onChange={(e) => handlePointChange(point.id, 'name', e.target.value)}
-                              placeholder="지점명"
-                            />
-                          </td>
-                          <td>
-                            <input
-                              type="number"
-                              step="0.0001"
-                              className={styles.input}
-                              value={point.lat ?? ''}
-                              onChange={(e) => handlePointChange(point.id, 'lat', e.target.value)}
-                            />
-                          </td>
-                          <td>
-                            <input
-                              type="number"
-                              step="0.0001"
-                              className={styles.input}
-                              value={point.lng ?? ''}
-                              onChange={(e) => handlePointChange(point.id, 'lng', e.target.value)}
-                            />
-                          </td>
-                          <td>
-                            <input
-                              className={styles.input}
-                              value={point.note || ''}
-                              onChange={(e) => handlePointChange(point.id, 'note', e.target.value)}
-                              placeholder="메모"
-                            />
-                          </td>
-                          <td>
-                            <button type="button" className={styles.deleteBtn} onClick={() => handleRemovePoint(point.id)}>
-                              삭제
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className={styles.mapSection}>
-              <div className={styles.mapCanvas} role="img" aria-label="반경 지도 목업">
-                <div className={styles.mapRadius} />
-                <div className={classnames(styles.mapMarker, styles.mapCenterMarker)} style={{ left: '50%', top: '50%' }}>
-                  <span className={styles.mapPinLabel}>대리점</span>
-                </div>
-                {mapPins.map((pin) => (
-                  <div
-                    key={pin.id}
-                    className={classnames(styles.mapMarker, pin.type === 'our' ? styles.mapMarkerOur : styles.mapMarkerCompetitor)}
-                    style={{
-                      left: `${Math.min(92, Math.max(8, 50 + ((Number(pin.lng) - Number(formData.mapCenter?.lng || 126.978)) * 260) / (Number(formData.mapCenter?.radiusKm || 3) * 2)))}%`,
-                      top: `${Math.min(92, Math.max(8, 50 - ((Number(pin.lat) - Number(formData.mapCenter?.lat || 37.5665)) * 260) / (Number(formData.mapCenter?.radiusKm || 3) * 2)))}%`,
-                    }}
-                  >
-                    <span className={styles.mapPinLabel}>{pin.name || '-'}</span>
-                  </div>
-                ))}
-              </div>
-              <div className={styles.mapMeta}>
-                <div className={styles.mapMetaRow}>
-                  <span className={styles.mapMetaLabel}>중심 좌표</span>
-                  <strong>{Number(formData.mapCenter?.lat || 37.5665).toFixed(4)}, {Number(formData.mapCenter?.lng || 126.978).toFixed(4)}</strong>
-                </div>
-                <div className={styles.mapMetaRow}>
-                  <span className={styles.mapMetaLabel}>반경</span>
-                  <strong>{Number(formData.mapCenter?.radiusKm || 3)}Km</strong>
-                </div>
-                <div className={styles.mapLegend}>
-                  <span><i className={classnames(styles.legendDot, styles.legendCenter)} />대리점</span>
-                  <span><i className={classnames(styles.legendDot, styles.legendOur)} />당사</span>
-                  <span><i className={classnames(styles.legendDot, styles.legendCompetitor)} />경쟁사</span>
-                </div>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
+                <Suspense fallback={<div style={{ padding: 12 }}>지도 카드 불러오는 중...</div>}>
+          <PartnerMapCard
+            formData={formData}
+            mapPins={mapPins}
+            handleMapCenterChange={handleMapCenterChange}
+            handleAddPoint={handleAddPoint}
+            handlePointChange={handlePointChange}
+            handleRemovePoint={handleRemovePoint}
+          />
+        </Suspense>
 
         <Card title="8) 거래처 이력 및 특이사항" className={styles.card}>
           <CardBody>
@@ -1811,12 +2027,14 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
             <Button
               variant="primary"
               className={classnames(styles.allowAction, styles.editModeButton)}
-              onClick={() => {
-                setIsEditMode(true);
-                setIsRepresentativeEditable(true);
-              }}
+              onClick={handleStartEditMode}
             >
               紐낇븿 ?곕룞?섍린
+            </Button>
+          )}
+          {isDetailMode && (
+            <Button variant="secondary" className={styles.allowAction} onClick={handleOpenHistory}>
+              수정 이력
             </Button>
           )}
           <Button
@@ -1844,6 +2062,24 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
 
         {saved && <p className={styles.toast}>등록 데이터를 저장했습니다.</p>}
       </div>
+
+      {isDetailMode && (
+        <Modal
+          open={historyModalOpen}
+          onClose={() => setHistoryModalOpen(false)}
+          title={`${selectedPartnerDetail?.name || formData.basic.companyName || '대리점'} 전체 수정 이력`}
+          size="xl"
+        >
+                    <Suspense fallback={<div style={{ padding: 12 }}>이력 불러오는 중...</div>}>
+            <EditHistoryModalContent editHistoryRows={editHistoryRows} />
+          </Suspense>
+        </Modal>
+      )}
     </PageShell>
   );
 }
+
+
+
+
+

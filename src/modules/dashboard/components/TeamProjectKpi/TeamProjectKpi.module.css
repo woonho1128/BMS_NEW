@@ -1,0 +1,52 @@
+﻿.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metricCard {
+  text-align: left;
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #f8fbff;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.metricCard:hover {
+  border-color: #2f7df6;
+  box-shadow: 0 4px 12px rgba(47, 125, 246, 0.14);
+}
+
+.metricTitle {
+  margin: 0;
+  font-size: 12px;
+  color: #5a6a83;
+  font-weight: 600;
+}
+
+.metricValue {
+  margin: 6px 0;
+  font-size: 20px;
+  line-height: 1;
+  color: #1f64d8;
+  font-weight: 800;
+}
+
+.metricMeta {
+  margin: 0;
+  font-size: 11px;
+  color: #6f7f95;
+}
+
+.placeholder {
+  margin: 0;
+  font-size: 12px;
+  color: #7f8ea6;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

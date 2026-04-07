@@ -1,10 +1,15 @@
 # Dependencies
 node_modules/
+.npm-cache/
+.eslintcache
 
 # Build
 dist/
 dist-ssr/
 *.local
+
+# Local backups
+backups/
 
 # Logs
 logs

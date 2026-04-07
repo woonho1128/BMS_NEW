@@ -410,6 +410,96 @@
   background: linear-gradient(90deg, #60a5fa 0%, #2563eb 100%);
 }
 
+.salesChartToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.salesModeButtons {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.salesModeButton {
+  border: 1px solid #cdd9ea;
+  background: #fff;
+  color: #3a4c67;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.salesModeButtonActive {
+  background: #e9f2ff;
+  border-color: #9fc1f5;
+  color: #1f64d8;
+  font-weight: var(--font-weight-semibold);
+}
+
+.salesCategorySelector {
+  display: inline-grid;
+  grid-template-columns: auto 180px;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.salesCategorySelect {
+  font-size: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.salesChartCard {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.salesChartSvg {
+  width: 100%;
+  min-height: 280px;
+}
+
+.salesChartTickLabel {
+  fill: #64748b;
+  font-size: 9px;
+}
+
+.salesChartYearLabel {
+  fill: #64748b;
+  font-size: 9px;
+}
+
+.salesChartLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 8px;
+}
+
+.salesChartLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+.salesChartLegendColor {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
 .financeTabRow {
   display: flex;
   flex-wrap: wrap;
@@ -495,44 +585,65 @@
   white-space: nowrap;
 }
 
+.table tfoot th,
+.table tfoot td {
+  background: #f7fbff;
+  border-top: 1px solid #dbe6f5;
+  font-weight: var(--font-weight-semibold);
+}
+
 .right {
   text-align: right !important;
   font-variant-numeric: tabular-nums;
 }
 
-.competitorCard .editableBlock {
-  background: linear-gradient(180deg, rgba(59, 130, 246, 0.06) 0%, rgba(59, 130, 246, 0.03) 100%);
-  border-color: #cfdcf0;
+.competitorPanel {
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
-.competitorCard .tableWrap {
-  border-radius: 14px;
-  border-color: #cfdaeb;
+.competitorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: 8px;
+}
+
+.competitorTableWrap {
+  border-radius: 10px;
+  border-color: #d8e2f0;
   box-shadow: none;
 }
 
 .competitorTable {
-  table-layout: fixed;
-  min-width: 920px;
+  table-layout: auto;
+  min-width: 760px;
 }
 
 .competitorTable th,
 .competitorTable td {
-  text-align: center;
+  text-align: left;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
-.competitorTable thead th {
-  background: linear-gradient(180deg, #f6f9ff 0%, #edf3ff 100%);
-  color: #334a6b;
+.competitorTable th:nth-child(2),
+.competitorTable td:nth-child(2),
+.competitorTable th:nth-child(4),
+.competitorTable td:nth-child(4) {
+  text-align: center;
 }
 
-.competitorTable thead th:first-child,
-.competitorTable tbody td:first-child,
-.competitorTable thead th:last-child,
-.competitorTable tbody td:last-child {
-  background: #f3f7ff;
+.competitorTable th:nth-child(3),
+.competitorTable td:nth-child(3) {
+  text-align: right;
+}
+
+.competitorTable thead th {
+  background: #f6f8fc;
+  color: #334a6b;
 }
 
 .competitorRowHeader {
@@ -541,8 +652,8 @@
 }
 
 .competitorToggle {
-  max-width: 92px;
-  margin: 0 auto;
+  width: 88px;
+  margin: 0;
   text-align: center;
   border-radius: 999px;
   border-color: #b8cae5;
@@ -775,6 +886,157 @@
   background: #e11d48;
 }
 
+.historyActionButton {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: var(--font-size-xs);
+}
+
+.historyModalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historyFilterBar {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.historyCardTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.historyTabButton {
+  border: 1px solid #cdd9e9;
+  background: #fff;
+  color: #4f6380;
+  border-radius: 999px;
+  font-size: 12px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.historyTabButtonActive {
+  border-color: #2f6fdc;
+  background: #edf4ff;
+  color: #174ea6;
+  font-weight: 700;
+}
+
+.historyEditorFilter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #4b5d79;
+}
+
+.historyEditorFilter select {
+  min-width: 170px;
+  height: 34px;
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #16253a;
+}
+
+.historySummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #dce7f4;
+  border-radius: 10px;
+  background: #f7faff;
+  font-size: 12px;
+  color: #4f6380;
+}
+
+.historySummary strong {
+  color: #1f3354;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 62vh;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.historyEmpty {
+  border: 1px dashed #cad8eb;
+  border-radius: 10px;
+  background: #f9fbff;
+  padding: 18px;
+  text-align: center;
+  font-size: 12px;
+  color: #627796;
+}
+
+.historyItem {
+  border: 1px solid #d8e3f1;
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px;
+}
+
+.historyItemHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  color: #12233c;
+  font-size: 13px;
+}
+
+.historyItemHead span {
+  color: #607391;
+  font-size: 12px;
+}
+
+.historyItemMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #536983;
+}
+
+.historyDiffTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.historyDiffTable th,
+.historyDiffTable td {
+  border: 1px solid #dce5f2;
+  padding: 8px;
+  font-size: 12px;
+  text-align: left;
+}
+
+.historyDiffTable th {
+  background: #f2f7ff;
+  color: #2a3f60;
+}
+
+.historyAfter {
+  color: #184fa8;
+  font-weight: 700;
+}
+
 .footer {
   display: flex;
   justify-content: flex-end;
@@ -870,5 +1132,43 @@
 
   .mapControlGrid {
     grid-template-columns: 1fr;
+  }
+
+  .salesChartToolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .salesModeButtons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .salesCategorySelector {
+    grid-template-columns: 1fr;
+  }
+
+  .historyFilterBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .historyEditorFilter {
+    justify-content: space-between;
+  }
+
+  .historyEditorFilter select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .historySummary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .historyItemHead {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

@@ -1,87 +1,54 @@
-/**
+﻿/**
  * =============================================================================
- * router/index.jsx — 라우터 설정 (전체 페이지 경로 ↔ 컴포넌트 매핑)
+ * router/index.jsx ???쇱슦???ㅼ젙 (?꾩껜 ?섏씠吏 寃쎈줈 ??而댄룷?뚰듃 留ㅽ븨)
  * =============================================================================
  *
- * 구조:
- *   1. 라이브러리·레이아웃 import
- *   2. 모듈별 페이지 컴포넌트 import (기준정보 / 영업 / 결재 / 출고납품 / 재무 / 대리점 / 인사이트 / 관리자)
- *   3. 라우트 가드 컴포넌트 (ProtectedRoute, PublicOnlyRoute)
- *   4. Router 컴포넌트: BrowserRouter > Routes 선언
+ * 援ъ“:
+ *   1. ?쇱씠釉뚮윭由?룸젅?댁븘??import
+ *   2. 紐⑤뱢蹂??섏씠吏 而댄룷?뚰듃 import (湲곗??뺣낫 / ?곸뾽 / 寃곗옱 / 異쒓퀬?⑺뭹 / ?щТ / ?由ъ젏 / ?몄궗?댄듃 / 愿由ъ옄)
+ *   3. ?쇱슦??媛??而댄룷?뚰듃 (ProtectedRoute, PublicOnlyRoute)
+ *   4. Router 而댄룷?뚰듃: BrowserRouter > Routes ?좎뼵
  *
- * 라우트 가드:
- *   - ProtectedRoute: 비로그인 시 /login 으로 리다이렉트
- *   - PublicOnlyRoute: 로그인 상태에서 /login 접근 시 홈으로 리다이렉트
- *   - Guard (권한): PERMISSIONS 상수 기반 — 현재 영업결재·납품결재에 적용
+ * ?쇱슦??媛??
+ *   - ProtectedRoute: 鍮꾨줈洹몄씤 ??/login ?쇰줈 由щ떎?대젆??
+ *   - PublicOnlyRoute: 濡쒓렇???곹깭?먯꽌 /login ?묎렐 ???덉쑝濡?由щ떎?대젆??
+ *   - Guard (沅뚰븳): PERMISSIONS ?곸닔 湲곕컲 ???꾩옱 ?곸뾽寃곗옱쨌?⑺뭹寃곗옱???곸슜
  *
- * 페이지 경로 상수는 router/routePaths.js 에서 관리합니다.
- * IA 메뉴 구조는 shared/constants/ia.js 에서 관리합니다.
+ * ?섏씠吏 寃쎈줈 ?곸닔??router/routePaths.js ?먯꽌 愿由ы빀?덈떎.
+ * IA 硫붾돱 援ъ“??shared/constants/ia.js ?먯꽌 愿由ы빀?덈떎.
  * =============================================================================
  */
 
-// ── 라이브러리
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../modules/auth/hooks/useAuth';
 import { ROUTES, toRelative } from './routePaths';
 
-// ── 레이아웃
-import { AppLayout } from '../layouts/AppLayout';
-import { AuthLayout } from '../layouts/AuthLayout';
+// ?? ?덉씠?꾩썐
 
-// ── 인증
-import { LoginPage } from '../modules/auth/pages/LoginPage';
+// ?? ?몄쬆
 
-// ── 대시보드
-import { DashboardHome } from '../modules/dashboard/pages/DashboardHome';
+// ?? ??쒕낫??
 
-// ── 기준 정보 (마스터)
+// ?? 湲곗? ?뺣낫 (留덉뒪??
 
-// ── 영업 관리 — 프로젝트팀 (손익분석)
-import { SalesProfitAnalysisPage } from '../modules/sales/pages/SalesProfitAnalysisPage';
-import { SalesProfitAnalysisNewPage } from '../modules/sales/pages/SalesProfitAnalysisNewPage';
-import { SalesProfitAnalysisDetailPage } from '../modules/sales/pages/SalesProfitAnalysisDetailPage';
-import { SalesInfoPage } from '../modules/sales/pages/SalesInfoPage';
-import { SalesInfoDetailPage } from '../modules/sales/pages/SalesInfoDetailPage';
-import { SalesInfoRegisterPage } from '../modules/sales/pages/SalesInfoRegisterPage';
-import { SpecStatusDiscountPage } from '../modules/sales/pages/SpecStatusDiscountPage';
-
-// ── 영업 관리 — 공통 (보고서 / 명함 / 자료실)
-import { SalesReportsPage } from '../modules/sales/pages/SalesReportsPage';
-import { WeeklyReportFormPage } from '../modules/sales/pages/WeeklyReportFormPage';
-import { TripReportFormPage } from '../modules/sales/pages/TripReportFormPage';
-import { ReportDetailPage } from '../modules/sales/pages/ReportDetailPage';
-import { BusinessCardPage } from '../modules/sales/pages/BusinessCardPage';
-import { BusinessCardFormPage } from '../modules/sales/pages/BusinessCardFormPage';
-import { SalesMaterialsPage } from '../modules/sales/pages/SalesMaterialsPage';
-import { SalesMaterialDetailPage } from '../modules/sales/pages/SalesMaterialDetailPage';
-import { SalesMaterialFormPage } from '../modules/sales/pages/SalesMaterialFormPage';
-import { DeliveryRequestStatusPage } from '../modules/sales/pages/DeliveryRequestStatusPage';
-import { DeliveryRequestDetailPage } from '../modules/sales/pages/DeliveryRequestDetailPage';
-import { DeliveryApprovalPage as SalesDeliveryApprovalPage } from '../modules/sales/pages/DeliveryApprovalPage';
-
-// ── 영업 관리 — 리테일팀
-import { ShortProjectPage } from '../modules/sales/pages/ShortProjectPage';
-import { ShortProjectRegisterPage } from '../modules/sales/pages/ShortProjectRegisterPage';
+// ?? ?곸뾽 愿由???由ы뀒?쇳?
 // import {
 //   RetailOrderReviewPage,
 //   RetailOrderDetailPage,
 //   RetailOrderApprovalPage,
 // } from '../modules/sales/pages/RetailOrderComponents';
 
-// ── 영업 관리 — 타일영업팀·영업지원팀 (임시)
-import { TileTeamPage } from '../modules/sales/pages/TileTeamPage';
-import { SalesSupportPage } from '../modules/sales/pages/SalesSupportPage';
+// ?? ?곸뾽 愿由?????쇱쁺?낇?쨌?곸뾽吏?먰? (?꾩떆)
 
-// ── 영업 결재
+// ?? ?곸뾽 寃곗옱
 
-// ── 출고 / 납품
+// ?? 異쒓퀬 / ?⑺뭹
 
-// ── 재무 (채권·여신·어음·매입매출)
+// ?? ?щТ (梨꾧텒쨌?ъ떊쨌?댁쓬쨌留ㅼ엯留ㅼ텧)
 
-// ── 대리점 포털
+// ?? ?由ъ젏 ?ы꽭
 // import { PartnerOrderPage } from '../modules/partner/pages/PartnerOrderPage';
-import { PartnerAsRedirect } from '../modules/partner/pages/PartnerAsRedirect';
 // import { PartnerProductOrderPage } from '../modules/partner/pages/PartnerProductOrderPage';
 // import { PartnerOrderListPage } from '../modules/partner/pages/PartnerOrderListPage';
 // import { PartnerCartPage } from '../modules/partner/pages/PartnerCartPage';
@@ -89,12 +56,11 @@ import { PartnerAsRedirect } from '../modules/partner/pages/PartnerAsRedirect';
 // import { PartnerOrderDeliveryPage } from '../modules/partner/pages/order-delivery/PartnerOrderDeliveryPage';
 // import { PartnerOrderModificationPage } from '../modules/partner/pages/PartnerOrderComponents';
 
-// ── 인사이트 / 분석
-import { PlaceholderPage } from '../shared/components/PlaceholderPage/PlaceholderPage';
+// ?? ?몄궗?댄듃 / 遺꾩꽍
 
-// ── 관리자 — 시스템 설정
+// ?? 愿由ъ옄 ???쒖뒪???ㅼ젙
 
-// ── 관리자 — 온라인 주문 관리
+// ?? 愿由ъ옄 ???⑤씪??二쇰Ц 愿由?
 // import {
 //   AdminTotalOrderPage,
 //   AdminStatusChangePage,
@@ -102,7 +68,7 @@ import { PlaceholderPage } from '../shared/components/PlaceholderPage/Placeholde
 //   AdminOrderLogPage,
 // } from '../modules/admin/pages/AdminOrderComponents';
 
-// ── 공통 (에러 페이지 / 접근제어 가드)
+// ?? 怨듯넻 (?먮윭 ?섏씠吏 / ?묎렐?쒖뼱 媛??
 import { NotFound } from '../shared/pages/NotFound';
 import { NoAccess } from '../shared/pages/NoAccess';
 import { Guard } from '../shared/components/Guard';
@@ -111,11 +77,61 @@ import { PERMISSIONS } from '../shared/constants/permissions';
 const lazyNamed = (importer, exportName) =>
   lazy(() => importer().then((module) => ({ default: module[exportName] })));
 
+const AppLayout = lazyNamed(() => import('../layouts/AppLayout'), 'AppLayout');
+const AuthLayout = lazyNamed(() => import('../layouts/AuthLayout'), 'AuthLayout');
+const LoginPage = lazyNamed(() => import('../modules/auth/pages/LoginPage'), 'LoginPage');
+const DashboardHome = lazyNamed(() => import('../modules/dashboard/pages/DashboardHome'), 'DashboardHome');
+
+
 const ItemsPage = lazyNamed(() => import('../modules/master/pages/items/ItemsPage'), 'ItemsPage');
 const PartnersPage = lazyNamed(() => import('../modules/master/pages/PartnersPage'), 'PartnersPage');
 const PartnerCardPage = lazyNamed(() => import('../modules/master/pages/PartnerCardPage'), 'PartnerCardPage');
 const PartnerRegisterPage = lazyNamed(() => import('../modules/master/pages/PartnerRegisterPage'), 'PartnerRegisterPage');
 const StandardCostPage = lazyNamed(() => import('../modules/master/pages/standard-cost/StandardCostPage'), 'StandardCostPage');
+const PerformancePlanPage = lazyNamed(() => import('../modules/master/pages/PerformancePlanPage'), 'PerformancePlanPage');
+
+const SalesProfitAnalysisPage = lazyNamed(() => import('../modules/sales/pages/SalesProfitAnalysisPage'), 'SalesProfitAnalysisPage');
+const SalesProfitAnalysisNewPage = lazyNamed(() => import('../modules/sales/pages/SalesProfitAnalysisNewPage'), 'SalesProfitAnalysisNewPage');
+const SalesProfitAnalysisDetailPage = lazyNamed(
+  () => import('../modules/sales/pages/SalesProfitAnalysisDetailPage'),
+  'SalesProfitAnalysisDetailPage'
+);
+const SalesInfoPage = lazyNamed(() => import('../modules/sales/pages/SalesInfoPage'), 'SalesInfoPage');
+const SalesInfoDetailPage = lazyNamed(() => import('../modules/sales/pages/SalesInfoDetailPage'), 'SalesInfoDetailPage');
+const SalesInfoRegisterPage = lazyNamed(() => import('../modules/sales/pages/SalesInfoRegisterPage'), 'SalesInfoRegisterPage');
+const SpecStatusDiscountPage = lazyNamed(() => import('../modules/sales/pages/SpecStatusDiscountPage'), 'SpecStatusDiscountPage');
+
+const SalesReportsPage = lazyNamed(() => import('../modules/sales/pages/SalesReportsPage'), 'SalesReportsPage');
+const WeeklyReportFormPage = lazyNamed(() => import('../modules/sales/pages/WeeklyReportFormPage'), 'WeeklyReportFormPage');
+const TripReportFormPage = lazyNamed(() => import('../modules/sales/pages/TripReportFormPage'), 'TripReportFormPage');
+const ReportDetailPage = lazyNamed(() => import('../modules/sales/pages/ReportDetailPage'), 'ReportDetailPage');
+const BusinessCardPage = lazyNamed(() => import('../modules/sales/pages/BusinessCardPage'), 'BusinessCardPage');
+const BusinessCardFormPage = lazyNamed(() => import('../modules/sales/pages/BusinessCardFormPage'), 'BusinessCardFormPage');
+const SalesMaterialsPage = lazyNamed(() => import('../modules/sales/pages/SalesMaterialsPage'), 'SalesMaterialsPage');
+const SalesMaterialDetailPage = lazyNamed(
+  () => import('../modules/sales/pages/SalesMaterialDetailPage'),
+  'SalesMaterialDetailPage'
+);
+const SalesMaterialFormPage = lazyNamed(() => import('../modules/sales/pages/SalesMaterialFormPage'), 'SalesMaterialFormPage');
+const DeliveryRequestStatusPage = lazyNamed(
+  () => import('../modules/sales/pages/DeliveryRequestStatusPage'),
+  'DeliveryRequestStatusPage'
+);
+const DeliveryRequestDetailPage = lazyNamed(
+  () => import('../modules/sales/pages/DeliveryRequestDetailPage'),
+  'DeliveryRequestDetailPage'
+);
+const SalesDeliveryApprovalPage = lazyNamed(
+  () => import('../modules/sales/pages/DeliveryApprovalPage'),
+  'DeliveryApprovalPage'
+);
+const ShortProjectPage = lazyNamed(() => import('../modules/sales/pages/ShortProjectPage'), 'ShortProjectPage');
+const ShortProjectRegisterPage = lazyNamed(
+  () => import('../modules/sales/pages/ShortProjectRegisterPage'),
+  'ShortProjectRegisterPage'
+);
+const TileTeamPage = lazyNamed(() => import('../modules/sales/pages/TileTeamPage'), 'TileTeamPage');
+const SalesSupportPage = lazyNamed(() => import('../modules/sales/pages/SalesSupportPage'), 'SalesSupportPage');
 
 const SalesApprovalPage = lazyNamed(() => import('../modules/approval/pages/SalesApprovalPage'), 'SalesApprovalPage');
 const SalesApprovalDetailPage = lazyNamed(() => import('../modules/approval/pages/SalesApprovalDetailPage'), 'SalesApprovalDetailPage');
@@ -132,6 +148,7 @@ const BillsDepositsPage = lazyNamed(() => import('../modules/finance/pages/Bills
 const CreditCollateralPage = lazyNamed(() => import('../modules/finance/pages/CreditCollateralPage'), 'CreditCollateralPage');
 
 const PartnerNoticePage = lazyNamed(() => import('../modules/partner/pages/PartnerNoticePage'), 'PartnerNoticePage');
+const PartnerCatalogPage = lazyNamed(() => import('../modules/partner/pages/PartnerCatalogPage'), 'PartnerCatalogPage');
 const PartnerDeliveryPage = lazyNamed(() => import('../modules/partner/pages/PartnerDeliveryPage'), 'PartnerDeliveryPage');
 const PartnerBasicInfoPage = lazyNamed(() => import('../modules/partner/pages/PartnerBasicInfoPage'), 'PartnerBasicInfoPage');
 const PartnerBalanceConfirmPage = lazyNamed(() => import('../modules/partner/pages/PartnerBalanceConfirmPage'), 'PartnerBalanceConfirmPage');
@@ -139,6 +156,7 @@ const PartnerOrderDeliveryPage = lazyNamed(
   () => import('../modules/partner/pages/order-delivery/PartnerOrderDeliveryPage'),
   'PartnerOrderDeliveryPage'
 );
+const PartnerAsRedirect = lazyNamed(() => import('../modules/partner/pages/PartnerAsRedirect'), 'PartnerAsRedirect');
 
 const UsersAdminPage = lazyNamed(() => import('../modules/admin/pages/UsersAdminPage'), 'UsersAdminPage');
 const OrgAdminPage = lazyNamed(() => import('../modules/admin/pages/OrgAdminPage'), 'OrgAdminPage');
@@ -176,14 +194,17 @@ const PersonalSalesPage = lazy(() =>
 const CategorySalesPage = lazy(() =>
   import('../modules/analytics/pages/CategorySalesPage').then((module) => ({ default: module.CategorySalesPage }))
 );
+const MonthlyPlanMeetingPage = lazy(() =>
+  import('../modules/analytics/pages/MonthlyPlanMeetingPage').then((module) => ({ default: module.MonthlyPlanMeetingPage }))
+);
 
-// ─────────────────────────────────────────────
-// 라우트 가드 컴포넌트
-// ─────────────────────────────────────────────
+// ?????????????????????????????????????????????
+// ?쇱슦??媛??而댄룷?뚰듃
+// ?????????????????????????????????????????????
 
 /**
- * ProtectedRoute — 로그인된 사용자만 자식 렌더
- * 비인증 상태에서 접근 시 /login 으로 리다이렉트합니다.
+ * ProtectedRoute ??濡쒓렇?몃맂 ?ъ슜?먮쭔 ?먯떇 ?뚮뜑
+ * 鍮꾩씤利??곹깭?먯꽌 ?묎렐 ??/login ?쇰줈 由щ떎?대젆?명빀?덈떎.
  */
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
@@ -194,8 +215,8 @@ function ProtectedRoute({ children }) {
 }
 
 /**
- * PublicOnlyRoute — 비로그인 사용자만 자식 렌더 (로그인 페이지용)
- * 이미 로그인된 상태에서 /login 접근 시 홈으로 리다이렉트합니다.
+ * PublicOnlyRoute ??鍮꾨줈洹몄씤 ?ъ슜?먮쭔 ?먯떇 ?뚮뜑 (濡쒓렇???섏씠吏??
+ * ?대? 濡쒓렇?몃맂 ?곹깭?먯꽌 /login ?묎렐 ???덉쑝濡?由щ떎?대젆?명빀?덈떎.
  */
 function PublicOnlyRoute({ children }) {
   const { isAuthenticated } = useAuth();
@@ -205,30 +226,30 @@ function PublicOnlyRoute({ children }) {
   return children;
 }
 
-// ─────────────────────────────────────────────
-// 라우터 진입점
-// ─────────────────────────────────────────────
+// ?????????????????????????????????????????????
+// ?쇱슦??吏꾩엯??
+// ?????????????????????????????????????????????
 
 /**
- * Router — 애플리케이션 전체 라우트 트리
+ * Router ???좏뵆由ъ??댁뀡 ?꾩껜 ?쇱슦???몃━
  *
- * 최상위 구조:
- *   /403           → 권한 없음 (NoAccess)
- *   /login         → 로그인 (PublicOnlyRoute > AuthLayout)
- *   /              → 앱 레이아웃 (ProtectedRoute > AppLayout)
- *     index        → 대시보드
- *     ...          → 각 기능 페이지
- *     *            → 404 (NotFound)
+ * 理쒖긽??援ъ“:
+ *   /403           ??沅뚰븳 ?놁쓬 (NoAccess)
+ *   /login         ??濡쒓렇??(PublicOnlyRoute > AuthLayout)
+ *   /              ?????덉씠?꾩썐 (ProtectedRoute > AppLayout)
+ *     index        ????쒕낫??
+ *     ...          ??媛?湲곕뒫 ?섏씠吏
+ *     *            ??404 (NotFound)
  */
 export function Router() {
   return (
     <BrowserRouter basename="/BMS_NEW">
-      <Suspense fallback={<div style={{ padding: '20px' }}>로딩 중...</div>}>
+      <Suspense fallback={<div style={{ padding: '20px' }}>濡쒕뵫 以?..</div>}>
       <Routes>
-        {/* 권한 없음 */}
+        {/* 沅뚰븳 ?놁쓬 */}
         <Route path={ROUTES.FORBIDDEN} element={<NoAccess />} />
 
-        {/* 로그인 — 비인증 전용 */}
+        {/* 濡쒓렇????鍮꾩씤利??꾩슜 */}
         <Route
           path={ROUTES.LOGIN}
           element={
@@ -240,7 +261,7 @@ export function Router() {
           }
         />
 
-        {/* 앱 전체 — 인증 필수 */}
+        {/* ???꾩껜 ???몄쬆 ?꾩닔 */}
         <Route
           path={ROUTES.HOME}
           element={
@@ -249,18 +270,19 @@ export function Router() {
             </ProtectedRoute>
           }
         >
-          {/* ── 대시보드 ── */}
+          {/* ?? ??쒕낫???? */}
           <Route index element={<DashboardHome />} />
           <Route path={toRelative(ROUTES.DASHBOARD_ALT)} element={<DashboardHome />} />
 
-          {/* ── 기준 정보 (마스터) ── */}
+          {/* ?? 湲곗? ?뺣낫 (留덉뒪?? ?? */}
           <Route path={toRelative(ROUTES.MASTER_ITEMS)} element={<ItemsPage />} />
           <Route path={toRelative(ROUTES.MASTER_PARTNERS)} element={<PartnersPage />} />
           <Route path={toRelative(ROUTES.MASTER_PARTNERS_NEW)} element={<PartnerRegisterPage />} />
           <Route path={toRelative(ROUTES.MASTER_PARTNERS_ID)} element={<PartnerCardPage />} />
           <Route path={toRelative(ROUTES.MASTER_STANDARD_COST)} element={<StandardCostPage />} />
+          <Route path={toRelative(ROUTES.MASTER_PERFORMANCE_PLAN)} element={<PerformancePlanPage />} />
 
-          {/* ── 영업 관리 — 프로젝트팀 (손익분석 / 영업정보 / SPEC현황) ── */}
+          {/* ?? ?곸뾽 愿由????꾨줈?앺듃? (?먯씡遺꾩꽍 / ?곸뾽?뺣낫 / SPEC?꾪솴) ?? */}
           <Route path={toRelative(ROUTES.PROFIT)} element={<SalesProfitAnalysisPage />} />
           <Route path={toRelative(ROUTES.PROFIT_NEW)} element={<SalesProfitAnalysisNewPage />} />
           <Route path={toRelative(ROUTES.PROFIT_ID_EDIT)} element={<SalesProfitAnalysisNewPage />} />
@@ -270,7 +292,7 @@ export function Router() {
           <Route path={toRelative(ROUTES.SALES_INFO_ID)} element={<SalesInfoDetailPage />} />
           <Route path={toRelative(ROUTES.SPEC_STATUS)} element={<SpecStatusDiscountPage />} />
 
-          {/* ── 영업 관리 — 공통 (보고서 / 명함 / 자료실) ── */}
+          {/* ?? ?곸뾽 愿由???怨듯넻 (蹂닿퀬??/ 紐낇븿 / ?먮즺?? ?? */}
           <Route path={toRelative(ROUTES.SALES_REPORT)} element={<SalesReportsPage />} />
           <Route path={toRelative(ROUTES.SALES_REPORT_WEEKLY_NEW)} element={<WeeklyReportFormPage />} />
           <Route path={toRelative(ROUTES.SALES_REPORT_TRIP_NEW)} element={<TripReportFormPage />} />
@@ -284,22 +306,22 @@ export function Router() {
           <Route path={toRelative(ROUTES.SALES_MATERIAL_ID)} element={<SalesMaterialDetailPage />} />
 
 
-          {/* ── 영업 활동 (공통) — 추가 메뉴 ── */}
+          {/* ?? ?곸뾽 ?쒕룞 (怨듯넻) ??異붽? 硫붾돱 ?? */}
           <Route path={toRelative(ROUTES.SALES_DELIVERY_REQUEST_STATUS)} element={<DeliveryRequestStatusPage />} />
           <Route path={toRelative(ROUTES.SALES_DELIVERY_REQUEST_DETAIL)} element={<DeliveryRequestDetailPage />} />
           <Route path={toRelative(ROUTES.SALES_DELIVERY_APPROVAL)} element={<SalesDeliveryApprovalPage />} />
 
-          {/* ── 영업 관리 — 리테일팀 (비활성화) ── */}
+          {/* ?? ?곸뾽 愿由???由ы뀒?쇳? (鍮꾪솢?깊솕) ?? */}
           <Route path={toRelative(ROUTES.SHORT_PROJECT)} element={<ShortProjectPage />} />
           <Route path={toRelative(ROUTES.SHORT_PROJECT_REGISTER)} element={<ShortProjectRegisterPage />} />
 
-          {/* ── 영업 관리 — 타일영업팀·영업지원팀 (임시) ── */}
+          {/* ?? ?곸뾽 愿由?????쇱쁺?낇?쨌?곸뾽吏?먰? (?꾩떆) ?? */}
           <Route path={toRelative(ROUTES.TILE_TEAM)} element={<TileTeamPage />} />
           <Route path={toRelative(ROUTES.SALES_SUPPORT)} element={<SalesSupportPage />} />
           <Route path={toRelative(ROUTES.SALES_SUPPORT_RECEIVABLE)} element={<SupportReceivablePage />} />
           <Route path={toRelative(ROUTES.SALES_SUPPORT_DISCOUNT_PROMOTION)} element={<DiscountPromotionPage />} />
 
-          {/* ── 영업 결재 (권한 가드 적용) ── */}
+          {/* ?? ?곸뾽 寃곗옱 (沅뚰븳 媛???곸슜) ?? */}
           <Route
             path={toRelative(ROUTES.APPROVAL_SALES)}
             element={
@@ -325,13 +347,13 @@ export function Router() {
             }
           />
 
-          {/* ── 재고 / 납품 ── */}
+          {/* ?? ?ш퀬 / ?⑺뭹 ?? */}
           <Route path={toRelative(ROUTES.DELIVERY_REQUEST)} element={<DeliveryRequestPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_HISTORY)} element={<DeliveryHistoryPage />} />
           <Route
             path={toRelative(ROUTES.DELIVERY_PLAN)}
             element={(
-              <Suspense fallback={<div style={{ padding: '20px' }}>로딩 중...</div>}>
+              <Suspense fallback={<div style={{ padding: '20px' }}>濡쒕뵫 以?..</div>}>
                 <DeliveryPlanPage />
               </Suspense>
             )}
@@ -339,19 +361,19 @@ export function Router() {
           <Route path={toRelative(ROUTES.DELIVERY_INVENTORY)} element={<InventoryPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_DEMAND)} element={<DemandForecastPage />} />
 
-          {/* ── 재무 (채권·수금·여신·매입매출) ── */}
+          {/* ?? ?щТ (梨꾧텒쨌?섍툑쨌?ъ떊쨌留ㅼ엯留ㅼ텧) ?? */}
           <Route path={toRelative(ROUTES.FINANCE_PURCHASE_SALES)} element={<PurchaseSalesPage />} />
           <Route path={toRelative(ROUTES.FINANCE_RECEIVABLE)} element={<ReceivablesPage />} />
           <Route path={toRelative(ROUTES.FINANCE_BILL)} element={<BillsDepositsPage />} />
           <Route path={toRelative(ROUTES.FINANCE_CREDIT)} element={<CreditCollateralPage />} />
 
-          {/* ── 대리점 포털 (온라인 주문 비활성화) ── */}
+          {/* ?? ?由ъ젏 ?ы꽭 (?⑤씪??二쇰Ц 鍮꾪솢?깊솕) ?? */}
           <Route path={toRelative(ROUTES.PARTNER_NOTICE)} element={<PartnerNoticePage />} />
           <Route path={toRelative(ROUTES.PARTNER_AS)} element={<PartnerAsRedirect />} />
-          <Route path={toRelative(ROUTES.PARTNER_CATALOG)} element={<PlaceholderPage path={ROUTES.PARTNER_CATALOG} description="카탈로그 메뉴 영역입니다." icon="📖" />} />
+          <Route path={toRelative(ROUTES.PARTNER_CATALOG)} element={<PartnerCatalogPage />} />
           <Route path={toRelative(ROUTES.PARTNER_DELIVERY)} element={<PartnerDeliveryPage />} />
           <Route path={toRelative(ROUTES.PARTNER_DISPATCH)} element={<PartnerOrderDeliveryPage />} />
-          {/* 하위 호환: /partner/receivable → 거래 정보 조회 페이지로 리다이렉트 */}
+          {/* ?섏쐞 ?명솚: /partner/receivable ??嫄곕옒 ?뺣낫 議고쉶 ?섏씠吏濡?由щ떎?대젆??*/}
           <Route
             path={toRelative(ROUTES.PARTNER_RECEIVABLE)}
             element={<Navigate to={ROUTES.FINANCE_RECEIVABLE} replace />}
@@ -359,13 +381,14 @@ export function Router() {
           <Route path={toRelative(ROUTES.PARTNER_BASIC)} element={<PartnerBasicInfoPage />} />
           <Route path={toRelative(ROUTES.PARTNER_BALANCE_CONFIRM)} element={<PartnerBalanceConfirmPage />} />
 
-          {/* ── 인사이트 — 성과 관리(KPI) ── */}
+          {/* ?? ?몄궗?댄듃 ???깃낵 愿由?KPI) ?? */}
           <Route path={toRelative(ROUTES.ANALYTICS_RETAIL)} element={<SalesPerformancePage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_PARTNER)} element={<PartnerPerformancePage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_PERSONAL_SALES)} element={<PersonalSalesPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_CATEGORY_SALES)} element={<CategorySalesPage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_MONTHLY_PLAN_MEETING)} element={<MonthlyPlanMeetingPage />} />
 
-          {/* ── 인사이트 — 시장 분석 ── */}
+          {/* ?? ?몄궗?댄듃 ???쒖옣 遺꾩꽍 ?? */}
           <Route path={toRelative(ROUTES.ANALYTICS_MARKET)} element={<MarketOverviewPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_COLLECTION)} element={<DataCollectionPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_PRICE)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
@@ -373,14 +396,14 @@ export function Router() {
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_PROMO)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
           <Route path={toRelative(ROUTES.ANALYTICS_CUSTOM)} element={<CustomReportPage />} />
 
-          {/* ── 관리자 — 시스템 설정 ── */}
+          {/* ?? 愿由ъ옄 ???쒖뒪???ㅼ젙 ?? */}
           <Route path={toRelative(ROUTES.ADMIN_USERS)} element={<UsersAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_ORG)} element={<OrgAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_PERMISSION)} element={<PermissionAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_CODE)} element={<CodesAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_LOG)} element={<LogsAdminPage />} />
 
-          {/* 404 — 매칭되지 않는 모든 경로 */}
+          {/* 404 ??留ㅼ묶?섏? ?딅뒗 紐⑤뱺 寃쎈줈 */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
@@ -388,3 +411,6 @@ export function Router() {
     </BrowserRouter>
   );
 }
+
+
+

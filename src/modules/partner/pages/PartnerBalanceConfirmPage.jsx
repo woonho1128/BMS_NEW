@@ -1,12 +1,11 @@
 ﻿import React, { useMemo, useState, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Button, Modal, Table } from 'antd';
 import { Download } from 'lucide-react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { formatNumber } from '../../../shared/utils/formatters';
-import { ROUTES } from '../../../router/routePaths';
 import styles from './PartnerBalanceConfirmPage.module.css';
 
 const YEAR_OPTIONS = [
@@ -129,11 +128,40 @@ function fmt(v) {
   return formatNumber(v);
 }
 
+function getShipFieldByType(itemType) {
+  if (itemType === 'sanitary') return 'shipSanitary';
+  if (itemType === 'tile') return 'shipTile';
+  return 'shipTotal';
+}
+
+function getShipTypeLabel(itemType) {
+  if (itemType === 'sanitary') return '위생도기';
+  if (itemType === 'tile') return '타일';
+  return '합계';
+}
+
+function buildYearShipmentRows(row, year, selectedMonth, itemType, clickedAmount) {
+  const monthFactors = [0.62, 0.68, 0.75, 0.79, 0.84, 0.9, 0.96, 1.02, 1.08, 1.12, 1.18, 1.24];
+  const field = getShipFieldByType(itemType);
+  const base = Number(row?.[field] || 0);
+  const targetMonth = Number(selectedMonth) || 1;
+
+  return MONTH_OPTIONS.map((month, index) => {
+    const monthNo = Number(month.value);
+    const amount = monthNo === targetMonth ? Number(clickedAmount || 0) : Math.max(0, Math.round(base * monthFactors[index]));
+    return {
+      key: `${year}-${month.value}`,
+      ym: `${year}-${month.value}`,
+      amount,
+    };
+  });
+}
+
 export function PartnerBalanceConfirmPage() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   const [selectedClient, setSelectedClient] = useState(null);
+  const [shipmentYearModal, setShipmentYearModal] = useState(null);
   const [filterValue, setFilterValue] = useState({
     year: '2026',
     month: '03',
@@ -151,14 +179,17 @@ export function PartnerBalanceConfirmPage() {
     setFilterValue({ year: '2026', month: '03', creditGroup: 'ALL', clientCode: '', clientName: '', clientLike: '' });
   }, []);
 
-  const fields = useMemo(() => [
-    { id: 'year', label: '기준년월', type: 'select', options: YEAR_OPTIONS, width: 110, row: 0 },
-    { id: 'month', label: '', type: 'select', options: MONTH_OPTIONS, width: 90, row: 0 },
-    { id: 'creditGroup', label: '여신구분', type: 'radio', options: CREDIT_GROUP_OPTIONS, row: 1 },
-    { id: 'clientCode', label: '거래처코드', type: 'text', row: 0 },
-    { id: 'clientName', label: '거래처', type: 'text', wide: true, row: 0 },
-    { id: 'clientLike', label: '거래처(like)', type: 'text', wide: true, row: 1 },
-  ], []);
+  const fields = useMemo(
+    () => [
+      { id: 'year', label: '기준년월', type: 'select', options: YEAR_OPTIONS, width: 110, row: 0 },
+      { id: 'month', label: '', type: 'select', options: MONTH_OPTIONS, width: 90, row: 0 },
+      { id: 'creditGroup', label: '여신구분', type: 'radio', options: CREDIT_GROUP_OPTIONS, row: 1 },
+      { id: 'clientCode', label: '거래처코드', type: 'text', row: 0 },
+      { id: 'clientName', label: '거래처', type: 'text', wide: true, row: 0 },
+      { id: 'clientLike', label: '거래처(like)', type: 'text', wide: true, row: 1 },
+    ],
+    []
+  );
 
   const isAgencyRole = user?.role === 'AGENCY' || user?.role === 'PARTNER' || user?.role === 'DEALER';
   const userKey = String(user?.name || '').toLowerCase();
@@ -197,20 +228,28 @@ export function PartnerBalanceConfirmPage() {
     [filterValue, rowsByAccount]
   );
 
-  const goToCollectionTab = useCallback(
-    (row, amount, itemType) => {
-      const params = new URLSearchParams({
-        tab: 'collection',
-        customerCode: row.code,
-        customerName: row.clientName,
-        dateFrom: `${filterValue.year}-${filterValue.month}-01`,
-        dateTo: `${filterValue.year}-${filterValue.month}-31`,
-        shipAmount: String(amount || 0),
-        shipType: itemType,
-      });
-      navigate(`${ROUTES.SALES_SUPPORT_RECEIVABLE}?${params.toString()}`);
-    },
-    [filterValue.month, filterValue.year, navigate]
+  const openShipmentYearModal = useCallback((row, amount, itemType) => {
+    setShipmentYearModal({
+      row,
+      itemType,
+      amount: Number(amount || 0),
+    });
+  }, []);
+
+  const shipmentYearRows = useMemo(() => {
+    if (!shipmentYearModal) return [];
+    return buildYearShipmentRows(
+      shipmentYearModal.row,
+      filterValue.year,
+      filterValue.month,
+      shipmentYearModal.itemType,
+      shipmentYearModal.amount
+    );
+  }, [shipmentYearModal, filterValue.year, filterValue.month]);
+
+  const shipmentYearTotal = useMemo(
+    () => shipmentYearRows.reduce((sum, row) => sum + (Number(row.amount) || 0), 0),
+    [shipmentYearRows]
   );
 
   const mainColumns = [
@@ -219,9 +258,14 @@ export function PartnerBalanceConfirmPage() {
       children: [
         { title: '코드', dataIndex: 'code', width: 80, fixed: 'left' },
         {
-          title: '거래처명', dataIndex: 'clientName', width: 180, fixed: 'left',
+          title: '거래처명',
+          dataIndex: 'clientName',
+          width: 180,
+          fixed: 'left',
           render: (_, row) => (
-            <button type="button" className={styles.clientBtn} onClick={() => setSelectedClient(row)}>{row.clientName}</button>
+            <button type="button" className={styles.clientBtn} onClick={() => setSelectedClient(row)}>
+              {row.clientName}
+            </button>
           ),
         },
         { title: '대표자', dataIndex: 'ceo', width: 90 },
@@ -253,7 +297,7 @@ export function PartnerBalanceConfirmPage() {
           width: 110,
           align: 'right',
           render: (value, row) => (
-            <button type="button" className={styles.amountLink} onClick={() => goToCollectionTab(row, value, 'sanitary')}>
+            <button type="button" className={styles.amountLink} onClick={() => openShipmentYearModal(row, value, 'sanitary')}>
               {fmt(value)}
             </button>
           ),
@@ -264,7 +308,7 @@ export function PartnerBalanceConfirmPage() {
           width: 90,
           align: 'right',
           render: (value, row) => (
-            <button type="button" className={styles.amountLink} onClick={() => goToCollectionTab(row, value, 'tile')}>
+            <button type="button" className={styles.amountLink} onClick={() => openShipmentYearModal(row, value, 'tile')}>
               {fmt(value)}
             </button>
           ),
@@ -275,7 +319,7 @@ export function PartnerBalanceConfirmPage() {
           width: 110,
           align: 'right',
           render: (value, row) => (
-            <button type="button" className={styles.amountLink} onClick={() => goToCollectionTab(row, value, 'total')}>
+            <button type="button" className={styles.amountLink} onClick={() => openShipmentYearModal(row, value, 'total')}>
               {fmt(value)}
             </button>
           ),
@@ -325,6 +369,11 @@ export function PartnerBalanceConfirmPage() {
     { title: '당월 연체금액', dataIndex: 'overdueTotal', width: 130, align: 'right', render: fmt },
   ];
 
+  const shipmentYearColumns = [
+    { title: '년월', dataIndex: 'ym', width: 120, align: 'center' },
+    { title: '출고금액', dataIndex: 'amount', width: 200, align: 'right', render: fmt },
+  ];
+
   return (
     <PageShell path={pathname} className={styles.shellWide}>
       <div className={styles.page}>
@@ -339,14 +388,7 @@ export function PartnerBalanceConfirmPage() {
           </div>
         </div>
 
-        <ListFilter
-          fields={fields}
-          value={filterValue}
-          onChange={onChange}
-          onReset={onReset}
-          onSearch={() => {}}
-          searchLabel="조회"
-        />
+        <ListFilter fields={fields} value={filterValue} onChange={onChange} onReset={onReset} onSearch={() => {}} searchLabel="조회" />
 
         <div className={styles.logicCard}>
           <div className={styles.logicTitle}>계산로직</div>
@@ -368,6 +410,44 @@ export function PartnerBalanceConfirmPage() {
             className={styles.mainTable}
           />
         </div>
+
+        <Modal
+          title={
+            shipmentYearModal
+              ? `${filterValue.year}년 출고금액 - ${shipmentYearModal.row.clientName} (${getShipTypeLabel(shipmentYearModal.itemType)})`
+              : `${filterValue.year}년 출고금액`
+          }
+          open={Boolean(shipmentYearModal)}
+          onCancel={() => setShipmentYearModal(null)}
+          footer={null}
+          width={780}
+          centered
+          className={styles.detailModal}
+        >
+          {shipmentYearModal && (
+            <div className={styles.detailTop}>
+              <div>거래처코드: {shipmentYearModal.row.code}</div>
+              <div>기준년월: {filterValue.year}-{filterValue.month}</div>
+              <div>선택값: {fmt(shipmentYearModal.amount)}</div>
+            </div>
+          )}
+          <Table
+            columns={shipmentYearColumns}
+            dataSource={shipmentYearRows}
+            size="small"
+            pagination={false}
+            rowKey="key"
+            summary={() => (
+              <Table.Summary fixed>
+                <Table.Summary.Row>
+                  <Table.Summary.Cell index={0} align="center">합계</Table.Summary.Cell>
+                  <Table.Summary.Cell index={1} align="right">{fmt(shipmentYearTotal)}</Table.Summary.Cell>
+                </Table.Summary.Row>
+              </Table.Summary>
+            )}
+            className={styles.detailTable}
+          />
+        </Modal>
 
         <Modal
           title={selectedClient ? `거래처 상세 - ${selectedClient.clientName}` : '거래처 상세'}

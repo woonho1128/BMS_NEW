@@ -224,6 +224,31 @@
   color: #0f172a;
 }
 
+.bestFilterTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.bestFilterTab {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid #cad6e6;
+  background: #fff;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bestFilterTabActive {
+  border-color: #2f7df6;
+  background: #edf4ff;
+  color: #1f64d8;
+}
+
 .bestList {
   list-style: none;
   margin: 0;

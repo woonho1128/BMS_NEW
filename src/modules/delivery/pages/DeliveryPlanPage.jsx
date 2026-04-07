@@ -3,7 +3,6 @@ import styles from './DeliveryPlanPage.module.css';
 import { SummaryTabs } from '../components/layout/SummaryTabs';
 import { DeliveryPlan } from '../components/plan/DeliveryPlan';
 import { useModal } from '../hooks/useModal';
-import { AddPlanModal } from '../components/modals/AddPlanModal';
 
 const YearSummary = lazy(() =>
   import('../components/summary/YearSummary').then((module) => ({ default: module.YearSummary }))
@@ -19,6 +18,9 @@ const SpecRegistrationList = lazy(() =>
 );
 const CancelledSpecList = lazy(() =>
   import('../components/spec/CancelledSpecList').then((module) => ({ default: module.CancelledSpecList }))
+);
+const AddPlanModal = lazy(() =>
+  import('../components/modals/AddPlanModal').then((module) => ({ default: module.AddPlanModal }))
 );
 
 const TabLoadingFallback = () => <div className={styles.loadingBox}>데이터를 불러오는 중입니다...</div>;
@@ -114,7 +116,11 @@ export const DeliveryPlanPage = () => {
         {activeTab === 'cancelled' && <CancelledSpecList />}
       </Suspense>
 
-      {addPlanModal.isOpen && <AddPlanModal onClose={addPlanModal.close} onSave={handleSaveNewPlan} />}
+      {addPlanModal.isOpen && (
+        <Suspense fallback={<TabLoadingFallback />}>
+          <AddPlanModal onClose={addPlanModal.close} onSave={handleSaveNewPlan} />
+        </Suspense>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useState } from 'react';
+﻿import React, { Fragment, Suspense, lazy, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
@@ -13,12 +13,23 @@ import {
 import { getPartnersList } from '../../master/data/partnersMock';
 import styles from './ShortProjectRegisterPage.module.css';
 
+const ShortProjectPricingPreviewModal = lazy(() => import('./components/ShortProjectPricingPreviewModal'));
+const ShortProjectSubmitModal = lazy(() => import('./components/ShortProjectSubmitModal'));
+
 const VIEW_MODE = {
   LIST: 'list',
   FORM: 'form',
 };
 
-const MOCK_SITES = [
+const APPROVER_OPTIONS = [
+  { id: 'apv-kim-jh', name: '김지훈 부장', dept: '영업1팀' },
+  { id: 'apv-lee-sy', name: '이서윤 팀장', dept: '영업기획팀' },
+  { id: 'apv-park-dh', name: '박동현 이사', dept: '영업본부' },
+  { id: 'apv-choi-mh', name: '최민호 상무', dept: '관리본부' },
+  { id: 'apv-jung-hr', name: '정하림 전무', dept: '본사' },
+];
+
+const MOCK_SITE_BASE = [
   {
     id: 'site-1',
     dealer: '동신건재',
@@ -45,6 +56,21 @@ const MOCK_SITES = [
     createdAt: '2026-03-18',
   },
 ];
+
+const MOCK_SITES = Array.from({ length: 20 }, (_, index) => {
+  const base = MOCK_SITE_BASE[index % MOCK_SITE_BASE.length];
+  const month = String((index % 12) + 1).padStart(2, '0');
+  const dayFrom = String((index % 20) + 1).padStart(2, '0');
+  const dayTo = String(((index % 20) + 8)).padStart(2, '0');
+  return {
+    ...base,
+    id: `site-${index + 1}`,
+    siteName: `${base.siteName} ${index + 1}`,
+    deliveryFrom: `2026-${month}-${dayFrom}`,
+    deliveryTo: `2026-${month}-${dayTo}`,
+    createdAt: `2026-${month}-${String((index % 25) + 1).padStart(2, '0')}`,
+  };
+});
 
 const EMPTY_ITEM = {
   id: '',
@@ -82,6 +108,13 @@ function formatNumber(value) {
   return (Number(value) || 0).toLocaleString('ko-KR');
 }
 
+function formatFileSize(bytes) {
+  const value = Number(bytes) || 0;
+  if (value >= 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+  if (value >= 1024) return `${Math.round(value / 1024)} KB`;
+  return `${value} B`;
+}
+
 function parseDate(value) {
   if (!value) return '';
   const d = new Date(value);
@@ -100,6 +133,12 @@ export function ShortProjectRegisterPage() {
   const [deliveryFromFilter, setDeliveryFromFilter] = useState('');
   const [deliveryToFilter, setDeliveryToFilter] = useState('');
   const [expandedSiteId, setExpandedSiteId] = useState('');
+  const [submitModalOpen, setSubmitModalOpen] = useState(false);
+  const [activeSubmitSiteId, setActiveSubmitSiteId] = useState('');
+  const [approvalStep1, setApprovalStep1] = useState(APPROVER_OPTIONS[0].id);
+  const [approvalStep2, setApprovalStep2] = useState(APPROVER_OPTIONS[2].id);
+  const [approvalStep3, setApprovalStep3] = useState(APPROVER_OPTIONS[4].id);
+  const [submitComment, setSubmitComment] = useState('');
   const [commonDiscountRate, setCommonDiscountRate] = useState('7');
 
   const [siteName, setSiteName] = useState('제주 미지정 현장');
@@ -109,6 +148,7 @@ export function ShortProjectRegisterPage() {
   const [deliveryTo, setDeliveryTo] = useState('2026-06-20');
   const [duplicateHint, setDuplicateHint] = useState('');
   const [specialNotes, setSpecialNotes] = useState('동종업체 입찰\n관급 공사\n모델하우스 우선 출고');
+  const [attachments, setAttachments] = useState([]);
   const [majorItems, setMajorItems] = useState([
     createItem({
       itemCode: 'CC-735',
@@ -164,6 +204,100 @@ export function ShortProjectRegisterPage() {
     () => listSites.some((site) => selectedSiteIds.includes(site.id)),
     [listSites, selectedSiteIds]
   );
+  const previewSite = useMemo(
+    () => listSites.find((site) => site.id === expandedSiteId) || null,
+    [listSites, expandedSiteId]
+  );
+  const previewProfitRows = useMemo(() => {
+    if (!previewSite) return [];
+    return (previewSite.majorItems || []).map((item, index) => {
+      const computed = computeShortProjectItem({
+        id: `preview-${previewSite.id}-${index}`,
+        itemCode: item.code || '',
+        qty: String(item.qty ?? 0),
+        unit: item.unit || 'EA',
+        standardPrice: '300000',
+        discountRate: '7',
+        note: '',
+      });
+      return computeShortProjectProfitRow(computed, false);
+    });
+  }, [previewSite]);
+  const previewProfitTotal = useMemo(
+    () =>
+      previewProfitRows.reduce(
+        (acc, row) => ({
+          costAmount: acc.costAmount + row.costAmount,
+          factoryAmount: acc.factoryAmount + row.factoryAmount,
+          baseDiscountAmount: acc.baseDiscountAmount + row.baseDiscountAmount,
+          appliedDiscountAmount: acc.appliedDiscountAmount + row.appliedDiscountAmount,
+        }),
+        { costAmount: 0, factoryAmount: 0, baseDiscountAmount: 0, appliedDiscountAmount: 0 }
+      ),
+    [previewProfitRows]
+  );
+  const selectedSitesForSubmit = useMemo(
+    () => listSites.filter((site) => selectedSiteIds.includes(site.id)),
+    [listSites, selectedSiteIds]
+  );
+  const submitSummary = useMemo(
+    () =>
+      selectedSitesForSubmit.reduce(
+        (acc, site) => ({
+          count: acc.count + 1,
+          baseDiscountAmount: acc.baseDiscountAmount + (Number(site.baseDiscountAmount) || 0),
+          shortDiscountAmount: acc.shortDiscountAmount + (Number(site.shortDiscountAmount) || 0),
+          itemCount: acc.itemCount + (site.majorItems?.length || 0),
+        }),
+        { count: 0, baseDiscountAmount: 0, shortDiscountAmount: 0, itemCount: 0 }
+      ),
+    [selectedSitesForSubmit]
+  );
+  const activeSubmitSite = useMemo(() => {
+    if (!selectedSitesForSubmit.length) return null;
+    return selectedSitesForSubmit.find((site) => site.id === activeSubmitSiteId) || selectedSitesForSubmit[0];
+  }, [selectedSitesForSubmit, activeSubmitSiteId]);
+  const activeSubmitProfitRows = useMemo(() => {
+    if (!activeSubmitSite) return [];
+    return (activeSubmitSite.majorItems || []).map((item, index) => {
+      const computed = computeShortProjectItem({
+        id: `submit-preview-${activeSubmitSite.id}-${index}`,
+        itemCode: item.code || '',
+        qty: String(item.qty ?? 0),
+        unit: item.unit || 'EA',
+        standardPrice: '300000',
+        discountRate: '7',
+        note: '',
+      });
+      return computeShortProjectProfitRow(computed, false);
+    });
+  }, [activeSubmitSite]);
+  const activeSubmitProfitTotal = useMemo(
+    () =>
+      activeSubmitProfitRows.reduce(
+        (acc, row) => ({
+          costAmount: acc.costAmount + row.costAmount,
+          factoryAmount: acc.factoryAmount + row.factoryAmount,
+          baseDiscountAmount: acc.baseDiscountAmount + row.baseDiscountAmount,
+          appliedDiscountAmount: acc.appliedDiscountAmount + row.appliedDiscountAmount,
+        }),
+        { costAmount: 0, factoryAmount: 0, baseDiscountAmount: 0, appliedDiscountAmount: 0 }
+      ),
+    [activeSubmitProfitRows]
+  );
+  const approvalStepLine = useMemo(
+    () => [
+      { order: 1, approverId: approvalStep1 },
+      { order: 2, approverId: approvalStep2 },
+      { order: 3, approverId: approvalStep3 },
+    ],
+    [approvalStep1, approvalStep2, approvalStep3]
+  );
+  const hasDuplicateApprover = useMemo(() => {
+    const ids = approvalStepLine.map((line) => line.approverId).filter(Boolean);
+    return new Set(ids).size !== ids.length;
+  }, [approvalStepLine]);
+  const isSubmitModalValid = Boolean(approvalStep1 && !hasDuplicateApprover);
 
   const computedItems = useMemo(() => majorItems.map(computeShortProjectItem), [majorItems]);
   const profitRows = useMemo(
@@ -251,6 +385,7 @@ export function ShortProjectRegisterPage() {
     setDeliveryFrom(site.deliveryFrom);
     setDeliveryTo(site.deliveryTo);
     setSpecialNotes(site.notes.replace(/, /g, '\n'));
+    setAttachments([]);
     setDuplicateHint('');
     setMajorItems(
       site.majorItems.map((item) =>
@@ -284,9 +419,10 @@ export function ShortProjectRegisterPage() {
       deliveryFrom,
       deliveryTo,
       specialNotes,
+      attachments: attachments.map((file) => ({ name: file.name, size: file.size })),
       majorItems,
     });
-  }, [siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, majorItems]);
+  }, [siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, attachments, majorItems]);
 
   const toggleSiteSelection = useCallback((siteId, checked) => {
     setSelectedSiteIds((prev) => {
@@ -327,17 +463,61 @@ export function ShortProjectRegisterPage() {
         discountAmount: (Number(item.standardAmount) || 0) - (Number(item.amountAfterDiscount) || 0),
         note: item.note || '',
       })),
+      attachments: attachments.map((file) => ({ name: file.name, size: file.size })),
       grossRate: '-',
       drafter: '영업담당',
     });
     navigate(`${ROUTES.APPROVAL_SALES}?category=shortProject`);
-  }, [isFormValid, siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, computedItems, navigate]);
+  }, [isFormValid, siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, attachments, computedItems, navigate]);
+
+  const addAttachments = useCallback((event) => {
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
+    setAttachments((prev) => {
+      const exists = new Set(prev.map((file) => `${file.name}-${file.size}-${file.lastModified}`));
+      const next = files.filter((file) => !exists.has(`${file.name}-${file.size}-${file.lastModified}`));
+      return [...prev, ...next];
+    });
+    event.target.value = '';
+  }, []);
+
+  const removeAttachment = useCallback((targetFile) => {
+    setAttachments((prev) =>
+      prev.filter(
+        (file) =>
+          !(
+            file.name === targetFile.name &&
+            file.size === targetFile.size &&
+            file.lastModified === targetFile.lastModified
+          )
+      )
+    );
+  }, []);
 
   const submitSelectedSites = useCallback(() => {
-    const selectedSites = listSites.filter((site) => selectedSiteIds.includes(site.id));
-    if (!selectedSites.length) return;
+    if (!selectedSitesForSubmit.length) return;
+    if (!isSubmitModalValid) return;
 
-    selectedSites.forEach((site) => {
+    const approvalLine = approvalStepLine
+      .filter((line) => line.approverId)
+      .map((line) => {
+        const approver = APPROVER_OPTIONS.find((item) => item.id === line.approverId);
+        return {
+          order: line.order,
+          approverId: line.approverId,
+          approverName: approver?.name || '-',
+          approverDept: approver?.dept || '-',
+        };
+      });
+    const submitGroupId = `submit-group-${Date.now()}`;
+    const submitSummaryPayload = {
+      selectedCount: submitSummary.count,
+      itemCount: submitSummary.itemCount,
+      baseDiscountAmount: submitSummary.baseDiscountAmount,
+      shortDiscountAmount: submitSummary.shortDiscountAmount,
+    };
+
+    selectedSitesForSubmit.forEach((site) => {
       createShortProjectApproval({
         siteName: site.siteName,
         builder: site.builder,
@@ -359,11 +539,24 @@ export function ShortProjectRegisterPage() {
         })),
         grossRate: '-',
         drafter: site.author || '영업담당',
+        submitComment: submitComment.trim(),
+        approvalLine,
+        submitGroupId,
+        submitSummary: submitSummaryPayload,
       });
     });
 
+    setSubmitModalOpen(false);
+    setSubmitComment('');
+    setSelectedSiteIds([]);
     navigate(`${ROUTES.APPROVAL_SALES}?category=shortProject`);
-  }, [listSites, navigate, selectedSiteIds]);
+  }, [approvalStepLine, isSubmitModalValid, navigate, selectedSitesForSubmit, submitComment, submitSummary]);
+
+  const openSubmitModal = useCallback(() => {
+    if (!selectedSitesForSubmit.length) return;
+    setActiveSubmitSiteId(selectedSitesForSubmit[0].id);
+    setSubmitModalOpen(true);
+  }, [selectedSitesForSubmit]);
 
   const listActions = (
     <Button variant="primary" onClick={openForm}>
@@ -513,38 +706,26 @@ export function ShortProjectRegisterPage() {
                                   setExpandedSiteId((prev) => (prev === site.id ? '' : site.id));
                                 }}
                               >
-                                보기
+                                {expandedSiteId === site.id ? '닫기' : '보기'}
                               </button>
                             </td>
                             <td>{site.author}</td>
                             <td>{site.createdAt}</td>
                             <td>{site.status}</td>
                           </tr>
-                          {expandedSiteId === site.id && (
-                            <tr className={styles.expandedRow}>
-                              <td colSpan={12}>
-                                <div className={styles.itemPreviewWrap}>
-                                  {site.majorItems.map((item) => (
-                                    <span key={`${site.id}-${item.code}`} className={styles.itemChip}>
-                                      {item.code} / {item.qty} {item.unit}
-                                    </span>
-                                  ))}
-                                </div>
-                              </td>
-                            </tr>
-                          )}
                         </Fragment>
                       ))}
                     </tbody>
                   </table>
                 </div>
                 <div className={styles.listFooter}>
-                  <Button variant="primary" onClick={submitSelectedSites} disabled={selectedSiteIds.length === 0}>
+                  <Button variant="primary" onClick={openSubmitModal} disabled={selectedSiteIds.length === 0}>
                     상신하기
                   </Button>
                 </div>
               </CardBody>
             </Card>
+
           </>
         ) : (
           <>
@@ -709,7 +890,7 @@ export function ShortProjectRegisterPage() {
                           <th rowSpan={2}>제조원가(기준단가)</th>
                           <th colSpan={2}>공장도가(25년 06월)</th>
                           <th colSpan={4}>{`기본 할인가(${BASE_DISCOUNT_RATE}%)`}</th>
-                          <th colSpan={4}>할인 적용가</th>
+                          <th colSpan={4}>단납 공급가(기본 할인가 기준)</th>
                           <th rowSpan={2}>매출총이익 금액</th>
                           <th rowSpan={2}>매출 총 이익율</th>
                           <th rowSpan={2}>추가 할인 미적용</th>
@@ -820,7 +1001,7 @@ export function ShortProjectRegisterPage() {
               </Card>
             )}
 
-            <Card title="특이사항" className={styles.sectionCard}>
+            <Card title="특이사항 / 첨부파일" className={styles.sectionCard}>
               <CardBody>
                 <textarea
                   className={styles.textarea}
@@ -829,6 +1010,38 @@ export function ShortProjectRegisterPage() {
                   onChange={(e) => setSpecialNotes(e.target.value)}
                   placeholder="동종업체 입찰, 관급 공사, 모델하우스 우선 출고 등"
                 />
+                <div className={styles.attachmentUploadRow}>
+                  <input
+                    id="short-project-attachments"
+                    className={styles.attachmentInput}
+                    type="file"
+                    multiple
+                    onChange={addAttachments}
+                  />
+                  <label htmlFor="short-project-attachments" className={styles.attachmentUploadButton}>
+                    파일 선택
+                  </label>
+                  <p className={styles.helper}>견적서, 도면, 협의 자료 등을 첨부할 수 있습니다.</p>
+                </div>
+                {attachments.length > 0 ? (
+                  <ul className={styles.attachmentList}>
+                    {attachments.map((file) => (
+                      <li key={`${file.name}-${file.size}-${file.lastModified}`} className={styles.attachmentItem}>
+                        <span className={styles.attachmentName}>{file.name}</span>
+                        <span className={styles.attachmentSize}>{formatFileSize(file.size)}</span>
+                        <button
+                          type="button"
+                          className={styles.attachmentDelete}
+                          onClick={() => removeAttachment(file)}
+                        >
+                          삭제
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className={styles.helper}>첨부된 파일이 없습니다.</p>
+                )}
               </CardBody>
             </Card>
 
@@ -845,9 +1058,50 @@ export function ShortProjectRegisterPage() {
             </div>
           </>
         )}
+                <Suspense fallback={null}>
+          <ShortProjectPricingPreviewModal
+            open={Boolean(previewSite)}
+            site={previewSite}
+            rows={previewProfitRows}
+            total={previewProfitTotal}
+            formatNumber={formatNumber}
+            baseDiscountRate={BASE_DISCOUNT_RATE}
+            onClose={() => setExpandedSiteId('')}
+          />
+          <ShortProjectSubmitModal
+            open={submitModalOpen}
+            selectedSitesForSubmit={selectedSitesForSubmit}
+            activeSubmitSite={activeSubmitSite}
+            activeSubmitSiteId={activeSubmitSiteId}
+            setActiveSubmitSiteId={setActiveSubmitSiteId}
+            submitSummary={submitSummary}
+            activeSubmitProfitRows={activeSubmitProfitRows}
+            activeSubmitProfitTotal={activeSubmitProfitTotal}
+            formatNumber={formatNumber}
+            formatDateRange={formatDateRange}
+            baseDiscountRate={BASE_DISCOUNT_RATE}
+            approverOptions={APPROVER_OPTIONS}
+            approvalStep1={approvalStep1}
+            approvalStep2={approvalStep2}
+            approvalStep3={approvalStep3}
+            setApprovalStep1={setApprovalStep1}
+            setApprovalStep2={setApprovalStep2}
+            setApprovalStep3={setApprovalStep3}
+            hasDuplicateApprover={hasDuplicateApprover}
+            submitComment={submitComment}
+            setSubmitComment={setSubmitComment}
+            isSubmitModalValid={isSubmitModalValid}
+            onClose={() => setSubmitModalOpen(false)}
+            onSubmit={submitSelectedSites}
+          />
+        </Suspense>
       </div>
     </PageShell>
   );
 }
 
 export default ShortProjectRegisterPage;
+
+
+
+

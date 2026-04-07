@@ -6,6 +6,7 @@ import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { useKpiTableData } from '../hooks/useKpiTableData';
 import { createYearOptions, getCurrentYear } from '../../../shared/utils/dateOptions';
+import { getPartnerSalesPlanMap } from '../../master/data/performancePlanMock';
 import styles from './PartnerPerformancePage.module.css';
 
 const currentYear = getCurrentYear();
@@ -21,17 +22,6 @@ const baseMockRows = [
   { key: 7, orgName: '리테일3팀', managerName: '김민수', clientCode: '196901', clientName: '백제도기', isDeliveryPossible: false },
   { key: 8, orgName: '영업지원팀', managerName: '조동현', clientCode: '123855', clientName: '서양세라믹', isDeliveryPossible: true },
 ];
-
-const SALES_PLAN_MOCK = {
-  1: 1280,
-  2: 980,
-  3: 1430,
-  4: 870,
-  5: 1110,
-  6: 760,
-  7: 620,
-  8: 1540,
-};
 
 export function PartnerPerformancePage() {
   const { pathname } = useLocation();
@@ -96,9 +86,10 @@ export function PartnerPerformancePage() {
     []
   );
 
+  const salesPlanMap = useMemo(() => getPartnerSalesPlanMap(Number(filterValue.year)), [filterValue.year]);
   const rowsWithSalesPlan = useMemo(
-    () => baseMockRows.map((row) => ({ ...row, salesPlan: SALES_PLAN_MOCK[row.key] ?? 0 })),
-    []
+    () => baseMockRows.map((row) => ({ ...row, salesPlan: salesPlanMap[row.clientCode] ?? 0 })),
+    [salesPlanMap]
   );
 
   const { mockData, dynamicColumns } = useKpiTableData(rowsWithSalesPlan, viewType);
@@ -196,4 +187,3 @@ export function PartnerPerformancePage() {
 }
 
 export default PartnerPerformancePage;
-

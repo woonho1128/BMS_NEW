@@ -173,6 +173,12 @@
   border-collapse: collapse;
 }
 
+.profitTable {
+  width: 100%;
+  min-width: 1400px;
+  border-collapse: collapse;
+}
+
 .table th,
 .table td {
   padding: 10px 12px;
@@ -186,6 +192,28 @@
   text-align: left;
 }
 
+.profitTable th,
+.profitTable td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e8eef7;
+  border-right: 1px solid #eef2f8;
+  font-size: var(--font-size-sm);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.profitTable th {
+  background: #eef5ff;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.profitTable tfoot td {
+  background: #f8fbff;
+  font-weight: var(--font-weight-semibold);
+}
+
 .thCenter {
   text-align: center !important;
 }
@@ -196,6 +224,73 @@
 
 .cellCenter {
   text-align: center;
+}
+
+.approvalLineRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.approvalChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #d7e4f5;
+  background: #f1f7ff;
+  color: #21456f;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.readOnlyCommentBox {
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #f9fbff;
+}
+
+.submitSummaryBar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.submitSummaryBar span {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #d7e4f5;
+  background: #f1f7ff;
+  color: #21456f;
+  font-size: 12px;
+}
+
+.submitSiteTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.submitSiteTab {
+  border: 1px solid #c5d5eb;
+  background: #f4f8ff;
+  color: #2f4e72;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submitSiteTabActive {
+  border-color: #7aa7ea;
+  background: #e6f0ff;
+  color: #124178;
 }
 
 .metricRow {

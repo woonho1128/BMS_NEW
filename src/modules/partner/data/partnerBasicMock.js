@@ -1,16 +1,14 @@
-/**
+﻿/**
  * 대리점 기본 정보 Mock
- * - 실제 연동 시 파트너 기본정보/이력 API로 교체
  */
-
 export const PARTNER_BASIC_MOCK = {
-  name: '이규*',
+  name: '대리점A',
   code: '111203',
-  status: '정상', // 정상 | 거래중단 등
+  status: '정상',
   basic: {
     bizNo: '123-45-67890',
-    ceoName: '이규*',
-    bizType: '도매 및 소매업',
+    ceoName: '홍길동',
+    bizType: '도소매업',
     bizItem: '건축자재 유통',
   },
   contact: {
@@ -23,29 +21,26 @@ export const PARTNER_BASIC_MOCK = {
     address: '서울특별시 강남구 테헤란로 123, 10층',
     startedAt: '2018-04-01',
   },
-  history: [
-    { id: 'h1', date: '2026-01-10', type: '계약', note: '거래 시작' },
-    { id: 'h2', date: '2026-01-18', type: '정보변경', note: '담당자 변경' },
-    { id: 'h3', date: '2026-02-01', type: '정산', note: '월 정산 완료' },
-    { id: 'h4', date: '2026-02-03', type: '공지', note: '정책 안내 확인' },
-    { id: 'h5', date: '2026-02-04', type: '정보변경', note: '주소 변경' },
-  ],
   erpInsights: {
     monthlyDiscountRate: 7.2,
     lastMonthSalesAmount: 38500000,
     amountToUpgradeDiscountTier: 6200000,
     collateralRenewalDday: 30,
   },
-  purchaseBest5: [
-    { rank: 1, itemCode: 'CC-735', itemName: '원피스세면기', amount: 11200000 },
-    { rank: 2, itemCode: 'CL-384', itemName: '비데일체형', amount: 9650000 },
-    { rank: 3, itemCode: 'BC310', itemName: '수전금구', amount: 8210000 },
-    { rank: 4, itemCode: 'TSC417D', itemName: '타일(600x600)', amount: 7560000 },
-    { rank: 5, itemCode: 'OEM-220', itemName: 'OEM 부자재', amount: 5320000 },
+  purchaseBest10: [
+    { itemCode: 'CC-735', itemName: '원피스세면기', category: '위생도기', amount: 11200000 },
+    { itemCode: 'CL-384', itemName: '비데일체형', category: '위생도기', amount: 9650000 },
+    { itemCode: 'BC-310', itemName: '세면 수전', category: '수전', amount: 8210000 },
+    { itemCode: 'FV-220', itemName: '샤워 수전', category: '수전', amount: 7980000 },
+    { itemCode: 'TSC-417D', itemName: '타일 600x600', category: '타일', amount: 7560000 },
+    { itemCode: 'TSC-338A', itemName: '타일 300x300', category: '타일', amount: 7020000 },
+    { itemCode: 'OEM-220', itemName: 'OEM 부자재', category: '부자재', amount: 5320000 },
+    { itemCode: 'ACC-901', itemName: '배수 트랩', category: '부자재', amount: 4860000 },
+    { itemCode: 'KIT-120', itemName: '설치 키트', category: '부자재', amount: 4410000 },
+    { itemCode: 'WX-700', itemName: '벽부형 액세서리', category: '액세서리', amount: 3980000 },
   ],
   salesMix: {
     deliveryAmount: 24800000,
     retailAmount: 13700000,
   },
 };
-

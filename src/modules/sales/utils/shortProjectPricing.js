@@ -35,7 +35,7 @@ export function computeShortProjectProfitRow(row, extraDiscountDisabled) {
 
   const appliedDiscountUnitPrice = extraDiscountDisabled
     ? baseDiscountUnitPrice
-    : Math.floor(factoryUnitPrice * (1 - (Number(row.discountRate) || 0) / 100));
+    : Math.floor(baseDiscountUnitPrice * (1 - (Number(row.discountRate) || 0) / 100));
   const appliedDiscountAmount = Math.floor(qty * appliedDiscountUnitPrice);
   const appliedDiscountDiff = appliedDiscountAmount - factoryAmount;
   const effectiveDiscountRate = factoryAmount ? (appliedDiscountDiff / factoryAmount) * 100 : 0;

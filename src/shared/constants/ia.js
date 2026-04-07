@@ -190,6 +190,7 @@ const MAIN = [
           { id: 'analytics-partner', label: '대리점별 매출 현황', path: '/analytics/partner' },
           { id: 'analytics-personal-sales', label: '개인별 매출 현황', path: '/analytics/personal-sales' },
           { id: 'analytics-category-sales', label: '카테고리별 판매 현황', path: '/analytics/category-sales' },
+          { id: 'analytics-monthly-plan-meeting', label: '월별 계획 회의 관리', path: '/analytics/monthly-plan-meeting' },
         ],
       },
       /* 시장 분석 */
@@ -217,6 +218,7 @@ const MAIN = [
           // { id: 'master-items', label: '품목정보', path: '/master/items' },
           { id: 'master-partners', label: '대리점정보(카드)', path: '/master/partners' },
           { id: 'master-cost', label: '표준원가', path: '/master/standard-cost' },
+          { id: 'master-performance-plan', label: '성과 계획 관리', path: '/master/performance-plan' },
         ],
       },
     ],

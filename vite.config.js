@@ -11,20 +11,31 @@ const __dirname = path.dirname(__filename);
 export default defineConfig({
   base: '/BMS_NEW/',
   plugins: [react()],
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   build: {
+    target: 'es2020',
+    modulePreload: {
+      polyfill: false,
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            // Keep Ant Design + RC ecosystem in one chunk to avoid circular chunk graph,
+            // while splitting other stable dependencies.
             if (
               id.includes('/antd/') ||
               id.includes('/@ant-design/') ||
               id.includes('/rc-') ||
-              id.includes('/@rc-component/') ||
-              id.includes('/dayjs/')
+              id.includes('/@rc-component/')
             ) {
               return 'vendor-ui';
             }
+            if (id.includes('/dayjs/')) return 'vendor-dayjs';
+            if (id.includes('/react-router-dom/') || id.includes('/react-router/')) return 'vendor-router';
+            if (id.includes('/lucide-react/')) return 'vendor-icons';
             return 'vendor';
           }
           return undefined;

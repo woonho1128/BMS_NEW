@@ -1,27 +1,41 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchApprovalTodo } from '../../api/dashboard.api';
 import { ROUTES } from '../../../../router/routePaths';
 import { Card } from '../../../../shared/components/Card';
 import styles from './ApprovalTodo.module.css';
 
-export function ApprovalTodo() {
+const scopeTitle = {
+  PROJECT_MENU: '손익/영업정보 결재 대기',
+  RETAIL_MENU: '리테일 결재 대기',
+  DEALER_PORTAL: '결재 대기',
+};
+
+export function ApprovalTodo({ role = 'TEAM_LEADER', scope = 'RETAIL_MENU' }) {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
-    fetchApprovalTodo().then((res) => {
+    setLoading(true);
+    fetchApprovalTodo({ role, scope }).then((res) => {
       if (!cancelled) setData(res);
       setLoading(false);
     });
-    return () => { cancelled = true; };
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [role, scope]);
+
+  const title = useMemo(() => {
+    if (scope === 'RETAIL_MENU' && role === 'EXECUTIVE') return '리테일 결재 대기(전팀/전팀원)';
+    return scopeTitle[scope] || '결재 대기';
+  }, [scope, role]);
 
   if (loading) {
     return (
-      <Card title="To-do (결재)" indicatorColor="primary" variant="highlight">
+      <Card title={title} indicatorColor="primary" variant="highlight">
         <p className={styles.placeholder}>로딩 중...</p>
       </Card>
     );
@@ -32,7 +46,7 @@ export function ApprovalTodo() {
 
   return (
     <Card
-      title="To-do (결재)"
+      title={title}
       indicatorColor="primary"
       variant="highlight"
       hoverable

@@ -63,11 +63,11 @@ const PARTNER_DETAIL_BY_ID = {
       address: '서울 강남구 역삼동 456',
     },
     salesByYear: [
-      { year: 2024, amount: 1250000000 },
-      { year: 2023, amount: 1180000000 },
-      { year: 2022, amount: 1090000000 },
-      { year: 2021, amount: 980000000 },
-      { year: 2020, amount: 890000000 },
+      { year: 2024, amount: 1250000000, categories: { 위생도기: 640000000, 타일: 400000000, 수전금구: 210000000 } },
+      { year: 2023, amount: 1180000000, categories: { 위생도기: 600000000, 타일: 375000000, 수전금구: 205000000 } },
+      { year: 2022, amount: 1090000000, categories: { 위생도기: 545000000, 타일: 350000000, 수전금구: 195000000 } },
+      { year: 2021, amount: 980000000, categories: { 위생도기: 500000000, 타일: 305000000, 수전금구: 175000000 } },
+      { year: 2020, amount: 890000000, categories: { 위생도기: 455000000, 타일: 275000000, 수전금구: 160000000 } },
     ],
     staffByYear: {
       2020: { name: '', isActive: false },
@@ -116,11 +116,11 @@ const PARTNER_DETAIL_BY_ID = {
       address: '경기 수원시',
     },
     salesByYear: [
-      { year: 2024, amount: 980000000 },
-      { year: 2023, amount: 920000000 },
-      { year: 2022, amount: 850000000 },
-      { year: 2021, amount: 780000000 },
-      { year: 2020, amount: 710000000 },
+      { year: 2024, amount: 980000000, categories: { 위생도기: 510000000, 타일: 310000000, 수전금구: 160000000 } },
+      { year: 2023, amount: 920000000, categories: { 위생도기: 475000000, 타일: 290000000, 수전금구: 155000000 } },
+      { year: 2022, amount: 850000000, categories: { 위생도기: 435000000, 타일: 270000000, 수전금구: 145000000 } },
+      { year: 2021, amount: 780000000, categories: { 위생도기: 400000000, 타일: 245000000, 수전금구: 135000000 } },
+      { year: 2020, amount: 710000000, categories: { 위생도기: 360000000, 타일: 225000000, 수전금구: 125000000 } },
     ],
     staffByYear: {
       2020: { name: '정매니저', isActive: true },
@@ -171,11 +171,11 @@ const DEFAULT_DETAIL = {
     address: '-',
   },
   salesByYear: [
-    { year: 2024, amount: 0 },
-    { year: 2023, amount: 0 },
-    { year: 2022, amount: 0 },
-    { year: 2021, amount: 0 },
-    { year: 2020, amount: 0 },
+    { year: 2024, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
+    { year: 2023, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
+    { year: 2022, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
+    { year: 2021, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
+    { year: 2020, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
   ],
   staffByYear: {
     2020: { name: '-', isActive: false },
@@ -240,4 +240,43 @@ export function getPartnerById(id) {
     status: row.status,
     ...detail,
   };
+}
+
+const PARTNER_EDIT_HISTORY_BY_ID = {
+  '1': [
+    {
+      id: '1-h-1',
+      changedAt: '2026-04-06 10:12',
+      changedBy: '김영업 과장',
+      reason: '상세 수정 저장',
+      changes: [
+        { field: '기본 주소', before: '서울 강남구 테헤란로 123 (구주소)', after: '서울 강남구 테헤란로 123' },
+        { field: '대표자 이메일', before: 'old-mail@partner.co.kr', after: 'hong@test.com' },
+      ],
+    },
+    {
+      id: '1-h-2',
+      changedAt: '2026-03-28 16:55',
+      changedBy: '박세현 대리',
+      reason: '상세 수정 저장',
+      changes: [
+        { field: '대리점 메모', before: '-', after: 'VIP 대리점. 월 2회 현장 방문 예정.' },
+      ],
+    },
+  ],
+  '2': [
+    {
+      id: '2-h-1',
+      changedAt: '2026-04-01 09:05',
+      changedBy: '조동욱 사원',
+      reason: '상세 수정 저장',
+      changes: [
+        { field: '경쟁사 취급 브랜드', before: '계림요업:Y:30', after: '계림요업:Y:50|VOVO:Y:20' },
+      ],
+    },
+  ],
+};
+
+export function getPartnerEditHistoryById(id) {
+  return PARTNER_EDIT_HISTORY_BY_ID[String(id)] || [];
 }

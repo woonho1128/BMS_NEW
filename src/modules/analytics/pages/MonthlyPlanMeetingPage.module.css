@@ -1,0 +1,169 @@
+.shellWide {
+  max-width: 100% !important;
+  width: 100%;
+  margin: 0 !important;
+  padding: 6px 8px 8px !important;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.actionRow {
+  display: flex;
+  gap: 8px;
+}
+
+.filterBar {
+  padding: 6px 8px !important;
+}
+
+.filterBar :global(.filters) {
+  gap: 8px;
+  align-items: center;
+}
+
+.filterBar :global(.filterItem) {
+  gap: 5px;
+}
+
+.filterBar :global(.filterLabel) {
+  font-size: 12px;
+}
+
+.filterBar :global(.filterInput),
+.filterBar :global(.filterSelect) {
+  height: 28px;
+  font-size: 12px;
+}
+
+.infoBar {
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  background: #fff;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #435a78;
+}
+
+.roundDateRow {
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  background: #fff;
+  padding: 6px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.roundDateItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #3f5778;
+}
+
+.roundDateInput {
+  height: 28px;
+  border: 1px solid #cfdced;
+  border-radius: 8px;
+  padding: 0 8px;
+  font-size: 12px;
+  color: #173457;
+}
+
+.tableCard {
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow: auto;
+  max-height: calc(100vh - 250px);
+}
+
+.matrixTable {
+  width: max-content;
+  min-width: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.matrixTable th,
+.matrixTable td {
+  border: 1px solid #dfe7f3;
+  padding: 3px 5px;
+  font-size: 13px;
+  text-align: right;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.matrixTable thead th {
+  background: #f3f7ff;
+  color: #2f4563;
+  text-align: center;
+  font-weight: 700;
+}
+
+.matrixTable tbody tr:nth-child(even) td {
+  background: #fbfdff;
+}
+
+.leftCell {
+  text-align: left !important;
+  color: #1f3554;
+}
+
+.matrixTable th:nth-child(1),
+.matrixTable td:nth-child(1) {
+  width: 63px;
+  min-width: 63px;
+}
+
+.matrixTable th:nth-child(2),
+.matrixTable td:nth-child(2) {
+  width: 57px;
+  min-width: 57px;
+}
+
+.matrixTable th:nth-child(n + 3),
+.matrixTable td:nth-child(n + 3) {
+  width: 59px;
+  min-width: 59px;
+}
+
+.totalRow td {
+  background: #f1f6ff !important;
+  font-weight: 700;
+}
+
+.valueInput {
+  width: 42px;
+  border: 1px solid #cddbee;
+  border-radius: 8px;
+  padding: 1px 3px;
+  text-align: right;
+  font-size: 13px;
+  color: #173457;
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .shellWide {
+    padding: 8px !important;
+  }
+
+  .actionRow {
+    flex-wrap: wrap;
+  }
+}

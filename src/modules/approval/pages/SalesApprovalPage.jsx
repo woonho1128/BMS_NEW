@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+﻿import { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
@@ -116,7 +116,7 @@ export function SalesApprovalPage() {
                 className={styles.filterSelect}
                 value={titleKeyword}
                 onChange={(e) => setTitleKeyword(e.target.value)}
-                placeholder="현장명 / 제목 검색"
+                placeholder="현장명/제목 검색"
               />
             </div>
           </CardBody>

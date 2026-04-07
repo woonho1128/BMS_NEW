@@ -1,13 +1,15 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
+import { Modal } from '../../../shared/components/Modal/Modal';
 import { ListFilter } from '../../../shared/components/ListFilter';
 import { classnames } from '../../../shared/utils/classnames';
 import {
   MOCK_MANAGER_OPTIONS,
   MOCK_REGION_OPTIONS,
   MOCK_STATUS_OPTIONS,
+  getPartnerEditHistoryById,
   getPartnersList,
 } from '../data/partnersMock';
 import styles from './PartnersPage.module.css';
@@ -26,13 +28,24 @@ const INITIAL_FILTER = {
   status: '',
 };
 
-const STATUS_LABEL = { active: '거래중', inactive: '거래중단', pending: '검토중' };
+const STATUS_LABEL = { active: '거래중', inactive: '거래중단', pending: '검토요청' };
 
 export function PartnersPage() {
   const navigate = useNavigate();
   const [filterValue, setFilterValue] = useState(INITIAL_FILTER);
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [selectedPartner, setSelectedPartner] = useState(null);
+  const [selectedHistoryId, setSelectedHistoryId] = useState('');
 
   const list = useMemo(() => getPartnersList(filterValue), [filterValue]);
+  const selectedHistoryRows = useMemo(
+    () => (selectedPartner ? getPartnerEditHistoryById(selectedPartner.id) : []),
+    [selectedPartner]
+  );
+  const selectedHistoryRow = useMemo(
+    () => selectedHistoryRows.find((row) => row.id === selectedHistoryId) || selectedHistoryRows[0] || null,
+    [selectedHistoryId, selectedHistoryRows]
+  );
 
   const handleFilterChange = useCallback((id, value) => {
     setFilterValue((prev) => ({ ...prev, [id]: value }));
@@ -53,11 +66,30 @@ export function PartnersPage() {
     navigate('/master/partners/new');
   }, [navigate]);
 
+  const handleOpenHistory = useCallback((event, item) => {
+    event.stopPropagation();
+    const rows = getPartnerEditHistoryById(item.id);
+    setSelectedPartner(item);
+    setSelectedHistoryId(rows[0]?.id || '');
+    setHistoryModalOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (!historyModalOpen) return;
+    if (!selectedHistoryRows.length) {
+      setSelectedHistoryId('');
+      return;
+    }
+    if (!selectedHistoryRows.some((row) => row.id === selectedHistoryId)) {
+      setSelectedHistoryId(selectedHistoryRows[0].id);
+    }
+  }, [historyModalOpen, selectedHistoryId, selectedHistoryRows]);
+
   return (
     <PageShell
       path="/master/partners"
       title="대리점 관리"
-      description="대리점 목록 조회 및 관리카드"
+      description="대리점 목록 조회 및 관리"
       actions={
         <Button variant="primary" onClick={handleAdd}>
           + 등록
@@ -90,6 +122,13 @@ export function PartnersPage() {
                 >
                   <div className={styles.cardHeader}>
                     <span className={styles.cardTitle}>{item.name}</span>
+                    <button
+                      type="button"
+                      className={styles.historyButton}
+                      onClick={(event) => handleOpenHistory(event, item)}
+                    >
+                      수정 이력
+                    </button>
                     <span
                       className={classnames(
                         styles.badge,
@@ -117,6 +156,73 @@ export function PartnersPage() {
           </div>
         </section>
       </div>
+
+      <Modal
+        open={historyModalOpen}
+        onClose={() => {
+          setHistoryModalOpen(false);
+          setSelectedHistoryId('');
+        }}
+        title={`${selectedPartner?.name || '대리점'} 수정 이력`}
+        size="lg"
+      >
+        <div className={styles.historyBody}>
+          <div className={styles.historySummary}>총 {selectedHistoryRows.length}건</div>
+          {selectedHistoryRows.length === 0 ? (
+            <div className={styles.historyEmpty}>등록된 수정 이력이 없습니다.</div>
+          ) : (
+            <div className={styles.historySplit}>
+              <aside className={styles.historyDateList}>
+                {selectedHistoryRows.map((history) => (
+                  <button
+                    key={history.id}
+                    type="button"
+                    className={classnames(
+                      styles.historyDateButton,
+                      selectedHistoryRow?.id === history.id && styles.historyDateButtonActive
+                    )}
+                    onClick={() => setSelectedHistoryId(history.id)}
+                  >
+                    <strong>{history.changedAt}</strong>
+                    <span>{history.changedBy}</span>
+                  </button>
+                ))}
+              </aside>
+              <section className={styles.historyDetail}>
+                {selectedHistoryRow && (
+                  <article key={selectedHistoryRow.id} className={styles.historyItem}>
+                    <div className={styles.historyHead}>
+                      <strong>{selectedHistoryRow.changedAt}</strong>
+                      <span>{selectedHistoryRow.changedBy}</span>
+                    </div>
+                    <p className={styles.historyReason}>{selectedHistoryRow.reason}</p>
+                    <table className={styles.historyTable}>
+                      <thead>
+                        <tr>
+                          <th>항목</th>
+                          <th>변경 전</th>
+                          <th>변경 후</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedHistoryRow.changes.map((change, index) => (
+                          <tr key={`${selectedHistoryRow.id}-${index}`}>
+                            <td>{change.field}</td>
+                            <td>{change.before}</td>
+                            <td className={styles.historyAfter}>{change.after}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </article>
+                )}
+              </section>
+            </div>
+          )}
+        </div>
+      </Modal>
     </PageShell>
   );
 }
+
+export default PartnersPage;

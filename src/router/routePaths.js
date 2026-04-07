@@ -25,6 +25,7 @@ export const ROUTES = {
   MASTER_PARTNERS_NEW: '/master/partners/new',
   MASTER_PARTNERS_ID: '/master/partners/:id',
   MASTER_STANDARD_COST: '/master/standard-cost',
+  MASTER_PERFORMANCE_PLAN: '/master/performance-plan',
 
   /* ── 영업 관리 — 공통 (보고서 / 명함 / 자료실) ── */
   SALES_REPORT: '/sales/report',
@@ -112,6 +113,7 @@ export const ROUTES = {
   ANALYTICS_PARTNER: '/analytics/partner',             /* 대리점별 매출 현황 */
   ANALYTICS_PERSONAL_SALES: '/analytics/personal-sales', /* 개인별 매출 현황 */
   ANALYTICS_CATEGORY_SALES: '/analytics/category-sales', /* 카테고리별 판매 현황 */
+  ANALYTICS_MONTHLY_PLAN_MEETING: '/analytics/monthly-plan-meeting', /* 월별 계획/실적 회의 관리 */
 
   /* ── 인사이트 — 시장 분석 ── */
   ANALYTICS_MARKET: '/analytics/market',               /* 시황파악 */
