@@ -37,7 +37,7 @@ export const DeliveryPlanPage = () => {
 
     const loadPlanRows = async () => {
       try {
-        const response = await fetch('/data/deliveryPlanRows.json', { cache: 'force-cache' });
+        const response = await fetch(`${import.meta.env.BASE_URL}data/deliveryPlanRows.json`, { cache: 'force-cache' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const rows = await response.json();
         if (ignore) return;
