@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+﻿import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -16,6 +16,7 @@ export default defineConfig({
   },
   build: {
     target: 'es2020',
+    chunkSizeWarningLimit: 1200,
     modulePreload: {
       polyfill: false,
     },
@@ -23,16 +24,11 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // Keep Ant Design + RC ecosystem in one chunk to avoid circular chunk graph,
-            // while splitting other stable dependencies.
-            if (
-              id.includes('/antd/') ||
-              id.includes('/@ant-design/') ||
-              id.includes('/rc-') ||
-              id.includes('/@rc-component/')
-            ) {
-              return 'vendor-ui';
-            }
+            if (id.includes('/antd/')) return 'vendor-ui';
+            if (id.includes('/@ant-design/')) return 'vendor-ui';
+            if (id.includes('/@rc-component/') || id.includes('/rc-')) return 'vendor-ui';
+            if (id.includes('/react-dom/')) return 'vendor-react-dom';
+            if (id.includes('/react/')) return 'vendor-react';
             if (id.includes('/dayjs/')) return 'vendor-dayjs';
             if (id.includes('/react-router-dom/') || id.includes('/react-router/')) return 'vendor-router';
             if (id.includes('/lucide-react/')) return 'vendor-icons';
@@ -49,7 +45,7 @@ export default defineConfig({
     },
   },
   server: {
-    host: true, // 0.0.0.0 바인딩 (내 IP로도 접속 가능)
+    host: true,
     port: 80,
     strictPort: true,
   },
@@ -59,3 +55,4 @@ export default defineConfig({
     },
   },
 });
+

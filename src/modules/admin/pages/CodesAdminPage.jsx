@@ -1,8 +1,9 @@
-import React, { useState, useMemo, useCallback } from 'react';
+﻿import React, { useState, useMemo, useCallback } from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
 import { ListFilter } from '../../../shared/components/ListFilter';
 import { Card, CardBody } from '../../../shared/components/Card';
+import { notify, confirmAction } from '../../../shared/utils/notify';
 import { getCodesList } from '../data/adminMock';
 import styles from './CodesAdminPage.module.css';
 
@@ -60,15 +61,12 @@ export function CodesAdminPage() {
   }, []);
 
   const handleDelete = useCallback((code) => {
-    if (window.confirm(`정말 삭제하시겠습니까?\n코드: ${code.codeName} (${code.code})`)) {
-      console.log('삭제:', code.id);
-      alert('삭제되었습니다.');
-    }
+    if (!confirmAction(`정말 삭제하시겠습니까?\n코드: ${code.codeName} (${code.code})`)) return;
+    notify.success('삭제되었습니다.');
   }, []);
 
   const handleSave = useCallback(() => {
-    console.log('저장:', selectedCode);
-    alert(selectedCode ? '수정되었습니다.' : '등록되었습니다.');
+    notify.success(selectedCode ? '수정되었습니다.' : '등록되었습니다.');
     setShowForm(false);
     setSelectedCode(null);
   }, [selectedCode]);
@@ -78,7 +76,6 @@ export function CodesAdminPage() {
     setSelectedCode(null);
   }, []);
 
-  // 코드 그룹별로 그룹화
   const groupedCodes = useMemo(() => {
     const groups = {};
     list.forEach((code) => {
@@ -97,7 +94,7 @@ export function CodesAdminPage() {
   return (
     <PageShell
       path="/admin/code"
-      title="코드관리"
+      title="코드 관리"
       description="시스템 코드 조회 및 관리"
       actions={
         <Button variant="primary" onClick={handleAdd}>
@@ -106,13 +103,7 @@ export function CodesAdminPage() {
       }
     >
       <div className={styles.page}>
-        <ListFilter
-          className={styles.toolbar}
-          fields={CODE_FILTER_FIELDS}
-          value={filterValue}
-          onChange={handleFilterChange}
-          onReset={handleReset}
-        />
+        <ListFilter className={styles.toolbar} fields={CODE_FILTER_FIELDS} value={filterValue} onChange={handleFilterChange} onReset={handleReset} />
 
         <section className={styles.section} aria-label="코드 목록">
           <div className={styles.count}>{list.length}건</div>
@@ -137,28 +128,16 @@ export function CodesAdminPage() {
                           <td className={styles.td}>{code.codeName}</td>
                           <td className={styles.td}>{code.sortOrder}</td>
                           <td className={styles.td}>
-                            <span
-                              className={`${styles.useBadge} ${
-                                code.useYn ? styles.use : styles.unuse
-                              }`}
-                            >
+                            <span className={`${styles.useBadge} ${code.useYn ? styles.use : styles.unuse}`}>
                               {code.useYn ? '사용' : '미사용'}
                             </span>
                           </td>
                           <td className={styles.tdAction}>
                             <div className={styles.actions}>
-                              <button
-                                className={styles.actionBtn}
-                                onClick={() => handleEdit(code)}
-                                aria-label="수정"
-                              >
+                              <button className={styles.actionBtn} onClick={() => handleEdit(code)} aria-label="수정">
                                 수정
                               </button>
-                              <button
-                                className={`${styles.actionBtn} ${styles.deleteBtn}`}
-                                onClick={() => handleDelete(code)}
-                                aria-label="삭제"
-                              >
+                              <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(code)} aria-label="삭제">
                                 삭제
                               </button>
                             </div>
@@ -179,7 +158,7 @@ export function CodesAdminPage() {
               <div className={styles.formGrid}>
                 <div className={styles.field}>
                   <label className={styles.label}>코드그룹 *</label>
-                  <select className={styles.select} value={selectedCode?.groupCode || ''}>
+                  <select className={styles.select} value={selectedCode?.groupCode || ''} readOnly>
                     <option value="">코드그룹 선택</option>
                     <option value="PROGRESS">진행상태</option>
                     <option value="STATUS">거래상태</option>
@@ -187,34 +166,19 @@ export function CodesAdminPage() {
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>코드 *</label>
-                  <input
-                    type="text"
-                    className={styles.input}
-                    value={selectedCode?.code || ''}
-                    placeholder="코드를 입력하세요"
-                  />
+                  <input type="text" className={styles.input} value={selectedCode?.code || ''} placeholder="코드를 입력하세요" readOnly />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>코드명 *</label>
-                  <input
-                    type="text"
-                    className={styles.input}
-                    value={selectedCode?.codeName || ''}
-                    placeholder="코드명을 입력하세요"
-                  />
+                  <input type="text" className={styles.input} value={selectedCode?.codeName || ''} placeholder="코드명을 입력하세요" readOnly />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>정렬순서</label>
-                  <input
-                    type="number"
-                    className={styles.input}
-                    value={selectedCode?.sortOrder || 1}
-                    min="1"
-                  />
+                  <input type="number" className={styles.input} value={selectedCode?.sortOrder || 1} min="1" readOnly />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>사용여부</label>
-                  <select className={styles.select} value={selectedCode?.useYn ? 'true' : 'false'}>
+                  <select className={styles.select} value={selectedCode?.useYn ? 'true' : 'false'} readOnly>
                     <option value="true">사용</option>
                     <option value="false">미사용</option>
                   </select>

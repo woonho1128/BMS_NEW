@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import styles from './EmptyState.module.css';
 
 export function EmptyState({ message = '데이터가 없습니다.', className }) {

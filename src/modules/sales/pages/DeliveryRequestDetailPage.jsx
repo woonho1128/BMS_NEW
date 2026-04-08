@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Modal, Table } from 'antd';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
+import { formatNumber } from '../../../shared/utils/formatters';
 import styles from './DeliveryRequestDetailPage.module.css';
 
 const SHIP_RESULT_OPTIONS = [
@@ -114,7 +115,7 @@ const DETAIL_BY_NO = {
 };
 
 function fmt(v) {
-  return Number(v || 0).toLocaleString('ko-KR');
+  return formatNumber(Number(v || 0));
 }
 
 export function DeliveryRequestDetailPage() {

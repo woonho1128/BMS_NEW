@@ -35,3 +35,27 @@ export function formatPercent(value, digits = 2) {
   if (Number.isNaN(num)) return '-';
   return `${num.toFixed(digits)}%`;
 }
+
+/**
+ * Format date range with fallback values.
+ * @param {string} from
+ * @param {string} to
+ * @returns {string}
+ */
+export function formatDateRange(from, to) {
+  if (!from && !to) return '-';
+  if (!to) return from;
+  return `${from} ~ ${to}`;
+}
+
+/**
+ * Format bytes to readable file size text.
+ * @param {number|string} bytes
+ * @returns {string}
+ */
+export function formatFileSize(bytes) {
+  const value = Number(bytes) || 0;
+  if (value >= 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+  if (value >= 1024) return `${Math.round(value / 1024)} KB`;
+  return `${value} B`;
+}

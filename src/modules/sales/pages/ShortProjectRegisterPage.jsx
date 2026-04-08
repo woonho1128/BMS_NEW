@@ -4,6 +4,8 @@ import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { ROUTES } from '../../../router/routePaths';
+import { notify } from '../../../shared/utils/notify';
+import { formatDateRange, formatFileSize, formatNumber } from '../../../shared/utils/formatters';
 import { createShortProjectApproval } from '../../approval/data/salesApprovalMock';
 import {
   BASE_DISCOUNT_RATE,
@@ -15,6 +17,7 @@ import styles from './ShortProjectRegisterPage.module.css';
 
 const ShortProjectPricingPreviewModal = lazy(() => import('./components/ShortProjectPricingPreviewModal'));
 const ShortProjectSubmitModal = lazy(() => import('./components/ShortProjectSubmitModal'));
+const ShortProjectCompareModal = lazy(() => import('./components/ShortProjectCompareModal'));
 
 const VIEW_MODE = {
   LIST: 'list',
@@ -35,6 +38,7 @@ const MOCK_SITE_BASE = [
     dealer: '동신건재',
     siteName: '제주 신선고 기숙사',
     builder: 'XX종건',
+    isGovernmentProject: true,
     deliveryFrom: '2026-03-05',
     deliveryTo: '2026-09-30',
     notes: '관급 공사 현장, XX설비 견적요청, 동종업체 입찰',
@@ -49,6 +53,7 @@ const MOCK_SITE_BASE = [
     dealer: '동신건재',
     siteName: '제주 미지정 현장',
     builder: '제주개발',
+    isGovernmentProject: false,
     deliveryFrom: '2026-04-01',
     deliveryTo: '2026-06-20',
     notes: '모델하우스 우선 출고, 동시견적 검토 가능',
@@ -98,23 +103,6 @@ function sanitizeNumber(value) {
   return String(value || '').replace(/[^\d.-]/g, '');
 }
 
-function formatDateRange(from, to) {
-  if (!from && !to) return '-';
-  if (!to) return from;
-  return `${from} ~ ${to}`;
-}
-
-function formatNumber(value) {
-  return (Number(value) || 0).toLocaleString('ko-KR');
-}
-
-function formatFileSize(bytes) {
-  const value = Number(bytes) || 0;
-  if (value >= 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1)} MB`;
-  if (value >= 1024) return `${Math.round(value / 1024)} KB`;
-  return `${value} B`;
-}
-
 function parseDate(value) {
   if (!value) return '';
   const d = new Date(value);
@@ -134,6 +122,7 @@ export function ShortProjectRegisterPage() {
   const [deliveryToFilter, setDeliveryToFilter] = useState('');
   const [expandedSiteId, setExpandedSiteId] = useState('');
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
+  const [compareModalOpen, setCompareModalOpen] = useState(false);
   const [activeSubmitSiteId, setActiveSubmitSiteId] = useState('');
   const [approvalStep1, setApprovalStep1] = useState(APPROVER_OPTIONS[0].id);
   const [approvalStep2, setApprovalStep2] = useState(APPROVER_OPTIONS[2].id);
@@ -146,6 +135,7 @@ export function ShortProjectRegisterPage() {
   const [dealer, setDealer] = useState('동신건재');
   const [deliveryFrom, setDeliveryFrom] = useState('2026-04-01');
   const [deliveryTo, setDeliveryTo] = useState('2026-06-20');
+  const [isGovernmentProject, setIsGovernmentProject] = useState(false);
   const [duplicateHint, setDuplicateHint] = useState('');
   const [specialNotes, setSpecialNotes] = useState('동종업체 입찰\n관급 공사\n모델하우스 우선 출고');
   const [attachments, setAttachments] = useState([]);
@@ -285,6 +275,82 @@ export function ShortProjectRegisterPage() {
       ),
     [activeSubmitProfitRows]
   );
+  const submitSiteTableData = useMemo(
+    () =>
+      selectedSitesForSubmit.map((site) => {
+        const rows = (site.majorItems || []).map((item, index) => {
+          const computed = computeShortProjectItem({
+            id: `submit-cover-${site.id}-${index}`,
+            itemCode: item.code || '',
+            qty: String(item.qty ?? 0),
+            unit: item.unit || 'EA',
+            standardPrice: '300000',
+            discountRate: '7',
+            note: '',
+          });
+          return computeShortProjectProfitRow(computed, false);
+        });
+
+        const total = rows.reduce(
+          (acc, row) => ({
+            costAmount: acc.costAmount + row.costAmount,
+            factoryAmount: acc.factoryAmount + row.factoryAmount,
+            baseDiscountAmount: acc.baseDiscountAmount + row.baseDiscountAmount,
+            appliedDiscountAmount: acc.appliedDiscountAmount + row.appliedDiscountAmount,
+          }),
+          { costAmount: 0, factoryAmount: 0, baseDiscountAmount: 0, appliedDiscountAmount: 0 }
+        );
+
+        return { site, rows, total };
+      }),
+    [selectedSitesForSubmit]
+  );
+  const submitCoverTotals = useMemo(
+    () =>
+      submitSiteTableData.reduce(
+        (acc, entry) => ({
+          factoryAmount: acc.factoryAmount + entry.total.factoryAmount,
+          baseDiscountAmount: acc.baseDiscountAmount + entry.total.baseDiscountAmount,
+          appliedDiscountAmount: acc.appliedDiscountAmount + entry.total.appliedDiscountAmount,
+        }),
+        { factoryAmount: 0, baseDiscountAmount: 0, appliedDiscountAmount: 0 }
+      ),
+    [submitSiteTableData]
+  );
+  const selectedSitesForCompare = useMemo(
+    () => listSites.filter((site) => selectedSiteIds.includes(site.id)).slice(0, 5),
+    [listSites, selectedSiteIds]
+  );
+  const compareData = useMemo(
+    () =>
+      selectedSitesForCompare.map((site) => {
+        const rows = (site.majorItems || []).map((item, index) => {
+          const computed = computeShortProjectItem({
+            id: `compare-preview-${site.id}-${index}`,
+            itemCode: item.code || '',
+            qty: String(item.qty ?? 0),
+            unit: item.unit || 'EA',
+            standardPrice: '300000',
+            discountRate: '7',
+            note: '',
+          });
+          return computeShortProjectProfitRow(computed, false);
+        });
+
+        const total = rows.reduce(
+          (acc, row) => ({
+            costAmount: acc.costAmount + row.costAmount,
+            factoryAmount: acc.factoryAmount + row.factoryAmount,
+            baseDiscountAmount: acc.baseDiscountAmount + row.baseDiscountAmount,
+            appliedDiscountAmount: acc.appliedDiscountAmount + row.appliedDiscountAmount,
+          }),
+          { costAmount: 0, factoryAmount: 0, baseDiscountAmount: 0, appliedDiscountAmount: 0 }
+        );
+
+        return { site, rows, total };
+      }),
+    [selectedSitesForCompare]
+  );
   const approvalStepLine = useMemo(
     () => [
       { order: 1, approverId: approvalStep1 },
@@ -384,6 +450,7 @@ export function ShortProjectRegisterPage() {
     setDealer(site.dealer);
     setDeliveryFrom(site.deliveryFrom);
     setDeliveryTo(site.deliveryTo);
+    setIsGovernmentProject(site.isGovernmentProject ?? String(site.notes || '').includes('관급'));
     setSpecialNotes(site.notes.replace(/, /g, '\n'));
     setAttachments([]);
     setDuplicateHint('');
@@ -412,16 +479,7 @@ export function ShortProjectRegisterPage() {
   }, []);
 
   const saveDraft = useCallback(() => {
-    console.log('단납 현장 임시저장', {
-      siteName,
-      builder,
-      dealer,
-      deliveryFrom,
-      deliveryTo,
-      specialNotes,
-      attachments: attachments.map((file) => ({ name: file.name, size: file.size })),
-      majorItems,
-    });
+    notify.info('단납 현장이 임시저장되었습니다. (목업)');
   }, [siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, attachments, majorItems]);
 
   const toggleSiteSelection = useCallback((siteId, checked) => {
@@ -451,6 +509,7 @@ export function ShortProjectRegisterPage() {
       deliveryFrom,
       deliveryTo,
       specialNote: specialNotes,
+      isGovernmentProject,
       items: computedItems.map((item) => ({
         itemCode: item.itemCode,
         qty: Number(item.qty) || 0,
@@ -468,7 +527,7 @@ export function ShortProjectRegisterPage() {
       drafter: '영업담당',
     });
     navigate(`${ROUTES.APPROVAL_SALES}?category=shortProject`);
-  }, [isFormValid, siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, attachments, computedItems, navigate]);
+  }, [isFormValid, siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, isGovernmentProject, attachments, computedItems, navigate]);
 
   const addAttachments = useCallback((event) => {
     const files = Array.from(event.target.files || []);
@@ -557,6 +616,17 @@ export function ShortProjectRegisterPage() {
     setActiveSubmitSiteId(selectedSitesForSubmit[0].id);
     setSubmitModalOpen(true);
   }, [selectedSitesForSubmit]);
+  const openCompareModal = useCallback(() => {
+    if (selectedSiteIds.length < 2) {
+      notify.warning('비교하기는 현장 2건 이상 선택 시 가능합니다.');
+      return;
+    }
+    if (selectedSiteIds.length > 5) {
+      notify.warning('비교하기는 최대 5건까지 가능합니다.');
+      return;
+    }
+    setCompareModalOpen(true);
+  }, [selectedSiteIds.length]);
 
   const listActions = (
     <Button variant="primary" onClick={openForm}>
@@ -658,6 +728,7 @@ export function ShortProjectRegisterPage() {
                         <th>현장명</th>
                         <th>건설사</th>
                         <th>납품예정일</th>
+                        <th>관급공사</th>
                         <th>특이사항</th>
                         <th>기본 할인 금액</th>
                         <th>단납 할인 금액</th>
@@ -694,6 +765,15 @@ export function ShortProjectRegisterPage() {
                             <td>{site.siteName}</td>
                             <td>{site.builder}</td>
                             <td>{formatDateRange(site.deliveryFrom, site.deliveryTo)}</td>
+                            <td className={styles.centerCell}>
+                              <input
+                                type="checkbox"
+                                checked={site.isGovernmentProject ?? String(site.notes || '').includes('관급')}
+                                readOnly
+                                tabIndex={-1}
+                                aria-label="관급공사 여부"
+                              />
+                            </td>
                             <td>{site.notes}</td>
                             <td className={styles.numberCell}>{formatNumber(site.baseDiscountAmount)}</td>
                             <td className={styles.numberCell}>{formatNumber(site.shortDiscountAmount)}</td>
@@ -719,6 +799,13 @@ export function ShortProjectRegisterPage() {
                   </table>
                 </div>
                 <div className={styles.listFooter}>
+                  <Button
+                    variant="secondary"
+                    onClick={openCompareModal}
+                    disabled={selectedSiteIds.length < 2 || selectedSiteIds.length > 5}
+                  >
+                    비교하기
+                  </Button>
                   <Button variant="primary" onClick={openSubmitModal} disabled={selectedSiteIds.length === 0}>
                     상신하기
                   </Button>
@@ -737,7 +824,7 @@ export function ShortProjectRegisterPage() {
                       현장명<span className={styles.required}>*</span>
                     </label>
                     <input className={styles.input} value={siteName} onChange={(e) => setSiteName(e.target.value)} />
-                    <p className={styles.helper}>{duplicateHint || '같은 현장 이력 여부를 먼저 확인하세요'}</p>
+                    {duplicateHint ? <p className={styles.helper}>{duplicateHint}</p> : null}
                   </div>
 
                   <div className={styles.field}>
@@ -771,6 +858,16 @@ export function ShortProjectRegisterPage() {
                       <input className={styles.input} type="date" value={deliveryTo} onChange={(e) => setDeliveryTo(e.target.value)} />
                     </div>
                   </div>
+                </div>
+                <div className={styles.conditionRow}>
+                  <label className={styles.conditionCheck}>
+                    <input
+                      type="checkbox"
+                      checked={isGovernmentProject}
+                      onChange={(e) => setIsGovernmentProject(e.target.checked)}
+                    />
+                    관급공사
+                  </label>
                 </div>
               </CardBody>
             </Card>
@@ -927,6 +1024,9 @@ export function ShortProjectRegisterPage() {
                               <td className={styles.numberCell}>{formatNumber(row.appliedDiscountAmount)}</td>
                               <td className={styles.numberCell}>{formatNumber(row.appliedDiscountDiff)}</td>
                               <td className={styles.centerCell}>
+                                {extraDiscountDisabledByItemId[row.id] ? (
+                                  <input className={styles.rateInput} value="0" disabled />
+                                ) : (
                                 <input
                                   className={styles.rateInput}
                                   inputMode="decimal"
@@ -939,19 +1039,24 @@ export function ShortProjectRegisterPage() {
                                     updateItem(row.id, 'discountRate', clamped);
                                   }}
                                 />
+                                )}
                               </td>
                               <td className={styles.numberCell}>{formatNumber(row.grossProfitAmount)}</td>
                               <td className={styles.numberCell}>{row.grossProfitRate.toFixed(2)}%</td>
                               <td className={styles.centerCell}>
                                 <input
                                   type="checkbox"
-                                  checked={Boolean(extraDiscountDisabledByItemId[row.id])}
-                                  onChange={(e) =>
+                                  checked={extraDiscountDisabledByItemId[row.id] ?? false}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
                                     setExtraDiscountDisabledByItemId((prev) => ({
                                       ...prev,
-                                      [row.id]: e.target.checked,
-                                    }))
-                                  }
+                                      [row.id]: checked,
+                                    }));
+                                    if (checked) {
+                                      updateItem(row.id, 'discountRate', '0');
+                                    }
+                                  }}
                                 />
                               </td>
                             </tr>
@@ -1071,6 +1176,8 @@ export function ShortProjectRegisterPage() {
           <ShortProjectSubmitModal
             open={submitModalOpen}
             selectedSitesForSubmit={selectedSitesForSubmit}
+            submitSiteTableData={submitSiteTableData}
+            submitCoverTotals={submitCoverTotals}
             activeSubmitSite={activeSubmitSite}
             activeSubmitSiteId={activeSubmitSiteId}
             setActiveSubmitSiteId={setActiveSubmitSiteId}
@@ -1094,6 +1201,13 @@ export function ShortProjectRegisterPage() {
             onClose={() => setSubmitModalOpen(false)}
             onSubmit={submitSelectedSites}
           />
+          <ShortProjectCompareModal
+            open={compareModalOpen}
+            compareData={compareData}
+            formatNumber={formatNumber}
+            baseDiscountRate={BASE_DISCOUNT_RATE}
+            onClose={() => setCompareModalOpen(false)}
+          />
         </Suspense>
       </div>
     </PageShell>
@@ -1101,6 +1215,8 @@ export function ShortProjectRegisterPage() {
 }
 
 export default ShortProjectRegisterPage;
+
+
 
 
 

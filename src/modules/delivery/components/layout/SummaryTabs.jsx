@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import styles from './SummaryTabs.module.css';
+import { notify } from '../../../../shared/utils/notify';
 
 export const SummaryTabs = ({ activeTab, onChange }) => {
   const tabs = [
@@ -13,7 +14,7 @@ export const SummaryTabs = ({ activeTab, onChange }) => {
 
   const handleClick = (tab) => {
     if (tab.disabled) {
-      alert('준비 중입니다.');
+      notify.info('준비 중입니다.');
       return;
     }
     onChange(tab.id);
@@ -34,3 +35,5 @@ export const SummaryTabs = ({ activeTab, onChange }) => {
     </div>
   );
 };
+
+

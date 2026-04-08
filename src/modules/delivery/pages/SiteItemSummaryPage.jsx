@@ -1,105 +1,32 @@
-import React, { useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
+import { notify } from '../../../shared/utils/notify';
 import styles from './SiteItemSummaryPage.module.css';
-import { SummaryTabs } from '../components/SiteItemSummary/SummaryTabs';
-import { SummaryFilterBar } from '../components/SiteItemSummary/SummaryFilterBar';
-import { SummarySection } from '../components/SiteItemSummary/SummarySection';
-import { SummaryTable } from '../components/SiteItemSummary/SummaryTable';
-import {
-    DEFAULT_YEAR,
-    CATEGORY_AMOUNT_DATA,
-    CATEGORY_WEIGHT_DATA,
-    ITEM_CODE_DATA,
-    ITEM_NAME_DATA,
-} from '../data/summaryData';
 
 export const SiteItemSummaryPage = () => {
-    const [activeTab, setActiveTab] = useState('summary');
-    const [year, setYear] = useState(DEFAULT_YEAR);
-    const [loading, setLoading] = useState(false);
+  const [year, setYear] = useState('2026');
+  const [loading, setLoading] = useState(false);
 
-    // Mock Refresh
-    const handleRefresh = () => {
-        setLoading(true);
-        console.log('Fetching data for year:', year);
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
-    };
+  useEffect(() => {
+    setLoading(true);
+    notify.info(`${year}년 데이터 조회 중입니다. (목업)`);
+    const t = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(t);
+  }, [year]);
 
-    return (
-        <div className={styles.container}>
-            <header className={styles.header}>
-                <div className={styles.pageTitle}>
-                    현장 별 품목 관리
-                    <span className={styles.subTitle}>년도 요약</span>
-                </div>
-                <div className={styles.actionGroup}>
-                    <button className={styles.actionButton} onClick={() => console.log('Excel')}>
-                        엑셀다운로드
-                    </button>
-                    <button className={styles.actionButton} onClick={() => console.log('Print')}>
-                        인쇄
-                    </button>
-                </div>
-            </header>
-
-            <SummaryTabs activeTab={activeTab} onChange={setActiveTab} />
-
-            <SummaryFilterBar
-                year={year}
-                onYearChange={setYear}
-                onRefresh={handleRefresh}
-            />
-
-            <div className={styles.content}>
-                {/* Section 1 */}
-                <SummarySection
-                    title={CATEGORY_AMOUNT_DATA.title}
-                    unitText={CATEGORY_AMOUNT_DATA.unitText}
-                >
-                    <SummaryTable
-                        columns={CATEGORY_AMOUNT_DATA.columns}
-                        rows={CATEGORY_AMOUNT_DATA.rows}
-                        loading={loading}
-                    />
-                </SummarySection>
-
-                {/* Section 2 */}
-                <SummarySection
-                    title={CATEGORY_WEIGHT_DATA.title}
-                    unitText={CATEGORY_WEIGHT_DATA.unitText}
-                >
-                    <SummaryTable
-                        columns={CATEGORY_WEIGHT_DATA.columns}
-                        rows={CATEGORY_WEIGHT_DATA.rows}
-                        loading={loading}
-                    />
-                </SummarySection>
-
-                {/* Section 3 */}
-                <SummarySection
-                    title={ITEM_CODE_DATA.title}
-                    unitText={ITEM_CODE_DATA.unitText}
-                >
-                    <SummaryTable
-                        columns={ITEM_CODE_DATA.columns}
-                        rows={ITEM_CODE_DATA.rows}
-                        loading={loading}
-                    />
-                </SummarySection>
-
-                {/* Section 4 */}
-                <SummarySection
-                    title={ITEM_NAME_DATA.title}
-                    unitText={ITEM_NAME_DATA.unitText}
-                >
-                    <SummaryTable
-                        columns={ITEM_NAME_DATA.columns}
-                        rows={ITEM_NAME_DATA.rows}
-                        loading={loading}
-                    />
-                </SummarySection>
-            </div>
+  return (
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <h2>현장별 품목 요약</h2>
+        <div className={styles.actionGroup}>
+          <button className={styles.actionButton} onClick={() => notify.info('엑셀 다운로드는 준비 중입니다.')}>엑셀다운로드</button>
+          <button className={styles.actionButton} onClick={() => notify.info('인쇄 기능은 준비 중입니다.')}>인쇄</button>
         </div>
-    );
+      </div>
+      <select value={year} onChange={(e) => setYear(e.target.value)}>
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+      </select>
+      <div className={styles.tableWrap}>{loading ? '로딩 중...' : '요약 데이터(목업)'}</div>
+    </div>
+  );
 };

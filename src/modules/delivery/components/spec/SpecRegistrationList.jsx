@@ -1,74 +1,105 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { notify } from '../../../../shared/utils/notify';
 import styles from './SpecRegistrationList.module.css';
-import { APPROVED_SPEC_DATA } from '../../data/planDummyData';
-import { SpecDetailTable } from './SpecDetailTable';
+
+const INITIAL_ROWS = [
+  {
+    id: 'spec-101',
+    company: 'DL건설',
+    site: '광교 A1 현장',
+    specNo: 'SPEC-2026-101',
+    requestedAt: '2026-04-05',
+    manager: '김영업',
+    status: 'pending',
+    items: ['벽타일 600x600', '바닥타일 300x300'],
+  },
+  {
+    id: 'spec-102',
+    company: '대리주택',
+    site: '제주 신도심 2차',
+    specNo: 'SPEC-2026-102',
+    requestedAt: '2026-04-06',
+    manager: '이담당',
+    status: 'pending',
+    items: ['대형타일 1200x600'],
+  },
+  {
+    id: 'spec-103',
+    company: 'DL건설',
+    site: '부산 워터파크',
+    specNo: 'SPEC-2026-103',
+    requestedAt: '2026-04-07',
+    manager: '박현장',
+    status: 'completed',
+    items: ['외장타일 300x600', '악세서리'],
+  },
+];
 
 export const SpecRegistrationList = ({ setRows }) => {
-  const [specList, setSpecList] = useState(APPROVED_SPEC_DATA);
-  const [expandedRows, setExpandedRows] = useState([]);
+  const [specRows, setSpecRows] = useState(INITIAL_ROWS);
+  const [companyFilter, setCompanyFilter] = useState('all');
+  const [query, setQuery] = useState('');
+  const [showPendingOnly, setShowPendingOnly] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [filterStatus, setFilterStatus] = useState('pending');
+  const [expandedIds, setExpandedIds] = useState([]);
 
-  const filteredSpecs = useMemo(() => {
-    return specList.filter((spec) => {
-      if (filterStatus === 'all') return true;
-      return spec.status === filterStatus;
+  const companies = useMemo(() => ['all', ...Array.from(new Set(specRows.map((row) => row.company)))], [specRows]);
+
+  const filteredRows = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return specRows.filter((row) => {
+      if (companyFilter !== 'all' && row.company !== companyFilter) return false;
+      if (showPendingOnly && row.status !== 'pending') return false;
+      if (!normalizedQuery) return true;
+      return (
+        row.site.toLowerCase().includes(normalizedQuery) ||
+        row.specNo.toLowerCase().includes(normalizedQuery) ||
+        row.manager.toLowerCase().includes(normalizedQuery)
+      );
     });
-  }, [specList, filterStatus]);
+  }, [companyFilter, query, showPendingOnly, specRows]);
 
-  const toggleRow = (id) => {
-    setExpandedRows((prev) => (prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id]));
+  const pendingRows = filteredRows.filter((row) => row.status === 'pending');
+  const isAllSelected = pendingRows.length > 0 && pendingRows.every((row) => selectedIds.includes(row.id));
+
+  const toggleExpanded = (id) => {
+    setExpandedIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
   };
 
-  const handleCheckboxChange = (id, isChecked) => {
-    if (isChecked) setSelectedIds((prev) => [...prev, id]);
-    else setSelectedIds((prev) => prev.filter((sid) => sid !== id));
+  const handleSelectAll = (checked) => {
+    if (!checked) {
+      setSelectedIds([]);
+      return;
+    }
+    setSelectedIds(pendingRows.map((row) => row.id));
+  };
+
+  const handleSelectOne = (id, checked) => {
+    setSelectedIds((prev) => (checked ? [...new Set([...prev, id])] : prev.filter((item) => item !== id)));
   };
 
   const handleAddToPlan = () => {
-    if (selectedIds.length === 0) {
-      alert('반영할 SPEC을 선택해주세요.');
+    const targets = specRows.filter((row) => selectedIds.includes(row.id) && row.status === 'pending');
+    if (!targets.length) {
+      notify.info('반영할 스펙을 선택해주세요.');
       return;
     }
 
-    const selectedSpecs = specList.filter((s) => selectedIds.includes(s.id));
-    const newRows = [];
+    setRows?.((prev) => [
+      ...targets.map((row) => ({
+        id: `plan-${row.id}-${Date.now()}`,
+        company: row.company,
+        site: row.site,
+        source: 'spec',
+      })),
+      ...(prev || []),
+    ]);
 
-    selectedSpecs.forEach((spec) => {
-      if (!spec.items) return;
-      spec.items.forEach((item, idx) => {
-        newRows.push({
-          id: `added-${spec.id}-${idx}-${Date.now()}`,
-          company: spec.company,
-          site: spec.site,
-          agency: spec.agency,
-          deliveryDate: spec.deliveryDate,
-          moveInDate: spec.moveInDate,
-          manager: spec.manager,
-          category: spec.category,
-          specManager: spec.specManager,
-          item1: item.item1,
-          color: item.color,
-          qty: item.qty,
-          agencyPrice: item.agencyPrice,
-          weight: item.weight,
-          totalWeightKg: item.totalWeightKg || item.qty * item.weight,
-          totalWeightTon: item.totalWeightTon || (item.qty * item.weight) / 1000,
-          amount: item.amount || item.qty * item.agencyPrice,
-          spec: item.spec,
-          memo: item.memo,
-          status: '진행',
-          source: 'spec',
-          partialHistory: [],
-          changeHistory: []
-        });
-      });
-    });
-
-    setRows((prev) => [...prev, ...newRows]);
-    setSpecList((prev) => prev.map((s) => (selectedIds.includes(s.id) ? { ...s, status: 'completed' } : s)));
+    setSpecRows((prev) =>
+      prev.map((row) => (selectedIds.includes(row.id) ? { ...row, status: 'completed' } : row))
+    );
     setSelectedIds([]);
-    alert(`${selectedSpecs.length}건의 스펙을 납품 계획에 반영했습니다.`);
+    notify.success(`${targets.length}건의 스펙을 납품 계획으로 반영했습니다.`);
   };
 
   return (
@@ -76,24 +107,34 @@ export const SpecRegistrationList = ({ setRows }) => {
       <div className={styles.header}>
         <div className={styles.filterGroup}>
           <div className={styles.filterItem}>
-            <span className={styles.label}>결재월</span>
-            <input type="month" className={styles.input} />
-          </div>
-          <div className={styles.filterItem}>
-            <span className={styles.label}>상태</span>
-            <select className={styles.select} value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-              <option value="pending">미반영</option>
-              <option value="completed">반영완료</option>
-              <option value="all">전체</option>
+            <span className={styles.label}>건설사</span>
+            <select className={styles.select} value={companyFilter} onChange={(e) => setCompanyFilter(e.target.value)}>
+              {companies.map((company) => (
+                <option key={company} value={company}>
+                  {company === 'all' ? '전체' : company}
+                </option>
+              ))}
             </select>
           </div>
           <div className={styles.filterItem}>
-            <span className={styles.label}>건설사</span>
-            <input className={styles.input} placeholder="전체" />
+            <span className={styles.label}>검색</span>
+            <input
+              className={styles.input}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="현장명 / SPEC NO / 담당자"
+            />
           </div>
+          <label className={styles.filterItem}>
+            <input
+              type="checkbox"
+              checked={showPendingOnly}
+              onChange={(e) => setShowPendingOnly(e.target.checked)}
+            />
+            <span className={styles.label}>미반영만 보기</span>
+          </label>
         </div>
-
-        <button className={styles.primaryButton} onClick={handleAddToPlan} disabled={selectedIds.length === 0} style={{ opacity: selectedIds.length === 0 ? 0.5 : 1 }}>
+        <button type="button" className={styles.primaryButton} onClick={handleAddToPlan} disabled={!selectedIds.length}>
           납품 계획으로 추가
         </button>
       </div>
@@ -103,59 +144,55 @@ export const SpecRegistrationList = ({ setRows }) => {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th className={styles.th} style={{ width: '40px', textAlign: 'center' }}></th>
-                <th className={styles.th} style={{ width: '40px' }}></th>
+                <th className={styles.th}>
+                  <input type="checkbox" checked={isAllSelected} onChange={(e) => handleSelectAll(e.target.checked)} />
+                </th>
                 <th className={styles.th}>상태</th>
                 <th className={styles.th}>건설사</th>
                 <th className={styles.th}>현장명</th>
-                <th className={styles.th}>대리점</th>
-                <th className={styles.th}>납품예정</th>
-                <th className={styles.th}>입주예정</th>
+                <th className={styles.th}>SPEC NO</th>
+                <th className={styles.th}>요청일</th>
                 <th className={styles.th}>담당자</th>
-                <th className={styles.th}>구분</th>
               </tr>
             </thead>
             <tbody>
-              {filteredSpecs.length === 0 ? (
+              {filteredRows.length === 0 ? (
                 <tr>
-                  <td colSpan={10} style={{ padding: '32px', textAlign: 'center', color: '#8ea0b8' }}>
-                    데이터가 없습니다.
-                  </td>
+                  <td className={styles.td} colSpan={7}>조회 결과가 없습니다.</td>
                 </tr>
               ) : (
-                filteredSpecs.map((spec) => {
-                  const isExpanded = expandedRows.includes(spec.id);
-                  const isCompleted = spec.status === 'completed';
-
+                filteredRows.map((row) => {
+                  const expanded = expandedIds.includes(row.id);
+                  const completed = row.status === 'completed';
                   return (
-                    <React.Fragment key={spec.id}>
-                      <tr className={`${styles.tr} ${isExpanded ? styles.expandedRow : ''}`} style={isCompleted ? { backgroundColor: '#f7faff', color: '#8ea0b8' } : {}} onClick={() => toggleRow(spec.id)}>
-                        <td className={styles.td} onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>
+                    <React.Fragment key={row.id}>
+                      <tr className={`${styles.accordionRow} ${expanded ? styles.expandedRow : ''}`}>
+                        <td className={styles.td}>
                           <input
                             type="checkbox"
-                            disabled={isCompleted}
-                            checked={selectedIds.includes(spec.id)}
-                            onChange={(e) => handleCheckboxChange(spec.id, e.target.checked)}
-                            style={{ cursor: isCompleted ? 'not-allowed' : 'pointer' }}
+                            checked={selectedIds.includes(row.id)}
+                            disabled={completed}
+                            onChange={(e) => handleSelectOne(row.id, e.target.checked)}
                           />
                         </td>
-                        <td className={styles.td} style={{ textAlign: 'center', cursor: 'pointer' }}>
-                          <span className={`${styles.chevron} ${isExpanded ? styles.open : ''}`}>▶</span>
+                        <td className={styles.td}>
+                          <span className={completed ? styles.badgeCompleted : styles.badgePending}>
+                            {completed ? '반영완료' : '대기'}
+                          </span>
                         </td>
-                        <td className={styles.td}>{isCompleted ? <span className={styles.badgeCompleted}>반영완료</span> : <span className={styles.badgePending}>미반영</span>}</td>
-                        <td className={styles.td}>{spec.company}</td>
-                        <td className={styles.td} style={{ fontWeight: 600 }}>{spec.site}</td>
-                        <td className={styles.td}>{spec.agency}</td>
-                        <td className={styles.td}>{spec.deliveryDate}</td>
-                        <td className={styles.td}>{spec.moveInDate}</td>
-                        <td className={styles.td}>{spec.manager}</td>
-                        <td className={styles.td}>{spec.category}</td>
+                        <td className={styles.td}>{row.company}</td>
+                        <td className={styles.td} onClick={() => toggleExpanded(row.id)}>
+                          <span className={`${styles.chevron} ${expanded ? 'open' : ''}`}>▸</span>
+                          {row.site}
+                        </td>
+                        <td className={styles.td}>{row.specNo}</td>
+                        <td className={styles.td}>{row.requestedAt}</td>
+                        <td className={styles.td}>{row.manager}</td>
                       </tr>
-
-                      {isExpanded && (
+                      {expanded && (
                         <tr className={styles.detailRow}>
-                          <td colSpan={10} style={{ padding: 0 }}>
-                            <SpecDetailTable items={spec.items} />
+                          <td className={styles.td} colSpan={7}>
+                            품목: {row.items.join(', ')}
                           </td>
                         </tr>
                       )}

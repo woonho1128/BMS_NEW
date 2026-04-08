@@ -212,7 +212,7 @@
 
 .priceInfoGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -375,6 +375,95 @@
   border-top: 1px solid #edf2f8;
   display: flex;
   justify-content: flex-end;
+}
+
+.priceDocsSection {
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #f8fbff;
+  padding: 10px;
+}
+
+.priceDocsHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.priceDocsTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2f4b6d;
+  margin-bottom: 2px;
+}
+
+.priceDocsGuide {
+  margin: 0;
+  font-size: 12px;
+  color: #5e7696;
+}
+
+.priceDocsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 10px;
+}
+
+.priceDocField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.priceDocField span {
+  font-size: 12px;
+  color: #4f6788;
+  font-weight: 700;
+}
+
+.priceDocInputRow {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.priceUploadLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  height: 30px;
+  border: 1px solid #ced9ea;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  color: #31557c;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.priceUploadLabel input {
+  display: none;
+}
+
+.priceDocList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.priceDocChip {
+  border: 1px solid #c7d8ef;
+  border-radius: 999px;
+  background: #eef5ff;
+  color: #295eaa;
+  font-size: 12px;
+  height: 24px;
+  padding: 0 10px;
+  cursor: pointer;
 }
 
 .uploadModalBody {
@@ -580,5 +669,9 @@
 
   .priceImageMock {
     height: 130px;
+  }
+
+  .priceDocsGrid {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,355 +1,400 @@
-import { useMemo, useState, useEffect } from 'react';
+﻿import { useMemo, useState } from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ROUTES } from '../../../router/routePaths';
-import { classnames } from '../../../shared/utils/classnames';
-import { Drawer } from '../../../shared/components/Drawer/Drawer';
-import { useAuth } from '../../auth/hooks/useAuth';
-import { hasPermission } from '../../../shared/constants/permissions';
-import { PERMISSIONS } from '../../../shared/constants/permissions';
-import { FileDown, X } from 'lucide-react';
+import { notify, confirmAction } from '../../../shared/utils/notify';
 import styles from './PartnerNoticePage.module.css';
 
 const TAB_ALL = 'all';
 const TAB_NOTICE = 'notice';
 const TAB_PROMO = 'promo';
 const TAB_WORK = 'work';
-const TAB_CATALOG = 'catalog';
 
-const TYPE_NOTICE = 'notice';
-const TYPE_PROMO = 'promo';
-const TYPE_WORK = 'work';
-const TYPE_CATALOG = 'catalog';
+const TODAY = '2026-04-07';
 
-/** 목업 리스트 데이터 */
-const MOCK_ITEMS = [
-  { id: '1', type: TYPE_NOTICE, title: '2025년 1분기 대리점 운영 안내', date: '2025-01-15', hasAttachment: true },
-  { id: '2', type: TYPE_PROMO, title: '신제품 브로슈어 (PDF)', date: '2025-01-12', hasAttachment: true },
-  { id: '3', type: TYPE_WORK, title: '출고 신청 양식 및 매뉴얼', date: '2025-01-10', hasAttachment: true },
-  { id: '4', type: TYPE_NOTICE, title: '연말 연휴 물류 휴무 안내', date: '2024-12-20', hasAttachment: false },
-  { id: '5', type: TYPE_PROMO, title: '시즌 프로모션 가이드', date: '2024-12-15', hasAttachment: true },
-  { id: '6', type: TYPE_WORK, title: '정산 자료 제출 요령', date: '2024-12-01', hasAttachment: true },
-  { id: '7', type: TYPE_NOTICE, title: '시스템 점검 안내', date: '2024-11-28', hasAttachment: false },
-  { id: '8', type: TYPE_CATALOG, title: '2025 종합 카탈로그 (e-book)', date: '2025-01-20', hasAttachment: true },
-  { id: '9', type: TYPE_CATALOG, title: '수전/도기 신제품 카탈로그', date: '2025-01-18', hasAttachment: true },
+const INITIAL_ITEMS = [
+  {
+    id: '1',
+    type: TAB_NOTICE,
+    title: '2026년 2분기 운영 공지',
+    date: '2026-04-01',
+    body: '2분기 운영 정책과 일정 안내입니다.',
+    files: ['운영공지.pdf'],
+    exposeFrom: '2026-04-01',
+    exposeTo: '2026-05-15',
+    showOnLogin: true,
+  },
+  {
+    id: '2',
+    type: TAB_PROMO,
+    title: '4월 프로모션 안내',
+    date: '2026-04-03',
+    body: '프로모션 상품과 적용 기간을 확인해주세요.',
+    files: ['프로모션.pdf'],
+    exposeFrom: '2026-04-08',
+    exposeTo: '2026-04-30',
+    showOnLogin: false,
+  },
+  {
+    id: '3',
+    type: TAB_WORK,
+    title: '업무 매뉴얼 v2',
+    date: '2026-04-05',
+    body: '대리점 업무 처리 절차 안내입니다.',
+    files: ['업무매뉴얼.pdf'],
+    exposeFrom: '2026-03-01',
+    exposeTo: '2026-03-31',
+    showOnLogin: false,
+  },
+  {
+    id: '4',
+    type: TAB_NOTICE,
+    title: '대리점 시스템 이용정책 변경 및 개인정보 처리방침 개정 안내(필독) - 2026년 2분기 반영',
+    date: '2026-04-06',
+    body: '안녕하세요. 대리점 포털 운영팀입니다.\n\n2026년 2분기부터 로그인 보안 정책과 첨부파일 보관 정책이 아래와 같이 변경됩니다.\n1) 비밀번호 만료 주기 90일 적용\n2) 동일 IP 과다 로그인 탐지 시 추가 인증\n3) 공지/자료실 첨부파일의 보관 기한 분류(필수/일반)\n\n본 공지는 로그인 시 팝업으로 우선 노출되며, 상세 정책은 첨부된 운영 가이드 문서를 참고해 주세요.\n\n감사합니다.',
+    files: ['운영가이드_개정본_v3.pdf', '개인정보처리방침_2026Q2.pdf', 'FAQ_보안정책.pdf'],
+    exposeFrom: '2026-04-06',
+    exposeTo: '2026-06-30',
+    showOnLogin: true,
+  },
 ];
 
-/** 상세용 목업 (본문, 작성자, 첨부파일) */
-const MOCK_DETAIL = {
-  '1': {
-    body: '안녕하세요. 2025년 1분기 대리점 운영 관련하여 아래와 같이 안내드립니다.\n\n1. 영업 목표 및 인센티브 정책이 일부 변경됩니다. 자세한 내용은 첨부 자료를 참고해 주세요.\n2. 분기 말 정산 일정은 4월 첫 주로 예정되어 있습니다.\n3. 문의 사항은 담당자에게 연락 부탁드립니다.\n\n감사합니다.',
-    author: '영업지원팀',
-    attachments: [{ name: '2025_1분기_운영안내.pdf', url: '#' }, { name: '인센티브_정책.pdf', url: '#' }],
-  },
-  '2': {
-    body: '신제품 브로슈어를 공유합니다. 대리점에서 고객 상담 시 활용해 주세요.',
-    author: '마케팅팀',
-    attachments: [{ name: '신제품_브로슈어_2025.pdf', url: '#' }],
-  },
-  '3': {
-    body: '출고 신청 시 사용하실 양식과 매뉴얼을 첨부했습니다. 반드시 최신 버전을 사용해 주세요.',
-    author: '물류팀',
-    attachments: [{ name: '출고신청_양식.xlsx', url: '#' }, { name: '출고_매뉴얼_v2.pdf', url: '#' }],
-  },
-  '4': {
-    body: '12월 30일(월) ~ 1월 2일(목) 연말 연휴 기간 물류 휴무로 인해 출고가 중단됩니다. 주문 시 일정을 참고해 주세요.',
-    author: '물류팀',
-    attachments: [],
-  },
-  '5': {
-    body: '시즌 프로모션 가이드라인을 첨부합니다.',
-    author: '마케팅팀',
-    attachments: [{ name: '시즌_프로모션_가이드.pdf', url: '#' }],
-  },
-  '6': {
-    body: '정산 자료 제출 요령 및 제출 기한을 안내드립니다. 미제출 시 정산이 지연될 수 있사오니 기한 내 제출 부탁드립니다.',
-    author: '정산팀',
-    attachments: [{ name: '정산_제출_요령.pdf', url: '#' }],
-  },
-  '7': {
-    body: '11월 30일(토) 02:00 ~ 06:00 시스템 점검으로 인해 포털 접속이 불가합니다. 이용에 참고 부탁드립니다.',
-    author: '시스템관리팀',
-    attachments: [],
-  },
-  '8': {
-    body: '2025년 최신 종합 카탈로그입니다. 대리점 영업 활동에 참고해 주세요.',
-    author: '마케팅팀',
-    attachments: [{ name: '2025_종합_카탈로그.pdf', url: '#' }],
-  },
-  '9': {
-    body: '수전 및 도기 카테고리 신제품 카탈로그입니다.',
-    author: '마케팅팀',
-    attachments: [{ name: '신제품_카탈로그_수전도기.pdf', url: '#' }],
-  },
-};
-
-function getTypeLabel(type) {
-  switch (type) {
-    case TYPE_NOTICE:
-      return '공지';
-    case TYPE_PROMO:
-      return '자료';
-    case TYPE_WORK:
-      return '자료';
-    case TYPE_CATALOG:
-      return '카탈로그';
-    default:
-      return type;
-  }
+function getExposeStatus(item) {
+  if (TODAY < item.exposeFrom) return 'scheduled';
+  if (TODAY > item.exposeTo) return 'ended';
+  return 'active';
 }
 
-function getTypeBadgeLabel(type) {
-  switch (type) {
-    case TYPE_PROMO:
-      return '홍보자료';
-    case TYPE_WORK:
-      return '업무자료';
-    case TYPE_CATALOG:
-      return '종합카탈로그';
-    default:
-      return null;
-  }
+function formatTypeLabel(type) {
+  if (type === TAB_NOTICE) return '공지';
+  if (type === TAB_PROMO) return '홍보';
+  return '업무';
+}
+
+function getStatusLabel(item) {
+  const status = getExposeStatus(item);
+  if (status === 'active') return '노출중';
+  if (status === 'scheduled') return '예약';
+  return '만료';
 }
 
 export function PartnerNoticePage() {
-  const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState(TAB_ALL);
-  const [drawerItem, setDrawerItem] = useState(null);
-
-  const isAdmin = hasPermission(user, PERMISSIONS.MANAGE_PARTNER_NOTICE);
-
-  const filteredItems = useMemo(() => {
-    if (activeTab === TAB_ALL) return MOCK_ITEMS;
-    return MOCK_ITEMS.filter((item) => item.type === activeTab);
-  }, [activeTab]);
+  const [items, setItems] = useState(INITIAL_ITEMS);
+  const [tab, setTab] = useState(TAB_ALL);
+  const [query, setQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [loginFilter, setLoginFilter] = useState('all');
+  const [selectedId, setSelectedId] = useState(null);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [registerForm, setRegisterForm] = useState({
+    type: TAB_NOTICE,
+    title: '',
+    body: '',
+    exposeFrom: TODAY,
+    exposeTo: '2026-12-31',
+    showOnLogin: false,
+    filesText: '',
+  });
 
   const tabs = [
     { key: TAB_ALL, label: '전체' },
     { key: TAB_NOTICE, label: '공지사항' },
     { key: TAB_PROMO, label: '홍보자료' },
     { key: TAB_WORK, label: '업무자료' },
-    { key: TAB_CATALOG, label: '카탈로그' },
   ];
 
-  const handleDetail = (row) => {
-    setDrawerItem(row);
+  const list = useMemo(() => {
+    return items.filter((item) => {
+      if (tab !== TAB_ALL && item.type !== tab) return false;
+      if (query && !item.title.toLowerCase().includes(query.toLowerCase())) return false;
+      if (statusFilter !== 'all' && getExposeStatus(item) !== statusFilter) return false;
+      if (loginFilter === 'login' && !item.showOnLogin) return false;
+      if (loginFilter === 'normal' && item.showOnLogin) return false;
+      return true;
+    });
+  }, [items, tab, query, statusFilter, loginFilter]);
+
+  const selected = list.find((item) => item.id === selectedId) || items.find((item) => item.id === selectedId) || null;
+
+  const handleToggleExpose = (id) => {
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.id !== id) return item;
+        const isActive = getExposeStatus(item) === 'active';
+        if (isActive) {
+          return { ...item, exposeTo: '2026-04-06' };
+        }
+        return { ...item, exposeFrom: TODAY, exposeTo: '2026-12-31' };
+      })
+    );
+    notify.success('노출 상태가 변경되었습니다. (목업)');
   };
 
-  const handleCloseDrawer = () => {
-    setDrawerItem(null);
+  const handleDuplicate = (target) => {
+    const clone = {
+      ...target,
+      id: String(Date.now()),
+      title: `${target.title} (복제본)`,
+      date: TODAY,
+      exposeFrom: TODAY,
+      exposeTo: '2026-12-31',
+    };
+    setItems((prev) => [clone, ...prev]);
+    notify.success('공지/자료를 복제했습니다. (목업)');
   };
 
-  const handleRegister = () => {
-    alert('등록하기 화면은 추후 연동됩니다.');
+  const openRegister = () => {
+    setRegisterForm({
+      type: TAB_NOTICE,
+      title: '',
+      body: '',
+      exposeFrom: TODAY,
+      exposeTo: '2026-12-31',
+      showOnLogin: false,
+      filesText: '',
+    });
+    setIsRegisterOpen(true);
   };
 
-  const handleEdit = (item) => {
-    alert(`수정: ${item.title} (추후 연동)`);
-  };
-
-  const handleDelete = (item) => {
-    if (window.confirm(`"${item.title}"을(를) 삭제하시겠습니까?`)) {
-      alert('삭제는 추후 API 연동 후 적용됩니다.');
-      handleCloseDrawer();
+  const handleRegisterSubmit = () => {
+    if (!registerForm.title.trim()) {
+      notify.warning('제목을 입력해주세요.');
+      return;
     }
-  };
-
-  const handleDownload = (e, file) => {
-    if (file.url === '#') {
-      e.preventDefault();
-      alert(`다운로드: ${file.name} (목업)`);
+    if (!registerForm.body.trim()) {
+      notify.warning('내용을 입력해주세요.');
+      return;
     }
-  };
-
-  // Drawer 열릴 때 body 스크롤 잠금
-  useEffect(() => {
-    if (drawerItem) {
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = '';
-      };
+    if (registerForm.exposeFrom > registerForm.exposeTo) {
+      notify.warning('노출 종료일은 시작일보다 같거나 이후여야 합니다.');
+      return;
     }
-  }, [drawerItem]);
 
-  const detail = drawerItem ? MOCK_DETAIL[drawerItem.id] : null;
-  const attachments = detail?.attachments ?? [];
+    const files = registerForm.filesText
+      .split(',')
+      .map((v) => v.trim())
+      .filter(Boolean);
+
+    const newItem = {
+      id: String(Date.now()),
+      type: registerForm.type,
+      title: registerForm.title.trim(),
+      date: TODAY,
+      body: registerForm.body.trim(),
+      files,
+      exposeFrom: registerForm.exposeFrom,
+      exposeTo: registerForm.exposeTo,
+      showOnLogin: registerForm.showOnLogin,
+    };
+
+    setItems((prev) => [newItem, ...prev]);
+    setIsRegisterOpen(false);
+    notify.success('공지/자료가 등록되었습니다. (목업)');
+  };
 
   return (
     <PageShell
       path={ROUTES.PARTNER_NOTICE}
-      description="공지사항과 홍보·업무 자료를 확인할 수 있습니다."
-      actions={
-        <button type="button" className={styles.primaryBtn} onClick={handleRegister}>
-          등록하기
-        </button>
-      }
+      title="공지/자료실"
+      actions={<button className={styles.primaryBtn} onClick={openRegister}>등록하기</button>}
     >
       <div className={styles.wrapper}>
-        <div className={styles.tabList} role="tablist" aria-label="카테고리">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              role="tab"
-              aria-selected={activeTab === tab.key}
-              className={classnames(styles.tab, activeTab === tab.key && styles.tabActive)}
-              onClick={() => setActiveTab(tab.key)}
-            >
-              {tab.label}
+        <div className={styles.tabList}>
+          {tabs.map((item) => (
+            <button key={item.key} className={`${styles.tab} ${tab === item.key ? styles.tabActive : ''}`} onClick={() => setTab(item.key)}>
+              {item.label}
             </button>
           ))}
         </div>
 
         <div className={styles.tableWrap}>
+          <div className={styles.filterRow}>
+            <input className={styles.searchInput} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="제목 검색" />
+            <select className={styles.select} value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+              <option value="all">상태 전체</option>
+              <option value="active">노출중</option>
+              <option value="scheduled">예약</option>
+              <option value="ended">만료</option>
+            </select>
+            <select className={styles.select} value={loginFilter} onChange={(e) => setLoginFilter(e.target.value)}>
+              <option value="all">노출 방식 전체</option>
+              <option value="login">로그인 팝업</option>
+              <option value="normal">일반 노출</option>
+            </select>
+          </div>
           <table className={styles.table}>
             <thead>
               <tr>
                 <th className={styles.th}>유형</th>
                 <th className={styles.th}>제목</th>
+                <th className={styles.th}>노출 상태</th>
+                <th className={styles.th}>노출 기간</th>
+                <th className={styles.th}>로그인 노출</th>
                 <th className={styles.th}>작성일</th>
-                <th className={styles.th}>첨부파일</th>
+                <th className={styles.th}>관리</th>
               </tr>
             </thead>
             <tbody>
-              {filteredItems.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className={styles.emptyCell}>
-                    해당 카테고리에 게시물이 없습니다.
-                  </td>
-                </tr>
+              {list.length === 0 ? (
+                <tr><td colSpan={7} className={styles.emptyCell}>조회 결과가 없습니다.</td></tr>
               ) : (
-                filteredItems.map((row) => {
-                  const badgeLabel = getTypeBadgeLabel(row.type);
-                  return (
-                    <tr key={row.id} className={styles.row}>
-                      <td className={styles.td}>{getTypeLabel(row.type)}</td>
-                      <td className={styles.td}>
-                        <button
-                          type="button"
-                          className={styles.titleLink}
-                          onClick={() => handleDetail(row)}
-                        >
-                          <span className={styles.titleCell}>
-                            {row.title}
-                            {badgeLabel && (
-                              <span
-                                className={classnames(
-                                  styles.badge,
-                                  row.type === TYPE_PROMO && styles.badgePromo,
-                                  row.type === TYPE_WORK && styles.badgeWork
-                                )}
-                              >
-                                {badgeLabel}
-                              </span>
-                            )}
-                          </span>
-                        </button>
-                      </td>
-                      <td className={styles.td}>{row.date}</td>
-                      <td className={styles.td}>{row.hasAttachment ? '있음' : '—'}</td>
-                    </tr>
-                  );
-                })
+                list.map((item) => (
+                  <tr key={item.id} className={styles.row}>
+                    <td className={styles.td}>{formatTypeLabel(item.type)}</td>
+                    <td className={styles.td}>
+                      <button className={styles.titleLink} onClick={() => setSelectedId(item.id)} title={item.title}>{item.title}</button>
+                    </td>
+                    <td className={styles.td}>
+                      <span className={`${styles.statusBadge} ${
+                        getExposeStatus(item) === 'active'
+                          ? styles.statusActive
+                          : getExposeStatus(item) === 'scheduled'
+                            ? styles.statusScheduled
+                            : styles.statusEnded
+                      }`}
+                      >
+                        {getStatusLabel(item)}
+                      </span>
+                    </td>
+                    <td className={styles.td}>{item.exposeFrom} ~ {item.exposeTo}</td>
+                    <td className={styles.td}>{item.showOnLogin ? 'Y' : 'N'}</td>
+                    <td className={styles.td}>{item.date}</td>
+                    <td className={styles.td}>
+                      <button className={styles.editBtn} onClick={() => notify.info('수정 기능은 추후 연동됩니다.')}>수정</button>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => {
+                          if (confirmAction(`"${item.title}"을(를) 삭제하시겠습니까?`)) {
+                            setItems((prev) => prev.filter((v) => v.id !== item.id));
+                            notify.success('삭제되었습니다. (목업)');
+                          }
+                        }}
+                      >
+                        삭제
+                      </button>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
         </div>
-      </div>
 
-      {/* 슬라이드 오버: 상세보기 */}
-      <Drawer open={Boolean(drawerItem)} onClose={handleCloseDrawer} width="45%">
-        {drawerItem && (
-          <>
-            {/* 헤더: 닫기(X) + 관리자일 때 수정/삭제 */}
-            <div className={styles.drawerHeader}>
-              <div className={styles.drawerActionsTop}>
-                {isAdmin && (
-                  <div className={styles.drawerAdminActions}>
-                    <button type="button" className={styles.editBtn} onClick={() => handleEdit(drawerItem)}>
-                      수정
-                    </button>
-                    <button type="button" className={styles.deleteBtn} onClick={() => handleDelete(drawerItem)}>
-                      삭제
-                    </button>
-                  </div>
-                )}
-                <button
-                  type="button"
-                  className={styles.closeBtn}
-                  onClick={handleCloseDrawer}
-                  aria-label="닫기"
-                >
-                  <X size={22} strokeWidth={2} />
-                </button>
-              </div>
-            </div>
-
-            <div className={styles.drawerScroll}>
-              {/* 상단: 배지, 제목, 작성일·작성자 */}
-              <div className={styles.drawerMeta}>
-                <span
-                  className={classnames(
-                    styles.drawerBadge,
-                    drawerItem.type === TYPE_NOTICE && styles.drawerBadgeNotice,
-                    drawerItem.type === TYPE_PROMO && styles.badgePromo,
-                    drawerItem.type === TYPE_WORK && styles.badgeWork
-                  )}
-                >
-                  {drawerItem.type === TYPE_NOTICE ? '공지' : getTypeBadgeLabel(drawerItem.type) ?? '자료'}
-                </span>
-                <h2 className={styles.drawerTitle}>{drawerItem.title}</h2>
-                <p className={styles.drawerDateAuthor}>
-                  {drawerItem.date} · {detail?.author ?? '-'}
-                </p>
-              </div>
-
-              {/* 본문 (스크롤) */}
-              <div className={styles.drawerBody}>
-                <div className={styles.drawerBodyText}>
-                  {detail?.body?.split('\n').map((line, i) => (
-                    <p key={i}>{line || <br />}</p>
-                  )) ?? '내용 없음'}
+        {selected ? (
+          <div className={styles.modalOverlay} onClick={() => setSelectedId(null)}>
+            <section className={styles.detailModal} onClick={(e) => e.stopPropagation()}>
+              <header className={styles.detailHeader}>
+                <div>
+                  <h3 className={styles.drawerTitle}>{selected.title}</h3>
+                  <p className={styles.drawerDateAuthor}>작성일 {selected.date}</p>
                 </div>
-              </div>
-
-              {/* 하단: 첨부파일 */}
-              <div className={styles.drawerAttachments}>
-                <h3 className={styles.drawerAttachmentsTitle}>첨부파일</h3>
-                {attachments.length === 0 ? (
-                  <p className={styles.drawerAttachmentsEmpty}>첨부된 파일이 없습니다.</p>
-                ) : (
+                <div className={styles.detailActions}>
+                  <button className={styles.editBtn} onClick={() => handleToggleExpose(selected.id)}>
+                    {getExposeStatus(selected) === 'active' ? '노출중지' : '노출재개'}
+                  </button>
+                  <button className={styles.editBtn} onClick={() => handleDuplicate(selected)}>복제</button>
+                  <button className={styles.editBtn} onClick={() => notify.info('로그인 팝업 미리보기는 API 연동 후 제공합니다.')}>로그인 미리보기</button>
+                  <button className={styles.closeBtn} onClick={() => setSelectedId(null)}>닫기</button>
+                </div>
+              </header>
+              <div className={styles.detailBody}>
+                <div className={styles.metaGrid}>
+                  <div className={styles.metaItem}><span>유형</span><strong>{formatTypeLabel(selected.type)}</strong></div>
+                  <div className={styles.metaItem}><span>노출상태</span><strong>{getStatusLabel(selected)}</strong></div>
+                  <div className={styles.metaItem}><span>노출기간</span><strong>{selected.exposeFrom} ~ {selected.exposeTo}</strong></div>
+                  <div className={styles.metaItem}><span>로그인 노출</span><strong>{selected.showOnLogin ? '사용' : '미사용'}</strong></div>
+                </div>
+                <div className={styles.drawerBody}>
+                  <div className={styles.drawerBodyTextWrap}>
+                    <p className={styles.drawerBodyText}>{selected.body}</p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className={styles.drawerAttachmentsTitle}>첨부파일</h4>
                   <ul className={styles.attachmentList}>
-                    {attachments.map((file, idx) => (
-                      <li key={idx}>
+                    {selected.files.length > 0 ? selected.files.map((file) => (
+                      <li key={file}>
                         <a
-                          href={file.url}
                           className={styles.attachmentLink}
-                          download={file.name}
-                          onClick={(e) => handleDownload(e, file)}
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            notify.info('다운로드는 추후 연동됩니다.');
+                          }}
                         >
-                          <FileDown size={18} strokeWidth={2} />
-                          <span>{file.name}</span>
+                          {file}
                         </a>
                       </li>
-                    ))}
+                    )) : <li className={styles.drawerDateAuthor}>첨부파일 없음</li>}
                   </ul>
-                )}
+                </div>
               </div>
-            </div>
+            </section>
+          </div>
+        ) : null}
 
-            {/* 관리자: 하단 고정 액션 (모바일 대비) */}
-            {isAdmin && (
-              <div className={styles.drawerFooter}>
-                <button type="button" className={styles.editBtn} onClick={() => handleEdit(drawerItem)}>
-                  수정
-                </button>
-                <button type="button" className={styles.deleteBtn} onClick={() => handleDelete(drawerItem)}>
-                  삭제
-                </button>
+        {isRegisterOpen ? (
+          <div className={styles.modalOverlay} onClick={() => setIsRegisterOpen(false)}>
+            <section className={styles.registerModal} onClick={(e) => e.stopPropagation()}>
+              <header className={styles.detailHeader}>
+                <div>
+                  <h3 className={styles.drawerTitle}>공지/자료 등록</h3>
+                  <p className={styles.drawerDateAuthor}>노출 기간과 로그인 노출 옵션을 함께 설정하세요.</p>
+                </div>
+                <div className={styles.detailActions}>
+                  <button className={styles.closeBtn} onClick={() => setIsRegisterOpen(false)}>닫기</button>
+                </div>
+              </header>
+              <div className={styles.formBody}>
+                <div className={styles.formGrid}>
+                  <label className={styles.formItem}>
+                    <span>유형</span>
+                    <select className={styles.select} value={registerForm.type} onChange={(e) => setRegisterForm((p) => ({ ...p, type: e.target.value }))}>
+                      <option value={TAB_NOTICE}>공지사항</option>
+                      <option value={TAB_PROMO}>홍보자료</option>
+                      <option value={TAB_WORK}>업무자료</option>
+                    </select>
+                  </label>
+                  <label className={styles.formItem}>
+                    <span>로그인 노출</span>
+                    <label className={styles.checkInline}>
+                      <input
+                        type="checkbox"
+                        checked={registerForm.showOnLogin}
+                        onChange={(e) => setRegisterForm((p) => ({ ...p, showOnLogin: e.target.checked }))}
+                      />
+                      로그인 시 팝업 노출
+                    </label>
+                  </label>
+                  <label className={`${styles.formItem} ${styles.full}`}>
+                    <span>제목</span>
+                    <input className={styles.input} value={registerForm.title} onChange={(e) => setRegisterForm((p) => ({ ...p, title: e.target.value }))} placeholder="제목 입력" />
+                  </label>
+                  <label className={styles.formItem}>
+                    <span>노출 시작일</span>
+                    <input type="date" className={styles.input} value={registerForm.exposeFrom} onChange={(e) => setRegisterForm((p) => ({ ...p, exposeFrom: e.target.value }))} />
+                  </label>
+                  <label className={styles.formItem}>
+                    <span>노출 종료일</span>
+                    <input type="date" className={styles.input} value={registerForm.exposeTo} onChange={(e) => setRegisterForm((p) => ({ ...p, exposeTo: e.target.value }))} />
+                  </label>
+                  <label className={`${styles.formItem} ${styles.full}`}>
+                    <span>첨부파일명(쉼표 구분)</span>
+                    <input className={styles.input} value={registerForm.filesText} onChange={(e) => setRegisterForm((p) => ({ ...p, filesText: e.target.value }))} placeholder="예: 공지.pdf, 가이드.pptx" />
+                  </label>
+                  <label className={`${styles.formItem} ${styles.full}`}>
+                    <span>내용</span>
+                    <textarea className={styles.textarea} value={registerForm.body} onChange={(e) => setRegisterForm((p) => ({ ...p, body: e.target.value }))} placeholder="공지/자료 상세 내용을 입력하세요." />
+                  </label>
+                </div>
               </div>
-            )}
-          </>
-        )}
-      </Drawer>
+              <footer className={styles.formFooter}>
+                <button className={styles.secondaryBtn} onClick={() => setIsRegisterOpen(false)}>취소</button>
+                <button className={styles.primaryBtn} onClick={handleRegisterSubmit}>등록</button>
+              </footer>
+            </section>
+          </div>
+        ) : null}
+      </div>
     </PageShell>
   );
 }

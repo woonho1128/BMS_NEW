@@ -1,226 +1,122 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
-import { ListFilter } from '../../../shared/components/ListFilter';
-import { classnames } from '../../../shared/utils/classnames';
+import { ROUTES } from '../../../router/routePaths';
 import { MOCK_PROFIT_LIST } from '../data/profitAnalysisMock';
+import { classnames } from '../../../shared/utils/classnames';
 import styles from './SalesProfitAnalysisPage.module.css';
 
-const STATUS_MAP = {
-  draft: '작성중',
-  inProgress: '결재중',
-  approved: '결재완료',
-  rejected: '반려',
+const STATUS_META = {
+  draft: { label: '작성중', cls: styles.status_draft },
+  inProgress: { label: '결재중', cls: styles.status_inProgress },
+  approved: { label: '결재완료', cls: styles.status_approved },
+  rejected: { label: '반려', cls: styles.status_rejected },
 };
 
-/** profit/new 등록 건과 동일한 목록 사용 */
-const MOCK_LIST = MOCK_PROFIT_LIST;
-
-const STATUS_KEYS = [null, 'draft', 'inProgress', 'approved', 'rejected'];
-const STATUS_LABELS = { null: '전체', draft: '작성중', inProgress: '결재중', approved: '결재완료', rejected: '반려' };
-
-function getCounts(list) {
-  const all = list.length;
-  const draft = list.filter((i) => i.status === 'draft').length;
-  const inProgress = list.filter((i) => i.status === 'inProgress').length;
-  const approved = list.filter((i) => i.status === 'approved').length;
-  const rejected = list.filter((i) => i.status === 'rejected').length;
-  return { all, draft, inProgress, approved, rejected };
-}
-
-const YEAR_OPTIONS = [2026, 2025, 2024, 2023];
-const AUTHOR_OPTIONS = ['전체', '김영업', '이팀장', '박대리', '정매니저', '최과장'];
-
-const DEBOUNCE_MS = 300;
-
-/** profit 필터 설정 (공통 ListFilter, 조건만 profit용) */
-const PROFIT_FILTER_FIELDS = [
-  { id: 'title', label: '제목', type: 'text', placeholder: '제목 검색', row: 0 },
-  { id: 'orderYear', label: '수주년도', type: 'select', options: [{ value: '', label: '전체' }, ...YEAR_OPTIONS.map((y) => ({ value: String(y), label: `${y}년` }))], row: 0 },
-  { id: 'deliveryYear', label: '납품예상년도', type: 'select', options: [{ value: '', label: '전체' }, ...YEAR_OPTIONS.map((y) => ({ value: String(y), label: `${y}년` }))], row: 0 },
-  { id: 'author', label: '등록자', type: 'select', options: AUTHOR_OPTIONS.map((m) => ({ value: m === '전체' ? '' : m, label: m })), row: 0 },
-  { id: 'mineOnly', label: '본인글보기', type: 'checkbox', row: 0 },
+const STATUS_TABS = [
+  { key: 'all', label: '전체' },
+  { key: 'draft', label: '작성중' },
+  { key: 'inProgress', label: '결재중' },
+  { key: 'approved', label: '결재완료' },
+  { key: 'rejected', label: '반려' },
 ];
-
-const INITIAL_PROFIT_FILTER = {
-  title: '',
-  orderYear: '',
-  deliveryYear: '',
-  author: '',
-  mineOnly: false,
-};
 
 export function SalesProfitAnalysisPage() {
   const navigate = useNavigate();
-  const [statusFilter, setStatusFilter] = useState(null);
-  const [filterValue, setFilterValue] = useState(INITIAL_PROFIT_FILTER);
-  const [titleFilter, setTitleFilter] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [query, setQuery] = useState('');
+  const [status, setStatus] = useState('all');
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
-  useEffect(() => {
-    const t = setTimeout(() => setTitleFilter((filterValue.title || '').trim()), DEBOUNCE_MS);
-    return () => clearTimeout(t);
-  }, [filterValue.title]);
-
-  const filteredList = useMemo(() => {
-    let list = [...MOCK_LIST];
-    if (statusFilter != null) list = list.filter((item) => item.status === statusFilter);
-    if (titleFilter) {
-      const q = titleFilter.toLowerCase();
-      list = list.filter((item) => item.title.toLowerCase().includes(q));
-    }
-    const f = filterValue;
-    if (f.orderYear) list = list.filter((item) => item.orderYear === f.orderYear);
-    if (f.deliveryYear) list = list.filter((item) => item.deliveryYear === f.deliveryYear);
-    if (f.author) list = list.filter((item) => item.author === f.author);
-    if (f.mineOnly) list = list.filter((item) => item.author === '김영업');
-    return list;
-  }, [statusFilter, titleFilter, filterValue]);
-
-  const paginatedList = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredList.slice(start, start + itemsPerPage);
-  }, [filteredList, currentPage]);
-
-  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
-  const tabCounts = useMemo(() => getCounts(MOCK_LIST), []);
-
-  const handleRowClick = useCallback((id, e) => {
-    if (e.target.closest('[data-action]')) return;
-    navigate(`/profit/${id}`);
-  }, [navigate]);
-
-  const handleAction = useCallback((action, id, e) => {
-    e.stopPropagation();
-    console.log(action, id);
+  const counts = useMemo(() => {
+    return STATUS_TABS.reduce((acc, tab) => {
+      acc[tab.key] = tab.key === 'all' ? MOCK_PROFIT_LIST.length : MOCK_PROFIT_LIST.filter((item) => item.status === tab.key).length;
+      return acc;
+    }, {});
   }, []);
 
-  const handleFilterChange = useCallback((id, value) => {
-    setFilterValue((prev) => ({ ...prev, [id]: value }));
-    setCurrentPage(1);
-  }, []);
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return MOCK_PROFIT_LIST.filter((item) => {
+      if (status !== 'all' && item.status !== status) return false;
+      if (q && !String(item.title || '').toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [query, status]);
 
-  const handleResetFilters = useCallback(() => {
-    setFilterValue(INITIAL_PROFIT_FILTER);
-    setTitleFilter('');
-    setCurrentPage(1);
-  }, []);
-
-  const headerActions = (
-    <>
-      <Button variant="secondary" onClick={() => {}}>
-        이전 손익 복사 등록
-      </Button>
-      <Button variant="primary" onClick={() => navigate('/profit/new')}>
-        손익분석 신규 등록
-      </Button>
-    </>
-  );
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(page, totalPages);
+  const paged = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
 
   return (
-    <PageShell
-      path="/profit"
-      title="손익분석"
-      description="손익분석 생명주기를 한눈에 관리"
-      actions={headerActions}
-    >
+    <PageShell path={ROUTES.PROFIT} title="손익분석" description="손익분석 작성/결재 상태를 한 번에 확인합니다.">
       <div className={styles.page}>
-        {/* StatusTabs */}
         <div className={styles.tabsRow}>
           <div className={styles.tabs}>
-            {STATUS_KEYS.map((key) => (
+            {STATUS_TABS.map((tab) => (
               <button
-                key={key ?? 'all'}
+                key={tab.key}
                 type="button"
-                className={classnames(styles.tab, statusFilter === key && styles.tabActive)}
+                className={classnames(styles.tab, status === tab.key && styles.tabActive)}
                 onClick={() => {
-                  setStatusFilter(key);
-                  setCurrentPage(1);
+                  setStatus(tab.key);
+                  setPage(1);
                 }}
               >
-                <span>{STATUS_LABELS[key]}</span>
-                <span className={styles.tabCount}>{tabCounts[key === null ? 'all' : key].toLocaleString()}</span>
+                {tab.label}
+                <span className={styles.tabCount}>{counts[tab.key]}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* 필터 (공통 ListFilter, 조건만 profit 설정) */}
-        <ListFilter
-          className={styles.toolbarWrap}
-          fields={PROFIT_FILTER_FIELDS}
-          value={filterValue}
-          onChange={handleFilterChange}
-          onReset={handleResetFilters}
-        />
+        <div className={styles.toolbarWrap}>
+          <input
+            className={styles.searchInput}
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(1);
+            }}
+            placeholder="제목 검색"
+          />
+        </div>
 
-        {/* List */}
-        <section className={styles.listSection} aria-label="손익분석 목록">
+        <section className={styles.listSection}>
           <div className={styles.listHeaderRow}>
-            <span className={styles.listCount}>{filteredList.length}건</span>
+            <Button variant="primary" onClick={() => navigate(ROUTES.PROFIT_NEW)}>신규 등록</Button>
           </div>
           <ul className={styles.list}>
-            {paginatedList.map((item) => (
-              <li key={item.id}>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className={styles.rowCard}
-                  onClick={(e) => handleRowClick(item.id, e)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleRowClick(item.id, e);
-                    }
-                  }}
-                >
-                  <span className={classnames(styles.badge, styles[`status_${item.status}`])}>
-                    {STATUS_MAP[item.status]}
-                  </span>
-                  <span className={styles.rowTitle}>{item.title}</span>
-                  <span className={styles.rowMeta}>
-                    {item.orderYear} / {item.deliveryYear} · {item.author} · {item.createdAt}
-                  </span>
-                  <div className={styles.rowActions} onClick={(e) => e.stopPropagation()} data-action>
-                    {item.status === 'draft' && (
-                      <>
-                        <Button variant="secondary" className={styles.actionBtn} onClick={(e) => handleAction('edit', item.id, e)}>수정</Button>
-                        <Button variant="primary" className={styles.actionBtn} onClick={(e) => handleAction('submit', item.id, e)}>결재상신</Button>
-                      </>
-                    )}
-                    {item.status === 'approved' && (
-                      <Button variant="primary" className={styles.actionBtn} onClick={(e) => handleAction('register', item.id, e)}>영업정보 등록</Button>
-                    )}
-                  </div>
-                </div>
-              </li>
-            ))}
+            {paged.map((row) => {
+              const meta = STATUS_META[row.status] || STATUS_META.draft;
+              return (
+                <li key={row.id}>
+                  <button className={styles.rowCard} onClick={() => navigate(`/profit/${row.id}`)}>
+                    <span className={classnames(styles.badge, meta.cls)}>{meta.label}</span>
+                    <span className={styles.rowTitle}>{row.title}</span>
+                    <span className={styles.rowMeta}>{row.author}</span>
+                    <span className={styles.rowMeta}>{row.orderYear}년</span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
-          {filteredList.length === 0 && (
-            <p className={styles.empty}>조건에 맞는 손익분석이 없습니다.</p>
-          )}
-        </section>
 
-        {totalPages > 1 && (
+          {paged.length === 0 && <div className={styles.empty}>조회 결과가 없습니다.</div>}
+
           <div className={styles.pagination}>
-            <button type="button" className={styles.pageBtn} disabled={currentPage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}>이전</button>
+            <button className={styles.pageBtn} onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage <= 1}>이전</button>
             <div className={styles.pageNumbers}>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  type="button"
-                  className={classnames(styles.pageNum, currentPage === page && styles.pageNumActive)}
-                  onClick={() => setCurrentPage(page)}
-                >
-                  {page}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).slice(0, 7).map((n) => (
+                <button key={n} className={classnames(styles.pageNum, n === safePage && styles.pageNumActive)} onClick={() => setPage(n)}>
+                  {n}
                 </button>
               ))}
             </div>
-            <button type="button" className={styles.pageBtn} disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}>다음</button>
+            <button className={styles.pageBtn} onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={safePage >= totalPages}>다음</button>
           </div>
-        )}
+        </section>
       </div>
     </PageShell>
   );

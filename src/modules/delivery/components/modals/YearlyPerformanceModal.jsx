@@ -61,8 +61,8 @@ export const YearlyPerformanceModal = ({ isOpen, onClose }) => {
         }}>
             <div className={styles.summaryModal} style={modalStyle} onClick={e => e.stopPropagation()}>
                 <div className={styles.modalHeader}>
-                    <div className={styles.title}>?곕룄蹂??ㅼ쟻 (2026??</div>
-                    <button className={styles.closeButton} onClick={onClose}>횞</button>
+                    <div className={styles.title}>연도별 실적 (2026)</div>
+                    <button className={styles.closeButton} onClick={onClose}>×</button>
                 </div>
 
                 <div style={contentStyle}>
@@ -91,7 +91,7 @@ export const YearlyPerformanceModal = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className={styles.modalFooter}>
-                    <button className={styles.footerButton} onClick={onClose}>?リ린</button>
+                    <button className={styles.footerButton} onClick={onClose}>닫기</button>
                 </div>
             </div>
         </div>

@@ -1,6 +1,4 @@
-/* ===============================
-   1. ?꾩껜: h-screen(100vh) 怨좎젙, sticky top-0, transition-all
-================================ */
+﻿
 .sidebar {
   flex-shrink: 0;
   width: var(--sidebar-width-collapsed);
@@ -12,7 +10,7 @@
   display: flex;
   flex-direction: column;
   border-right: 1px solid rgba(255, 255, 255, 0.06);
-  /* allow bottom dropdown to overflow when collapsed */
+  
   overflow: visible;
   z-index: 100;
   position: sticky;
@@ -27,16 +25,14 @@
   min-width: var(--sidebar-width);
 }
 
-/* ===============================
-   ?곷떒: 濡쒓퀬 & 而⑦듃濡?(Toggle, Pin, Logout)
-================================ */
+
 .top {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  /* 濡쒓퀬(媛濡? + 踰꾪듉 寃뱀묠 諛⑹? */
+  
   padding: 14px 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   min-width: 0;
@@ -60,12 +56,12 @@
 }
 
 .brandMark {
-  /* sidebar(湲곕낯 256px)?먯꽌 ?곗륫 踰꾪듉怨?寃뱀튂吏 ?딄쾶 */
+  
   width: 160px;
   height: 44px;
   flex-shrink: 0;
   border-radius: 12px;
-  /* ??諛앹? ?뚯깋 諛뷀깢 */
+  
   background: #e4ebf4;
   border: none;
   display: flex;
@@ -153,9 +149,7 @@
   color: #60a5fa;
 }
 
-/* ===============================
-   ?섎떒: ?ъ슜???⑤꼸 (Tip ?泥?
-================================ */
+
 .userPanel {
   flex-shrink: 0;
   display: flex;
@@ -231,8 +225,7 @@
 }
 
 .sidebar:not(.sidebarExpanded) .userDropdown {
-  /* ?묓엺 ?곹깭(64px)?먯꽌???쇱そ?쇰줈 諛???붾㈃ 諛뽰쑝濡??섍?誘濡?
-     ?ъ씠?쒕컮 ?ㅻⅨ履?諛붽묑?쇰줈 ?쇱튂湲?*/
+  
   left: calc(100% + 8px);
   right: auto;
   bottom: 12px;
@@ -264,7 +257,7 @@
   color: #fecaca;
 }
 
-/* 鍮꾨?踰덊샇 蹂寃?紐⑤떖 ??*/
+
 .pwForm {
   display: flex;
   flex-direction: column;
@@ -317,9 +310,7 @@
   color: #ffffff;
 }
 
-/* ===============================
-   以묎컙: 硫붾돱 (flex-1 + overflow-y-auto), ?ㅽ겕濡ㅻ컮 ?щ┝
-================================ */
+
 .navWrap {
   height: calc(100vh - 45px - 60px);
   overflow-y: auto;
@@ -353,11 +344,11 @@
   min-width: 0;
 }
 
-/* ???꾪솚 UI */
+
 .tabs {
   display: flex;
   gap: 4px;
-  /* ?꾩껜 硫붾돱/利먭꺼李얘린 ??쓣 議곌툑 ?꾨줈 */
+  
   padding: 0 12px 8px 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -397,9 +388,7 @@
   animation: fadeIn 0.2s ease;
 }
 
-/* ===============================
-   ?섎떒: ?뚯궗 ?뺣낫 ?명꽣 (60px, absolute)
-================================ */
+
 .sidebarFooter {
   position: absolute;
   bottom: 0;
@@ -552,7 +541,7 @@
   flex-shrink: 0;
 }
 
-/* ?묓엺 ?곹깭: ?꾩씠肄섎쭔 */
+
 .collapsedNav {
   display: flex;
   flex-direction: column;
@@ -587,9 +576,7 @@
   color: #93c5fd;
 }
 
-/* ===============================
-   Group / 移댄뀒怨좊━ / ?꾩씠??(IA ?좎?)
-================================ */
+
 .group {
   margin-bottom: 4px;
   min-width: 0;
@@ -675,7 +662,7 @@
   margin-bottom: 0;
 }
 
-/* 2?덈꺼 ?묎린/?쇱튂湲?洹몃９ (1?덈꺼 ?대?) */
+
 .nestedGroup {
   margin-bottom: 8px;
   min-width: 0;
@@ -766,7 +753,7 @@
   text-overflow: ellipsis;
 }
 
-/* 蹂꾪몴 踰꾪듉 */
+
 .starBtn {
   position: absolute;
   right: 8px;
@@ -802,9 +789,7 @@
 }
 
 
-/* ===============================
-   ?섎떒: Tip (?쇱묠 ???꾩껜, ?묓옒 ???꾩씠肄섎쭔)
-================================ */
+
 .footer {
   flex-shrink: 0;
   padding: 14px 16px;
@@ -859,9 +844,7 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
-/* ===============================
-   Mobile
-================================ */
+
 @media (max-width: 768px) {
   .sidebarHeader {
     height: 45px;
@@ -893,7 +876,7 @@
     bottom: 0;
     height: 100vh;
     z-index: 101;
-    /* Mobile Drawer Styles */
+    
     width: min(var(--sidebar-width), 85vw);
     min-width: min(var(--sidebar-width), 85vw);
     transform: translateX(-100%);
@@ -903,12 +886,12 @@
 
   .sidebarExpanded {
     transform: translateX(0);
-    /* Width constraints maintained from base .sidebar */
+    
     width: min(var(--sidebar-width), 85vw);
     min-width: min(var(--sidebar-width), 85vw);
   }
 
-  /* Remove old width-hiding logic */
+  
   .sidebar:not(.sidebarExpanded) {
     width: min(var(--sidebar-width), 85vw);
     min-width: min(var(--sidebar-width), 85vw);
@@ -916,7 +899,7 @@
 }
 
 @media (max-width: 600px) {
-  /* keep, 480?먯꽌 ??異뺤냼 */
+  
 }
 
 @media (max-width: 480px) {
@@ -924,4 +907,5 @@
     display: none;
   }
 }
+
 

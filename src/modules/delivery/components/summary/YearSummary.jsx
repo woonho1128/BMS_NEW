@@ -1,101 +1,27 @@
-﻿import React, { useState } from 'react';
-import styles from '../../pages/DeliveryPlanPage.module.css'; // Shared styles
-import { SummaryFilterBar } from '../filters/SummaryFilterBar';
-import { SummarySection } from './SummarySection';
-import { SummaryTable } from '../table/SummaryTable';
-import { SummaryDetailModal } from '../modals/SummaryDetailModal'; // NEW
-import {
-    DEFAULT_YEAR,
-    CATEGORY_AMOUNT_DATA,
-    CATEGORY_WEIGHT_DATA,
-} from '../../data/summaryData';
+﻿import React, { useEffect, useState } from 'react';
+import { notify } from '../../../../shared/utils/notify';
+import styles from './YearSummary.module.css';
 
 export const YearSummary = () => {
-    const [year, setYear] = useState(DEFAULT_YEAR);
-    const [loading, setLoading] = useState(false);
+  const [year, setYear] = useState('2026');
+  const [loading, setLoading] = useState(false);
 
-    // Modal State
-    const [detailModalOpen, setDetailModalOpen] = useState(false);
-    const [detailMode, setDetailMode] = useState('itemCode');
+  useEffect(() => {
+    setLoading(true);
+    notify.info(`${year}년 요약 데이터를 조회 중입니다. (목업)`);
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, [year]);
 
-    // Mock Refresh
-    const handleRefresh = () => {
-        setLoading(true);
-        console.log('Fetching data for year:', year);
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
-    };
-
-    const handleOpenDetail = (mode) => {
-        setDetailMode(mode);
-        setDetailModalOpen(true);
-    };
-
-    return (
-        <>
-            <SummaryFilterBar
-                year={year}
-                onYearChange={setYear}
-                onRefresh={handleRefresh}
-            />
-
-            <div className={styles.content}>
-                {/* Section 1 */}
-                <SummarySection
-                    title={CATEGORY_AMOUNT_DATA.title}
-                    unitText={CATEGORY_AMOUNT_DATA.unitText}
-                >
-                    <SummaryTable
-                        columns={CATEGORY_AMOUNT_DATA.columns}
-                        rows={CATEGORY_AMOUNT_DATA.rows}
-                        loading={loading}
-                    />
-                </SummarySection>
-
-                {/* Section 2 */}
-                <SummarySection
-                    title={CATEGORY_WEIGHT_DATA.title}
-                    unitText={CATEGORY_WEIGHT_DATA.unitText}
-                >
-                    <SummaryTable
-                        columns={CATEGORY_WEIGHT_DATA.columns}
-                        rows={CATEGORY_WEIGHT_DATA.rows}
-                        loading={loading}
-                    />
-                </SummarySection>
-
-                {/* New Action Button Area */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-                    <button
-                        className={styles.actionButton} // Using shared style from page module if available, or inline
-                        style={{
-                            height: '40px',
-                            padding: '0 24px',
-                            border: '1px solid #2f7df6',
-                            backgroundColor: '#fff',
-                            color: '#2f7df6',
-                            borderRadius: '4px',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px'
-                        }}
-                        onClick={() => handleOpenDetail('itemCode')}
-                    >
-                        <span>📊</span> 품번/품목 요약 보기
-                    </button>
-                </div>
-            </div>
-
-            {/* Detail Modal */}
-            <SummaryDetailModal
-                isOpen={detailModalOpen}
-                initialMode={detailMode}
-                onClose={() => setDetailModalOpen(false)}
-            />
-        </>
-    );
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <select className={styles.yearSelect} value={year} onChange={(e) => setYear(e.target.value)}>
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+        </select>
+      </div>
+      <div className={styles.body}>{loading ? '로딩 중...' : '연간 요약 데이터(목업)'}</div>
+    </div>
+  );
 };
-

@@ -103,7 +103,7 @@ const DETAIL_BY_SHIPNO = {
 };
 
 function fmt(n) {
-  return formatNumber(n);
+  return formatNumber(Number(n || 0));
 }
 
 export function DeliveryApprovalPage() {

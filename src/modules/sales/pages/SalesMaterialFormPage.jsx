@@ -1,15 +1,15 @@
-import React, { useState, useCallback, useEffect } from 'react';
+﻿import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { Input } from '../../../shared/components/Input/Input';
 import { RichTextEditor } from '../../../shared/components/RichTextEditor';
+import { notify, confirmAction } from '../../../shared/utils/notify';
 import { getSalesMaterialById, formatFileSize } from '../data/salesMaterialMock';
 import styles from './SalesMaterialFormPage.module.css';
 
-const CONTENT_PLACEHOLDER =
-  '영업자료의 내용을 작성해 주세요. (굵게, 목록, 링크, 이미지, 표 기능 사용 가능)';
+const CONTENT_PLACEHOLDER = '영업자료 내용을 작성해 주세요. (굵게, 목록, 링크, 이미지 등 기능 사용 가능)';
 
 export function SalesMaterialFormPage() {
   const { id } = useParams();
@@ -52,22 +52,16 @@ export function SalesMaterialFormPage() {
 
   const handleSave = useCallback(() => {
     if (!title.trim()) {
-      alert('제목을 입력해 주세요.');
+      notify.warning('제목을 입력해 주세요.');
       return;
     }
 
-    console.log('저장', {
-      title,
-      contentHtml,
-      attachments,
-    });
-
-    alert(isNew ? '영업자료가 등록되었습니다.' : '영업자료가 수정되었습니다.');
+    notify.success(isNew ? '영업자료가 등록되었습니다.' : '영업자료가 수정되었습니다.');
     navigate('/sales/material');
-  }, [title, contentHtml, attachments, isNew, navigate]);
+  }, [title, isNew, navigate]);
 
   const handleCancel = useCallback(() => {
-    if (window.confirm('작성 중인 내용은 저장되지 않습니다. 취소하시겠습니까?')) {
+    if (confirmAction('작성 중인 내용은 저장되지 않습니다. 취소하시겠습니까?')) {
       navigate('/sales/material');
     }
   }, [navigate]);
@@ -76,7 +70,7 @@ export function SalesMaterialFormPage() {
     <PageShell
       path="/sales/material"
       title={isNew ? '영업자료 등록' : '영업자료 수정'}
-      description={isNew ? '새 영업자료를 등록합니다' : '영업자료를 수정합니다'}
+      description={isNew ? '새 영업자료를 등록합니다.' : '영업자료를 수정합니다.'}
     >
       <div className={styles.page}>
         <Card title="기본 정보" className={styles.card}>
@@ -95,7 +89,7 @@ export function SalesMaterialFormPage() {
           </CardBody>
         </Card>
 
-        <Card title="내용 요약" className={styles.card}>
+        <Card title="내용" className={styles.card}>
           <CardBody className={styles.contentCardBody}>
             <RichTextEditor
               value={contentHtml}
@@ -116,7 +110,7 @@ export function SalesMaterialFormPage() {
                 className={styles.fileInput}
                 multiple
                 onChange={handleFileChange}
-                aria-label="첨부파일"
+                aria-label="첨부 파일"
               />
             </div>
             {attachments.length > 0 && (
@@ -125,9 +119,7 @@ export function SalesMaterialFormPage() {
                   <li key={attachment.id} className={styles.attachmentItem}>
                     <div className={styles.attachmentInfo}>
                       <span className={styles.attachmentName}>{attachment.name}</span>
-                      <span className={styles.attachmentSize}>
-                        {formatFileSize(attachment.size)}
-                      </span>
+                      <span className={styles.attachmentSize}>{formatFileSize(attachment.size)}</span>
                     </div>
                     <button
                       type="button"

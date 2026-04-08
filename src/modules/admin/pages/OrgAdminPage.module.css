@@ -30,7 +30,7 @@
   }
 }
 
-/* 醫뚯륫 ?몃━ ?⑤꼸 */
+/* 조직 트리 패널 */
 .treePanel {
   min-width: 0;
   overflow: hidden;
@@ -59,7 +59,6 @@
   min-height: 0;
 }
 
-/* CardBody ?대?媛 flex濡?梨꾩썙吏怨??몃━ ?곸뿭留??ㅽ겕濡?*/
 .treeCard > div {
   flex: 1;
   min-height: 0;
@@ -124,7 +123,6 @@
   overflow-y: auto;
 }
 
-/* ?곗륫 ?곸꽭 ?⑤꼸 */
 .detailPanel {
   min-width: 0;
   overflow: hidden;

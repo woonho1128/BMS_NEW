@@ -6,10 +6,21 @@ import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { usePagination } from '../../../shared/hooks/usePagination';
 import { Pagination } from '../../../shared/components/Pagination/Pagination';
 import { PRICE_CATEGORY_TREE, PRICE_PRODUCT_DATA, createProductComponents } from '../data/priceCatalogMock';
+import { loadPriceCatalogProducts, savePriceCatalogProducts } from '../data/priceCatalogStorage';
 import { formatNumber } from '../../../shared/utils/formatters';
+import { notify } from '../../../shared/utils/notify';
 import styles from './DiscountPromotionPage.module.css';
 
 const formatNum = (num) => formatNumber(num);
+function normalizeDocFiles(docFiles) {
+  const input = docFiles || {};
+  return {
+    testReport: Array.isArray(input.testReport) ? input.testReport : input.testReport ? [input.testReport] : [],
+    ecoCert: Array.isArray(input.ecoCert) ? input.ecoCert : input.ecoCert ? [input.ecoCert] : [],
+    drawingPdf: Array.isArray(input.drawingPdf) ? input.drawingPdf : input.drawingPdf ? [input.drawingPdf] : [],
+    drawingDwg: Array.isArray(input.drawingDwg) ? input.drawingDwg : input.drawingDwg ? [input.drawingDwg] : [],
+  };
+}
 
 function buildDealerMonthlyDetail(row) {
   if (!row) return null;
@@ -82,16 +93,17 @@ const CLIENT_DISCOUNT_DATA = Array.from({ length: 84 }, (_, idx) => {
 });
 
 export function DiscountPromotionPage() {
+  const initialPriceProducts = useMemo(() => loadPriceCatalogProducts(), []);
   const [activeTab, setActiveTab] = useState('1');
   const [selectedDealerRow, setSelectedDealerRow] = useState(null);
-  const [selectedPriceProductId, setSelectedPriceProductId] = useState(PRICE_PRODUCT_DATA[0]?.id || '');
-  const [priceProducts, setPriceProducts] = useState(PRICE_PRODUCT_DATA);
+  const [selectedPriceProductId, setSelectedPriceProductId] = useState(initialPriceProducts[0]?.id || PRICE_PRODUCT_DATA[0]?.id || '');
+  const [priceProducts, setPriceProducts] = useState(initialPriceProducts);
   const [priceFilter, setPriceFilter] = useState({
     majorCategory: '',
     middleCategory: '',
     keyword: '',
   });
-  const [priceDraft, setPriceDraft] = useState(() => PRICE_PRODUCT_DATA[0] || null);
+  const [priceDraft, setPriceDraft] = useState(() => initialPriceProducts[0] || PRICE_PRODUCT_DATA[0] || null);
   const [priceDraftStatus, setPriceDraftStatus] = useState('조회 상태');
   const [priceUploadModalOpen, setPriceUploadModalOpen] = useState(false);
   const [filterValue, setFilterValue] = useState({
@@ -237,8 +249,14 @@ export function DiscountPromotionPage() {
   useEffect(() => {
     if (!selectedPriceProduct) return;
     if (priceDraft?.id === selectedPriceProduct.id) return;
-    setPriceDraft(JSON.parse(JSON.stringify(selectedPriceProduct)));
+    const nextDraft = JSON.parse(JSON.stringify(selectedPriceProduct));
+    nextDraft.docFiles = normalizeDocFiles(nextDraft.docFiles);
+    setPriceDraft(nextDraft);
   }, [priceDraft?.id, selectedPriceProduct]);
+
+  useEffect(() => {
+    savePriceCatalogProducts(priceProducts);
+  }, [priceProducts]);
 
   const handlePriceFilterChange = useCallback((field, value) => {
     setPriceFilter((prev) => {
@@ -253,13 +271,70 @@ export function DiscountPromotionPage() {
   const handlePriceSelectItem = useCallback((id) => {
     const found = priceProducts.find((row) => row.id === id);
     if (!found) return;
+    const nextDraft = JSON.parse(JSON.stringify(found));
+    nextDraft.docFiles = normalizeDocFiles(nextDraft.docFiles);
     setSelectedPriceProductId(id);
-    setPriceDraft(JSON.parse(JSON.stringify(found)));
+    setPriceDraft(nextDraft);
     setPriceDraftStatus(`${found.modelName} 편집 중`);
   }, [priceProducts]);
 
   const handlePriceDraftField = useCallback((field, value) => {
     setPriceDraft((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
+  const handlePriceDraftSeriesName = useCallback((value) => {
+    setPriceDraft((prev) => ({ ...prev, seriesName: value, series: value }));
+  }, []);
+
+  const handlePriceDraftDocUpload = useCallback((field, fileList) => {
+    const parsed = Array.from(fileList || []).map((file) => file?.name).filter(Boolean);
+    if (!parsed.length) return;
+    setPriceDraft((prev) => {
+      const current = normalizeDocFiles(prev?.docFiles);
+      const merged = Array.from(new Set([...(current[field] || []), ...parsed]));
+      return {
+        ...prev,
+        docFiles: {
+          ...current,
+          [field]: merged,
+        },
+      };
+    });
+    notify.success(`${parsed.length}개 파일을 등록했습니다.`);
+  }, []);
+
+  const handlePriceDraftDocRemove = useCallback((field, index) => {
+    setPriceDraft((prev) => {
+      const current = normalizeDocFiles(prev?.docFiles);
+      return {
+        ...prev,
+        docFiles: {
+          ...current,
+          [field]: current[field].filter((_, i) => i !== index),
+        },
+      };
+    });
+  }, []);
+
+  const handlePriceDraftDocReset = useCallback((field) => {
+    setPriceDraft((prev) => {
+      const current = normalizeDocFiles(prev?.docFiles);
+      return {
+        ...prev,
+        docFiles: {
+          ...current,
+          [field]: [],
+        },
+      };
+    });
+  }, []);
+
+  const handlePriceDraftDocResetAll = useCallback(() => {
+    setPriceDraft((prev) => ({
+      ...prev,
+      docFiles: normalizeDocFiles({}),
+    }));
+    notify.info('품목 문서를 전체 초기화했습니다.');
   }, []);
 
   const handlePriceDraftComponentField = useCallback((componentId, field, value) => {
@@ -301,14 +376,23 @@ export function DiscountPromotionPage() {
       majorCategory: priceFilter.majorCategory || PRICE_CATEGORY_TREE[0].major,
       middleCategory: priceFilter.middleCategory || PRICE_CATEGORY_TREE[0].middle[0],
       series: '',
+      seriesName: '',
       modelName: '신규 품목',
       itemCode: '',
       weightKg: 0,
       ksSpec: '',
+      waterSavingGrade: '',
       packUnit: 'EA/PT',
+      shippingOrigin: '',
       baseDate: '2025-06-01',
       note: '',
       imageLabel: 'NEW',
+      docFiles: {
+        testReport: [],
+        ecoCert: [],
+        drawingPdf: [],
+        drawingDwg: [],
+      },
       components: [],
     };
     setPriceProducts((prev) => [newRow, ...prev]);
@@ -320,9 +404,14 @@ export function DiscountPromotionPage() {
 
   const handleSavePriceDraft = useCallback(() => {
     if (!priceDraft) return;
-    setPriceProducts((prev) => prev.map((row) => (row.id === priceDraft.id ? { ...priceDraft } : row)));
+    setPriceProducts((prev) => {
+      const exists = prev.some((row) => row.id === priceDraft.id);
+      if (!exists) return [{ ...priceDraft }, ...prev];
+      return prev.map((row) => (row.id === priceDraft.id ? { ...priceDraft } : row));
+    });
     setSelectedPriceProductId(priceDraft.id);
-    setPriceDraftStatus('목업 데이터 저장 완료');
+    setPriceDraftStatus('저장 완료 (카탈로그 반영)');
+    notify.success('판매단가 저장 내용을 카탈로그에 반영했습니다.');
   }, [priceDraft]);
 
   const handleApplyMockUpload = useCallback(() => {
@@ -332,14 +421,23 @@ export function DiscountPromotionPage() {
         majorCategory: '비데/양변기',
         middleCategory: '일체형비데',
         series: '엑셀업로드 시리즈',
+        seriesName: '엑셀업로드 시리즈',
         modelName: '엑셀 업로드 모델 A',
         itemCode: 'UPA-001',
         weightKg: 29.7,
         ksSpec: 'KS B 2361',
+        waterSavingGrade: '1등급',
         packUnit: 'EA/PT',
+        shippingOrigin: '제천',
         baseDate: '2025-06-01',
         note: '엑셀 업로드',
         imageLabel: 'UPLOAD-A',
+        docFiles: {
+          testReport: ['시험성적서_UPA001.pdf'],
+          ecoCert: ['환경표지_UPA001.pdf'],
+          drawingPdf: ['도면_UPA001.pdf'],
+          drawingDwg: ['도면_UPA001.dwg'],
+        },
         components: createProductComponents('UPA001', 960000),
       },
       {
@@ -347,20 +445,29 @@ export function DiscountPromotionPage() {
         majorCategory: '세면/수전',
         middleCategory: '세면기',
         series: '엑셀업로드 시리즈',
+        seriesName: '엑셀업로드 시리즈',
         modelName: '엑셀 업로드 모델 B',
         itemCode: 'UPB-001',
         weightKg: 16.4,
         ksSpec: 'KS B 2361',
+        waterSavingGrade: '2등급',
         packUnit: 'EA/PT',
+        shippingOrigin: '창원',
         baseDate: '2025-06-01',
         note: '엑셀 업로드',
         imageLabel: 'UPLOAD-B',
+        docFiles: {
+          testReport: [],
+          ecoCert: [],
+          drawingPdf: [],
+          drawingDwg: [],
+        },
         components: createProductComponents('UPB001', 720000),
       },
     ];
     setPriceProducts((prev) => [...uploadRows, ...prev]);
     setPriceUploadModalOpen(false);
-    setPriceDraftStatus('엑셀 목업 2건 반영 완료');
+    setPriceDraftStatus('엑셀 목업 2건 반영 완료 (카탈로그 연동)');
     resetPricePage();
   }, [resetPricePage]);
 
@@ -572,8 +679,11 @@ export function DiscountPromotionPage() {
                 />
               </label>
               <label className={styles.priceInfoField}>
-                <span>시리즈</span>
-                <input value={priceDraft?.series || ''} onChange={(e) => handlePriceDraftField('series', e.target.value)} />
+                <span>시리즈명</span>
+                <input
+                  value={priceDraft?.seriesName || priceDraft?.series || ''}
+                  onChange={(e) => handlePriceDraftSeriesName(e.target.value)}
+                />
               </label>
               <label className={styles.priceInfoField}>
                 <span>대표 품번</span>
@@ -588,8 +698,16 @@ export function DiscountPromotionPage() {
                 <input value={priceDraft?.ksSpec || ''} onChange={(e) => handlePriceDraftField('ksSpec', e.target.value)} />
               </label>
               <label className={styles.priceInfoField}>
+                <span>절수등급</span>
+                <input value={priceDraft?.waterSavingGrade || ''} onChange={(e) => handlePriceDraftField('waterSavingGrade', e.target.value)} placeholder="예: 1등급" />
+              </label>
+              <label className={styles.priceInfoField}>
                 <span>포장단위</span>
                 <input value={priceDraft?.packUnit || ''} onChange={(e) => handlePriceDraftField('packUnit', e.target.value)} />
+              </label>
+              <label className={styles.priceInfoField}>
+                <span>출고지</span>
+                <input value={priceDraft?.shippingOrigin || ''} onChange={(e) => handlePriceDraftField('shippingOrigin', e.target.value)} placeholder="예: 제천, 창원" />
               </label>
               <label className={styles.priceInfoField}>
                 <span>비고</span>
@@ -675,6 +793,116 @@ export function DiscountPromotionPage() {
                 <div className={styles.priceTableFooter}>
                   <Button variant="secondary" onClick={handleAddPriceComponent}>+ 세부 품번 행 추가</Button>
                 </div>
+              </div>
+            </div>
+
+            <div className={styles.priceDocsSection}>
+              <div className={styles.priceDocsHeader}>
+                <div>
+                  <div className={styles.priceDocsTitle}>품목 문서 등록</div>
+                  <p className={styles.priceDocsGuide}>문서별 파일 업로드로 등록하며, 다중 선택 업로드를 지원합니다.</p>
+                </div>
+                <Button variant="secondary" onClick={handlePriceDraftDocResetAll}>문서 전체 초기화</Button>
+              </div>
+              <div className={styles.priceDocsGrid}>
+                <label className={styles.priceDocField}>
+                  <span>시험성적서</span>
+                  <div className={styles.priceDocInputRow}>
+                    <label className={styles.priceUploadLabel}>
+                      파일 업로드
+                      <input
+                        type="file"
+                        multiple
+                        onChange={(e) => {
+                          handlePriceDraftDocUpload('testReport', e.target.files);
+                          e.target.value = '';
+                        }}
+                      />
+                    </label>
+                    <Button variant="secondary" onClick={() => handlePriceDraftDocReset('testReport')}>초기화</Button>
+                  </div>
+                  <div className={styles.priceDocList}>
+                    {(priceDraft?.docFiles?.testReport || []).map((name, idx) => (
+                      <button key={`${name}-${idx}`} type="button" className={styles.priceDocChip} onClick={() => handlePriceDraftDocRemove('testReport', idx)}>
+                        {name} ✕
+                      </button>
+                    ))}
+                  </div>
+                </label>
+                <label className={styles.priceDocField}>
+                  <span>환경표지인증서</span>
+                  <div className={styles.priceDocInputRow}>
+                    <label className={styles.priceUploadLabel}>
+                      파일 업로드
+                      <input
+                        type="file"
+                        multiple
+                        onChange={(e) => {
+                          handlePriceDraftDocUpload('ecoCert', e.target.files);
+                          e.target.value = '';
+                        }}
+                      />
+                    </label>
+                    <Button variant="secondary" onClick={() => handlePriceDraftDocReset('ecoCert')}>초기화</Button>
+                  </div>
+                  <div className={styles.priceDocList}>
+                    {(priceDraft?.docFiles?.ecoCert || []).map((name, idx) => (
+                      <button key={`${name}-${idx}`} type="button" className={styles.priceDocChip} onClick={() => handlePriceDraftDocRemove('ecoCert', idx)}>
+                        {name} ✕
+                      </button>
+                    ))}
+                  </div>
+                </label>
+                <label className={styles.priceDocField}>
+                  <span>제품이미지 도면 PDF</span>
+                  <div className={styles.priceDocInputRow}>
+                    <label className={styles.priceUploadLabel}>
+                      파일 업로드
+                      <input
+                        type="file"
+                        multiple
+                        accept=".pdf"
+                        onChange={(e) => {
+                          handlePriceDraftDocUpload('drawingPdf', e.target.files);
+                          e.target.value = '';
+                        }}
+                      />
+                    </label>
+                    <Button variant="secondary" onClick={() => handlePriceDraftDocReset('drawingPdf')}>초기화</Button>
+                  </div>
+                  <div className={styles.priceDocList}>
+                    {(priceDraft?.docFiles?.drawingPdf || []).map((name, idx) => (
+                      <button key={`${name}-${idx}`} type="button" className={styles.priceDocChip} onClick={() => handlePriceDraftDocRemove('drawingPdf', idx)}>
+                        {name} ✕
+                      </button>
+                    ))}
+                  </div>
+                </label>
+                <label className={styles.priceDocField}>
+                  <span>DWG</span>
+                  <div className={styles.priceDocInputRow}>
+                    <label className={styles.priceUploadLabel}>
+                      파일 업로드
+                      <input
+                        type="file"
+                        multiple
+                        accept=".dwg"
+                        onChange={(e) => {
+                          handlePriceDraftDocUpload('drawingDwg', e.target.files);
+                          e.target.value = '';
+                        }}
+                      />
+                    </label>
+                    <Button variant="secondary" onClick={() => handlePriceDraftDocReset('drawingDwg')}>초기화</Button>
+                  </div>
+                  <div className={styles.priceDocList}>
+                    {(priceDraft?.docFiles?.drawingDwg || []).map((name, idx) => (
+                      <button key={`${name}-${idx}`} type="button" className={styles.priceDocChip} onClick={() => handlePriceDraftDocRemove('drawingDwg', idx)}>
+                        {name} ✕
+                      </button>
+                    ))}
+                  </div>
+                </label>
               </div>
             </div>
           </section>

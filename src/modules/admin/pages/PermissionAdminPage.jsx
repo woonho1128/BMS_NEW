@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+﻿import React, { useState, useCallback } from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
 import { Card, CardBody } from '../../../shared/components/Card';
+import { notify, confirmAction } from '../../../shared/utils/notify';
 import { PERMISSIONS } from '../../../shared/constants/permissions';
 import { getPermissionGroupsList } from '../data/adminMock';
 import styles from './PermissionAdminPage.module.css';
@@ -34,15 +35,12 @@ export function PermissionAdminPage() {
   }, []);
 
   const handleDelete = useCallback((group) => {
-    if (window.confirm(`정말 삭제하시겠습니까?\n권한그룹: ${group.name}`)) {
-      console.log('삭제:', group.id);
-      alert('삭제되었습니다.');
-    }
+    if (!confirmAction(`정말 삭제하시겠습니까?\n권한그룹: ${group.name}`)) return;
+    notify.success('삭제되었습니다.');
   }, []);
 
   const handleSave = useCallback(() => {
-    console.log('저장:', selectedGroup);
-    alert(selectedGroup ? '수정되었습니다.' : '등록되었습니다.');
+    notify.success(selectedGroup ? '수정되었습니다.' : '등록되었습니다.');
     setShowForm(false);
     setSelectedGroup(null);
   }, [selectedGroup]);
@@ -55,7 +53,7 @@ export function PermissionAdminPage() {
   return (
     <PageShell
       path="/admin/permission"
-      title="권한관리"
+      title="권한 관리"
       description="권한 그룹 조회 및 관리"
       actions={
         <Button variant="primary" onClick={handleAdd}>
@@ -76,18 +74,10 @@ export function PermissionAdminPage() {
                     <div className={styles.cardHeader}>
                       <h3 className={styles.groupName}>{group.name}</h3>
                       <div className={styles.actions}>
-                        <button
-                          className={styles.actionBtn}
-                          onClick={() => handleEdit(group)}
-                          aria-label="수정"
-                        >
+                        <button className={styles.actionBtn} onClick={() => handleEdit(group)} aria-label="수정">
                           수정
                         </button>
-                        <button
-                          className={`${styles.actionBtn} ${styles.deleteBtn}`}
-                          onClick={() => handleDelete(group)}
-                          aria-label="삭제"
-                        >
+                        <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(group)} aria-label="삭제">
                           삭제
                         </button>
                       </div>
@@ -101,8 +91,8 @@ export function PermissionAdminPage() {
                     <div className={styles.permissions}>
                       <span className={styles.permissionsLabel}>권한:</span>
                       <div className={styles.permissionList}>
-                        {group.permissions.map((perm, idx) => (
-                          <span key={idx} className={styles.permissionTag}>
+                        {group.permissions.map((perm) => (
+                          <span key={perm} className={styles.permissionTag}>
                             {perm}
                           </span>
                         ))}
@@ -121,31 +111,18 @@ export function PermissionAdminPage() {
               <div className={styles.formGrid}>
                 <div className={styles.field}>
                   <label className={styles.label}>그룹명 *</label>
-                  <input
-                    type="text"
-                    className={styles.input}
-                    value={selectedGroup?.name || ''}
-                    placeholder="권한그룹명을 입력하세요"
-                  />
+                  <input type="text" className={styles.input} value={selectedGroup?.name || ''} placeholder="권한그룹명을 입력하세요" readOnly />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>설명</label>
-                  <textarea
-                    className={styles.textarea}
-                    value={selectedGroup?.description || ''}
-                    placeholder="권한그룹 설명을 입력하세요"
-                    rows={3}
-                  />
+                  <textarea className={styles.textarea} value={selectedGroup?.description || ''} placeholder="권한그룹 설명을 입력하세요" rows={3} readOnly />
                 </div>
                 <div className={styles.fieldFull}>
                   <label className={styles.label}>권한 선택</label>
                   <div className={styles.permissionCheckboxes}>
                     {PERMISSION_OPTIONS.map((perm) => (
                       <label key={perm} className={styles.checkboxLabel}>
-                        <input
-                          type="checkbox"
-                          checked={selectedGroup?.permissions?.includes(perm) || false}
-                        />
+                        <input type="checkbox" checked={selectedGroup?.permissions?.includes(perm) || false} readOnly />
                         <span>{perm}</span>
                       </label>
                     ))}

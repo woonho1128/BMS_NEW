@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+﻿import React, { useState, useMemo, useCallback } from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter';
 import { getLogsList } from '../data/adminMock';
@@ -63,15 +63,9 @@ export function LogsAdminPage() {
   }, []);
 
   return (
-    <PageShell path="/admin/log" title="로그/사용내역" description="시스템 사용 로그 조회">
+    <PageShell path="/admin/log" title="로그/사용 이력" description="시스템 사용 로그 조회">
       <div className={styles.page}>
-        <ListFilter
-          className={styles.toolbar}
-          fields={LOG_FILTER_FIELDS}
-          value={filterValue}
-          onChange={handleFilterChange}
-          onReset={handleReset}
-        />
+        <ListFilter className={styles.toolbar} fields={LOG_FILTER_FIELDS} value={filterValue} onChange={handleFilterChange} onReset={handleReset} />
 
         <section className={styles.section} aria-label="로그 목록">
           <div className={styles.count}>{list.length}건</div>
@@ -105,10 +99,7 @@ export function LogsAdminPage() {
                         </div>
                       </td>
                       <td className={styles.td}>
-                        <span
-                          className={styles.actionBadge}
-                          style={{ color: ACTION_COLORS[log.action] || '#666' }}
-                        >
+                        <span className={styles.actionBadge} style={{ color: ACTION_COLORS[log.action] || '#666' }}>
                           {log.actionName || ACTION_LABELS[log.action] || log.action}
                         </span>
                       </td>
@@ -119,7 +110,7 @@ export function LogsAdminPage() {
                             <span className={styles.resourcePath}>{log.resource}</span>
                           </div>
                         ) : (
-                          '—'
+                          '-'
                         )}
                       </td>
                       <td className={styles.td}>{log.ip}</td>

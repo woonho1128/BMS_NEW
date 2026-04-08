@@ -128,21 +128,21 @@ function fmt(v) {
   return formatNumber(v);
 }
 
-function getShipFieldByType(itemType) {
-  if (itemType === 'sanitary') return 'shipSanitary';
-  if (itemType === 'tile') return 'shipTile';
-  return 'shipTotal';
+function getReceiptFieldByType(itemType) {
+  if (itemType === 'sanitary') return 'receiptSanitary';
+  if (itemType === 'tile') return 'receiptTile';
+  return 'receiptTotal';
 }
 
-function getShipTypeLabel(itemType) {
+function getReceiptTypeLabel(itemType) {
   if (itemType === 'sanitary') return '위생도기';
   if (itemType === 'tile') return '타일';
   return '합계';
 }
 
-function buildYearShipmentRows(row, year, selectedMonth, itemType, clickedAmount) {
+function buildYearReceiptRows(row, year, selectedMonth, itemType, clickedAmount) {
   const monthFactors = [0.62, 0.68, 0.75, 0.79, 0.84, 0.9, 0.96, 1.02, 1.08, 1.12, 1.18, 1.24];
-  const field = getShipFieldByType(itemType);
+  const field = getReceiptFieldByType(itemType);
   const base = Number(row?.[field] || 0);
   const targetMonth = Number(selectedMonth) || 1;
 
@@ -161,7 +161,7 @@ export function PartnerBalanceConfirmPage() {
   const { user } = useAuth();
   const { pathname } = useLocation();
   const [selectedClient, setSelectedClient] = useState(null);
-  const [shipmentYearModal, setShipmentYearModal] = useState(null);
+  const [receiptYearModal, setReceiptYearModal] = useState(null);
   const [filterValue, setFilterValue] = useState({
     year: '2026',
     month: '03',
@@ -228,28 +228,28 @@ export function PartnerBalanceConfirmPage() {
     [filterValue, rowsByAccount]
   );
 
-  const openShipmentYearModal = useCallback((row, amount, itemType) => {
-    setShipmentYearModal({
+  const openReceiptYearModal = useCallback((row, amount, itemType) => {
+    setReceiptYearModal({
       row,
       itemType,
       amount: Number(amount || 0),
     });
   }, []);
 
-  const shipmentYearRows = useMemo(() => {
-    if (!shipmentYearModal) return [];
-    return buildYearShipmentRows(
-      shipmentYearModal.row,
+  const receiptYearRows = useMemo(() => {
+    if (!receiptYearModal) return [];
+    return buildYearReceiptRows(
+      receiptYearModal.row,
       filterValue.year,
       filterValue.month,
-      shipmentYearModal.itemType,
-      shipmentYearModal.amount
+      receiptYearModal.itemType,
+      receiptYearModal.amount
     );
-  }, [shipmentYearModal, filterValue.year, filterValue.month]);
+  }, [receiptYearModal, filterValue.year, filterValue.month]);
 
-  const shipmentYearTotal = useMemo(
-    () => shipmentYearRows.reduce((sum, row) => sum + (Number(row.amount) || 0), 0),
-    [shipmentYearRows]
+  const receiptYearTotal = useMemo(
+    () => receiptYearRows.reduce((sum, row) => sum + (Number(row.amount) || 0), 0),
+    [receiptYearRows]
   );
 
   const mainColumns = [
@@ -291,47 +291,47 @@ export function PartnerBalanceConfirmPage() {
     {
       title: '당월 출고금액',
       children: [
+        { title: '위생도기', dataIndex: 'shipSanitary', width: 110, align: 'right', render: fmt },
+        { title: '타일', dataIndex: 'shipTile', width: 90, align: 'right', render: fmt },
+        { title: '합계', dataIndex: 'shipTotal', width: 110, align: 'right', render: fmt },
+      ],
+    },
+    {
+      title: '당월 수금액',
+      children: [
         {
           title: '위생도기',
-          dataIndex: 'shipSanitary',
+          dataIndex: 'receiptSanitary',
           width: 110,
           align: 'right',
           render: (value, row) => (
-            <button type="button" className={styles.amountLink} onClick={() => openShipmentYearModal(row, value, 'sanitary')}>
+            <button type="button" className={styles.amountLink} onClick={() => openReceiptYearModal(row, value, 'sanitary')}>
               {fmt(value)}
             </button>
           ),
         },
         {
           title: '타일',
-          dataIndex: 'shipTile',
+          dataIndex: 'receiptTile',
           width: 90,
           align: 'right',
           render: (value, row) => (
-            <button type="button" className={styles.amountLink} onClick={() => openShipmentYearModal(row, value, 'tile')}>
+            <button type="button" className={styles.amountLink} onClick={() => openReceiptYearModal(row, value, 'tile')}>
               {fmt(value)}
             </button>
           ),
         },
         {
           title: '합계',
-          dataIndex: 'shipTotal',
+          dataIndex: 'receiptTotal',
           width: 110,
           align: 'right',
           render: (value, row) => (
-            <button type="button" className={styles.amountLink} onClick={() => openShipmentYearModal(row, value, 'total')}>
+            <button type="button" className={styles.amountLink} onClick={() => openReceiptYearModal(row, value, 'total')}>
               {fmt(value)}
             </button>
           ),
         },
-      ],
-    },
-    {
-      title: '당월 수금액',
-      children: [
-        { title: '위생도기', dataIndex: 'receiptSanitary', width: 110, align: 'right', render: fmt },
-        { title: '타일', dataIndex: 'receiptTile', width: 90, align: 'right', render: fmt },
-        { title: '합계', dataIndex: 'receiptTotal', width: 110, align: 'right', render: fmt },
       ],
     },
     {
@@ -369,9 +369,9 @@ export function PartnerBalanceConfirmPage() {
     { title: '당월 연체금액', dataIndex: 'overdueTotal', width: 130, align: 'right', render: fmt },
   ];
 
-  const shipmentYearColumns = [
+  const receiptYearColumns = [
     { title: '년월', dataIndex: 'ym', width: 120, align: 'center' },
-    { title: '출고금액', dataIndex: 'amount', width: 200, align: 'right', render: fmt },
+    { title: '수금금액', dataIndex: 'amount', width: 200, align: 'right', render: fmt },
   ];
 
   return (
@@ -413,27 +413,27 @@ export function PartnerBalanceConfirmPage() {
 
         <Modal
           title={
-            shipmentYearModal
-              ? `${filterValue.year}년 출고금액 - ${shipmentYearModal.row.clientName} (${getShipTypeLabel(shipmentYearModal.itemType)})`
-              : `${filterValue.year}년 출고금액`
+            receiptYearModal
+              ? `${filterValue.year}년 수금금액 - ${receiptYearModal.row.clientName} (${getReceiptTypeLabel(receiptYearModal.itemType)})`
+              : `${filterValue.year}년 수금금액`
           }
-          open={Boolean(shipmentYearModal)}
-          onCancel={() => setShipmentYearModal(null)}
+          open={Boolean(receiptYearModal)}
+          onCancel={() => setReceiptYearModal(null)}
           footer={null}
           width={780}
           centered
           className={styles.detailModal}
         >
-          {shipmentYearModal && (
+          {receiptYearModal && (
             <div className={styles.detailTop}>
-              <div>거래처코드: {shipmentYearModal.row.code}</div>
+              <div>거래처코드: {receiptYearModal.row.code}</div>
               <div>기준년월: {filterValue.year}-{filterValue.month}</div>
-              <div>선택값: {fmt(shipmentYearModal.amount)}</div>
+              <div>선택값: {fmt(receiptYearModal.amount)}</div>
             </div>
           )}
           <Table
-            columns={shipmentYearColumns}
-            dataSource={shipmentYearRows}
+            columns={receiptYearColumns}
+            dataSource={receiptYearRows}
             size="small"
             pagination={false}
             rowKey="key"
@@ -441,7 +441,7 @@ export function PartnerBalanceConfirmPage() {
               <Table.Summary fixed>
                 <Table.Summary.Row>
                   <Table.Summary.Cell index={0} align="center">합계</Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} align="right">{fmt(shipmentYearTotal)}</Table.Summary.Cell>
+                  <Table.Summary.Cell index={1} align="right">{fmt(receiptYearTotal)}</Table.Summary.Cell>
                 </Table.Summary.Row>
               </Table.Summary>
             )}

@@ -1,45 +1,45 @@
 /**
- * Performance plan mock source.
- * Shared by:
- * - Master > 성과 계획 관리 (edit/view)
- * - Insights > 대리점별 매출 현황 (salesPlan column)
+ * 성과 계획 관리 목업 데이터
+ * - Master > 성과 계획 관리
  */
-const PLAN_STATUS = {
+export const PLAN_STATUS = {
   DRAFT: 'DRAFT',
   CONFIRMED: 'CONFIRMED',
 };
+
+export const MONTH_KEYS = Array.from({ length: 12 }, (_, index) => `m${String(index + 1).padStart(2, '0')}`);
 
 const TEAM_CONFIG = [
   {
     orgId: 'R1',
     orgName: '리테일 1팀',
     members: [
-      { memberId: 'R1-01', memberName: '박진호', position: '매니저' },
-      { memberId: 'R1-02', memberName: '김수림', position: '매니저' },
-      { memberId: 'R1-03', memberName: '이재현', position: '선임' },
+      { memberId: 'R1-01', memberName: '박진오', position: '매니저' },
+      { memberId: 'R1-02', memberName: '김혜림', position: '매니저' },
+      { memberId: 'R1-03', memberName: '이재현', position: '주임' },
     ],
   },
   {
     orgId: 'R2',
     orgName: '리테일 2팀',
     members: [
-      { memberId: 'R2-01', memberName: '최민수', position: '매니저' },
-      { memberId: 'R2-02', memberName: '오동건', position: '선임' },
+      { memberId: 'R2-01', memberName: '최윤한', position: '매니저' },
+      { memberId: 'R2-02', memberName: '서동건', position: '주임' },
     ],
   },
   {
     orgId: 'R3',
     orgName: '리테일 3팀',
     members: [
-      { memberId: 'R3-01', memberName: '한미정', position: '매니저' },
-      { memberId: 'R3-02', memberName: '윤시우', position: '선임' },
+      { memberId: 'R3-01', memberName: '유승식', position: '매니저' },
+      { memberId: 'R3-02', memberName: '남도현', position: '주임' },
     ],
   },
   {
     orgId: 'T1',
     orgName: '타일영업팀',
     members: [
-      { memberId: 'T1-01', memberName: '오현우', position: '매니저' },
+      { memberId: 'T1-01', memberName: '곽현우', position: '매니저' },
       { memberId: 'T1-02', memberName: '강유진', position: '사원' },
     ],
   },
@@ -47,15 +47,13 @@ const TEAM_CONFIG = [
     orgId: 'S1',
     orgName: '영업지원팀',
     members: [
-      { memberId: 'S1-01', memberName: '조동현', position: '매니저' },
-      { memberId: 'S1-02', memberName: '정희은', position: '사원' },
+      { memberId: 'S1-01', memberName: '조동욱', position: '매니저' },
+      { memberId: 'S1-02', memberName: '정하림', position: '사원' },
     ],
   },
 ];
 
 const PLAN_YEARS = [2025, 2026, 2027];
-
-const MONTH_KEYS = Array.from({ length: 12 }, (_, index) => `m${String(index + 1).padStart(2, '0')}`);
 
 function makeMonthly(base, seed) {
   const monthly = {};
@@ -67,7 +65,7 @@ function makeMonthly(base, seed) {
   return monthly;
 }
 
-function totalOf(monthly) {
+export function totalOf(monthly = {}) {
   return MONTH_KEYS.reduce((sum, key) => sum + Number(monthly[key] || 0), 0);
 }
 
@@ -90,13 +88,13 @@ function makeHistory(base, row, annualTotal) {
       summary: '1분기 계획 보정',
       changes: [
         { field: '1월', before: Math.round(base * 0.95).toLocaleString('ko-KR'), after: Math.round(base * 1.02).toLocaleString('ko-KR') },
-        { field: '비고', before: '-', after: '현장 납기 지연 리스크 반영' },
+        { field: '비고', before: '-', after: '현장 성수기 일정 리스크 반영' },
       ],
     },
   ];
 }
 
-function buildPlanRows() {
+export function createPerformancePlanRows() {
   const rows = [];
 
   PLAN_YEARS.forEach((year) => {
@@ -135,7 +133,7 @@ function buildPlanRows() {
           ownerName: `${member.memberName} ${member.position}`,
           status: year < 2027 ? PLAN_STATUS.CONFIRMED : PLAN_STATUS.DRAFT,
           monthly: personalMonthly,
-          note: memberIndex % 2 === 0 ? '핵심 거래처 집중' : '',
+          note: memberIndex % 2 === 0 ? '중점 거래처 집중' : '',
           updatedAt: `${year}-03-18 10:05`,
           updatedBy: member.memberName,
         };
@@ -148,7 +146,68 @@ function buildPlanRows() {
   return rows;
 }
 
-const PLAN_ROWS = buildPlanRows();
+export function getPerformancePlanMeta(rows = []) {
+  const yearOptions = [{ value: '', label: '전체' }, ...PLAN_YEARS.map((year) => ({ value: String(year), label: `${year}년` }))];
+  const orgMap = new Map();
+  const ownerMap = new Map();
+  rows.forEach((row) => {
+    orgMap.set(row.orgId, row.orgName);
+    if (row.ownerId) ownerMap.set(row.ownerId, row.ownerName);
+  });
+
+  return {
+    yearOptions,
+    orgOptions: [{ value: '', label: '전체' }, ...Array.from(orgMap.entries()).map(([value, label]) => ({ value, label }))],
+    ownerOptions: [{ value: '', label: '전체' }, ...Array.from(ownerMap.entries()).map(([value, label]) => ({ value, label }))],
+    statusOptions: [
+      { value: '', label: '전체' },
+      { value: PLAN_STATUS.DRAFT, label: '작성중' },
+      { value: PLAN_STATUS.CONFIRMED, label: '확정' },
+    ],
+  };
+}
+
+export function filterPerformancePlanRows(rows = [], filters = {}) {
+  const {
+    planType = 'TEAM',
+    year = '',
+    orgId = '',
+    ownerId = '',
+    status = '',
+    keyword = '',
+  } = filters;
+
+  const keywordValue = String(keyword || '').trim().toLowerCase();
+  return rows
+    .filter((row) => (planType ? row.planType === planType : true))
+    .filter((row) => (year ? String(row.year) === String(year) : true))
+    .filter((row) => (orgId ? row.orgId === orgId : true))
+    .filter((row) => (ownerId ? row.ownerId === ownerId : true))
+    .filter((row) => (status ? row.status === status : true))
+    .filter((row) => {
+      if (!keywordValue) return true;
+      return [row.orgName, row.ownerName, row.note, row.updatedBy]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(keywordValue));
+    })
+    .map((row) => ({
+      ...row,
+      annualTotal: totalOf(row.monthly),
+    }));
+}
+
+export function getPlanUploadPreviewRows() {
+  return [
+    { no: 1, orgName: '리테일 1팀', ownerName: '박진오 매니저', year: 2027, jan: 312, feb: 298, mar: 336, status: '신규' },
+    { no: 2, orgName: '리테일 2팀', ownerName: '서동건 주임', year: 2027, jan: 264, feb: 252, mar: 277, status: '수정' },
+    { no: 3, orgName: '영업지원팀', ownerName: '정하림 사원', year: 2027, jan: 188, feb: 201, mar: 206, status: '신규' },
+  ];
+}
+
+export function getPlanStatusLabel(status) {
+  if (status === PLAN_STATUS.CONFIRMED) return '확정';
+  return '작성중';
+}
 
 const CLIENT_PLAN_BY_YEAR = {
   2025: {
@@ -183,79 +242,6 @@ const CLIENT_PLAN_BY_YEAR = {
   },
 };
 
-export function getPerformancePlanMeta() {
-  const yearOptions = [{ value: '', label: '전체' }, ...PLAN_YEARS.map((year) => ({ value: String(year), label: `${year}년` }))];
-  const orgMap = new Map();
-  const ownerMap = new Map();
-  PLAN_ROWS.forEach((row) => {
-    orgMap.set(row.orgId, row.orgName);
-    if (row.ownerId) ownerMap.set(row.ownerId, row.ownerName);
-  });
-
-  return {
-    yearOptions,
-    orgOptions: [{ value: '', label: '전체' }, ...Array.from(orgMap.entries()).map(([value, label]) => ({ value, label }))],
-    ownerOptions: [{ value: '', label: '전체' }, ...Array.from(ownerMap.entries()).map(([value, label]) => ({ value, label }))],
-    statusOptions: [
-      { value: '', label: '전체' },
-      { value: PLAN_STATUS.DRAFT, label: '작성중' },
-      { value: PLAN_STATUS.CONFIRMED, label: '확정' },
-    ],
-  };
-}
-
-export function getPerformancePlanRows(filters = {}) {
-  const {
-    planType = 'TEAM',
-    year = '',
-    orgId = '',
-    ownerId = '',
-    status = '',
-    keyword = '',
-  } = filters;
-
-  const keywordValue = String(keyword || '').trim().toLowerCase();
-  return PLAN_ROWS
-    .filter((row) => row.planType === planType)
-    .filter((row) => (year ? String(row.year) === String(year) : true))
-    .filter((row) => (orgId ? row.orgId === orgId : true))
-    .filter((row) => (ownerId ? row.ownerId === ownerId : true))
-    .filter((row) => (status ? row.status === status : true))
-    .filter((row) => {
-      if (!keywordValue) return true;
-      return [row.orgName, row.ownerName, row.note, row.updatedBy]
-        .filter(Boolean)
-        .some((value) => String(value).toLowerCase().includes(keywordValue));
-    })
-    .map((row) => {
-      const annualTotal = totalOf(row.monthly);
-      return {
-        ...row,
-        annualTotal,
-      };
-    });
-}
-
-export function getPlanHistoryByRowId(rowId) {
-  const row = PLAN_ROWS.find((item) => item.id === rowId);
-  return row?.history || [];
-}
-
-export function getPlanUploadPreviewRows() {
-  return [
-    { no: 1, orgName: '리테일 1팀', ownerName: '박진호 매니저', year: 2027, jan: 312, feb: 298, mar: 336, status: '신규' },
-    { no: 2, orgName: '리테일 2팀', ownerName: '오동건 선임', year: 2027, jan: 264, feb: 252, mar: 277, status: '수정' },
-    { no: 3, orgName: '영업지원팀', ownerName: '정희은 사원', year: 2027, jan: 188, feb: 201, mar: 206, status: '신규' },
-  ];
-}
-
 export function getPartnerSalesPlanMap(year) {
   return CLIENT_PLAN_BY_YEAR[Number(year)] || CLIENT_PLAN_BY_YEAR[2026];
 }
-
-export function getPlanStatusLabel(status) {
-  if (status === PLAN_STATUS.CONFIRMED) return '확정';
-  return '작성중';
-}
-
-export { MONTH_KEYS, PLAN_STATUS };

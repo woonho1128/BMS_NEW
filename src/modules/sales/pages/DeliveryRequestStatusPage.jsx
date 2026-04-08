@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Modal, Table } from 'antd';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
+import { formatNumber } from '../../../shared/utils/formatters';
 import styles from './DeliveryRequestStatusPage.module.css';
 
 const STATUS_OPTIONS = [
@@ -158,7 +159,7 @@ const DETAIL_ROWS_BY_DELIVERY = {
 };
 
 function fmt(n) {
-  return Number(n || 0).toLocaleString('ko-KR');
+  return formatNumber(Number(n || 0));
 }
 
 function makeDateList(from, to) {

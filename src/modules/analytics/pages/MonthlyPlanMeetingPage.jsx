@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+﻿import React, { useMemo, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Tag } from 'antd';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
@@ -6,6 +6,7 @@ import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { Button } from '../../../shared/components/Button/Button';
 import { formatNumber } from '../../../shared/utils/formatters';
 import { createMonthOptions, createYearOptions, getCurrentYear } from '../../../shared/utils/dateOptions';
+import { notify } from '../../../shared/utils/notify';
 import {
   METRIC_LABELS,
   ZERO_METRICS,
@@ -23,11 +24,7 @@ export function MonthlyPlanMeetingPage() {
   const currentYear = String(getCurrentYear());
   const currentMonth = String(new Date().getMonth() + 1);
 
-  const [filters, setFilters] = useState({
-    year: currentYear,
-    month: currentMonth,
-  });
-  // Each row keeps fixed plan + loaded actual + per-round editable values.
+  const [filters, setFilters] = useState({ year: currentYear, month: currentMonth });
   const [rows, setRows] = useState(createInitialRows);
   const [rounds, setRounds] = useState([]);
 
@@ -36,47 +33,95 @@ export function MonthlyPlanMeetingPage() {
   }, []);
 
   const handleReset = useCallback(() => {
-    setFilters({
-      year: currentYear,
-      month: currentMonth,
-    });
-  }, [currentMonth, currentYear]);
+    setFilters({ year: currentYear, month: currentMonth });
+  }, [currentYear, currentMonth]);
 
   const handleLoadActual = useCallback(() => {
-    // Mock: replace actual values using deterministic random seed per row.
     setRows((prev) =>
-      prev.map((row, index) => ({
-        ...row,
-        actual: createRandomActual(row.plan, index + Number(filters.month) * 5 + Number(filters.year) * 3),
-      }))
+      prev.map((row, index) => (
+        row.isTotal
+          ? row
+          : {
+            ...row,
+            actual: createRandomActual(row.plan, index + Number(filters.month) * 5 + Number(filters.year) * 3),
+          }
+      ))
     );
+    notify.success('마감 실적을 불러왔습니다.');
   }, [filters.month, filters.year]);
 
   const handleAddRound = useCallback(() => {
     if (rounds.length >= 4) {
-      window.alert('차수는 최대 4차까지 생성할 수 있습니다.');
+      notify.warning('차수는 최대 4차까지 생성할 수 있습니다.');
       return;
     }
 
     const next = rounds.length + 1;
     const key = `round${next}`;
     const defaultDay = [11, 16, 23, 27][next - 1];
-    setRounds((prev) => [...prev, { key, label: `${next}차`, date: toDateString(filters.year, filters.month, defaultDay) }]);
+    const newRound = {
+      key,
+      label: `${next}차`,
+      date: toDateString(filters.year, filters.month, defaultDay),
+    };
 
-    // New round starts from latest round (or actual when first created).
+    setRounds((prev) => [...prev, newRound]);
     setRows((prev) =>
       prev.map((row) => {
-        const latestRound = rounds.length > 0 ? row.rounds[rounds[rounds.length - 1].key] : null;
+        if (row.isTotal) return row;
+        const previous = rounds.length > 0 ? row.rounds[rounds[rounds.length - 1].key] : null;
         return {
           ...row,
           rounds: {
             ...row.rounds,
-            [key]: latestRound ? { ...latestRound } : { ...row.actual },
+            [key]: previous ? { ...previous } : { ...row.actual },
           },
         };
       })
     );
   }, [filters.month, filters.year, rounds]);
+
+  const displayRows = useMemo(() => {
+    const list = [];
+    let groupRows = [];
+
+    const sumMetrics = (source, picker) => source.reduce(
+      (acc, row) => {
+        const metric = picker(row);
+        return {
+          retail: acc.retail + Number(metric?.retail || 0),
+          delivery: acc.delivery + Number(metric?.delivery || 0),
+          total: acc.total + Number(metric?.total || 0),
+        };
+      },
+      { retail: 0, delivery: 0, total: 0 }
+    );
+
+    rows.forEach((row) => {
+      if (!row.isTotal) {
+        groupRows.push(row);
+        list.push(row);
+        return;
+      }
+
+      // "계" 행은 화면 렌더 시점마다 동적으로 다시 계산해 입력 변경을 즉시 반영한다.
+      const summedRounds = rounds.reduce((acc, round) => {
+        acc[round.key] = sumMetrics(groupRows, (item) => item.rounds?.[round.key] || ZERO_METRICS);
+        return acc;
+      }, {});
+
+      list.push({
+        ...row,
+        plan: sumMetrics(groupRows, (item) => item.plan),
+        actual: sumMetrics(groupRows, (item) => item.actual),
+        rounds: { ...row.rounds, ...summedRounds },
+      });
+
+      groupRows = [];
+    });
+
+    return list;
+  }, [rows, rounds]);
 
   const handleRoundDateChange = useCallback((roundKey, date) => {
     setRounds((prev) => prev.map((round) => (round.key === roundKey ? { ...round, date } : round)));
@@ -87,8 +132,13 @@ export function MonthlyPlanMeetingPage() {
     setRows((prev) =>
       prev.map((row) => {
         if (row.id !== rowId) return row;
-        const nextRound = { ...(row.rounds[roundKey] || ZERO_METRICS), [metricKey]: Number.isNaN(numeric) ? 0 : Math.max(0, numeric) };
-        if (metricKey !== 'total') nextRound.total = Number(nextRound.retail || 0) + Number(nextRound.delivery || 0);
+        const nextRound = {
+          ...(row.rounds[roundKey] || ZERO_METRICS),
+          [metricKey]: Number.isNaN(numeric) ? 0 : Math.max(0, numeric),
+        };
+        if (metricKey !== 'total') {
+          nextRound.total = Number(nextRound.retail || 0) + Number(nextRound.delivery || 0);
+        }
         return { ...row, rounds: { ...row.rounds, [roundKey]: nextRound } };
       })
     );
@@ -111,13 +161,17 @@ export function MonthlyPlanMeetingPage() {
       title="월별 계획 회의 관리"
       description="월별 계획/실적/차수 의지치를 회의 기준으로 관리합니다."
       className={styles.shellWide}
-      actions={(
+      actions={
         <div className={styles.actionRow}>
-          <Button variant="secondary" onClick={handleLoadActual}>마감 실적 불러오기</Button>
-          <Button variant="secondary" onClick={handleAddRound}>차수 생성</Button>
+          <Button variant="secondary" onClick={handleLoadActual}>
+            마감 실적 불러오기
+          </Button>
+          <Button variant="secondary" onClick={handleAddRound}>
+            차수 생성
+          </Button>
           <Button variant="primary">저장</Button>
         </div>
-      )}
+      }
     >
       <div className={styles.page}>
         <ListFilter
@@ -169,15 +223,19 @@ export function MonthlyPlanMeetingPage() {
                   {Array.from({ length: 2 + rounds.length }).map((_, groupIndex) =>
                     METRIC_LABELS.map((metric) => <th key={`${groupIndex}-${metric}`}>{metric}</th>)
                   )}
-                  {METRIC_LABELS.map((metric) => <th key={`rate-${metric}`}>{metric}</th>)}
+                  {METRIC_LABELS.map((metric) => (
+                    <th key={`rate-${metric}`}>{metric}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {rows.map((row) => {
+                {displayRows.map((row) => {
+                  // 달성률은 마지막 차수(없으면 실적 기준) 대비 계획값으로 계산한다.
                   const latestRound = rounds.length > 0 ? row.rounds[rounds[rounds.length - 1].key] || ZERO_METRICS : row.actual;
                   const rateRetail = row.plan.retail > 0 ? `${Math.round((latestRound.retail / row.plan.retail) * 100)}%` : '0%';
                   const rateDelivery = row.plan.delivery > 0 ? `${Math.round((latestRound.delivery / row.plan.delivery) * 100)}%` : '0%';
                   const rateTotal = row.plan.total > 0 ? `${Math.round((latestRound.total / row.plan.total) * 100)}%` : '0%';
+
                   return (
                     <tr key={row.id} className={row.isTotal ? styles.totalRow : ''}>
                       <td className={styles.leftCell}>{row.name}</td>
@@ -198,27 +256,22 @@ export function MonthlyPlanMeetingPage() {
                             <td>
                               <input
                                 type="number"
-                                className={styles.valueInput}
+                                className={styles.cellInput}
                                 value={values.retail}
                                 onChange={(event) => handleRoundValueChange(row.id, round.key, 'retail', event.target.value)}
+                                disabled={row.isTotal}
                               />
                             </td>
                             <td>
                               <input
                                 type="number"
-                                className={styles.valueInput}
+                                className={styles.cellInput}
                                 value={values.delivery}
                                 onChange={(event) => handleRoundValueChange(row.id, round.key, 'delivery', event.target.value)}
+                                disabled={row.isTotal}
                               />
                             </td>
-                            <td>
-                              <input
-                                type="number"
-                                className={styles.valueInput}
-                                value={values.total}
-                                onChange={(event) => handleRoundValueChange(row.id, round.key, 'total', event.target.value)}
-                              />
-                            </td>
+                            <td>{formatNumber(values.total)}</td>
                           </React.Fragment>
                         );
                       })}
@@ -237,5 +290,3 @@ export function MonthlyPlanMeetingPage() {
     </PageShell>
   );
 }
-
-export default MonthlyPlanMeetingPage;

@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import styles from './Modal.module.css';
+import { notify } from '../../../../shared/utils/notify';
 
 export const AddPlanModal = ({ onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ export const AddPlanModal = ({ onClose, onSave }) => {
 
   const handleSave = () => {
     if (!formData.company || !formData.site) {
-      alert('건설사와 현장명을 입력해주세요.');
+      notify.warning('건설사와 현장명을 입력해주세요.');
       return;
     }
 
@@ -59,9 +60,9 @@ export const AddPlanModal = ({ onClose, onSave }) => {
         site: '현장 검색결과 A',
         agency: '서울대리점'
       }));
-      alert('현장 정보가 검색되었습니다.');
+      notify.success('현장 정보가 검색되었습니다.');
     } else {
-      alert('검색된 현장이 없습니다. 직접 입력해주세요.');
+      notify.info('검색된 현장이 없습니다. 직접 입력해주세요.');
     }
   };
 
@@ -143,3 +144,8 @@ export const AddPlanModal = ({ onClose, onSave }) => {
     </div>
   );
 };
+
+
+
+
+

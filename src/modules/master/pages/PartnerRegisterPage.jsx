@@ -12,6 +12,7 @@ import { BILLS_MOCK } from '../../finance/data/billsMock';
 import { COLLATERAL_MOCK } from '../../finance/data/collateralMock';
 import { classnames } from '../../../shared/utils/classnames';
 import styles from './PartnerRegisterPage.module.css';
+import { notify } from '../../../shared/utils/notify';
 
 const EditHistoryModalContent = lazy(() => import('./components/EditHistoryModalContent'));
 const PartnerMapCard = lazy(() => import('./components/PartnerMapCard'));
@@ -650,7 +651,7 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
 
   const handleSubmit = useCallback(() => {
     setSaved(true);
-    console.log('partner register payload', formData);
+    notify.info('대리점 카드 저장 데이터가 준비되었습니다. (목업)');
     if (isDetailMode) {
       const afterSnapshot = createHistorySnapshot(formData);
       const beforeSnapshot = editStartSnapshot || afterSnapshot;
@@ -2029,7 +2030,7 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
               className={classnames(styles.allowAction, styles.editModeButton)}
               onClick={handleStartEditMode}
             >
-              紐낇븿 ?곕룞?섍린
+              수정하기
             </Button>
           )}
           {isDetailMode && (
@@ -2078,6 +2079,8 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     </PageShell>
   );
 }
+
+
 
 
 

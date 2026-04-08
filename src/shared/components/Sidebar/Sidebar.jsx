@@ -7,6 +7,7 @@ import styles from './Sidebar.module.css';
 import { ROUTES } from '../../../router/routePaths';
 import { IA_SIDEBAR_SECTIONS } from '../../constants/ia';
 import { Modal } from '../Modal/Modal';
+import { notify } from '../../utils/notify';
 
 function isPathActive(locationPath, targetPath) {
   if (!targetPath) return false;
@@ -136,7 +137,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
     }
     // Mock 처리
     setPwModalOpen(false);
-    alert('비밀번호가 변경되었습니다. (Mock)');
+    notify.success('비밀번호가 변경되었습니다. (목업)');
   };
 
   const autoOpenIds = useMemo(() => {

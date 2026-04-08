@@ -1,8 +1,9 @@
-import React, { useCallback } from 'react';
+﻿import React, { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
+import { notify, confirmAction } from '../../../shared/utils/notify';
 import { getSalesMaterialById, formatFileSize } from '../data/salesMaterialMock';
 import styles from './SalesMaterialDetailPage.module.css';
 
@@ -16,16 +17,14 @@ export function SalesMaterialDetailPage() {
   }, [navigate, id]);
 
   const handleDelete = useCallback(() => {
-    if (window.confirm('정말 삭제하시겠습니까?')) {
-      console.log('삭제:', id);
-      alert('삭제되었습니다.');
+    if (confirmAction('정말 삭제하시겠습니까?')) {
+      notify.success('삭제되었습니다.');
       navigate('/sales/material');
     }
-  }, [navigate, id]);
+  }, [navigate]);
 
   const handleDownload = useCallback((attachment) => {
-    console.log('다운로드:', attachment);
-    alert(`다운로드: ${attachment.name}`);
+    notify.info(`다운로드: ${attachment.name}`);
   }, []);
 
   if (!material) {
@@ -73,11 +72,8 @@ export function SalesMaterialDetailPage() {
             </div>
 
             <div className={styles.contentSection}>
-              <h2 className={styles.sectionTitle}>내용 요약</h2>
-              <div
-                className={styles.content}
-                dangerouslySetInnerHTML={{ __html: material.contentHtml }}
-              />
+              <h2 className={styles.sectionTitle}>내용</h2>
+              <div className={styles.content} dangerouslySetInnerHTML={{ __html: material.contentHtml }} />
             </div>
 
             {material.attachments && material.attachments.length > 0 && (
@@ -88,15 +84,9 @@ export function SalesMaterialDetailPage() {
                     <li key={attachment.id} className={styles.attachmentItem}>
                       <div className={styles.attachmentInfo}>
                         <span className={styles.attachmentName}>{attachment.name}</span>
-                        <span className={styles.attachmentSize}>
-                          {formatFileSize(attachment.size)}
-                        </span>
+                        <span className={styles.attachmentSize}>{formatFileSize(attachment.size)}</span>
                       </div>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleDownload(attachment)}
-                      >
+                      <Button variant="secondary" size="sm" onClick={() => handleDownload(attachment)}>
                         다운로드
                       </Button>
                     </li>

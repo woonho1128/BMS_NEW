@@ -1,74 +1,7 @@
-﻿/**
- * =============================================================================
- * router/index.jsx ???쇱슦???ㅼ젙 (?꾩껜 ?섏씠吏 寃쎈줈 ??而댄룷?뚰듃 留ㅽ븨)
- * =============================================================================
- *
- * 援ъ“:
- *   1. ?쇱씠釉뚮윭由?룸젅?댁븘??import
- *   2. 紐⑤뱢蹂??섏씠吏 而댄룷?뚰듃 import (湲곗??뺣낫 / ?곸뾽 / 寃곗옱 / 異쒓퀬?⑺뭹 / ?щТ / ?由ъ젏 / ?몄궗?댄듃 / 愿由ъ옄)
- *   3. ?쇱슦??媛??而댄룷?뚰듃 (ProtectedRoute, PublicOnlyRoute)
- *   4. Router 而댄룷?뚰듃: BrowserRouter > Routes ?좎뼵
- *
- * ?쇱슦??媛??
- *   - ProtectedRoute: 鍮꾨줈洹몄씤 ??/login ?쇰줈 由щ떎?대젆??
- *   - PublicOnlyRoute: 濡쒓렇???곹깭?먯꽌 /login ?묎렐 ???덉쑝濡?由щ떎?대젆??
- *   - Guard (沅뚰븳): PERMISSIONS ?곸닔 湲곕컲 ???꾩옱 ?곸뾽寃곗옱쨌?⑺뭹寃곗옱???곸슜
- *
- * ?섏씠吏 寃쎈줈 ?곸닔??router/routePaths.js ?먯꽌 愿由ы빀?덈떎.
- * IA 硫붾돱 援ъ“??shared/constants/ia.js ?먯꽌 愿由ы빀?덈떎.
- * =============================================================================
- */
-
-import React, { lazy, Suspense } from 'react';
+﻿import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../modules/auth/hooks/useAuth';
 import { ROUTES, toRelative } from './routePaths';
-
-// ?? ?덉씠?꾩썐
-
-// ?? ?몄쬆
-
-// ?? ??쒕낫??
-
-// ?? 湲곗? ?뺣낫 (留덉뒪??
-
-// ?? ?곸뾽 愿由???由ы뀒?쇳?
-// import {
-//   RetailOrderReviewPage,
-//   RetailOrderDetailPage,
-//   RetailOrderApprovalPage,
-// } from '../modules/sales/pages/RetailOrderComponents';
-
-// ?? ?곸뾽 愿由?????쇱쁺?낇?쨌?곸뾽吏?먰? (?꾩떆)
-
-// ?? ?곸뾽 寃곗옱
-
-// ?? 異쒓퀬 / ?⑺뭹
-
-// ?? ?щТ (梨꾧텒쨌?ъ떊쨌?댁쓬쨌留ㅼ엯留ㅼ텧)
-
-// ?? ?由ъ젏 ?ы꽭
-// import { PartnerOrderPage } from '../modules/partner/pages/PartnerOrderPage';
-// import { PartnerProductOrderPage } from '../modules/partner/pages/PartnerProductOrderPage';
-// import { PartnerOrderListPage } from '../modules/partner/pages/PartnerOrderListPage';
-// import { PartnerCartPage } from '../modules/partner/pages/PartnerCartPage';
-// import { PartnerOrderDetailPage } from '../modules/partner/pages/PartnerOrderDetailPage';
-// import { PartnerOrderDeliveryPage } from '../modules/partner/pages/order-delivery/PartnerOrderDeliveryPage';
-// import { PartnerOrderModificationPage } from '../modules/partner/pages/PartnerOrderComponents';
-
-// ?? ?몄궗?댄듃 / 遺꾩꽍
-
-// ?? 愿由ъ옄 ???쒖뒪???ㅼ젙
-
-// ?? 愿由ъ옄 ???⑤씪??二쇰Ц 愿由?
-// import {
-//   AdminTotalOrderPage,
-//   AdminStatusChangePage,
-//   AdminErpPage,
-//   AdminOrderLogPage,
-// } from '../modules/admin/pages/AdminOrderComponents';
-
-// ?? 怨듯넻 (?먮윭 ?섏씠吏 / ?묎렐?쒖뼱 媛??
 import { NotFound } from '../shared/pages/NotFound';
 import { NoAccess } from '../shared/pages/NoAccess';
 import { Guard } from '../shared/components/Guard';
@@ -198,14 +131,6 @@ const MonthlyPlanMeetingPage = lazy(() =>
   import('../modules/analytics/pages/MonthlyPlanMeetingPage').then((module) => ({ default: module.MonthlyPlanMeetingPage }))
 );
 
-// ?????????????????????????????????????????????
-// ?쇱슦??媛??而댄룷?뚰듃
-// ?????????????????????????????????????????????
-
-/**
- * ProtectedRoute ??濡쒓렇?몃맂 ?ъ슜?먮쭔 ?먯떇 ?뚮뜑
- * 鍮꾩씤利??곹깭?먯꽌 ?묎렐 ??/login ?쇰줈 由щ떎?대젆?명빀?덈떎.
- */
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
@@ -214,10 +139,6 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-/**
- * PublicOnlyRoute ??鍮꾨줈洹몄씤 ?ъ슜?먮쭔 ?먯떇 ?뚮뜑 (濡쒓렇???섏씠吏??
- * ?대? 濡쒓렇?몃맂 ?곹깭?먯꽌 /login ?묎렐 ???덉쑝濡?由щ떎?대젆?명빀?덈떎.
- */
 function PublicOnlyRoute({ children }) {
   const { isAuthenticated } = useAuth();
   if (isAuthenticated) {
@@ -226,30 +147,12 @@ function PublicOnlyRoute({ children }) {
   return children;
 }
 
-// ?????????????????????????????????????????????
-// ?쇱슦??吏꾩엯??
-// ?????????????????????????????????????????????
-
-/**
- * Router ???좏뵆由ъ??댁뀡 ?꾩껜 ?쇱슦???몃━
- *
- * 理쒖긽??援ъ“:
- *   /403           ??沅뚰븳 ?놁쓬 (NoAccess)
- *   /login         ??濡쒓렇??(PublicOnlyRoute > AuthLayout)
- *   /              ?????덉씠?꾩썐 (ProtectedRoute > AppLayout)
- *     index        ????쒕낫??
- *     ...          ??媛?湲곕뒫 ?섏씠吏
- *     *            ??404 (NotFound)
- */
 export function Router() {
   return (
     <BrowserRouter basename="/BMS_NEW">
-      <Suspense fallback={<div style={{ padding: '20px' }}>濡쒕뵫 以?..</div>}>
+      <Suspense fallback={<div style={{ padding: '20px' }}>로딩 중...</div>}>
       <Routes>
-        {/* 沅뚰븳 ?놁쓬 */}
         <Route path={ROUTES.FORBIDDEN} element={<NoAccess />} />
-
-        {/* 濡쒓렇????鍮꾩씤利??꾩슜 */}
         <Route
           path={ROUTES.LOGIN}
           element={
@@ -260,8 +163,6 @@ export function Router() {
             </PublicOnlyRoute>
           }
         />
-
-        {/* ???꾩껜 ???몄쬆 ?꾩닔 */}
         <Route
           path={ROUTES.HOME}
           element={
@@ -270,19 +171,14 @@ export function Router() {
             </ProtectedRoute>
           }
         >
-          {/* ?? ??쒕낫???? */}
           <Route index element={<DashboardHome />} />
           <Route path={toRelative(ROUTES.DASHBOARD_ALT)} element={<DashboardHome />} />
-
-          {/* ?? 湲곗? ?뺣낫 (留덉뒪?? ?? */}
           <Route path={toRelative(ROUTES.MASTER_ITEMS)} element={<ItemsPage />} />
           <Route path={toRelative(ROUTES.MASTER_PARTNERS)} element={<PartnersPage />} />
           <Route path={toRelative(ROUTES.MASTER_PARTNERS_NEW)} element={<PartnerRegisterPage />} />
           <Route path={toRelative(ROUTES.MASTER_PARTNERS_ID)} element={<PartnerCardPage />} />
           <Route path={toRelative(ROUTES.MASTER_STANDARD_COST)} element={<StandardCostPage />} />
           <Route path={toRelative(ROUTES.MASTER_PERFORMANCE_PLAN)} element={<PerformancePlanPage />} />
-
-          {/* ?? ?곸뾽 愿由????꾨줈?앺듃? (?먯씡遺꾩꽍 / ?곸뾽?뺣낫 / SPEC?꾪솴) ?? */}
           <Route path={toRelative(ROUTES.PROFIT)} element={<SalesProfitAnalysisPage />} />
           <Route path={toRelative(ROUTES.PROFIT_NEW)} element={<SalesProfitAnalysisNewPage />} />
           <Route path={toRelative(ROUTES.PROFIT_ID_EDIT)} element={<SalesProfitAnalysisNewPage />} />
@@ -291,8 +187,6 @@ export function Router() {
           <Route path={toRelative(ROUTES.SALES_INFO_NEW)} element={<SalesInfoRegisterPage />} />
           <Route path={toRelative(ROUTES.SALES_INFO_ID)} element={<SalesInfoDetailPage />} />
           <Route path={toRelative(ROUTES.SPEC_STATUS)} element={<SpecStatusDiscountPage />} />
-
-          {/* ?? ?곸뾽 愿由???怨듯넻 (蹂닿퀬??/ 紐낇븿 / ?먮즺?? ?? */}
           <Route path={toRelative(ROUTES.SALES_REPORT)} element={<SalesReportsPage />} />
           <Route path={toRelative(ROUTES.SALES_REPORT_WEEKLY_NEW)} element={<WeeklyReportFormPage />} />
           <Route path={toRelative(ROUTES.SALES_REPORT_TRIP_NEW)} element={<TripReportFormPage />} />
@@ -304,24 +198,15 @@ export function Router() {
           <Route path={toRelative(ROUTES.SALES_MATERIAL_NEW)} element={<SalesMaterialFormPage />} />
           <Route path={toRelative(ROUTES.SALES_MATERIAL_ID_EDIT)} element={<SalesMaterialFormPage />} />
           <Route path={toRelative(ROUTES.SALES_MATERIAL_ID)} element={<SalesMaterialDetailPage />} />
-
-
-          {/* ?? ?곸뾽 ?쒕룞 (怨듯넻) ??異붽? 硫붾돱 ?? */}
           <Route path={toRelative(ROUTES.SALES_DELIVERY_REQUEST_STATUS)} element={<DeliveryRequestStatusPage />} />
           <Route path={toRelative(ROUTES.SALES_DELIVERY_REQUEST_DETAIL)} element={<DeliveryRequestDetailPage />} />
           <Route path={toRelative(ROUTES.SALES_DELIVERY_APPROVAL)} element={<SalesDeliveryApprovalPage />} />
-
-          {/* ?? ?곸뾽 愿由???由ы뀒?쇳? (鍮꾪솢?깊솕) ?? */}
           <Route path={toRelative(ROUTES.SHORT_PROJECT)} element={<ShortProjectPage />} />
           <Route path={toRelative(ROUTES.SHORT_PROJECT_REGISTER)} element={<ShortProjectRegisterPage />} />
-
-          {/* ?? ?곸뾽 愿由?????쇱쁺?낇?쨌?곸뾽吏?먰? (?꾩떆) ?? */}
           <Route path={toRelative(ROUTES.TILE_TEAM)} element={<TileTeamPage />} />
           <Route path={toRelative(ROUTES.SALES_SUPPORT)} element={<SalesSupportPage />} />
           <Route path={toRelative(ROUTES.SALES_SUPPORT_RECEIVABLE)} element={<SupportReceivablePage />} />
           <Route path={toRelative(ROUTES.SALES_SUPPORT_DISCOUNT_PROMOTION)} element={<DiscountPromotionPage />} />
-
-          {/* ?? ?곸뾽 寃곗옱 (沅뚰븳 媛???곸슜) ?? */}
           <Route
             path={toRelative(ROUTES.APPROVAL_SALES)}
             element={
@@ -346,64 +231,49 @@ export function Router() {
               </Guard>
             }
           />
-
-          {/* ?? ?ш퀬 / ?⑺뭹 ?? */}
           <Route path={toRelative(ROUTES.DELIVERY_REQUEST)} element={<DeliveryRequestPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_HISTORY)} element={<DeliveryHistoryPage />} />
           <Route
             path={toRelative(ROUTES.DELIVERY_PLAN)}
             element={(
-              <Suspense fallback={<div style={{ padding: '20px' }}>濡쒕뵫 以?..</div>}>
+              <Suspense fallback={<div style={{ padding: '20px' }}>로딩 중...</div>}>
                 <DeliveryPlanPage />
               </Suspense>
             )}
           />
           <Route path={toRelative(ROUTES.DELIVERY_INVENTORY)} element={<InventoryPage />} />
           <Route path={toRelative(ROUTES.DELIVERY_DEMAND)} element={<DemandForecastPage />} />
-
-          {/* ?? ?щТ (梨꾧텒쨌?섍툑쨌?ъ떊쨌留ㅼ엯留ㅼ텧) ?? */}
           <Route path={toRelative(ROUTES.FINANCE_PURCHASE_SALES)} element={<PurchaseSalesPage />} />
           <Route path={toRelative(ROUTES.FINANCE_RECEIVABLE)} element={<ReceivablesPage />} />
           <Route path={toRelative(ROUTES.FINANCE_BILL)} element={<BillsDepositsPage />} />
           <Route path={toRelative(ROUTES.FINANCE_CREDIT)} element={<CreditCollateralPage />} />
-
-          {/* ?? ?由ъ젏 ?ы꽭 (?⑤씪??二쇰Ц 鍮꾪솢?깊솕) ?? */}
           <Route path={toRelative(ROUTES.PARTNER_NOTICE)} element={<PartnerNoticePage />} />
           <Route path={toRelative(ROUTES.PARTNER_AS)} element={<PartnerAsRedirect />} />
           <Route path={toRelative(ROUTES.PARTNER_CATALOG)} element={<PartnerCatalogPage />} />
           <Route path={toRelative(ROUTES.PARTNER_DELIVERY)} element={<PartnerDeliveryPage />} />
           <Route path={toRelative(ROUTES.PARTNER_DISPATCH)} element={<PartnerOrderDeliveryPage />} />
-          {/* ?섏쐞 ?명솚: /partner/receivable ??嫄곕옒 ?뺣낫 議고쉶 ?섏씠吏濡?由щ떎?대젆??*/}
           <Route
             path={toRelative(ROUTES.PARTNER_RECEIVABLE)}
             element={<Navigate to={ROUTES.FINANCE_RECEIVABLE} replace />}
           />
           <Route path={toRelative(ROUTES.PARTNER_BASIC)} element={<PartnerBasicInfoPage />} />
           <Route path={toRelative(ROUTES.PARTNER_BALANCE_CONFIRM)} element={<PartnerBalanceConfirmPage />} />
-
-          {/* ?? ?몄궗?댄듃 ???깃낵 愿由?KPI) ?? */}
           <Route path={toRelative(ROUTES.ANALYTICS_RETAIL)} element={<SalesPerformancePage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_PARTNER)} element={<PartnerPerformancePage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_PERSONAL_SALES)} element={<PersonalSalesPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_CATEGORY_SALES)} element={<CategorySalesPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_MONTHLY_PLAN_MEETING)} element={<MonthlyPlanMeetingPage />} />
-
-          {/* ?? ?몄궗?댄듃 ???쒖옣 遺꾩꽍 ?? */}
           <Route path={toRelative(ROUTES.ANALYTICS_MARKET)} element={<MarketOverviewPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_COLLECTION)} element={<DataCollectionPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_PRICE)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_CATALOG)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_PROMO)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
           <Route path={toRelative(ROUTES.ANALYTICS_CUSTOM)} element={<CustomReportPage />} />
-
-          {/* ?? 愿由ъ옄 ???쒖뒪???ㅼ젙 ?? */}
           <Route path={toRelative(ROUTES.ADMIN_USERS)} element={<UsersAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_ORG)} element={<OrgAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_PERMISSION)} element={<PermissionAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_CODE)} element={<CodesAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_LOG)} element={<LogsAdminPage />} />
-
-          {/* 404 ??留ㅼ묶?섏? ?딅뒗 紐⑤뱺 寃쎈줈 */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
@@ -411,6 +281,7 @@ export function Router() {
     </BrowserRouter>
   );
 }
+
 
 
 

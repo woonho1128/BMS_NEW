@@ -7,7 +7,7 @@
 
 .page {
   width: 100%;
-  padding: 0 0 0 10px;
+  padding: 0 8px 0 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -16,15 +16,87 @@
 .actionRow {
   display: flex;
   gap: 8px;
+  justify-content: flex-end;
+  padding-right: 2px;
+  align-items: center;
+  min-height: 36px;
 }
 
-.filterBar {
-  margin-bottom: var(--space-sm);
+.versionBox {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.versionBox span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #476284;
+}
+
+.versionBox select {
+  height: 32px;
+  min-width: 210px;
+  border: 1px solid #ced9ea;
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 13px;
+  color: #1c2d45;
+  background: #f9fbff;
+}
+
+.versionBox small {
+  font-size: 12px;
+  color: #5b6f8a;
+}
+
+.filterPanel {
+  border: 1px solid #dbe5f2;
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px 10px 9px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.filterPanel label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filterPanel span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #476284;
+}
+
+.filterPanel select,
+.filterPanel input {
+  height: 32px;
+  border: 1px solid #ced9ea;
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 13px;
+  color: #1c2d45;
+  background: #f9fbff;
+}
+
+.filterPanel select:disabled {
+  opacity: 0.5;
+}
+
+.filterActions {
+  display: flex;
+  gap: 8px;
 }
 
 .summaryRow {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -44,12 +116,31 @@
 }
 
 .summaryCard strong {
-  font-size: 16px;
+  font-size: 20px;
   color: #11223a;
 }
 
 .tabRoot {
-  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tabButton {
+  border: 1px solid #ccdaef;
+  border-radius: 999px;
+  background: #fff;
+  color: #2d4769;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.tabButtonActive {
+  border-color: #2f6fd7;
+  background: #ebf2ff;
+  color: #1f58b6;
 }
 
 .tableCard {
@@ -59,19 +150,38 @@
   padding: 10px;
 }
 
-.planTable :global(.ant-table-thead > tr > th) {
-  background: #f5f8ff;
-  color: #2f4563;
-  font-size: 12px;
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
 }
 
-.planTable :global(.ant-table-tbody > tr > td) {
-  padding: 6px 8px;
+.historyTable {
+  width: 100%;
+  min-width: 1280px;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.historyTable th,
+.historyTable td {
+  border: 1px solid #dce5f2;
+  padding: 8px 7px;
   font-size: 12px;
+  line-height: 1.25;
+  text-align: left;
+  white-space: nowrap;
+  word-break: keep-all;
+  writing-mode: horizontal-tb;
+}
+
+.historyTable th {
+  background: #f3f7ff;
+  color: #2d4567;
+  min-width: 72px;
 }
 
 .monthInput {
-  width: 82px;
+  width: 88px;
   border: 1px solid #cfdced;
   border-radius: 8px;
   padding: 4px 6px;
@@ -110,10 +220,6 @@
   cursor: pointer;
 }
 
-.statusButton:hover {
-  background: #eaf1ff;
-}
-
 .historyButton {
   border: 1px solid #cfdced;
   background: #fff;
@@ -122,10 +228,6 @@
   font-size: 12px;
   color: #24456d;
   cursor: pointer;
-}
-
-.historyButton:hover {
-  background: #f5f8ff;
 }
 
 .tableFooter {
@@ -143,7 +245,7 @@
 
 .uploadSection {
   display: grid;
-  grid-template-columns: 420px minmax(0, 1fr);
+  grid-template-columns: 380px minmax(0, 1fr);
   gap: 10px;
 }
 
@@ -268,24 +370,6 @@
   font-size: 12px;
 }
 
-.historyTable {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.historyTable th,
-.historyTable td {
-  border: 1px solid #dce5f2;
-  padding: 8px;
-  font-size: 12px;
-  text-align: left;
-}
-
-.historyTable th {
-  background: #f3f7ff;
-  color: #2d4567;
-}
-
 .historyEmpty {
   color: #647a97;
   font-size: 12px;
@@ -293,8 +377,12 @@
 }
 
 @media (max-width: 1280px) {
+  .filterPanel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .summaryRow {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .uploadSection {
@@ -304,11 +392,21 @@
 
 @media (max-width: 768px) {
   .page {
-    padding: 0 0 0 6px;
+    padding: 0 0 0 8px;
   }
 
   .actionRow {
     flex-wrap: wrap;
+  }
+
+  .versionBox {
+    width: 100%;
+    flex-wrap: wrap;
+    margin-right: 0;
+  }
+
+  .filterPanel {
+    grid-template-columns: 1fr;
   }
 
   .summaryRow {

@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../ShortProjectRegisterPage.module.css';
 import { Button } from '../../../../shared/components/Button/Button';
 import ShortProjectProfitReadonlyTable from './ShortProjectProfitReadonlyTable';
 
+const TAB = {
+  COVER: 'cover',
+  DETAIL: 'detail',
+};
+
 export default function ShortProjectSubmitModal({
   open,
   selectedSitesForSubmit,
+  submitSiteTableData,
+  submitCoverTotals,
   activeSubmitSite,
   activeSubmitSiteId,
   setActiveSubmitSiteId,
@@ -29,6 +36,14 @@ export default function ShortProjectSubmitModal({
   onClose,
   onSubmit,
 }) {
+  const [activeTab, setActiveTab] = useState(TAB.COVER);
+
+  useEffect(() => {
+    if (open) {
+      setActiveTab(TAB.COVER);
+    }
+  }, [open]);
+
   if (!open) return null;
 
   return (
@@ -37,7 +52,7 @@ export default function ShortProjectSubmitModal({
         className={styles.submitModal}
         role="dialog"
         aria-modal="true"
-        aria-label="결재 상신 설정"
+        aria-label="결재선 지정 후 상신"
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.submitModalHeader}>
@@ -48,66 +63,121 @@ export default function ShortProjectSubmitModal({
         </div>
 
         <div className={styles.submitModalBody}>
-          <section className={styles.submitSection}>
-            <h3 className={styles.submitSectionTitle}>선택 건 요약</h3>
-            <div className={styles.submitSummaryBar}>
-              <span>선택 건수: {submitSummary.count}건</span>
-              <span>대표품번 수: {submitSummary.itemCount}개</span>
-              <span>기본 할인 금액: {formatNumber(submitSummary.baseDiscountAmount)}</span>
-              <span>단납 할인 금액: {formatNumber(submitSummary.shortDiscountAmount)}</span>
-            </div>
+          <div className={styles.submitTopTabs}>
+            <button
+              type="button"
+              className={`${styles.submitTopTab} ${activeTab === TAB.COVER ? styles.submitTopTabActive : ''}`}
+              onClick={() => setActiveTab(TAB.COVER)}
+            >
+              갑지(요약)
+            </button>
+            <button
+              type="button"
+              className={`${styles.submitTopTab} ${activeTab === TAB.DETAIL ? styles.submitTopTabActive : ''}`}
+              onClick={() => setActiveTab(TAB.DETAIL)}
+            >
+              현장별 상세
+            </button>
+          </div>
 
-            <div className={styles.submitSiteTabs} role="tablist" aria-label="상신 대상 현장 선택">
-              {selectedSitesForSubmit.map((site) => {
-                const isActive = activeSubmitSite?.id === site.id;
-                return (
-                  <button
-                    key={`tab-${site.id}`}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    className={`${styles.submitSiteTab} ${isActive ? styles.submitSiteTabActive : ''}`}
-                    onClick={() => setActiveSubmitSiteId(site.id)}
-                  >
-                    {site.siteName}
-                  </button>
-                );
-              })}
-            </div>
-
-            {activeSubmitSite && (
-              <>
-                <div className={styles.submitSiteInfoGrid}>
-                  <div className={styles.submitInfoItem}>
-                    <span className={styles.submitInfoLabel}>현장명</span>
-                    <strong className={styles.submitInfoValue}>{activeSubmitSite.siteName}</strong>
-                  </div>
-                  <div className={styles.submitInfoItem}>
-                    <span className={styles.submitInfoLabel}>건설사</span>
-                    <strong className={styles.submitInfoValue}>{activeSubmitSite.builder}</strong>
-                  </div>
-                  <div className={styles.submitInfoItem}>
-                    <span className={styles.submitInfoLabel}>대리점</span>
-                    <strong className={styles.submitInfoValue}>{activeSubmitSite.dealer}</strong>
-                  </div>
-                  <div className={styles.submitInfoItem}>
-                    <span className={styles.submitInfoLabel}>납품예정일</span>
-                    <strong className={styles.submitInfoValue}>
-                      {formatDateRange(activeSubmitSite.deliveryFrom, activeSubmitSite.deliveryTo)}
-                    </strong>
-                  </div>
+          {activeTab === TAB.COVER ? (
+            <section className={styles.submitSection}>
+              <h3 className={styles.submitSectionTitle}>요약</h3>
+              <div className={styles.coverTotals}>
+                <div className={styles.coverTotalCard}>
+                  <span>총 공장도가 금액</span>
+                  <strong>{formatNumber(submitCoverTotals.factoryAmount)}</strong>
                 </div>
+                <div className={styles.coverTotalCard}>
+                  <span>총 기본할인가 금액</span>
+                  <strong>{formatNumber(submitCoverTotals.baseDiscountAmount)}</strong>
+                </div>
+                <div className={styles.coverTotalCard}>
+                  <span>총 단납공급가 금액</span>
+                  <strong>{formatNumber(submitCoverTotals.appliedDiscountAmount)}</strong>
+                </div>
+              </div>
 
-                <ShortProjectProfitReadonlyTable
-                  rows={activeSubmitProfitRows}
-                  total={activeSubmitProfitTotal}
-                  formatNumber={formatNumber}
-                  baseDiscountRate={baseDiscountRate}
-                  rowKeyPrefix={`submit-${activeSubmitSiteId || 'site'}`}
-                />
-              </>
-            )}
-          </section>
+              <div className={styles.coverSiteStack}>
+                {submitSiteTableData.map((entry) => (
+                  <div key={`cover-${entry.site.id}`} className={styles.coverSiteCard}>
+                    <div className={styles.coverSiteTitleRow}>
+                      <strong>{entry.site.siteName}</strong>
+                      <span>{formatDateRange(entry.site.deliveryFrom, entry.site.deliveryTo)}</span>
+                    </div>
+                    <ShortProjectProfitReadonlyTable
+                      rows={entry.rows}
+                      total={entry.total}
+                      formatNumber={formatNumber}
+                      baseDiscountRate={baseDiscountRate}
+                      rowKeyPrefix={`submit-cover-${entry.site.id}`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : (
+            <section className={styles.submitSection}>
+              <h3 className={styles.submitSectionTitle}>선택 건 요약</h3>
+              <div className={styles.submitSummaryBar}>
+                <span>선택 건수: {submitSummary.count}건</span>
+                <span>대표품번 수: {submitSummary.itemCount}개</span>
+                <span>기본 할인 금액: {formatNumber(submitSummary.baseDiscountAmount)}</span>
+                <span>단납 할인 금액: {formatNumber(submitSummary.shortDiscountAmount)}</span>
+              </div>
+
+              <div className={styles.submitSiteTabs} role="tablist" aria-label="상신 대상 현장 선택">
+                {selectedSitesForSubmit.map((site) => {
+                  const isActive = activeSubmitSite?.id === site.id;
+                  return (
+                    <button
+                      key={`tab-${site.id}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`${styles.submitSiteTab} ${isActive ? styles.submitSiteTabActive : ''}`}
+                      onClick={() => setActiveSubmitSiteId(site.id)}
+                    >
+                      {site.siteName}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {activeSubmitSite && (
+                <>
+                  <div className={styles.submitSiteInfoGrid}>
+                    <div className={styles.submitInfoItem}>
+                      <span className={styles.submitInfoLabel}>현장명</span>
+                      <strong className={styles.submitInfoValue}>{activeSubmitSite.siteName}</strong>
+                    </div>
+                    <div className={styles.submitInfoItem}>
+                      <span className={styles.submitInfoLabel}>건설사</span>
+                      <strong className={styles.submitInfoValue}>{activeSubmitSite.builder}</strong>
+                    </div>
+                    <div className={styles.submitInfoItem}>
+                      <span className={styles.submitInfoLabel}>대리점</span>
+                      <strong className={styles.submitInfoValue}>{activeSubmitSite.dealer}</strong>
+                    </div>
+                    <div className={styles.submitInfoItem}>
+                      <span className={styles.submitInfoLabel}>납품예정일</span>
+                      <strong className={styles.submitInfoValue}>
+                        {formatDateRange(activeSubmitSite.deliveryFrom, activeSubmitSite.deliveryTo)}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <ShortProjectProfitReadonlyTable
+                    rows={activeSubmitProfitRows}
+                    total={activeSubmitProfitTotal}
+                    formatNumber={formatNumber}
+                    baseDiscountRate={baseDiscountRate}
+                    rowKeyPrefix={`submit-${activeSubmitSiteId || 'site'}`}
+                  />
+                </>
+              )}
+            </section>
+          )}
 
           <section className={styles.submitSection}>
             <h3 className={styles.submitSectionTitle}>결재선</h3>
@@ -155,7 +225,7 @@ export default function ShortProjectSubmitModal({
               rows={4}
               value={submitComment}
               onChange={(e) => setSubmitComment(e.target.value)}
-              placeholder="결재자가 확인할 핵심 내용(할인 배경, 현장 특이점 등)을 입력하세요."
+              placeholder="결재자가 확인할 핵심 내용을 입력하세요."
             />
           </section>
         </div>

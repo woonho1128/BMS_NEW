@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { useAuth } from '../../../auth/hooks/useAuth';
+import { notify } from '../../../../shared/utils/notify';
 
 export const ModificationPeriod = () => {
   const { user } = useAuth();
@@ -55,7 +56,7 @@ export const ModificationPeriod = () => {
       />
       {isAdmin && (
         <button
-          onClick={() => alert(`수정 가능 기간이 ${startDate} ~ ${endDate}로 저장되었습니다.`)}
+          onClick={() => notify.success()}
           style={{
             padding: '4px 12px',
             backgroundColor: '#2f7df6',
@@ -80,3 +81,6 @@ export const ModificationPeriod = () => {
     </div>
   );
 };
+
+
+

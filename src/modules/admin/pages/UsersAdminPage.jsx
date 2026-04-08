@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+﻿import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
 import { ListFilter } from '../../../shared/components/ListFilter';
+import { notify, confirmAction } from '../../../shared/utils/notify';
 import { getUsersList } from '../data/adminMock';
 import styles from './UsersAdminPage.module.css';
 
@@ -65,10 +66,7 @@ export function UsersAdminPage() {
   const totalCount = list.length;
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
   const start = (page - 1) * PAGE_SIZE;
-  const paginatedList = useMemo(
-    () => list.slice(start, start + PAGE_SIZE),
-    [list, start]
-  );
+  const paginatedList = useMemo(() => list.slice(start, start + PAGE_SIZE), [list, start]);
 
   const handleFilterChange = useCallback((id, value) => {
     setFilterValue((prev) => ({ ...prev, [id]: value }));
@@ -103,20 +101,16 @@ export function UsersAdminPage() {
   }, []);
 
   const handleDelete = useCallback((user) => {
-    if (window.confirm(`정말 삭제하시겠습니까?\n사용자: ${user.name} (${user.loginId})`)) {
-      // 실제로는 API 호출
-      console.log('삭제:', user.id);
-      alert('삭제되었습니다.');
-    }
+    const ok = confirmAction(`정말 삭제하시겠습니까?\n사용자: ${user.name} (${user.loginId})`);
+    if (!ok) return;
+    notify.success('삭제되었습니다.');
   }, []);
 
   const handleSave = useCallback(() => {
-    // 실제로는 API 호출
-    console.log('저장:', formData);
-    alert(isEdit ? '수정되었습니다.' : '등록되었습니다.');
+    notify.success(isEdit ? '수정되었습니다.' : '등록되었습니다.');
     setShowDrawer(false);
     setFormData(emptyForm);
-  }, [formData, isEdit]);
+  }, [isEdit]);
 
   const handleCancel = useCallback(() => {
     setShowDrawer(false);
@@ -143,7 +137,7 @@ export function UsersAdminPage() {
   return (
     <PageShell
       path="/admin/users"
-      title="사용자관리"
+      title="사용자 관리"
       description="시스템 사용자 조회 및 관리"
       actions={
         <Button variant="primary" onClick={handleAdd}>
@@ -152,13 +146,7 @@ export function UsersAdminPage() {
       }
     >
       <div className={styles.page}>
-        <ListFilter
-          className={styles.toolbar}
-          fields={USER_FILTER_FIELDS}
-          value={filterValue}
-          onChange={handleFilterChange}
-          onReset={handleReset}
-        />
+        <ListFilter className={styles.toolbar} fields={USER_FILTER_FIELDS} value={filterValue} onChange={handleFilterChange} onReset={handleReset} />
 
         <section className={styles.section} aria-label="사용자 목록">
           <div className={styles.count}>
@@ -203,29 +191,17 @@ export function UsersAdminPage() {
                         <span className={styles.badge}>{user.role === 'admin' ? '관리자' : '일반'}</span>
                       </td>
                       <td className={styles.td}>
-                        <span
-                          className={`${styles.statusBadge} ${
-                            user.status === 'active' ? styles.active : styles.inactive
-                          }`}
-                        >
+                        <span className={`${styles.statusBadge} ${user.status === 'active' ? styles.active : styles.inactive}`}>
                           {user.status === 'active' ? '활성' : '비활성'}
                         </span>
                       </td>
-                      <td className={styles.td}>{user.lastLoginAt || '—'}</td>
+                      <td className={styles.td}>{user.lastLoginAt || '-'}</td>
                       <td className={styles.tdAction}>
                         <div className={styles.actions}>
-                          <button
-                            className={styles.actionBtn}
-                            onClick={() => handleEdit(user)}
-                            aria-label="수정"
-                          >
+                          <button className={styles.actionBtn} onClick={() => handleEdit(user)} aria-label="수정">
                             수정
                           </button>
-                          <button
-                            className={`${styles.actionBtn} ${styles.deleteBtn}`}
-                            onClick={() => handleDelete(user)}
-                            aria-label="삭제"
-                          >
+                          <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(user)} aria-label="삭제">
                             삭제
                           </button>
                         </div>
@@ -236,176 +212,83 @@ export function UsersAdminPage() {
               </tbody>
             </table>
           </div>
+
           {totalPages > 1 && (
             <div className={styles.pagination}>
-              <button
-                type="button"
-                className={styles.pageBtn}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                aria-label="이전 페이지"
-              >
+              <button type="button" className={styles.pageBtn} onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
                 이전
               </button>
               <span className={styles.pageInfo}>
                 {page} / {totalPages}
               </span>
-              <button
-                type="button"
-                className={styles.pageBtn}
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                aria-label="다음 페이지"
-              >
+              <button type="button" className={styles.pageBtn} onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
                 다음
               </button>
             </div>
           )}
         </section>
 
-        {/* Side Drawer: 사용자 수정/등록 */}
         {showDrawer && (
-          <>
-            <div className={styles.drawerOverlay} onClick={handleCancel} aria-hidden />
-            <div className={styles.drawer} role="dialog" aria-labelledby="drawer-title">
-              <header className={styles.drawerHeader}>
-                <h2 id="drawer-title" className={styles.drawerTitle}>
-                  {isEdit ? '사용자 정보 수정' : '사용자 등록'}
-                </h2>
-                <button
-                  type="button"
-                  className={styles.drawerClose}
-                  onClick={handleCancel}
-                  aria-label="닫기"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
+          <div className={styles.drawerOverlay} role="dialog" aria-modal="true">
+            <aside className={styles.drawer}>
+              <div className={styles.drawerHeader}>
+                <h3>{isEdit ? '사용자 수정' : '사용자 등록'}</h3>
+                <button type="button" className={styles.closeBtn} onClick={handleCancel} aria-label="닫기">
+                  ×
                 </button>
-              </header>
-              <div className={styles.drawerBody}>
-                {/* 기본 정보 */}
-                <div className={styles.drawerGroup}>
-                  <span className={styles.drawerGroupLabel}>기본 정보</span>
-                  <div className={styles.drawerFields}>
-                    <div className={styles.field}>
-                      <label className={styles.drawerLabel}>로그인ID *</label>
-                      <input
-                        type="text"
-                        className={`${styles.drawerInput} ${isEdit ? styles.drawerInputReadOnly : ''}`}
-                        value={formData.loginId}
-                        onChange={(e) => updateForm('loginId', e.target.value)}
-                        placeholder="로그인ID를 입력하세요"
-                        disabled={isEdit}
-                        readOnly={isEdit}
-                      />
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.drawerLabel}>이름 *</label>
-                      <input
-                        type="text"
-                        className={styles.drawerInput}
-                        value={formData.name}
-                        onChange={(e) => updateForm('name', e.target.value)}
-                        placeholder="이름을 입력하세요"
-                      />
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.drawerLabel}>이메일</label>
-                      <input
-                        type="email"
-                        className={styles.drawerInput}
-                        value={formData.email}
-                        onChange={(e) => updateForm('email', e.target.value)}
-                        placeholder="email@example.com"
-                      />
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.drawerLabel}>전화번호</label>
-                      <input
-                        type="tel"
-                        className={styles.drawerInput}
-                        value={formData.phone}
-                        onChange={(e) => updateForm('phone', e.target.value)}
-                        placeholder="010-1234-5678"
-                      />
-                    </div>
-                  </div>
+              </div>
+
+              <div className={styles.formGrid}>
+                <div className={styles.field}>
+                  <label className={styles.label}>로그인ID</label>
+                  <input className={styles.input} value={formData.loginId} onChange={(e) => updateForm('loginId', e.target.value)} />
                 </div>
-                {/* 소속 및 권한 */}
-                <div className={styles.drawerGroup}>
-                  <span className={styles.drawerGroupLabel}>소속 및 권한</span>
-                  <div className={styles.drawerFields}>
-                    <div className={styles.field}>
-                      <label className={styles.drawerLabel}>부서</label>
-                      <select
-                        className={styles.drawerSelect}
-                        value={formData.department}
-                        onChange={(e) => updateForm('department', e.target.value)}
-                      >
-                        <option value="">부서 선택</option>
-                        <option value="영업팀">영업팀</option>
-                        <option value="물류팀">물류팀</option>
-                        <option value="IT팀">IT팀</option>
-                        <option value="재무팀">재무팀</option>
-                      </select>
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.drawerLabel}>직급</label>
-                      <select
-                        className={styles.drawerSelect}
-                        value={formData.position}
-                        onChange={(e) => updateForm('position', e.target.value)}
-                      >
-                        <option value="">직급 선택</option>
-                        <option value="사원">사원</option>
-                        <option value="대리">대리</option>
-                        <option value="과장">과장</option>
-                        <option value="팀장">팀장</option>
-                      </select>
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.drawerLabel}>권한</label>
-                      <select
-                        className={styles.drawerSelect}
-                        value={formData.role}
-                        onChange={(e) => updateForm('role', e.target.value)}
-                      >
-                        <option value="user">일반</option>
-                        <option value="admin">관리자</option>
-                      </select>
-                    </div>
-                  </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>이름</label>
+                  <input className={styles.input} value={formData.name} onChange={(e) => updateForm('name', e.target.value)} />
                 </div>
-                {/* 상태 설정 */}
-                <div className={styles.drawerGroup}>
-                  <span className={styles.drawerGroupLabel}>상태 설정</span>
-                  <div className={styles.drawerFields}>
-                    <div className={styles.field}>
-                      <label className={styles.drawerLabel}>상태</label>
-                      <select
-                        className={styles.drawerSelect}
-                        value={formData.status}
-                        onChange={(e) => updateForm('status', e.target.value)}
-                      >
-                        <option value="active">활성</option>
-                        <option value="inactive">비활성</option>
-                      </select>
-                    </div>
-                  </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>이메일</label>
+                  <input className={styles.input} value={formData.email} onChange={(e) => updateForm('email', e.target.value)} />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>연락처</label>
+                  <input className={styles.input} value={formData.phone} onChange={(e) => updateForm('phone', e.target.value)} />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>부서</label>
+                  <input className={styles.input} value={formData.department} onChange={(e) => updateForm('department', e.target.value)} />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>직급</label>
+                  <input className={styles.input} value={formData.position} onChange={(e) => updateForm('position', e.target.value)} />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>권한</label>
+                  <select className={styles.select} value={formData.role} onChange={(e) => updateForm('role', e.target.value)}>
+                    <option value="user">일반</option>
+                    <option value="admin">관리자</option>
+                  </select>
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>상태</label>
+                  <select className={styles.select} value={formData.status} onChange={(e) => updateForm('status', e.target.value)}>
+                    <option value="active">활성</option>
+                    <option value="inactive">비활성</option>
+                  </select>
                 </div>
               </div>
-              <footer className={styles.drawerFooter}>
-                <button type="button" className={styles.drawerBtnCancel} onClick={handleCancel}>
+
+              <div className={styles.drawerActions}>
+                <Button variant="secondary" onClick={handleCancel}>
                   취소
-                </button>
-                <button type="button" className={styles.drawerBtnSave} onClick={handleSave}>
+                </Button>
+                <Button variant="primary" onClick={handleSave}>
                   저장
-                </button>
-              </footer>
-            </div>
-          </>
+                </Button>
+              </div>
+            </aside>
+          </div>
         )}
       </div>
     </PageShell>

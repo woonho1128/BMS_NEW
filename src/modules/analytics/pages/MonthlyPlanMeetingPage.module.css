@@ -138,8 +138,8 @@
 
 .matrixTable th:nth-child(n + 3),
 .matrixTable td:nth-child(n + 3) {
-  width: 59px;
-  min-width: 59px;
+  width: 68px;
+  min-width: 68px;
 }
 
 .totalRow td {
@@ -147,8 +147,8 @@
   font-weight: 700;
 }
 
-.valueInput {
-  width: 42px;
+.cellInput {
+  width: 58px;
   border: 1px solid #cddbee;
   border-radius: 8px;
   padding: 1px 3px;
@@ -156,6 +156,21 @@
   font-size: 13px;
   color: #173457;
   background: #fff;
+}
+
+.cellInput:disabled {
+  background: #f3f6fc;
+  color: #8aa0bd;
+}
+
+.cellInput::-webkit-outer-spin-button,
+.cellInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cellInput[type='number'] {
+  -moz-appearance: textfield;
 }
 
 @media (max-width: 768px) {

@@ -8,6 +8,7 @@
     "check:encoding": "node scripts/check-encoding.mjs",
     "build": "node --require ./scripts/node-webcrypto-polyfill.cjs ./node_modules/vite/bin/vite.js build",
     "build:safe": "npm run check:encoding && npm run build",
+    "smoke:pages": "node scripts/smoke-pages.mjs",
     "analyze:bundle": "node scripts/analyze-dist.mjs",
     "analyze:antd": "node scripts/analyze-antd-usage.mjs",
     "preview": "node --require ./scripts/node-webcrypto-polyfill.cjs ./node_modules/vite/bin/vite.js preview",

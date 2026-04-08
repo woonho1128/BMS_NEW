@@ -94,8 +94,12 @@
 
 .metaGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px 8px;
+}
+
+.metaWide {
+  grid-column: span 2;
 }
 
 .metaGrid div {
@@ -141,6 +145,42 @@
   font-weight: 800;
 }
 
+.itemDocBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.itemDocLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #5a7394;
+}
+
+.docActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.docButton {
+  border: 1px solid #c9d7ec;
+  border-radius: 6px;
+  background: #f7fbff;
+  color: #33537a;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 3px 6px;
+  cursor: pointer;
+}
+
+.docButton:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
 .right {
   text-align: right;
 }
@@ -152,6 +192,14 @@
 @media (max-width: 1280px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metaGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metaWide {
+    grid-column: span 1;
   }
 }
 

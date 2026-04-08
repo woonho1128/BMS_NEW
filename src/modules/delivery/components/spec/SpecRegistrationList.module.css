@@ -11,8 +11,9 @@
     align-items: center;
     padding: 16px;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    border-radius: 12px;
+    border: 1px solid #dce4ef;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
 .filterGroup {
@@ -27,6 +28,12 @@
     gap: 8px;
 }
 
+.filterItem input[type='checkbox'] {
+    width: 14px;
+    height: 14px;
+    accent-color: #2f7df6;
+}
+
 .label {
     font-size: 13px;
     font-weight: 600;
@@ -37,17 +44,17 @@
 .input {
     padding: 6px 10px;
     border: 1px solid #cad6e6;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 13px;
-    min-width: 120px;
+    min-width: 160px;
 }
 
 .primaryButton {
     background-color: #2f7df6;
     color: white;
-    border: none;
+    border: 1px solid #2f7df6;
     padding: 8px 16px;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: 500;
     font-size: 14px;
@@ -58,7 +65,8 @@
 }
 
 .primaryButton:hover {
-    background-color: #2f7df6;
+    background-color: #1f64d8;
+    border-color: #1f64d8;
 }
 
 .primaryButton:disabled {
@@ -69,8 +77,9 @@
 .tableContainer {
     flex: 1;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    border-radius: 12px;
+    border: 1px solid #dce4ef;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
     overflow: hidden;
     display: flex;
     flex-direction: column;

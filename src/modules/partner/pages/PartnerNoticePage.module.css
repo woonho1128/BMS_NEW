@@ -1,10 +1,9 @@
-.wrapper {
+﻿.wrapper {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg, 20px);
 }
 
-/* 탭 / 세그먼트 컨트롤 */
 .tabList {
   display: flex;
   flex-wrap: wrap;
@@ -40,7 +39,6 @@
   box-shadow: 0 2px 8px rgba(47, 125, 246, 0.18);
 }
 
-/* 테이블 */
 .tableWrap {
   border: 1px solid #dce4ef;
   border-radius: 14px;
@@ -49,9 +47,38 @@
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
+.filterRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 12px 12px 0;
+}
+
+.searchInput {
+  width: min(420px, 100%);
+  height: 36px;
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #223247;
+}
+
+.select {
+  height: 36px;
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
+  padding: 0 10px;
+  font-size: 13px;
+  color: #223247;
+  background: #fff;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 12px;
 }
 
 .th {
@@ -69,6 +96,7 @@
   font-size: var(--font-size-md, 14px);
   color: var(--color-text-primary, #0f172a);
   border-bottom: 1px solid #edf2f8;
+  vertical-align: middle;
 }
 
 .row:last-child .td {
@@ -79,30 +107,29 @@
   background: #f7faff;
 }
 
-.titleCell {
+.statusBadge {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs, 8px);
-  flex-wrap: wrap;
-}
-
-.badge {
-  display: inline-block;
-  padding: 3px 8px;
-  border-radius: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
   font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
+  font-weight: 700;
 }
 
-.badgePromo {
-  background: var(--color-primary-light, #eff6ff);
-  color: var(--color-primary, #2563eb);
+.statusActive {
+  color: #166534;
+  background: #dcfce7;
 }
 
-.badgeWork {
-  background: #f0fdf4;
-  color: var(--color-success, #16a34a);
+.statusScheduled {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.statusEnded {
+  color: #b91c1c;
+  background: #fee2e2;
 }
 
 .emptyCell {
@@ -112,13 +139,12 @@
   font-size: var(--font-size-md, 14px);
 }
 
-/* 등록하기 버튼 (헤더 액션) */
 .primaryBtn {
   padding: var(--space-xs, 8px) var(--space-md, 16px);
   font-size: var(--font-size-md, 14px);
-  font-weight: 500;
+  font-weight: 600;
   color: #fff;
-  background: var(--color-primary, #2563eb);
+  background: #2f7df6;
   border: none;
   border-radius: var(--radius-md, 10px);
   cursor: pointer;
@@ -126,10 +152,9 @@
 }
 
 .primaryBtn:hover {
-  background: var(--color-primary-hover, #1d4ed8);
+  background: #1f64d8;
 }
 
-/* 제목 클릭 (상세보기 열기) */
 .titleLink {
   display: inline-flex;
   align-items: center;
@@ -142,13 +167,51 @@
   text-align: left;
   cursor: pointer;
   transition: color 0.15s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .titleLink:hover {
-  color: var(--color-primary, #2563eb);
+  color: #2563eb;
 }
 
-/* ========== 슬라이드 오버 Drawer (상세보기) ========== */
+.editBtn,
+.deleteBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  min-width: 52px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.editBtn {
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.editBtn:hover {
+  background: #dbeafe;
+}
+
+.deleteBtn {
+  margin-left: 6px;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.deleteBtn:hover {
+  background: #fee2e2;
+}
+
 .drawerHeader {
   flex-shrink: 0;
   padding: var(--space-md, 16px) var(--space-xl, 24px);
@@ -163,62 +226,23 @@
   gap: var(--space-sm, 12px);
 }
 
-.drawerAdminActions {
-  display: flex;
-  gap: var(--space-xs, 8px);
-  margin-right: auto;
-}
-
 .closeBtn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: none;
-  border-radius: var(--radius-md, 10px);
-  background: transparent;
-  color: var(--color-text-secondary, #475569);
+  min-width: 64px;
+  height: 34px;
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
+  background: #fff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
 }
 
 .closeBtn:hover {
-  background: var(--color-hover-bg, #f1f5f9);
-  color: var(--color-text-primary, #0f172a);
-}
-
-.editBtn {
-  padding: var(--space-xxs, 4px) var(--space-sm, 12px);
-  font-size: var(--font-size-sm, 13px);
-  font-weight: 500;
-  color: var(--color-primary, #2563eb);
-  background: transparent;
-  border: 1px solid var(--color-primary, #2563eb);
-  border-radius: var(--radius-sm, 6px);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.editBtn:hover {
-  background: var(--color-primary-light, #eff6ff);
-}
-
-.deleteBtn {
-  padding: var(--space-xxs, 4px) var(--space-sm, 12px);
-  font-size: var(--font-size-sm, 13px);
-  font-weight: 500;
-  color: var(--color-danger, #ef4444);
-  background: transparent;
-  border: 1px solid var(--color-danger, #ef4444);
-  border-radius: var(--radius-sm, 6px);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.deleteBtn:hover {
-  background: #fef2f2;
+  background: #f1f5f9;
 }
 
 .drawerScroll {
@@ -230,20 +254,6 @@
 
 .drawerMeta {
   margin-bottom: var(--space-xl, 24px);
-}
-
-.drawerBadge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: var(--space-sm, 12px);
-}
-
-.drawerBadgeNotice {
-  background: var(--color-sidebar-hover, #334155);
-  color: var(--color-sidebar-text, #e2e8f0);
 }
 
 .drawerTitle {
@@ -271,25 +281,11 @@
   white-space: pre-wrap;
 }
 
-.drawerBodyText p {
-  margin: 0 0 0.75em;
-}
-
-.drawerBodyText p:last-child {
-  margin-bottom: 0;
-}
-
 .drawerAttachmentsTitle {
   font-size: var(--font-size-sm, 13px);
   font-weight: 600;
   color: var(--color-text-secondary, #475569);
   margin: 0 0 var(--space-sm, 12px);
-}
-
-.drawerAttachmentsEmpty {
-  font-size: var(--font-size-sm, 13px);
-  color: var(--color-text-muted, #94a3b8);
-  margin: 0;
 }
 
 .attachmentList {
@@ -301,34 +297,209 @@
   gap: var(--space-xs, 8px);
 }
 
-.attachmentList li {
-  margin: 0;
-}
-
 .attachmentLink {
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm, 12px);
   padding: var(--space-sm, 12px) var(--space-md, 16px);
   font-size: var(--font-size-md, 14px);
-  color: var(--color-primary, #2563eb);
-  background: var(--color-bg-page, #f8fafc);
-  border: 1px solid var(--color-border, #e2e8f0);
-  border-radius: var(--radius-md, 10px);
+  color: #2563eb;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
   text-decoration: none;
   transition: background 0.15s, border-color 0.15s;
 }
 
 .attachmentLink:hover {
-  background: var(--color-primary-light, #eff6ff);
-  border-color: var(--color-primary, #2563eb);
+  background: #eff6ff;
+  border-color: #2563eb;
 }
 
-.drawerFooter {
-  flex-shrink: 0;
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  z-index: 999;
   display: flex;
-  gap: var(--space-sm, 12px);
-  padding: var(--space-md, 16px) var(--space-xl, 24px);
-  border-top: 1px solid var(--color-border, #e2e8f0);
-  background: var(--color-bg-card, #fff);
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+
+.detailModal {
+  width: min(1040px, 100%);
+  max-height: calc(100vh - 56px);
+  background: #fff;
+  border: 1px solid #dce4ef;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.28);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.registerModal {
+  width: min(920px, 100%);
+  max-height: calc(100vh - 56px);
+  background: #fff;
+  border: 1px solid #dce4ef;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(31, 100, 216, 0.22);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.detailActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.detailBody {
+  padding: 20px;
+  overflow: auto;
+}
+
+.formBody {
+  padding: 18px 20px;
+  overflow: auto;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formItem span {
+  font-size: 12px;
+  color: #335175;
+  font-weight: 700;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.input {
+  height: 36px;
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #223247;
+  background: #ffffff;
+}
+
+.textarea {
+  min-height: 180px;
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+  background: #ffffff;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: #2f7df6;
+  box-shadow: 0 0 0 3px rgba(47, 125, 246, 0.14);
+}
+
+.checkInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #223247;
+}
+
+.formFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid #e2e8f0;
+  background: #f3f8ff;
+}
+
+.secondaryBtn {
+  padding: 0 14px;
+  height: 34px;
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
+  background: #fff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondaryBtn:hover {
+  background: #f1f5f9;
+}
+
+.drawerBodyTextWrap {
+  max-height: 320px;
+  overflow: auto;
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 12px 14px;
+}
+
+@media (max-width: 900px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.metaItem {
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #f8fbff;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metaItem span {
+  font-size: 12px;
+  color: #6b809c;
+}
+
+.metaItem strong {
+  font-size: 14px;
+  color: #1f2e45;
 }

@@ -12,7 +12,27 @@
 }
 
 .toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   margin-bottom: var(--space-md);
+}
+
+.searchInput {
+  height: 36px;
+  width: 320px;
+  max-width: 100%;
+  border: 1px solid #cad6e6;
+  border-radius: 10px;
+  padding: 0 12px;
+  background: #fff;
+}
+
+.toolbarActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .section {
@@ -43,7 +63,7 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 760px;
 }
 
 .th,
@@ -52,6 +72,9 @@
   text-align: center;
   border-bottom: 1px solid var(--color-border);
   vertical-align: middle;
+  white-space: nowrap;
+  word-break: keep-all;
+  writing-mode: horizontal-tb;
 }
 
 .th {
@@ -69,12 +92,13 @@
 }
 
 .thAction {
-  width: 80px;
+  width: 164px;
   text-align: center;
 }
 
 .tdAction {
   text-align: center;
+  min-width: 164px;
 }
 
 .row {
@@ -99,6 +123,8 @@
 .downloadBtn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
   gap: var(--space-xs);
   padding: var(--space-xs) var(--space-sm);
   background: none;
@@ -107,6 +133,11 @@
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
+  word-break: keep-all;
+  writing-mode: horizontal-tb;
+  line-height: 1.2;
+  min-width: 108px;
 }
 
 .downloadBtn:hover {
@@ -132,6 +163,15 @@
 }
 
 @media (max-width: 768px) {
+  .toolbar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
   .tableWrap {
     max-height: 500px;
     overflow-y: auto;

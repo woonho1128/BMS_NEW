@@ -1,0 +1,29 @@
+.container {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.yearSelect {
+  min-width: 120px;
+  height: 36px;
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
+  padding: 0 10px;
+}
+
+.body {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  font-size: 13px;
+}
