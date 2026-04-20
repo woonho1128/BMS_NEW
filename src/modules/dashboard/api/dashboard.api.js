@@ -138,11 +138,6 @@ export async function fetchProjectCoreStatus(context = {}) {
   return pickScope(context.scope).projectCore || byScope.PROJECT_MENU.projectCore;
 }
 
-export async function fetchTeamProjectKpi(context = {}) {
-  await delay(140);
-  return pickScope(context.scope).teamMemberKpi || byScope.PROJECT_MENU.teamMemberKpi;
-}
-
 export async function fetchKpi(context = {}) {
   await delay(180);
   const scoped = pickScope(context.scope);

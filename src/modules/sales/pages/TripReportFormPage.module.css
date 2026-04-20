@@ -6,8 +6,8 @@
   flex-direction: column;
   gap: var(--space-xl);
   padding-bottom: var(--space-xl);
-  max-width: 900px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* ----- 1. 출장 기본 정보 카드 ----- */
@@ -17,7 +17,7 @@
 
 .basicInfoGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
   gap: var(--space-lg) var(--space-xl);
   align-items: start;
 }

@@ -4,7 +4,7 @@ import { useAuth } from '../modules/auth/hooks/useAuth';
 import { ROUTES, toRelative } from './routePaths';
 import { NotFound } from '../shared/pages/NotFound';
 import { NoAccess } from '../shared/pages/NoAccess';
-import { Guard } from '../shared/components/Guard';
+import { Guard } from '../shared/components/Guard/Guard';
 import { PERMISSIONS } from '../shared/constants/permissions';
 
 const lazyNamed = (importer, exportName) =>
@@ -120,6 +120,14 @@ const DataCollectionPage = lazy(() =>
 );
 const CustomReportPage = lazy(() =>
   import('../modules/analytics/pages/CustomReportPage').then((module) => ({ default: module.CustomReportPage }))
+);
+const ProjectPerformancePage = lazy(() =>
+  import('../modules/analytics/pages/ProjectPerformancePage').then((module) => ({ default: module.ProjectPerformancePage }))
+);
+const YearlyDeliveryForecastPage = lazy(() =>
+  import('../modules/analytics/pages/YearlyDeliveryForecastPage').then((module) => ({
+    default: module.YearlyDeliveryForecastPage,
+  }))
 );
 const PersonalSalesPage = lazy(() =>
   import('../modules/analytics/pages/PersonalSalesPage').then((module) => ({ default: module.PersonalSalesPage }))
@@ -269,6 +277,8 @@ export function Router() {
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_CATALOG)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_PROMO)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
           <Route path={toRelative(ROUTES.ANALYTICS_CUSTOM)} element={<CustomReportPage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_PROJECT_PERFORMANCE)} element={<ProjectPerformancePage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_YEARLY_DELIVERY_FORECAST)} element={<YearlyDeliveryForecastPage />} />
           <Route path={toRelative(ROUTES.ADMIN_USERS)} element={<UsersAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_ORG)} element={<OrgAdminPage />} />
           <Route path={toRelative(ROUTES.ADMIN_PERMISSION)} element={<PermissionAdminPage />} />

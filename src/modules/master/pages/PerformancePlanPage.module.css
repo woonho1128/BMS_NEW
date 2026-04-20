@@ -13,6 +13,42 @@
   gap: 10px;
 }
 
+.divisionRoot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.divisionButton {
+  border: 1px solid #ccdaef;
+  border-radius: 999px;
+  background: #fff;
+  color: #2d4769;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.divisionButtonActive {
+  border-color: #2f6fd7;
+  background: #ebf2ff;
+  color: #1f58b6;
+}
+
+.manageSection,
+.uploadSectionWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d4769;
+}
+
 .actionRow {
   display: flex;
   gap: 8px;

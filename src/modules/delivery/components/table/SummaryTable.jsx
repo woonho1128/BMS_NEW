@@ -1,5 +1,10 @@
 ﻿import styles from './SummaryTable.module.css';
 
+const getRowAnchorId = (value) => {
+    const safe = encodeURIComponent(String(value || '').trim());
+    return safe ? `summary-anchor-${safe}` : undefined;
+};
+
 export const SummaryTable = ({ columns, rows }) => {
     // Calculate sticky offsets
     const getLeftOffset = (index) => {
@@ -51,8 +56,11 @@ export const SummaryTable = ({ columns, rows }) => {
                             row.groupKey !== rows[rowIndex - 1].groupKey ||
                             !row.groupKey;
 
+                        const anchorKey = row.groupKey || row.keyLabel;
+                        const anchorId = isGroupStart && anchorKey ? getRowAnchorId(anchorKey) : undefined;
+
                         return (
-                            <tr key={row.id} id={row.groupKey ? `row-${row.groupKey}` : undefined}>
+                            <tr key={row.id} id={anchorId}>
                                 {columns.map((col, colIndex) => {
                                     const cellValue = row[col.key];
 
@@ -110,4 +118,3 @@ export const SummaryTable = ({ columns, rows }) => {
         </div>
     );
 };
-

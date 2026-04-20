@@ -5,12 +5,14 @@ import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { notify, confirmAction } from '../../../shared/utils/notify';
 import { getSalesMaterialById, formatFileSize } from '../data/salesMaterialMock';
+import { sanitizeRichHtml } from '../../../shared/utils/sanitizeRichHtml';
 import styles from './SalesMaterialDetailPage.module.css';
 
 export function SalesMaterialDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const material = getSalesMaterialById(id);
+  const sanitizedContentHtml = sanitizeRichHtml(material?.contentHtml || '');
 
   const handleEdit = useCallback(() => {
     navigate(`/sales/material/${id}/edit`);
@@ -73,7 +75,7 @@ export function SalesMaterialDetailPage() {
 
             <div className={styles.contentSection}>
               <h2 className={styles.sectionTitle}>내용</h2>
-              <div className={styles.content} dangerouslySetInnerHTML={{ __html: material.contentHtml }} />
+              <div className={styles.content} dangerouslySetInnerHTML={{ __html: sanitizedContentHtml }} />
             </div>
 
             {material.attachments && material.attachments.length > 0 && (

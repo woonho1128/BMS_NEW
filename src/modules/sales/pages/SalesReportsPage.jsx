@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+﻿import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
@@ -6,9 +6,7 @@ import { Card, CardBody } from '../../../shared/components/Card';
 import { classnames } from '../../../shared/utils/classnames';
 import {
   MOCK_REPORT_LIST,
-  REPORT_TYPE,
   getStatusLabel,
-  getReportById,
   MOCK_DEPTS,
   MOCK_TEAMS,
   MOCK_AUTHORS,
@@ -23,6 +21,17 @@ const STATUS_OPTIONS = [
   { value: 'submitted', label: '제출완료' },
   { value: 'confirmed', label: '확인완료' },
 ];
+
+const TYPE_BADGE_CLASS = {
+  [TAB_KEYS.WEEKLY]: styles.badgeWeekly,
+  [TAB_KEYS.TRIP]: styles.badgeTrip,
+};
+
+const STATUS_BADGE_CLASS = {
+  draft: styles.badgeDraft,
+  submitted: styles.badgeSubmitted,
+  confirmed: styles.badgeConfirmed,
+};
 
 export function SalesReportsPage() {
   const navigate = useNavigate();
@@ -39,17 +48,36 @@ export function SalesReportsPage() {
   const itemsPerPage = 10;
 
   const filteredList = useMemo(() => {
-    let list = MOCK_REPORT_LIST.filter((r) => r.type === activeTab);
-    if (periodFrom) list = list.filter((r) => r.period >= periodFrom || (r.periodLabel && r.periodLabel >= periodFrom));
-    if (periodTo) list = list.filter((r) => r.period <= periodTo || (r.periodLabel && r.periodLabel <= periodTo));
-    if (dept) list = list.filter((r) => r.dept === dept);
-    if (team) list = list.filter((r) => r.team === team);
-    if (author) list = list.filter((r) => r.author === author);
-    if (status) list = list.filter((r) => r.status === status);
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter((r) => (r.summary && r.summary.toLowerCase().includes(q)) || (r.author && r.author.toLowerCase().includes(q)));
+    let list = MOCK_REPORT_LIST.filter((row) => row.type === activeTab);
+
+    if (periodFrom) {
+      list = list.filter((row) => {
+        const target = String(row.createdAt || row.period || '').slice(0, 10);
+        return target >= periodFrom;
+      });
     }
+
+    if (periodTo) {
+      list = list.filter((row) => {
+        const target = String(row.createdAt || row.period || '').slice(0, 10);
+        return target <= periodTo;
+      });
+    }
+
+    if (dept) list = list.filter((row) => row.dept === dept);
+    if (team) list = list.filter((row) => row.team === team);
+    if (author) list = list.filter((row) => row.author === author);
+    if (status) list = list.filter((row) => row.status === status);
+
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      list = list.filter(
+        (row) =>
+          String(row.summary || '').toLowerCase().includes(q) ||
+          String(row.author || '').toLowerCase().includes(q)
+      );
+    }
+
     return list;
   }, [activeTab, periodFrom, periodTo, dept, team, author, status, search]);
 
@@ -58,15 +86,26 @@ export function SalesReportsPage() {
     return filteredList.slice(start, start + itemsPerPage);
   }, [filteredList, currentPage]);
 
-  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredList.length / itemsPerPage));
+  const pageNumbers = useMemo(() => Array.from({ length: totalPages }, (_, index) => index + 1), [totalPages]);
 
   useEffect(() => {
-    const close = (e) => {
-      if (!e.target.closest('[data-report-write]')) setWriteDropdownOpen(false);
+    const close = (event) => {
+      if (!event.target.closest('[data-report-write]')) {
+        setWriteDropdownOpen(false);
+      }
     };
     document.addEventListener('mousedown', close);
     return () => document.removeEventListener('mousedown', close);
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, periodFrom, periodTo, dept, team, author, status, search]);
+
+  useEffect(() => {
+    setCurrentPage((prev) => Math.min(prev, totalPages));
+  }, [totalPages]);
 
   const handleReset = useCallback(() => {
     setPeriodFrom('');
@@ -79,20 +118,21 @@ export function SalesReportsPage() {
     setCurrentPage(1);
   }, []);
 
-  const handleRowClick = useCallback(
-    (id) => {
-      navigate(`/sales/report/${id}`);
-    },
-    [navigate]
-  );
+  const handlePrevPage = useCallback(() => {
+    setCurrentPage((prev) => Math.max(1, prev - 1));
+  }, []);
+
+  const handleNextPage = useCallback(() => {
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+  }, [totalPages]);
 
   const headerActions = (
     <div className={styles.writeWrap} data-report-write>
       <Button
         variant="primary"
-        onClick={() => setWriteDropdownOpen((v) => !v)}
+        onClick={() => setWriteDropdownOpen((prev) => !prev)}
         aria-expanded={writeDropdownOpen}
-        aria-haspopup="true"
+        aria-haspopup="menu"
       >
         + 보고서 작성
       </Button>
@@ -126,7 +166,12 @@ export function SalesReportsPage() {
   );
 
   return (
-    <PageShell path="/sales/report" title="보고관리" description="주간보고 / 출장보고" actions={headerActions}>
+    <PageShell
+      path="/sales/report"
+      title="보고관리"
+      description="주간보고 / 출장보고"
+      actions={headerActions}
+    >
       <div className={styles.page}>
         <div className={styles.tabsRow}>
           <div className={styles.tabs} role="tablist">
@@ -137,10 +182,7 @@ export function SalesReportsPage() {
                 role="tab"
                 aria-selected={activeTab === key}
                 className={classnames(styles.tab, activeTab === key && styles.tabActive)}
-                onClick={() => {
-                  setActiveTab(key);
-                  setCurrentPage(1);
-                }}
+                onClick={() => setActiveTab(key)}
               >
                 {TAB_LABELS[key]}
               </button>
@@ -170,52 +212,86 @@ export function SalesReportsPage() {
                     aria-label="기간 종료"
                   />
                 </div>
+
                 <div className={styles.filterItem}>
                   <span className={styles.filterLabel}>부문</span>
-                  <select className={styles.filterSelect} value={dept} onChange={(e) => setDept(e.target.value)} aria-label="부문">
+                  <select
+                    className={styles.filterSelect}
+                    value={dept}
+                    onChange={(e) => setDept(e.target.value)}
+                    aria-label="부문"
+                  >
                     <option value="">전체</option>
-                    {MOCK_DEPTS.map((d) => (
-                      <option key={d} value={d}>{d}</option>
+                    {MOCK_DEPTS.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
                     ))}
                   </select>
                 </div>
+
                 <div className={styles.filterItem}>
                   <span className={styles.filterLabel}>팀</span>
-                  <select className={styles.filterSelect} value={team} onChange={(e) => setTeam(e.target.value)} aria-label="팀">
+                  <select
+                    className={styles.filterSelect}
+                    value={team}
+                    onChange={(e) => setTeam(e.target.value)}
+                    aria-label="팀"
+                  >
                     <option value="">전체</option>
-                    {MOCK_TEAMS.map((t) => (
-                      <option key={t} value={t}>{t}</option>
+                    {MOCK_TEAMS.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
                     ))}
                   </select>
                 </div>
+
                 <div className={styles.filterItem}>
                   <span className={styles.filterLabel}>작성자</span>
-                  <select className={styles.filterSelect} value={author} onChange={(e) => setAuthor(e.target.value)} aria-label="작성자">
+                  <select
+                    className={styles.filterSelect}
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                    aria-label="작성자"
+                  >
                     <option value="">전체</option>
-                    {MOCK_AUTHORS.map((a) => (
-                      <option key={a} value={a}>{a}</option>
+                    {MOCK_AUTHORS.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
                     ))}
                   </select>
                 </div>
+
                 <div className={styles.filterItem}>
                   <span className={styles.filterLabel}>상태</span>
-                  <select className={styles.filterSelect} value={status} onChange={(e) => setStatus(e.target.value)} aria-label="상태">
-                    {STATUS_OPTIONS.map((o) => (
-                      <option key={o.value || 'all'} value={o.value}>{o.label}</option>
+                  <select
+                    className={styles.filterSelect}
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    aria-label="상태"
+                  >
+                    {STATUS_OPTIONS.map((option) => (
+                      <option key={option.value || 'all'} value={option.value}>
+                        {option.label}
+                      </option>
                     ))}
                   </select>
                 </div>
+
                 <div className={styles.filterItem}>
                   <span className={styles.filterLabel}>검색</span>
                   <input
                     type="text"
                     className={styles.filterInput}
-                    placeholder="핵심요약, 작성자"
+                    placeholder="요약, 작성자"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     aria-label="검색"
                   />
                 </div>
+
                 <div className={styles.filterActions}>
                   <button type="button" className={styles.resetBtn} onClick={handleReset}>
                     초기화
@@ -223,69 +299,122 @@ export function SalesReportsPage() {
                 </div>
               </div>
             </div>
+
+            <div className={styles.tableSection}>
+              <div className={styles.tableHeaderRow}>
+                <span className={styles.tableCount}>총 {filteredList.length}건</span>
+              </div>
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th className={styles.th}>유형</th>
+                      <th className={styles.th}>기간</th>
+                      <th className={styles.th}>요약</th>
+                      <th className={styles.th}>작성자</th>
+                      <th className={styles.th}>부문/팀</th>
+                      <th className={styles.th}>상태</th>
+                      <th className={styles.th}>작성일</th>
+                      <th className={styles.th}>액션</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paginatedList.length === 0 ? (
+                      <tr>
+                        <td className={styles.empty} colSpan={8}>
+                          조회 결과가 없습니다.
+                        </td>
+                      </tr>
+                    ) : (
+                      paginatedList.map((row) => (
+                        <tr
+                          key={row.id}
+                          className={styles.tableRow}
+                          onClick={() => navigate(`/sales/report/${row.id}`)}
+                        >
+                          <td className={styles.td}>
+                            <span
+                              className={classnames(
+                                styles.badge,
+                                TYPE_BADGE_CLASS[row.type] || styles.badgeWeekly
+                              )}
+                            >
+                              {TAB_LABELS[row.type] || row.type}
+                            </span>
+                          </td>
+                          <td className={styles.td}>{row.periodLabel || row.period || '-'}</td>
+                          <td className={styles.td}>{row.summary || '-'}</td>
+                          <td className={styles.td}>{row.author || '-'}</td>
+                          <td className={styles.td}>{`${row.dept || '-'} / ${row.team || '-'}`}</td>
+                          <td className={styles.td}>
+                            <span
+                              className={classnames(
+                                styles.badge,
+                                STATUS_BADGE_CLASS[row.status] || styles.badgeDraft
+                              )}
+                            >
+                              {getStatusLabel(row.status)}
+                            </span>
+                          </td>
+                          <td className={styles.td}>{row.createdAt || '-'}</td>
+                          <td className={styles.td}>
+                            <Button
+                              size="small"
+                              variant="secondary"
+                              className={styles.detailBtn}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                navigate(`/sales/report/${row.id}`);
+                              }}
+                            >
+                              상세
+                            </Button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              {totalPages > 1 && (
+                <div className={styles.pagination}>
+                  <button
+                    type="button"
+                    className={styles.pageBtn}
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                  >
+                    이전
+                  </button>
+                  <div className={styles.pageNumbers} aria-label="페이지 번호">
+                    {pageNumbers.map((page) => (
+                      <button
+                        key={page}
+                        type="button"
+                        className={classnames(styles.pageBtn, page === currentPage && styles.pageBtnActive)}
+                        onClick={() => setCurrentPage(page)}
+                        aria-current={page === currentPage ? 'page' : undefined}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className={styles.pageBtn}
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                  >
+                    다음
+                  </button>
+                </div>
+              )}
+            </div>
           </CardBody>
         </Card>
-
-        <section className={styles.tableSection} aria-label="보고 목록">
-          <div className={styles.tableHeaderRow}>
-            <span className={styles.tableCount}>{filteredList.length}건</span>
-          </div>
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th className={styles.th}>보고유형</th>
-                  <th className={styles.th}>기간</th>
-                  <th className={styles.th}>핵심요약</th>
-                  <th className={styles.th}>작성자</th>
-                  <th className={styles.th}>상태</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedList.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className={styles.empty}>
-                      조건에 맞는 보고가 없습니다.
-                    </td>
-                  </tr>
-                ) : (
-                  paginatedList.map((row) => (
-                    <tr
-                      key={row.id}
-                      className={styles.tableRow}
-                      onClick={() => handleRowClick(row.id)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleRowClick(row.id)}
-                    >
-                      <td className={styles.td}>
-                        <span className={classnames(styles.badge, row.type === REPORT_TYPE.WEEKLY ? styles.badgeWeekly : styles.badgeTrip)}>
-                          {row.type === REPORT_TYPE.WEEKLY ? '주간보고' : '출장보고'}
-                        </span>
-                      </td>
-                      <td className={styles.td}>{row.periodLabel || row.period}</td>
-                      <td className={styles.td} style={{ maxWidth: 320 }}>{row.summary || '—'}</td>
-                      <td className={styles.td}>{row.author}</td>
-                      <td className={styles.td}>
-                        <span className={classnames(styles.badge, styles[`badge${row.status.charAt(0).toUpperCase() + row.status.slice(1)}`])}>
-                          {getStatusLabel(row.status)}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-          {totalPages > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 4, marginTop: 8 }}>
-              <button type="button" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>이전</button>
-              <span>{currentPage} / {totalPages}</span>
-              <button type="button" disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => p + 1)}>다음</button>
-            </div>
-          )}
-        </section>
       </div>
     </PageShell>
   );
 }
+
+export default SalesReportsPage;

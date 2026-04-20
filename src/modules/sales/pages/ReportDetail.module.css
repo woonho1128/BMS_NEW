@@ -106,6 +106,32 @@
   margin: 0 0 4px;
 }
 
+.tripInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.richReadOnly {
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+  background: #fff;
+  min-height: 220px;
+  padding: 14px;
+  font-size: var(--font-size-md);
+  color: #1f2f47;
+  line-height: 1.6;
+}
+
+.richReadOnly :global(p) {
+  margin: 0 0 8px;
+}
+
+.richReadOnly :global(ul),
+.richReadOnly :global(ol) {
+  margin: 0 0 8px 20px;
+}
+
 .commentList {
   list-style: none;
   margin: 0 0 var(--space-md);
@@ -173,6 +199,10 @@
 
 @media (max-width: 768px) {
   .weeklySplitSection {
+    grid-template-columns: 1fr;
+  }
+
+  .tripInfoGrid {
     grid-template-columns: 1fr;
   }
 

@@ -1,4 +1,4 @@
-/* 손익분석 등록 — 제안서 + 손익 시뮬레이션, 디자인 토큰 */
+/* ?익분석 ?록 ???안??+ ?익 ???이?? ?자???큰 */
 
 .formLayout {
   display: grid;
@@ -21,14 +21,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
-  min-width: 0; /* STEP2 상단 카드가 화면 넘지 않게, 그리드에서 폭 제한 */
+  min-width: 0; /* STEP2 ?단 카드가 ?면 ?? ?게, 그리?에?????한 */
 }
 
 .sectionCard {
   flex-shrink: 0;
 }
 
-/* STEP 인디케이터 */
+/* STEP ?디케?터 */
 .stepNav {
   display: flex;
   gap: var(--space-xs);
@@ -95,7 +95,7 @@
   cursor: pointer;
 }
 
-/* ===== STEP2 레이아웃: 상단 고정 + 하단만 스크롤 ===== */
+/* ===== STEP2 ?이?웃: ?단 고정 + ?단??크?===== */
 
 .step2Container {
   display: flex;
@@ -111,7 +111,7 @@
   flex-shrink: 0;
   min-width: 0;
   max-width: 100%;
-  overflow-x: auto; /* 카드가 화면을 넘지 않게, 넘치면 카드 안에서 가로 스크롤 */
+  overflow-x: auto; /* 카드가 ?면???? ?게, ?치?카드 ?에??가??크?*/
   background: #ffffff;
   margin-bottom: 16px;
 }
@@ -138,7 +138,7 @@
   flex-shrink: 0;
 }
 
-/* STEP2 액션 바: [+ 품목 추가] + 안내 문구 */
+/* STEP2 ?션 ? [+ ?목 추?] + ?내 문구 */
 .step2ActionBar {
   display: flex;
   align-items: center;
@@ -153,7 +153,7 @@
   color: var(--color-text-muted);
 }
 
-/* ===== Drawer (A 영역): 우측 슬라이드 패널 ===== */
+/* ===== Drawer (A ?역): ?측 ?라?드 ?널 ===== */
 .drawerOverlay {
   position: fixed;
   inset: 0;
@@ -229,7 +229,7 @@
   gap: var(--space-xs);
 }
 
-/* 자품번 다중 선택 샘플 (SET일 때) */
+/* ?품??중 ?택 ?플 (SET???? */
 .unitItemMultiSelect {
   display: flex;
   flex-direction: column;
@@ -327,7 +327,7 @@
   to { transform: translateX(0); }
 }
 
-/* STEP2: 1행 7개(구분·SET·자품번·수주유형·수량·단가·마진율) / 2행 비고·버튼3개 */
+/* STEP2: 1??7?구분·SET·?품번·수주유?·수?·단가·마진?? / 2??비고·버튼3?*/
 .step2FormWrap {
   display: flex;
   flex-direction: column;
@@ -431,7 +431,7 @@
   cursor: default;
 }
 
-/* ===== STEP2: 하단 결과 테이블 (17컬럼: 구분·비고·SET품번·수주유형·원가·판매·수익성) ===== */
+/* ===== STEP2: ?단 결과 ?이?(17컬럼: 구분·비고·SET?번·?주?형·??·?매·?익?? ===== */
 
 .profitTableWrap {
   background: #fff;
@@ -452,14 +452,14 @@
   flex: 1;
   min-height: 0;
   min-width: 0;
-  overflow-x: auto;  /* 가로 스크롤: 테이블(2180px)이 넓을 때 */
-  overflow-y: auto; /* 세로 스크롤 */
+  overflow-x: auto;  /* 가??크? ?이?2180px)???을 ??*/
+  overflow-y: auto; /* ?로 ?크?*/
   border-radius: 10px;
   width: 100%;
   max-width: 100%;
 }
 
-/* 테이블: 카드 너비에 맞춤 (100%), 컬럼은 비율로 배분 */
+/* ?이? 카드 ?비??맞춤 (100%), 컬럼? 비율?배분 */
 .profitTable {
   border-collapse: separate;
   border-spacing: 0;
@@ -495,7 +495,7 @@
   vertical-align: middle;
 }
 
-/* 테이블 헤더: 컬럼명 1행 (sticky) */
+/* ?이??더: 컬럼?1??(sticky) */
 .colHeader th {
   position: sticky;
   top: 0;
@@ -516,7 +516,7 @@
 .colProfit { background: #f7fdf9; }
 .colEtc { background: #ffffff; }
 
-/* 정렬 */
+/* ?렬 */
 .tLeft { text-align: left; }
 .tCenter { text-align: center; }
 .tRight { text-align: right; font-variant-numeric: tabular-nums; }
@@ -533,7 +533,7 @@
   cursor: pointer;
 }
 
-/* 구분 컬럼: 타입 표시 + 비고/자품번 버튼(크기 영향 없이 절대 위치) */
+/* 구분 컬럼: ????시 + 비고/?품?버튼(?기 ?향 ?이 ?? ?치) */
 .profitTable .colTypeWithToggles {
   position: relative;
   vertical-align: middle;
@@ -586,7 +586,7 @@
   color: var(--color-primary);
 }
 
-/* 비고 전용 행 (Row Note): 데이터 행 바로 아래, 연한 배경 */
+/* 비고 ?용 ??(Row Note): ?이????바로 ?래, ?한 배경 */
 .profitTable tr.remarkRow {
   background: #f8f9fc;
 }
@@ -611,7 +611,7 @@
   margin-right: 6px;
 }
 
-/* 비고+자품번 통합 하위 행 내용 (폰트 11px) */
+/* 비고+?품??합 ?위 ???용 (?트 11px) */
 .detailRowContent {
   display: flex;
   flex-direction: column;
@@ -624,7 +624,7 @@
   font-size: 11px !important;
 }
 
-/* 데이터 없을 때 */
+/* ?이???을 ??*/
 .emptyRow {
   text-align: center;
   color: var(--color-text-muted);
@@ -632,12 +632,12 @@
   padding: 24px;
 }
 
-/* 수익률 조건부 색상 */
+/* ?익?조건부 ?상 */
 .rateGood { color: #16a34a; font-weight: 600; }
 .rateMid { color: #ea580c; font-weight: 600; }
 .rateLow { color: var(--color-danger); font-weight: 600; }
 
-/* 합계 행 (sticky footer) */
+/* ?계 ??(sticky footer) */
 .profitTable tfoot td {
   font-weight: 700;
   background: #eef2f7;
@@ -669,7 +669,7 @@
   color: var(--color-text-secondary);
 }
 
-/* 지급수수료: 그리드 셀 내 적용 체크 + 금액 */
+/* 지급수?료: 그리??? ???용 체크 + 금액 */
 .fieldCommission {
   grid-column: span 1;
 }
@@ -744,7 +744,7 @@
 }
 
 /* ===============================
-   현장·거래 조건 필드 (컬럼 모두 수용)
+   ?장·거래 조건 ?드 (컬럼 모두 ?용)
 ================================ */
 .fieldGrid {
   display: grid;
@@ -802,7 +802,7 @@
 }
 
 /* ===============================
-   납품 품목 Table
+   ?품 ?목 Table
 ================================ */
 .tableWrap {
   overflow-x: auto;
@@ -877,7 +877,7 @@
   color: var(--color-text-muted);
 }
 
-/* 품목별 손익 상세 (펼침 영역) */
+/* ?목??익 ?세 (?침 ?역) */
 .trDetail {
   background: var(--color-bg-page);
 }
@@ -995,7 +995,7 @@
 }
 
 /* ===============================
-   결재 상신 영역
+   결재 ?신 ?역
 ================================ */
 .submitFooter {
   display: flex;
@@ -1004,14 +1004,14 @@
 }
 
 /* ===============================
-   실시간 손익 요약 (Aside, Sticky)
+   ?시??익 ?약 (Aside, Sticky)
 ================================ */
 .summaryAside {
   position: sticky;
   top: var(--space-xl);
 }
 
-/* STEP 1 요약 카드 형태 */
+/* STEP 1 ?약 카드 ?태 */
 .step1SummaryGrid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -1135,7 +1135,7 @@
   font-weight: 400;
 }
 
-/* STEP 3 하단 요약 텍스트 */
+/* STEP 3 ?단 ?약 ?스??*/
 .step3Summary {
   display: flex;
   gap: var(--space-xl);
@@ -1217,4 +1217,377 @@
   color: var(--color-danger);
   background: rgba(239, 68, 68, 0.08);
   border-radius: var(--radius-sm);
+}
+
+/* ===== 2026-04 ͵  ̾ƿ ===== */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.sectionCard {
+  border: 1px solid #dce4ef;
+}
+
+.stepNav {
+  margin-bottom: 0;
+}
+
+.stepActions {
+  margin-top: var(--space-lg);
+  justify-content: flex-end;
+}
+
+.specHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.specTitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.foldBtn {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--color-text-secondary);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+}
+
+.foldBtn:hover {
+  border-color: #b8c7dd;
+}
+
+.specTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.specTable th,
+.specTable td {
+  border: 1px solid #dbe3ef;
+  padding: 10px;
+  vertical-align: middle;
+}
+
+.specTable th {
+  width: 14%;
+  background: #eef3f9;
+  text-align: left;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: #273448;
+}
+
+.specTable td {
+  width: 36%;
+  background: #fff;
+}
+
+.input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #cfd9e8;
+  border-radius: 8px;
+  font-size: var(--font-size-sm);
+}
+
+.textarea {
+  min-height: 74px;
+}
+
+.commissionInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+}
+
+.specHelp {
+  margin: 10px 0 0;
+  color: #2c74d8;
+  font-size: 12px;
+}
+
+.tableTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.tableHint {
+  font-size: 12px;
+  color: #4f6280;
+}
+
+.tableRight {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.countInput {
+  width: 56px;
+  padding: 8px;
+  border: 1px solid #cfd9e8;
+  border-radius: 8px;
+}
+
+.profitTableScrollX {
+  overflow-x: auto;
+  border: 1px solid #dce4ef;
+  border-radius: 10px;
+}
+
+.step2Table {
+  width: 100%;
+  min-width: 1520px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+}
+
+.step2Table th,
+.step2Table td {
+  border: 1px solid #dbe3ef;
+  padding: 7px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.step2Table th {
+  background: #566fa7;
+  color: #fff;
+  font-weight: 600;
+}
+
+.step2Table thead tr:nth-child(2) th {
+  background: #e9eef7;
+  color: #1f2f47;
+}
+
+.cellInput {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #cfd9e8;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.tRight {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.removeBtn {
+  border: 1px solid #c5cfde;
+  border-radius: 6px;
+  background: #f1f4fa;
+  color: #60708a;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+}
+
+.totalRow td {
+  background: #eef2f8;
+  font-weight: 700;
+}
+
+.summaryBox {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.summaryBox div {
+  border: 1px solid #d9e3f2;
+  border-radius: 10px;
+  background: #f8fbff;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.summaryBox span {
+  font-size: 12px;
+  color: #4a5d7a;
+}
+
+.summaryBox strong {
+  font-size: 14px;
+  color: #1f2f47;
+}
+
+@media (max-width: 1200px) {
+  .summaryBox {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .specTable,
+  .specTable tbody,
+  .specTable tr,
+  .specTable th,
+  .specTable td {
+    display: block;
+    width: 100%;
+  }
+
+  .specTable tr {
+    border-bottom: 1px solid #dbe3ef;
+    margin-bottom: 8px;
+  }
+
+  .tableTopBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.pageFullWidth {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.verifyStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.selectedRow td {
+  background: #eef4ff !important;
+}
+
+.remarkEditor {
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid #dbe3ef;
+  border-radius: 10px;
+  background: #f8fbff;
+}
+
+.remarkLabel {
+  display: block;
+  font-size: 12px;
+  color: #4a5d7a;
+  margin-bottom: 6px;
+}
+
+.remarkTextarea {
+  width: 100%;
+  min-height: 86px;
+  border: 1px solid #cfd9e8;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+  resize: vertical;
+  background: #fff;
+}
+
+.remarkTextarea[readonly] {
+  background: #f4f7fb;
+}
+.headerMultiline {
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.headerYear {
+  display: inline-block;
+  line-height: 1.1;
+}
+
+.headerSub {
+  display: inline-block;
+  font-size: 11px;
+  line-height: 1.1;
+}
+
+.remarkToggleBtn {
+  border: 1px solid #c5cfde;
+  border-radius: 6px;
+  background: #f3f6fb;
+  color: #455a7d;
+  padding: 2px 10px;
+  min-width: 50px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.remarkToggleBtn:hover {
+  border-color: #9eb3d1;
+  background: #eaf1ff;
+}
+
+.remarkAccordionRow td {
+  background: #f7faff;
+}
+
+.remarkAccordionCell {
+  text-align: left !important;
+  padding: 10px 12px !important;
+}
+
+.remarkAccordionLabel {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4a5d7a;
+}
+
+.remarkAccordionText {
+  display: inline;
+  margin: 0;
+  font-size: 13px;
+  color: #273448;
+  line-height: 1.5;
+}.colType { width: 84px; }
+.colSetCode { width: 96px; }
+.colItemCode { width: 98px; }
+.colOrderType { width: 118px; }
+.colFactory { width: 92px; }
+.colSetUnit { width: 92px; }
+.colCost2026 { width: 92px; }
+.colCost2027 { width: 92px; }
+.colQty { width: 70px; }
+.colBidPrice { width: 92px; }
+.colDealerMargin { width: 76px; }
+.colDealerSupply { width: 96px; }
+.colDiscount { width: 72px; }
+.colGrossUnit { width: 92px; }
+.colGrossRate { width: 66px; }
+.colOpUnit { width: 92px; }
+.colOpRate { width: 66px; }.cellInputNumeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.percentInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.percentSuffix {
+  font-size: 12px;
+  color: #4a5d7a;
+  flex-shrink: 0;
 }

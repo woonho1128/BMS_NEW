@@ -193,10 +193,6 @@ export const MOCK_DELIVERY_HISTORY = [
   },
 ];
 
-export function getDeliveryHistoryById(id) {
-  return MOCK_DELIVERY_HISTORY.find((item) => item.id === id) ?? null;
-}
-
 export const FACTORY_OPTIONS = [
   { value: '', label: '전체' },
   { value: '창원SW공장', label: '창원SW공장' },

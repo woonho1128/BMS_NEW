@@ -1,0 +1,115 @@
+.shellWide {
+  max-width: 100%;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filterBar {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filterItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: #4b5b74;
+  font-weight: 600;
+}
+
+.filterItem select {
+  height: 34px;
+  min-width: 120px;
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 13px;
+  background: #fff;
+}
+
+.tableWrap {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  overflow: auto;
+}
+
+.tableTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e8eef7;
+  font-size: 14px;
+  color: #1f2d3d;
+}
+
+.table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th,
+.table td {
+  border: 1px solid #e5ebf5;
+  padding: 7px 8px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.table th {
+  background: #f5f8ff;
+  color: #31445d;
+  font-weight: 700;
+  text-align: center;
+}
+
+.labelCol {
+  text-align: left !important;
+}
+
+.emphasis {
+  background: #ffe676 !important;
+  color: #1f2d3d !important;
+}
+
+.shareRow td {
+  font-weight: 700;
+}
+
+.mainRow td {
+  font-weight: 700;
+}
+
+.subRow td {
+  font-weight: 400;
+  color: #334155;
+}
+
+.sectionRow td {
+  font-weight: 700;
+  background: #f8fbff;
+  color: #1f2d3d;
+}
+
+.subLabel {
+  padding-left: 16px;
+}
+
+@media (max-width: 768px) {
+  .shellWide {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}

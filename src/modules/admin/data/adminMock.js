@@ -124,10 +124,6 @@ export function getUsersList(filter) {
   return result;
 }
 
-export function getUserById(id) {
-  return MOCK_USERS.find((user) => user.id === id) || null;
-}
-
 export function getOrgsList() {
   return [...MOCK_ORGS];
 }
@@ -152,19 +148,11 @@ export function getPermissionGroupsList() {
   return [...MOCK_PERMISSION_GROUPS];
 }
 
-export function getPermissionGroupById(id) {
-  return MOCK_PERMISSION_GROUPS.find((group) => group.id === id) || null;
-}
-
 export function getCodesList(filter) {
   let result = [...MOCK_CODES];
   if (filter.groupCode) result = result.filter((code) => code.groupCode === filter.groupCode);
   if (filter.codeName) result = result.filter((code) => code.codeName.toLowerCase().includes(filter.codeName.toLowerCase()));
   return result;
-}
-
-export function getCodeById(id) {
-  return MOCK_CODES.find((code) => code.id === id) || null;
 }
 
 export function getLogsList(filter) {

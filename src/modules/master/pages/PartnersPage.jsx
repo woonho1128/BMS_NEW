@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
 import { Modal } from '../../../shared/components/Modal/Modal';
-import { ListFilter } from '../../../shared/components/ListFilter';
+import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { classnames } from '../../../shared/utils/classnames';
 import {
   MOCK_MANAGER_OPTIONS,

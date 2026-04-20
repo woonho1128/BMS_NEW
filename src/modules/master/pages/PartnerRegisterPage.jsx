@@ -194,8 +194,8 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
   const [emailLocal, setEmailLocal] = useState('');
   const [emailDomainType, setEmailDomainType] = useState('');
   const [emailDomainDirect, setEmailDomainDirect] = useState('');
-  const [representativeAddressType, setRepresentativeAddressType] = useState('');
-  const [representativeAddressDirect, setRepresentativeAddressDirect] = useState('');
+  const [, setRepresentativeAddressType] = useState('');
+  const [, setRepresentativeAddressDirect] = useState('');
   const [saved, setSaved] = useState(false);
   const [financeLoaded, setFinanceLoaded] = useState(false);
   const [financePartnerQuery, setFinancePartnerQuery] = useState('');
@@ -264,12 +264,6 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
       .slice(0, 8);
   }, [partnerCandidates, partnerKeyword]);
 
-  const updateBasic = useCallback((field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      basic: { ...prev.basic, [field]: value },
-    }));
-  }, []);
 
   const updateRepresentative = useCallback((field, value) => {
     setFormData((prev) => ({
@@ -312,32 +306,7 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     }));
   }, []);
 
-  const handleRepresentativeAddressTypeChange = useCallback((value) => {
-    setRepresentativeAddressType(value);
-    if (value === 'direct') {
-      setFormData((prev) => ({
-        ...prev,
-        representative: { ...prev.representative, address: representativeAddressDirect || '' },
-      }));
-      return;
-    }
 
-    setRepresentativeAddressDirect('');
-    setFormData((prev) => ({
-      ...prev,
-      representative: { ...prev.representative, address: value || '' },
-    }));
-  }, [representativeAddressDirect]);
-
-  const handleRepresentativeAddressDirectChange = useCallback((value) => {
-    setRepresentativeAddressDirect(value);
-    if (representativeAddressType === 'direct') {
-      setFormData((prev) => ({
-        ...prev,
-        representative: { ...prev.representative, address: value },
-      }));
-    }
-  }, [representativeAddressType]);
 
   const setStaffEmailParts = useCallback((id, local, domainType, domainDirect) => {
     const domain = domainType === 'direct' ? domainDirect : domainType;
@@ -452,25 +421,6 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     );
   }, []);
 
-  const handlePartnerSelect = useCallback((id) => {
-    const partnerDetail = getPartnerById(String(id));
-    if (!partnerDetail) {
-      setPartnerSearchMessage('선택한 대리점 정보를 찾지 못했습니다.');
-      return;
-    }
-
-    setIsPartnerDropdownOpen(false);
-    setPartnerKeyword(partnerDetail.name || '');
-    setPartnerSearchMessage(`${partnerDetail.name || '대리점'} 정보를 불러왔습니다.`);
-    setFormData((prev) => ({
-      ...prev,
-      basic: {
-        ...prev.basic,
-        ...(partnerDetail.basic || {}),
-      },
-      region: partnerDetail.region || prev.region,
-    }));
-  }, []);
 
   const onPartnerSelect = useCallback(
     (id) => {
@@ -891,40 +841,6 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
       .sort((a, b) => b.year - a.year)
       .slice(0, 4);
   }, [selectedPartnerDetail]);
-  const receivableTabRows = useMemo(
-    () =>
-      (financePreview.receivableRows || []).map((row) => [
-        row.baseYm,
-        row.tradeLimit ?? 0,
-        row.salesThisMonth ?? 0,
-        row.depositThisMonth ?? 0,
-      ]),
-    [financePreview.receivableRows]
-  );
-  const collectionTabRows = useMemo(
-    () =>
-      (financePreview.billRows || []).map((row) => [
-        selectedPartnerDetail?.basic?.partnerCode || '-',
-        selectedPartnerDetail?.name || '-',
-        selectedPartnerDetail?.basic?.ceoName || '-',
-        '어음',
-        row.dueDate || '-',
-        row.billNo || '-',
-        row.amount ?? 0,
-      ]),
-    [financePreview.billRows, selectedPartnerDetail]
-  );
-  const noteTabRows = useMemo(
-    () =>
-      (financePreview.billRows || []).map((row) => [
-        row.status || '-',
-        row.billNo || '-',
-        row.amount ?? 0,
-        row.dueDate || '-',
-        row.bankName || '-',
-      ]),
-    [financePreview.billRows]
-  );
   const outstandingTabRows = useMemo(
     () =>
       (financePreview.receivableRows || []).map((row, index) => {
@@ -2079,6 +1995,8 @@ export function PartnerRegisterPage({ mode = 'register', partnerId: initialPartn
     </PageShell>
   );
 }
+
+
 
 
 

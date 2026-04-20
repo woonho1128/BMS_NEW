@@ -44,10 +44,6 @@ export const ROUTES = {
 
   SHORT_PROJECT: '/sales/short-project',              
   SHORT_PROJECT_REGISTER: '/sales/short-project/register',
-  SHORT_PROJECT_APPROVAL: '/sales/short-project/approval',
-  SALES_RETAIL_REVIEW_LIST: '/sales/retail/review',   
-  SALES_RETAIL_ORDER_DETAIL: '/sales/retail/order/:id',
-  SALES_RETAIL_APPROVAL: '/sales/retail/approval',    
 
   TILE_TEAM: '/sales/tile-team',
 
@@ -78,15 +74,6 @@ export const ROUTES = {
   PARTNER_BASIC: '/partner/basic',                     
   PARTNER_RECEIVABLE: '/partner/receivable',           
   PARTNER_BALANCE_CONFIRM: '/partner/balance-confirm', 
-  PARTNER_ORDER: '/partner/order',                     
-  PARTNER_ORDER_PRODUCT: '/partner/order/product',     
-  PARTNER_ORDER_LIST: '/partner/order/list',           
-  PARTNER_ORDER_MODIFY: '/partner/order/modify',       
-  PARTNER_ORDER_DELIVERY: '/partner/order/delivery',   
-  PARTNER_ORDER_CART: '/partner/order/cart',           
-  PARTNER_ORDER_DETAIL: '/partner/order/detail/:orderId', 
-  PARTNER_ORDER_NEW: '/partner/order/new',
-  PARTNER_ORDER_ID: '/partner/order/:orderId',
 
   ANALYTICS_RETAIL: '/analytics/retail-sales',         
   ANALYTICS_PARTNER: '/analytics/partner',             
@@ -100,17 +87,14 @@ export const ROUTES = {
   ANALYTICS_DATA_CATALOG: '/analytics/data-collection/catalog', 
   ANALYTICS_DATA_PROMO: '/analytics/data-collection/promo', 
   ANALYTICS_CUSTOM: '/analytics/custom',               
+  ANALYTICS_PROJECT_PERFORMANCE: '/analytics/project-performance',
+  ANALYTICS_YEARLY_DELIVERY_FORECAST: '/analytics/yearly-delivery-forecast',
 
   ADMIN_USERS: '/admin/users',
   ADMIN_ORG: '/admin/org',
   ADMIN_PERMISSION: '/admin/permission',
   ADMIN_CODE: '/admin/code',
   ADMIN_LOG: '/admin/log',
-
-  ADMIN_ORDER_TOTAL: '/admin/order/total',             
-  ADMIN_ORDER_STATUS_FORCE: '/admin/order/status-force', 
-  ADMIN_ORDER_ERP: '/admin/order/erp',                 
-  ADMIN_ORDER_HISTORY_LOG: '/admin/order/history-log', 
 };
 
 export function toRelative(fullPath) {

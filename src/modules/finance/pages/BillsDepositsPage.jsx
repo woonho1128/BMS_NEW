@@ -1,9 +1,77 @@
-import React, { useState, useCallback, useMemo } from 'react';
+﻿import React, { useState, useCallback, useMemo } from 'react';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { Button } from '../../../shared/components/Button/Button';
 import { formatNumber } from '../../../shared/utils/formatters';
 import styles from './BillsDepositsPage.module.css';
+
 const formatNum = (num) => formatNumber(num);
+
+const DATA_SOURCE = [
+  {
+    key: '1',
+    bpCd: '050006',
+    bpNm: '효자타일대리점',
+    repreNm: '김경호',
+    type: '입장입금',
+    colDate: '2026-01-29',
+    manager: '이해구',
+    salesNo: 'BN202512310535',
+    salesDate: '2025-12-31',
+    clearNo: 'UX202601290010',
+    swAmt: 13521959,
+    tileAmt: 0,
+    totalAmt: 13521959,
+    bank: '우리은행',
+  },
+  {
+    key: '2',
+    bpCd: '050006',
+    bpNm: '효자타일대리점',
+    repreNm: '김경호',
+    type: '입장입금',
+    colDate: '2026-02-26',
+    manager: '김지민',
+    salesNo: 'BN202601310563',
+    salesDate: '2026-01-31',
+    clearNo: 'UX202602260020',
+    swAmt: 0,
+    tileAmt: 704000,
+    totalAmt: 704000,
+    bank: '우리은행',
+  },
+  {
+    key: '3',
+    bpCd: '050016',
+    bpNm: '로얄세라믹하우징',
+    repreNm: '김진태',
+    type: '입장입금',
+    colDate: '2026-01-27',
+    manager: '이해구',
+    salesNo: 'BN202511300211',
+    salesDate: '2025-11-30',
+    clearNo: 'UX202601270011',
+    swAmt: 200000000,
+    tileAmt: 0,
+    totalAmt: 200000000,
+    bank: '우리은행',
+  },
+  {
+    key: '4',
+    bpCd: '050020',
+    bpNm: '세라기계산업',
+    repreNm: '권용택',
+    type: '입장입금',
+    colDate: '2026-01-30',
+    manager: '조동우',
+    salesNo: 'BN202512310576',
+    salesDate: '2025-12-31',
+    clearNo: 'UX202601300051',
+    swAmt: 10000000,
+    tileAmt: 0,
+    totalAmt: 10000000,
+    bank: '우리은행',
+  },
+];
 
 const CollectionStatus = ({ isTabMode = false }) => {
   const [filterValue, setFilterValue] = useState({
@@ -65,7 +133,7 @@ const CollectionStatus = ({ isTabMode = false }) => {
         row: 0,
         options: [
           { label: '전체', value: '' },
-          { label: '통장입금', value: 'bank' },
+          { label: '입장입금', value: 'bank' },
           { label: '어음', value: 'note' },
         ],
       },
@@ -73,28 +141,7 @@ const CollectionStatus = ({ isTabMode = false }) => {
     []
   );
 
-  const dataSource = [
-    {
-      key: '1', bpCd: '050006', bpNm: '효자타일 대리점', repreNm: '김경호', type: '통장입금', colDate: '2026-01-29',
-      manager: '이해규', salesNo: 'BN202512310535', salesDate: '2025-12-31', clearNo: 'UX202601290010',
-      swAmt: 13521959, tileAmt: 0, totalAmt: 13521959, bank: '우리은행 주식회사',
-    },
-    {
-      key: '2', bpCd: '050006', bpNm: '효자타일 대리점', repreNm: '김경호', type: '통장입금', colDate: '2026-02-26',
-      manager: '김지원', salesNo: 'BN202601310563', salesDate: '2026-01-31', clearNo: 'UX202602260020',
-      swAmt: 0, tileAmt: 704000, totalAmt: 704000, bank: '우리은행 주식회사',
-    },
-    {
-      key: '3', bpCd: '050016', bpNm: '로얄세라믹하우징(주)', repreNm: '김진태', type: '통장입금', colDate: '2026-01-27',
-      manager: '이해규', salesNo: 'BN202511300211', salesDate: '2025-11-30', clearNo: 'UX202601270011',
-      swAmt: 200000000, tileAmt: 0, totalAmt: 200000000, bank: '우리은행 주식회사',
-    },
-    {
-      key: '4', bpCd: '050020', bpNm: '한일기계산업', repreNm: '권용호', type: '통장입금', colDate: '2026-01-30',
-      manager: '조동윤', salesNo: 'BN202512310576', salesDate: '2025-12-31', clearNo: 'UX202601300051',
-      swAmt: 10000000, tileAmt: 0, totalAmt: 10000000, bank: '우리은행 주식회사',
-    },
-  ];
+  const dataSource = useMemo(() => DATA_SOURCE, []);
 
   const paginatedRows = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -115,15 +162,23 @@ const CollectionStatus = ({ isTabMode = false }) => {
   }, [dataSource]);
 
   return (
-    <div style={{ padding: isTabMode ? '0' : '24px', backgroundColor: isTabMode ? 'transparent' : '#f0f2f5', minHeight: isTabMode ? 'auto' : '100vh' }}>
+    <div
+      style={{
+        padding: isTabMode ? '0' : '24px',
+        backgroundColor: isTabMode ? 'transparent' : '#f0f2f5',
+        minHeight: isTabMode ? 'auto' : '100vh',
+      }}
+    >
       <div className={styles.headerRow}>
         {!isTabMode ? (
-          <h2 className={styles.pageTitle}>어음/수금관리</h2>
+          <h2 className={styles.pageTitle}>어음/입금관리</h2>
         ) : (
-          <h3 className={styles.sectionTitle}>어음 및 수금 현황</h3>
+          <h3 className={styles.sectionTitle}>어음 및 입금 현황</h3>
         )}
         <div>
-          <Button variant="secondary" size={isTabMode ? "small" : "md"}>엑셀 다운로드</Button>
+          <Button variant="secondary" size={isTabMode ? 'small' : 'md'}>
+            엑셀 다운로드
+          </Button>
         </div>
       </div>
 
@@ -138,9 +193,9 @@ const CollectionStatus = ({ isTabMode = false }) => {
 
       <div className={styles.tableCard}>
         <div className={styles.tableTop}>
-          <span className={styles.tableCount}>조회 결과: {dataSource.length} 건</span>
+          <span className={styles.tableCount}>조회 결과: {dataSource.length}건</span>
         </div>
-        
+
         <div className={styles.tableContainer}>
           <div className={styles.tableWrap}>
             <table className={styles.table}>
@@ -164,7 +219,9 @@ const CollectionStatus = ({ isTabMode = false }) => {
               <tbody>
                 {paginatedRows.length === 0 ? (
                   <tr>
-                    <td colSpan={13} style={{ textAlign: 'center', padding: '48px', color: '#8ea0b8' }}>데이터가 없습니다.</td>
+                    <td colSpan={13} style={{ textAlign: 'center', padding: '48px', color: '#8ea0b8' }}>
+                      데이터가 없습니다.
+                    </td>
                   </tr>
                 ) : (
                   paginatedRows.map((row) => (
@@ -182,7 +239,9 @@ const CollectionStatus = ({ isTabMode = false }) => {
                       <td className={styles.tdCenter}>{row.clearNo}</td>
                       <td className={styles.tdNum}>{formatNum(row.swAmt)}</td>
                       <td className={styles.tdNum}>{formatNum(row.tileAmt)}</td>
-                      <td className={styles.tdNum} style={{ color: '#cf1322', fontWeight: 'bold' }}>{formatNum(row.totalAmt)}</td>
+                      <td className={styles.tdNum} style={{ color: '#cf1322', fontWeight: 'bold' }}>
+                        {formatNum(row.totalAmt)}
+                      </td>
                       <td className={styles.td}>{row.bank}</td>
                     </tr>
                   ))
@@ -191,22 +250,32 @@ const CollectionStatus = ({ isTabMode = false }) => {
               <tfoot>
                 {dataSource.length > 0 && (
                   <tr className={styles.tfootTr}>
-                    <td colSpan={9} className={styles.tdCenter}>총 합계</td>
+                    <td colSpan={9} className={styles.tdCenter}>합계</td>
                     <td className={styles.tdNum}>{formatNum(totalSw)}</td>
                     <td className={styles.tdNum}>{formatNum(totalTile)}</td>
                     <td className={styles.tdNum} style={{ color: '#cf1322' }}>{formatNum(totalSum)}</td>
-                    <td className={styles.td}></td>
+                    <td className={styles.td} />
                   </tr>
                 )}
               </tfoot>
             </table>
           </div>
-          
+
           {totalPages > 1 && (
             <div className={styles.pagination}>
-              <button type="button" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>이전</button>
-              <span>{currentPage} / {totalPages}</span>
-              <button type="button" disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => p + 1)}>다음</button>
+              <button type="button" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
+                이전
+              </button>
+              <span>
+                {currentPage} / {totalPages}
+              </span>
+              <button
+                type="button"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
+              >
+                다음
+              </button>
             </div>
           )}
         </div>

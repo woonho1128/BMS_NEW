@@ -1,14 +1,60 @@
-.container {
+﻿.container {
   border: 1px solid #dce4ef;
   border-radius: 12px;
   background: #ffffff;
-  padding: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .header {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.3;
+  color: #1d2a3b;
+}
+
+.headerControls {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.yearControlGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.itemSearchButton {
+  height: 36px;
+  border: 1px solid #2f7df6;
+  border-radius: 8px;
+  background: #2f7df6;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 12px;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.itemSearchButton:hover {
+  background: #2369d4;
+  border-color: #2369d4;
+}
+
+.controlLabel {
+  font-size: 13px;
+  color: #495a73;
 }
 
 .yearSelect {
@@ -17,13 +63,130 @@
   border: 1px solid #cad6e6;
   border-radius: 8px;
   padding: 0 10px;
+  color: #1d2a3b;
+  background: #fff;
 }
 
-.body {
-  min-height: 80px;
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metricCard {
+  border: 1px solid #e5ecf5;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f9fbff 0%, #ffffff 100%);
+  padding: 14px 16px;
+}
+
+.metricLabel {
+  font-size: 12px;
+  color: #5a6b84;
+  margin-bottom: 6px;
+}
+
+.metricValue {
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #1b2b42;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  color: #3b4d66;
+  font-size: 13px;
+}
+
+.filterWrap {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #334155;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #e5ecf5;
+  border-radius: 10px;
+  background: #f9fbff;
+}
+
+.filterTitle {
+  font-size: 12px;
+  color: #4a5b74;
+  font-weight: 600;
+  min-width: 56px;
+}
+
+.filterList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.filterItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
+  color: #243247;
+}
+
+@media (max-width: 1200px) {
+  .metricGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .headerControls {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .yearControlGroup {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .itemSearchButton {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .metricGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .metricValue {
+    font-size: 18px;
+  }
+
+  .filterWrap {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .filterTitle {
+    min-width: auto;
+  }
 }

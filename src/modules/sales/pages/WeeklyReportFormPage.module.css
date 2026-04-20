@@ -1,6 +1,6 @@
-/* ===== 주간보고 등록 - 출장보고 등록과 UI 톤 통일, 보고서 문서형 ===== */
+﻿/* ===== 二쇨컙蹂닿퀬 ?깅줉 - 異쒖옣蹂닿퀬 ?깅줉怨?UI ???듭씪, 蹂닿퀬??臾몄꽌??===== */
 
-/* ----- 페이지 전체 (화면 너비에 맞춤) ----- */
+/* ----- ?섏씠吏 ?꾩껜 (?붾㈃ ?덈퉬??留욎땄) ----- */
 .page {
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@
   overflow-x: hidden;
 }
 
-/* ----- 1. 기본정보(왼쪽) + 이번 주 + 차주 한 줄 (비율로 화면에 맞춤) ----- */
+/* ----- 1. 湲곕낯?뺣낫(?쇱そ) + ?대쾲 二?+ 李⑥＜ ??以?(鍮꾩쑉濡??붾㈃??留욎땄) ----- */
 .topRow {
   display: grid;
   grid-template-columns: 0.9fr 2fr 2fr;
@@ -142,7 +142,7 @@
   margin-left: 2px;
 }
 
-/* ----- 2. 이번 주 / 차주 카드 ----- */
+/* ----- 2. ?대쾲 二?/ 李⑥＜ 移대뱶 ----- */
 
 .weekCard {
   flex-shrink: 1;
@@ -312,7 +312,7 @@
   letter-spacing: -0.01em;
 }
 
-/* Textarea: 초기 높이 축소, focus 시 확장 */
+/* Textarea: 珥덇린 ?믪씠 異뺤냼, focus ???뺤옣 */
 .textarea {
   width: 100%;
   min-width: 0;
@@ -346,7 +346,7 @@
   min-height: 80px;
 }
 
-/* ----- 3. 기타 / 첨부 카드 (시각적 무게 축소, Drag & Drop 톤) ----- */
+/* ----- 3. 湲고? / 泥⑤? 移대뱶 (?쒓컖??臾닿쾶 異뺤냼, Drag & Drop ?? ----- */
 .attachCard {
   flex-shrink: 0;
   min-width: 0;
@@ -444,7 +444,7 @@
   border-color: var(--color-danger);
 }
 
-/* ----- 4. 버튼 영역 (하단 우측, 임시저장 / 저장(Primary) / 취소) ----- */
+/* ----- 4. 踰꾪듉 ?곸뿭 (?섎떒 ?곗륫, ?꾩떆???/ ???Primary) / 痍⑥냼) ----- */
 .footer {
   display: flex;
   align-items: center;
@@ -458,7 +458,7 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-/* ----- 기본정보 카드 최하단 버튼 ----- */
+/* ----- 湲곕낯?뺣낫 移대뱶 理쒗븯??踰꾪듉 ----- */
 .basicInfoCardFooter {
   margin-top: auto;
   padding-top: var(--space-sm);
@@ -469,7 +469,7 @@
   font-size: var(--font-size-sm);
 }
 
-/* ----- 이전 주간보고 팝업 (읽기 전용) ----- */
+/* ----- ?댁쟾 二쇨컙蹂닿퀬 ?앹뾽 (?쎄린 ?꾩슜) ----- */
 .modalEmpty {
   padding: var(--space-lg);
   text-align: center;
@@ -485,7 +485,7 @@
   min-width: 0;
 }
 
-/* 보고 선택 영역 */
+/* 蹂닿퀬 ?좏깮 ?곸뿭 */
 .prevReportMeta {
   display: flex;
   flex-wrap: wrap;
@@ -535,7 +535,7 @@
   border-radius: var(--radius-sm);
 }
 
-/* 이번 주 | 차주 가로 2열 */
+/* ?대쾲 二?| 李⑥＜ 媛濡?2??*/
 .prevReportTwoCol {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -603,7 +603,7 @@
   flex-shrink: 0;
 }
 
-/* ===== 모바일 최적화 (768px 이하) ===== */
+/* ===== 紐⑤컮??理쒖쟻??(768px ?댄븯) ===== */
 @media (max-width: 768px) {
   .page {
     gap: var(--space-md);
@@ -645,10 +645,8 @@
     min-width: 0;
     min-height: 44px;
   }
-}
 
-/* 이전 주간보고 팝업 - 모바일에서 세로 배치 */
-@media (max-width: 768px) {
+/* ?댁쟾 二쇨컙蹂닿퀬 ?앹뾽 - 紐⑤컮?쇱뿉???몃줈 諛곗튂 */
   .prevReportModal {
     max-height: 85vh;
   }
@@ -684,7 +682,7 @@
   }
 }
 
-/* 소형 기기 (480px 이하) */
+/* ?뚰삎 湲곌린 (480px ?댄븯) */
 @media (max-width: 480px) {
   .page {
     padding-bottom: var(--space-sm);

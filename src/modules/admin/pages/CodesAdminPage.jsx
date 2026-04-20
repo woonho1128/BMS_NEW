@@ -1,7 +1,7 @@
 ﻿import React, { useState, useMemo, useCallback } from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Button } from '../../../shared/components/Button/Button';
-import { ListFilter } from '../../../shared/components/ListFilter';
+import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { Card, CardBody } from '../../../shared/components/Card';
 import { notify, confirmAction } from '../../../shared/utils/notify';
 import { getCodesList } from '../data/adminMock';

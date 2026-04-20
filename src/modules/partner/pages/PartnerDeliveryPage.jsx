@@ -7,7 +7,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Download, Printer, Search } from 'lucide-react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
-import { ListFilter } from '../../../shared/components/ListFilter';
+import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { downloadCsv } from '../../../shared/utils/csv';
 import { formatNumber } from '../../../shared/utils/formatters';
 import { useAuth } from '../../auth/hooks/useAuth';

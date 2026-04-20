@@ -24,19 +24,6 @@ export function formatMoney(value) {
 }
 
 /**
- * Format percent value (e.g. 12.34 -> "12.34%")
- * @param {any} value
- * @param {number} [digits=2]
- * @returns {string}
- */
-export function formatPercent(value, digits = 2) {
-  if (value == null || value === '') return '-';
-  const num = Number(value);
-  if (Number.isNaN(num)) return '-';
-  return `${num.toFixed(digits)}%`;
-}
-
-/**
  * Format date range with fallback values.
  * @param {string} from
  * @param {string} to

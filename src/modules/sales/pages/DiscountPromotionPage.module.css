@@ -641,6 +641,491 @@
   padding: 0 4px 4px;
 }
 
+.promoManageFrame {
+  display: flex;
+  flex-direction: column;
+  min-height: 560px;
+  max-height: calc(100vh - 300px);
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.promoManageTopBar {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e4ebf4;
+  background: #f7faff;
+}
+
+.promoManageLeftControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.promoManageTitle {
+  margin: 0 8px 0 0;
+  font-size: 18px;
+  line-height: 1;
+  color: #1b2a40;
+  white-space: nowrap;
+}
+
+.promoControlLabel,
+.promoControlInput {
+  height: 30px;
+  border: 1px solid #c7d6ea;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  color: #1e314d;
+  padding: 0 10px;
+}
+
+.promoControlLabel {
+  width: 88px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  background: #f8fbff;
+}
+
+.promoControlInput {
+  width: 180px;
+}
+
+.promoGhostBtn {
+  height: 30px;
+  border: 1px solid #bccde4;
+  border-radius: 8px;
+  background: #fff;
+  color: #2f4b6d;
+  font-size: 13px;
+  padding: 0 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.promoManageRightControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.promoTinyBtn,
+.promoTinyBtnDanger {
+  height: 30px;
+  border-radius: 8px;
+  font-size: 13px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.promoTinyBtn {
+  border: 1px solid #bccde4;
+  background: #fff;
+  color: #1e314d;
+}
+
+.promoTinyBtnDanger {
+  border: 1px solid #d9a9ae;
+  background: #fff;
+  color: #9c2330;
+}
+
+.promoManageTableWrap {
+  flex: 1 1 auto;
+  overflow: auto;
+  background: #fff;
+}
+
+.promoManageTable {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  color: #1a2a40;
+}
+
+.promoManageTable th,
+.promoManageTable td {
+  border: 1px solid #d9e3f0;
+  padding: 3px 4px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.promoManageTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #dce8f5;
+  text-align: center;
+  font-weight: 700;
+  white-space: normal;
+  word-break: keep-all;
+  line-height: 1.2;
+}
+
+.groupStock {
+  background: #d9e6f7 !important;
+}
+
+.groupNormal {
+  background: #dff0df !important;
+}
+
+.groupPromo {
+  background: #fff1db !important;
+}
+
+.groupProfit {
+  background: #f4e8db !important;
+}
+
+.promoManageTable tfoot th {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  background: #f1f6fd;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.stickyCol {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  background: #eef4fd;
+  text-align: center;
+  width: 36px;
+  min-width: 36px;
+  padding: 0 !important;
+}
+
+.checkCellInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  width: 100%;
+}
+
+.checkInput {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  border: 1px solid #9fb7d8;
+  border-radius: 4px;
+  background: #fff;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.checkInput::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: #fff;
+  transform: scale(0);
+  transition: transform 120ms ease-in-out;
+}
+
+.checkInput:checked {
+  background: #2f7df6;
+  border-color: #2f7df6;
+}
+
+.checkInput:checked::before {
+  transform: scale(1);
+}
+
+.checkInput:focus-visible {
+  outline: 2px solid #8eb6f3;
+  outline-offset: 1px;
+}
+
+.expandColHead,
+.expandColCell {
+  width: 36px;
+  min-width: 36px;
+  text-align: center;
+  position: sticky;
+  left: 36px;
+  z-index: 4;
+  background: #f7fbff;
+}
+
+.expandBtn {
+  width: 22px;
+  height: 22px;
+  border: 1px solid #c7d5ea;
+  border-radius: 6px;
+  background: #fff;
+  color: #365071;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.promoCellInput {
+  height: 24px;
+  border: 1px solid #d2deee;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #1d304b;
+  background: #fff;
+  padding: 0 6px;
+  min-width: 78px;
+}
+
+.promoCellSelect {
+  height: 24px;
+  border: 1px solid #d2deee;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #1d304b;
+  background: #fff;
+  padding: 0 4px;
+  min-width: 76px;
+}
+
+.promoTypeSelect {
+  min-width: 0;
+  width: 100%;
+}
+
+.promoDivisionCell {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 6px;
+  min-width: 210px;
+  align-items: center;
+}
+
+.promoCellInputNum {
+  width: 68px;
+  text-align: right;
+}
+
+.colMarginRateHead {
+  width: 56px;
+  min-width: 56px;
+}
+
+.colStock {
+  background: #f6f9ff;
+  width: 78px;
+  min-width: 78px;
+}
+
+.colNormal {
+  background: #f6fbf6;
+  width: 78px;
+  min-width: 78px;
+}
+
+.colPromo {
+  background: #fffaf1;
+  width: 78px;
+  min-width: 78px;
+}
+
+.colProfit {
+  background: #fcf8f1;
+  width: 78px;
+  min-width: 78px;
+}
+
+.colMarginRate {
+  width: 56px;
+  min-width: 56px;
+}
+
+.colDivisionHead,
+.colDivisionCell {
+  width: 230px;
+  min-width: 230px;
+  position: sticky;
+  left: 72px;
+  z-index: 3;
+  background: #fff;
+}
+
+.colSetHead,
+.colSetCell {
+  width: 96px;
+  min-width: 96px;
+  position: sticky;
+  left: 302px;
+  z-index: 3;
+  background: #fff;
+}
+
+.colComponentHead,
+.colComponentCell {
+  width: 122px;
+  min-width: 122px;
+  position: sticky;
+  left: 398px;
+  z-index: 3;
+  background: #fff;
+}
+
+.colErpHead,
+.colErpCell {
+  width: 132px;
+  min-width: 132px;
+  position: sticky;
+  left: 520px;
+  z-index: 3;
+  background: #fff;
+}
+
+.promoManageTable thead .colDivisionHead,
+.promoManageTable thead .colSetHead,
+.promoManageTable thead .colComponentHead,
+.promoManageTable thead .colErpHead {
+  z-index: 5;
+}
+
+.promoManageTable thead .expandColHead {
+  z-index: 6;
+}
+
+.promoManageTable tfoot .expandColCell {
+  position: sticky;
+  left: 36px;
+  z-index: 4;
+  background: #f1f6fd;
+}
+
+.colSetCell .promoCellInput,
+.colComponentCell .promoCellInput,
+.colErpCell .promoCellInput {
+  min-width: 0;
+  width: 100%;
+}
+
+.promoDivisionCell .promoCellInput {
+  min-width: 0;
+  width: 100%;
+}
+
+.promoSubtotalRow td {
+  background: #fbf7e8;
+}
+
+.subtotalLabelCell {
+  position: sticky;
+  left: 72px;
+  z-index: 3;
+  background: #fbf1cd !important;
+  font-weight: 800;
+  color: #304764;
+  text-align: center;
+}
+
+.promoRemarkRow td {
+  background: #f7fafc;
+  border-top: 0;
+  padding: 6px 8px;
+}
+
+.promoRemarkInner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.promoRemarkInner strong {
+  font-size: 12px;
+  color: #355172;
+  min-width: 34px;
+}
+
+.promoRemarkInput {
+  height: 26px;
+  border: 1px solid #cdd9ea;
+  border-radius: 6px;
+  padding: 0 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.promoManageBottomBar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid #e4ebf4;
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.promoShapeWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.promoShapeLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334d70;
+  white-space: nowrap;
+}
+
+.promoShapeInput {
+  height: 34px;
+  border: 1px solid #c7d6ea;
+  border-radius: 8px;
+  padding: 0 10px;
+  width: 100%;
+  min-width: 280px;
+}
+
+.promoActionWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.promoActionSecondary,
+.promoActionPrimary {
+  height: 30px;
+  border-radius: 8px;
+  font-size: 13px;
+  padding: 0 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.promoActionSecondary {
+  border: 1px solid #bccde4;
+  background: #fff;
+  color: #1e314d;
+}
+
+.promoActionPrimary {
+  border: 1px solid #2f7df6;
+  background: #2f7df6;
+  color: #fff;
+}
+
 @media (max-width: 1024px) {
   .shellWide {
     padding-left: 8px;
@@ -673,5 +1158,36 @@
 
   .priceDocsGrid {
     grid-template-columns: 1fr;
+  }
+
+  .promoManageFrame {
+    max-height: none;
+  }
+
+  .promoManageTopBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .promoManageLeftControls {
+    flex-wrap: wrap;
+  }
+
+  .promoControlInput {
+    width: 100%;
+    min-width: 220px;
+  }
+
+  .promoManageBottomBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .promoShapeInput {
+    min-width: 0;
+  }
+
+  .promoActionWrap {
+    justify-content: flex-end;
   }
 }

@@ -480,7 +480,7 @@ export function ShortProjectRegisterPage() {
 
   const saveDraft = useCallback(() => {
     notify.info('단납 현장이 임시저장되었습니다. (목업)');
-  }, [siteName, builder, dealer, deliveryFrom, deliveryTo, specialNotes, attachments, majorItems]);
+  }, []);
 
   const toggleSiteSelection = useCallback((siteId, checked) => {
     setSelectedSiteIds((prev) => {
@@ -1215,6 +1215,7 @@ export function ShortProjectRegisterPage() {
 }
 
 export default ShortProjectRegisterPage;
+
 
 
 

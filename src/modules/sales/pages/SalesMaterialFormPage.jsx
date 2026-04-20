@@ -4,7 +4,7 @@ import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { Input } from '../../../shared/components/Input/Input';
-import { RichTextEditor } from '../../../shared/components/RichTextEditor';
+import { RichTextEditor } from '../../../shared/components/RichTextEditor/RichTextEditor';
 import { notify, confirmAction } from '../../../shared/utils/notify';
 import { getSalesMaterialById, formatFileSize } from '../data/salesMaterialMock';
 import styles from './SalesMaterialFormPage.module.css';

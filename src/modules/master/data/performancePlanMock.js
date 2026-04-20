@@ -14,16 +14,16 @@ const TEAM_CONFIG = [
     orgId: 'R1',
     orgName: '리테일 1팀',
     members: [
-      { memberId: 'R1-01', memberName: '박진오', position: '매니저' },
-      { memberId: 'R1-02', memberName: '김혜림', position: '매니저' },
-      { memberId: 'R1-03', memberName: '이재현', position: '주임' },
+      { memberId: 'R1-01', memberName: '박진우', position: '매니저' },
+      { memberId: 'R1-02', memberName: '김소림', position: '매니저' },
+      { memberId: 'R1-03', memberName: '이재호', position: '주임' },
     ],
   },
   {
     orgId: 'R2',
     orgName: '리테일 2팀',
     members: [
-      { memberId: 'R2-01', memberName: '최윤한', position: '매니저' },
+      { memberId: 'R2-01', memberName: '최윤호', position: '매니저' },
       { memberId: 'R2-02', memberName: '서동건', position: '주임' },
     ],
   },
@@ -31,15 +31,15 @@ const TEAM_CONFIG = [
     orgId: 'R3',
     orgName: '리테일 3팀',
     members: [
-      { memberId: 'R3-01', memberName: '유승식', position: '매니저' },
-      { memberId: 'R3-02', memberName: '남도현', position: '주임' },
+      { memberId: 'R3-01', memberName: '유득한', position: '매니저' },
+      { memberId: 'R3-02', memberName: '오도현', position: '주임' },
     ],
   },
   {
     orgId: 'T1',
-    orgName: '타일영업팀',
+    orgName: '특수영업팀',
     members: [
-      { memberId: 'T1-01', memberName: '곽현우', position: '매니저' },
+      { memberId: 'T1-01', memberName: '공현준', position: '매니저' },
       { memberId: 'T1-02', memberName: '강유진', position: '사원' },
     ],
   },
@@ -47,8 +47,8 @@ const TEAM_CONFIG = [
     orgId: 'S1',
     orgName: '영업지원팀',
     members: [
-      { memberId: 'S1-01', memberName: '조동욱', position: '매니저' },
-      { memberId: 'S1-02', memberName: '정하림', position: '사원' },
+      { memberId: 'S1-01', memberName: '조동원', position: '매니저' },
+      { memberId: 'S1-02', memberName: '정하리', position: '사원' },
     ],
   },
 ];
@@ -84,11 +84,11 @@ function makeHistory(base, row, annualTotal) {
     {
       id: `${row.id}-h2`,
       changedAt: `${row.year}-03-02 14:31`,
-      changedBy: '박동현 이사',
+      changedBy: '박동혁 이사',
       summary: '1분기 계획 보정',
       changes: [
         { field: '1월', before: Math.round(base * 0.95).toLocaleString('ko-KR'), after: Math.round(base * 1.02).toLocaleString('ko-KR') },
-        { field: '비고', before: '-', after: '현장 성수기 일정 리스크 반영' },
+        { field: '비고', before: '-', after: '현장 접수기 일정 리스크 반영' },
       ],
     },
   ];
@@ -198,9 +198,10 @@ export function filterPerformancePlanRows(rows = [], filters = {}) {
 
 export function getPlanUploadPreviewRows() {
   return [
-    { no: 1, orgName: '리테일 1팀', ownerName: '박진오 매니저', year: 2027, jan: 312, feb: 298, mar: 336, status: '신규' },
-    { no: 2, orgName: '리테일 2팀', ownerName: '서동건 주임', year: 2027, jan: 264, feb: 252, mar: 277, status: '수정' },
-    { no: 3, orgName: '영업지원팀', ownerName: '정하림 사원', year: 2027, jan: 188, feb: 201, mar: 206, status: '신규' },
+    { no: 1, division: 'RETAIL', orgName: '리테일 1팀', ownerName: '박진우 매니저', year: 2027, jan: 312, feb: 298, mar: 336, status: '신규' },
+    { no: 2, division: 'RETAIL', orgName: '리테일 2팀', ownerName: '서동건 주임', year: 2027, jan: 264, feb: 252, mar: 277, status: '수정' },
+    { no: 3, division: 'PROJECT', orgName: '특수영업팀', ownerName: '정하리 사원', year: 2027, jan: 188, feb: 201, mar: 206, status: '신규' },
+    { no: 4, division: 'PROJECT', orgName: '영업지원팀', ownerName: '조동원 매니저', year: 2027, jan: 206, feb: 214, mar: 222, status: '수정' },
   ];
 }
 

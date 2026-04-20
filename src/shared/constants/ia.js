@@ -23,10 +23,10 @@ const MAIN = [
         children: [
           { id: 'sales-report', label: '보고서 관리', path: '/sales/report' },
           { id: 'sales-card', label: '명함 관리', path: '/sales/card' },
-          { id: 'sales-material', label: '영업 자료실', path: '/sales/material' },
+          { id: 'sales-material', label: '영업 자료', path: '/sales/material' },
           { id: 'sales-delivery-request-status', label: '출고 요청 진행 현황', path: '/sales/delivery-request-status' },
           { id: 'sales-delivery-request-detail', label: '출하 요청 상세내역 조회', path: '/sales/delivery-request-detail' },
-          { id: 'sales-delivery-approval', label: '출고 승인', path: '/sales/delivery-approval' },
+          { id: 'sales-delivery-approval', label: '출고 확인', path: '/sales/delivery-approval' },
         ],
       },
       {
@@ -50,7 +50,7 @@ const MAIN = [
               { id: 'sales-short-project-list', label: '단납 현장 내역', path: '/sales/short-project' },
             ],
           },
-          { id: 'sales-support-receivable', label: '여신·수금 관리', path: '/sales/support/receivable' },
+          { id: 'sales-support-receivable', label: '수신채권금 관리', path: '/sales/support/receivable' },
           { id: 'sales-support-discount', label: '판매단가 관리', path: '/sales/support/discount-promotion' },
         ],
       },
@@ -107,7 +107,7 @@ const MAIN = [
         label: '채권조회',
         children: [
           { id: 'partner-receivable', label: '채권채무조회', path: '/finance/receivable' },
-          { id: 'partner-balance-confirm', label: '채권채무잔액확인서', path: '/partner/balance-confirm' },
+          { id: 'partner-balance-confirm', label: '채권채무요약확인서', path: '/partner/balance-confirm' },
         ],
       },
     ],
@@ -118,29 +118,44 @@ const MAIN = [
     icon: BarChart3,
     children: [
       {
-        id: 'insights-kpi',
-        label: '성과 관리(KPI)',
+        id: 'insights-project',
+        label: '프로젝트부문',
         children: [
-          { id: 'analytics-retail', label: '리테일팀 매출 현황', path: '/analytics/retail-sales' },
-          { id: 'analytics-partner', label: '대리점별 매출 현황', path: '/analytics/partner' },
-          { id: 'analytics-personal-sales', label: '개인별 매출 현황', path: '/analytics/personal-sales' },
-          { id: 'analytics-category-sales', label: '카테고리별 판매 현황', path: '/analytics/category-sales' },
-          { id: 'analytics-monthly-plan-meeting', label: '월별 계획 회의 관리', path: '/analytics/monthly-plan-meeting' },
+          { id: 'analytics-project-performance', label: '프로젝트 실적 요약', path: '/analytics/project-performance' },
+          { id: 'analytics-yearly-delivery-forecast', label: '연도별 납품예정 현황', path: '/analytics/yearly-delivery-forecast' },
+          { id: 'analytics-custom', label: '연도 별 채널 비중', path: '/analytics/custom' },
         ],
       },
       {
-        id: 'insights-market',
-        label: '시장 분석',
+        id: 'insights-retail',
+        label: '리테일부문',
         children: [
-          { id: 'analytics-market', label: '시장파악', path: '/analytics/market' },
-          { id: 'analytics-data-collection', label: '자료수집', path: '/analytics/data-collection' },
+          {
+            id: 'insights-kpi',
+            label: '성과 관리(KPI)',
+            children: [
+              { id: 'analytics-retail', label: '리테일별 매출 현황', path: '/analytics/retail-sales' },
+              { id: 'analytics-partner', label: '대리점별 매출 현황', path: '/analytics/partner' },
+              { id: 'analytics-personal-sales', label: '개인별 매출 현황', path: '/analytics/personal-sales' },
+              { id: 'analytics-category-sales', label: '카테고리별 판매 현황', path: '/analytics/category-sales' },
+              { id: 'analytics-monthly-plan-meeting', label: '월간 계획 회의 관리', path: '/analytics/monthly-plan-meeting' },
+            ],
+          },
+          {
+            id: 'insights-market',
+            label: '시장 분석',
+            children: [
+              { id: 'analytics-market', label: '시장파악', path: '/analytics/market' },
+              { id: 'analytics-data-collection', label: '자료수집', path: '/analytics/data-collection' },
+            ],
+          },
         ],
       },
     ],
   },
   {
     id: 'master',
-    label: '기준 정보',
+    label: '기초 정보',
     icon: Settings,
     children: [
       {
@@ -188,23 +203,9 @@ export const IA_SIDEBAR_SECTIONS = [
   { key: 'admin', items: ADMIN, divider: true },
 ];
 
-export const IA_TREE = [...MAIN, ...ADMIN];
+const IA_TREE = [...MAIN, ...ADMIN];
 
-const FLAT_ITEMS = (() => {
-  const list = [];
-  const traverse = (nodes) => {
-    nodes.forEach((node) => {
-      if (node.path) list.push(node);
-      if (node.children) traverse(node.children);
-    });
-  };
-  traverse(IA_TREE);
-  return list;
-})();
-
-export const getAllRoutes = () => [...FLAT_ITEMS];
-
-export const findIaByPath = (path) => {
+const findIaByPath = (path) => {
   let found = null;
   const traverse = (nodes, parents = []) => {
     for (const node of nodes) {

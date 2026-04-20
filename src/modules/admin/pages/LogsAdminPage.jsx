@@ -1,6 +1,6 @@
 ﻿import React, { useState, useMemo, useCallback } from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
-import { ListFilter } from '../../../shared/components/ListFilter';
+import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { getLogsList } from '../data/adminMock';
 import styles from './LogsAdminPage.module.css';
 

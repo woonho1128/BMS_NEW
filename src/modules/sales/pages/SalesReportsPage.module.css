@@ -251,6 +251,42 @@
   font-size: var(--font-size-md);
 }
 
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.pageNumbers {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pageBtn {
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid #cad6e6;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d2a3b;
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+}
+
+.pageBtnActive {
+  border-color: #1f64d8;
+  background: #edf4ff;
+  color: #1f64d8;
+  font-weight: var(--font-weight-semibold);
+}
+
+.pageBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* 모바일 최적화 */
 @media (max-width: 768px) {
   .tabsRow {
@@ -321,6 +357,11 @@
   .detailBtn {
     min-height: 36px;
     padding: var(--space-xs) var(--space-sm);
+  }
+
+  .pagination {
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 

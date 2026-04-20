@@ -1,30 +1,21 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { REPORT_TYPE, getReportById, getStatusLabel } from '../data/reportMock';
+import { sanitizeRichHtml } from '../../../shared/utils/sanitizeRichHtml';
 import styles from './ReportDetail.module.css';
 
 function formatWeekLabel(report) {
   const weekLabel = String(report?.weekLabel || '');
-  const alreadyKo = weekLabel.match(/(\d{4})년\s*(\d{1,2})월\s*(\d)주차/);
-  if (alreadyKo) return `${alreadyKo[1]}년 ${Number(alreadyKo[2])}월 ${Number(alreadyKo[3])}주차`;
-
   const periodLabel = String(report?.periodLabel || '');
-  const match = periodLabel.match(/(\d{4})\.(\d{2})\.(\d{2})/);
-  if (match) {
-    const year = Number(match[1]);
-    const month = Number(match[2]);
-    const day = Number(match[3]);
-    const firstDayOffset = (new Date(year, month - 1, 1).getDay() + 6) % 7;
-    const week = Math.floor((day + firstDayOffset - 1) / 7) + 1;
-    return `${year}년 ${month}월 ${week}주차`;
-  }
+  const periodCode = String(report?.period || '');
 
-  const codeMatch = String(report?.period || '').match(/^(\d{4})-W(\d{1,2})$/);
-  if (codeMatch) return `${codeMatch[1]}년 ${Number(codeMatch[2])}주차`;
-  return report?.period || '-';
+  if (weekLabel) return weekLabel;
+  if (periodLabel) return periodLabel;
+  if (periodCode) return periodCode;
+  return '-';
 }
 
 export function ReportDetailPage() {
@@ -66,94 +57,149 @@ export function ReportDetailPage() {
   const isWeekly = report.type === REPORT_TYPE.WEEKLY;
   const thisWeekTasks = report.keyTasks || [];
   const nextWeekTasks = report.nextWeekTasks || [];
+  const companions = Array.isArray(report.companions) ? report.companions.join(', ') : report.companions || '-';
+  const sanitizedActivityResultHtml = sanitizeRichHtml(report.activityResultHtml || '');
 
   return (
     <PageShell path="/sales/report" title={isWeekly ? '주간보고 상세' : '출장보고 상세'}>
       <div className={styles.page}>
-        <Card title={isWeekly ? '주간보고' : '출장보고'} className={styles.sectionCard}>
-          <CardBody>
-            <div className={styles.metaRow}>
-              <span className={styles.badge}>{isWeekly ? '주간보고' : '출장보고'}</span>
-              <span className={styles.status}>{getStatusLabel(report.status)}</span>
-              <span className={styles.author}>{report.author}</span>
-            </div>
+        {isWeekly ? (
+          <Card title="주간보고" className={styles.sectionCard}>
+            <CardBody>
+              <div className={styles.metaRow}>
+                <span className={styles.badge}>주간보고</span>
+                <span className={styles.status}>{getStatusLabel(report.status)}</span>
+                <span className={styles.author}>{report.author}</span>
+              </div>
 
-            {isWeekly ? (
-              <>
-                <div className={styles.readOnlyField}>
-                  <span className={styles.readOnlyLabel}>주차</span>
-                  <span className={styles.weekValue}>{formatWeekLabel(report)}</span>
+              <div className={styles.readOnlyField}>
+                <span className={styles.readOnlyLabel}>주차</span>
+                <span className={styles.weekValue}>{formatWeekLabel(report)}</span>
+              </div>
+
+              <section className={styles.weeklySplitSection} aria-label="주간보고 상세">
+                <article className={styles.weeklyColumn}>
+                  <h4 className={styles.weeklyColumnHeader}>이번 주</h4>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>중점 업무</span>
+                    <ul className={styles.readOnlyList}>
+                      {thisWeekTasks.length === 0
+                        ? <li>-</li>
+                        : thisWeekTasks.map((task, idx) => <li key={idx}>{typeof task === 'string' ? task : task.text}</li>)}
+                    </ul>
+                  </div>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>상세 내용</span>
+                    <p className={styles.readOnlyValue}>{report.keyTaskDetail || '-'}</p>
+                  </div>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>이슈 / 요청사항</span>
+                    <p className={styles.readOnlyValue}>{report.issues || '-'}</p>
+                  </div>
+                </article>
+
+                <article className={styles.weeklyColumn}>
+                  <h4 className={styles.weeklyColumnHeader}>다음 주</h4>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>계획 업무</span>
+                    <ul className={styles.readOnlyList}>
+                      {nextWeekTasks.length === 0
+                        ? <li>{report.nextPlan || '-'}</li>
+                        : nextWeekTasks.map((task, idx) => <li key={idx}>{typeof task === 'string' ? task : task.text}</li>)}
+                    </ul>
+                  </div>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>상세 계획</span>
+                    <p className={styles.readOnlyValue}>{report.nextWeekDetail || report.nextPlan || '-'}</p>
+                  </div>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>예상 이슈</span>
+                    <p className={styles.readOnlyValue}>{report.nextWeekIssues || '-'}</p>
+                  </div>
+                </article>
+              </section>
+            </CardBody>
+          </Card>
+        ) : (
+          <>
+            <Card title="출장보고" className={styles.sectionCard}>
+              <CardBody>
+                <div className={styles.metaRow}>
+                  <span className={styles.badge}>출장보고</span>
+                  <span className={styles.status}>{getStatusLabel(report.status)}</span>
+                  <span className={styles.author}>{report.author}</span>
                 </div>
-                <section className={styles.weeklySplitSection} aria-label="주간보고 상세">
-                  <article className={styles.weeklyColumn}>
-                    <h4 className={styles.weeklyColumnHeader}>이번 주</h4>
-                    <div className={styles.readOnlyField}>
-                      <span className={styles.readOnlyLabel}>핵심 업무</span>
-                      <ul className={styles.readOnlyList}>
-                        {thisWeekTasks.length === 0
-                          ? <li>-</li>
-                          : thisWeekTasks.map((task, idx) => <li key={idx}>{typeof task === 'string' ? task : task.text}</li>)}
-                      </ul>
-                    </div>
-                    <div className={styles.readOnlyField}>
-                      <span className={styles.readOnlyLabel}>상세 내용</span>
-                      <p className={styles.readOnlyValue}>{report.keyTaskDetail || '-'}</p>
-                    </div>
-                    <div className={styles.readOnlyField}>
-                      <span className={styles.readOnlyLabel}>이슈 / 요청사항</span>
-                      <p className={styles.readOnlyValue}>{report.issues || '-'}</p>
-                    </div>
-                  </article>
+              </CardBody>
+            </Card>
 
-                  <article className={styles.weeklyColumn}>
-                    <h4 className={styles.weeklyColumnHeader}>다음 주</h4>
-                    <div className={styles.readOnlyField}>
-                      <span className={styles.readOnlyLabel}>계획 업무</span>
-                      <ul className={styles.readOnlyList}>
-                        {nextWeekTasks.length === 0
-                          ? <li>{report.nextPlan || '-'}</li>
-                          : nextWeekTasks.map((task, idx) => <li key={idx}>{typeof task === 'string' ? task : task.text}</li>)}
-                      </ul>
-                    </div>
-                    <div className={styles.readOnlyField}>
-                      <span className={styles.readOnlyLabel}>상세 계획</span>
-                      <p className={styles.readOnlyValue}>{report.nextWeekDetail || report.nextPlan || '-'}</p>
-                    </div>
-                    <div className={styles.readOnlyField}>
-                      <span className={styles.readOnlyLabel}>예상 이슈</span>
-                      <p className={styles.readOnlyValue}>{report.nextWeekIssues || '-'}</p>
-                    </div>
-                  </article>
+            <Card title="출장 기본 정보" className={styles.sectionCard}>
+              <CardBody>
+                <section className={styles.tripInfoGrid}>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>출장기간</span>
+                    <p className={styles.readOnlyValue}>
+                      {report.tripFrom || '-'} ~ {report.tripTo || '-'}
+                    </p>
+                  </div>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>출장지</span>
+                    <p className={styles.readOnlyValue}>{report.destination || '-'}</p>
+                  </div>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>출장 목적</span>
+                    <p className={styles.readOnlyValue}>{report.purpose || '-'}</p>
+                  </div>
+                  <div className={styles.readOnlyField}>
+                    <span className={styles.readOnlyLabel}>동행자</span>
+                    <p className={styles.readOnlyValue}>{companions}</p>
+                  </div>
                 </section>
-              </>
-            ) : (
-              <>
-                <div className={styles.readOnlyField}>
-                  <span className={styles.readOnlyLabel}>출장기간</span>
-                  <span className={styles.readOnlyValue}>{report.tripFrom} ~ {report.tripTo}</span>
-                </div>
-                <div className={styles.readOnlyField}>
-                  <span className={styles.readOnlyLabel}>출장지 / 목적 / 동행자</span>
-                  <span className={styles.readOnlyValue}>
-                    {report.destination} / {report.purpose} / {report.companions || '-'}
-                  </span>
-                </div>
-                <div className={styles.readOnlyField}>
-                  <span className={styles.readOnlyLabel}>출장 활동 & 결과</span>
+              </CardBody>
+            </Card>
+
+            <Card title="출장 활동 & 결과" className={styles.sectionCard}>
+              <CardBody>
+                {sanitizedActivityResultHtml ? (
+                  <div className={styles.richReadOnly} dangerouslySetInnerHTML={{ __html: sanitizedActivityResultHtml }} />
+                ) : (
                   <ul className={styles.readOnlyList}>
-                    {(report.activities || []).map((activity, idx) => (
-                      <li key={idx}>{activity.activity}: {activity.result}</li>
-                    ))}
+                    {(report.activities || []).length === 0 ? (
+                      <li>-</li>
+                    ) : (
+                      (report.activities || []).map((activity, idx) => (
+                        <li key={idx}>
+                          {activity.activity}: {activity.result}
+                        </li>
+                      ))
+                    )}
                   </ul>
-                </div>
-                <div className={styles.readOnlyField}>
-                  <span className={styles.readOnlyLabel}>후속 조치</span>
-                  <span className={styles.readOnlyValue}>{report.followUp || '-'}</span>
-                </div>
-              </>
-            )}
-          </CardBody>
-        </Card>
+                )}
+              </CardBody>
+            </Card>
+
+            <Card title="후속 조치" className={styles.sectionCard}>
+              <CardBody>
+                <p className={styles.readOnlyValue}>{report.followUp || '-'}</p>
+              </CardBody>
+            </Card>
+
+            <Card title="첨부 파일" className={styles.sectionCard}>
+              <CardBody>
+                <ul className={styles.readOnlyList}>
+                  {(report.attachments || []).length === 0 ? (
+                    <li>-</li>
+                  ) : (
+                    (report.attachments || []).map((file, idx) => (
+                      <li key={`${idx}-${typeof file === 'string' ? file : file.name || 'file'}`}>
+                        {typeof file === 'string' ? file : file.name || '-'}
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </CardBody>
+            </Card>
+          </>
+        )}
 
         <Card title="코멘트" className={styles.sectionCard}>
           <CardBody>
@@ -174,7 +220,7 @@ export function ReportDetailPage() {
               <textarea
                 className={styles.commentInput}
                 rows={2}
-                placeholder="코멘트 입력"
+                placeholder="코멘트를 입력"
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 aria-label="코멘트 입력"
