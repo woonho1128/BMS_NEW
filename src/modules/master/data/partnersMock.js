@@ -173,6 +173,8 @@ const MOCK_PARTNER_EDIT_HISTORIES = Object.fromEntries(
   ])
 );
 
+export const MOCK_PARTNERS_LIST = MOCK_PARTNERS;
+
 export const MOCK_DIVISION_OPTIONS = [
   { value: '', label: '전체' },
   { value: 'project', label: '프로젝트 부문' },
