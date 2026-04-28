@@ -265,6 +265,10 @@ export function DeliveryApprovalPage() {
         </div>
 
         <div className={styles.tableCard}>
+          <div className={styles.tableTop}>
+            <span className={styles.tableTitle}>출고 승인 대상</span>
+            <span className={styles.tableCount}>총 {filteredRows.length}건</span>
+          </div>
           <Table
             rowSelection={{ selectedRowKeys, onChange: setSelectedRowKeys }}
             columns={columns}
@@ -272,9 +276,74 @@ export function DeliveryApprovalPage() {
             size="small"
             pagination={{ pageSize: 10 }}
             scroll={{ x: 2300, y: 360 }}
-            className={styles.approvalTable}
+            className={`${styles.approvalTable} ${styles.desktopTable}`}
             rowKey="key"
           />
+          <div className={styles.mobileList}>
+            {filteredRows.length === 0 ? (
+              <div className={styles.mobileEmpty}>조회 결과가 없습니다.</div>
+            ) : (
+              filteredRows.map((row) => {
+                const checked = selectedRowKeys.includes(row.key);
+                return (
+                  <article
+                    key={`mobile-${row.key}`}
+                    className={styles.mobileCard}
+                    onClick={() => setSelectedShipNo(row.shipNo)}
+                  >
+                    <div className={styles.mobileHead}>
+                      <label
+                        className={styles.mobileSelect}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={(e) => {
+                            const nextChecked = e.target.checked;
+                            setSelectedRowKeys((prev) => (
+                              nextChecked ? [...new Set([...prev, row.key])] : prev.filter((key) => key !== row.key)
+                            ));
+                          }}
+                        />
+                        선택
+                      </label>
+                      <button
+                        type="button"
+                        className={styles.shipNoButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedShipNo(row.shipNo);
+                        }}
+                      >
+                        {row.shipNo}
+                      </button>
+                    </div>
+                    <div className={styles.mobileCustomer}>{row.customerName}</div>
+                    <div className={styles.mobileMetaGrid}>
+                      <div className={styles.mobileMetaItem}>
+                        <span>공장</span>
+                        <strong>{row.factory}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>출고예정일</span>
+                        <strong>{row.shipDate}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>금액</span>
+                        <strong>{fmt(row.amount)}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>출고여부</span>
+                        <strong>{row.shipResult}</strong>
+                      </div>
+                    </div>
+                    <div className={styles.mobileDestination}>{row.destination}</div>
+                  </article>
+                );
+              })
+            )}
+          </div>
         </div>
 
         <Modal

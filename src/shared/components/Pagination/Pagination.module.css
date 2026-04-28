@@ -67,3 +67,35 @@
   color: #7a8fae;
   font-size: 12px;
 }
+
+@media (max-width: 768px) {
+  .pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .sizeWrap {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav {
+    order: 1;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    min-width: 28px;
+    padding: 0 8px;
+  }
+
+  .sizeSelect {
+    min-width: 74px;
+  }
+}

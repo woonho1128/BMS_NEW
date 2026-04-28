@@ -1,146 +1,35 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import React from 'react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { Card, CardBody } from '../../../shared/components/Card';
 import { Button } from '../../../shared/components/Button/Button';
 import { ROUTES } from '../../../router/routePaths';
-import { notify } from '../../../shared/utils/notify';
-import { MOCK_PROFIT_LIST, getProfitDetail, getRowDetail } from '../data/profitAnalysisMock';
+import { getProfitDetail } from '../data/profitAnalysisMock';
+import { formatNumber } from './salesInfoRegister.helpers';
+import { useSalesInfoRegisterState } from './useSalesInfoRegisterState';
 import styles from './SalesInfoRegisterPage.module.css';
 
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function formatNumber(value) {
-  return new Intl.NumberFormat('ko-KR').format(Number(value) || 0);
-}
-
-function createDefaultForm() {
-  return {
-    specType: '',
-    swSpecNo: '',
-    builder: '',
-    partnerName: '',
-    siteName: '',
-    region: '',
-    orderType: '',
-    businessType: '',
-    salesManager: '',
-    specDate: today(),
-    progressStatus: '',
-    expectedDeliveryDate: '',
-    bidetProgress: '미진행',
-    paidOption: '미적용',
-    totalHouseholds: '',
-    appliedHouseholds: '',
-    completionDate: '',
-    originSpecNo: '',
-    remark: '',
-    deliveryManager: '',
-  };
-}
-
 export function SalesInfoRegisterPage() {
-  const navigate = useNavigate();
-  const [inputMode, setInputMode] = useState('profit');
-  const [profitSearch, setProfitSearch] = useState('');
-  const [selectedProfitId, setSelectedProfitId] = useState('');
-  const [form, setForm] = useState(createDefaultForm);
-  const [attachedImage, setAttachedImage] = useState('');
-  const [attachedPdf, setAttachedPdf] = useState('');
-  const [attachedChecklist, setAttachedChecklist] = useState('');
-
-  useEffect(() => {
-    if (inputMode === 'direct' && selectedProfitId) {
-      setSelectedProfitId('');
-    }
-  }, [inputMode, selectedProfitId]);
-
-  const selectedProfit = useMemo(
-    () => (selectedProfitId ? getProfitDetail(selectedProfitId) : null),
-    [selectedProfitId],
-  );
-
-  const filteredProfitList = useMemo(() => {
-    const q = profitSearch.trim().toLowerCase();
-    if (!q) return MOCK_PROFIT_LIST;
-    return MOCK_PROFIT_LIST.filter((row) => {
-      const detail = getProfitDetail(row.id);
-      const haystack = [
-        row.title,
-        row.author,
-        row.orderYear,
-        row.deliveryYear,
-        detail?.specNo,
-        detail?.builder,
-        detail?.siteName,
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase();
-      return haystack.includes(q);
-    });
-  }, [profitSearch]);
-
-  const profitRows = useMemo(() => {
-    if (!selectedProfit) return [];
-    return (selectedProfit.items || [])
-      .map((row) => ({ row, detail: getRowDetail(row, true) }))
-      .filter((it) => Boolean(it.detail));
-  }, [selectedProfit]);
-
-  const profitSummary = useMemo(() => {
-    return profitRows.reduce(
-      (acc, item) => {
-        const qty = Number(item.row.qty) || 0;
-        acc.qty += qty;
-        acc.sales += item.detail.sales || 0;
-        acc.gross += item.detail.grossProfit || 0;
-        acc.op += item.detail.operatingProfit || 0;
-        return acc;
-      },
-      { qty: 0, sales: 0, gross: 0, op: 0 },
-    );
-  }, [profitRows]);
-
-  const applyProfitDetailToForm = (detail) => {
-    setForm((prev) => ({
-      ...prev,
-      specType: detail.specType || '',
-      swSpecNo: detail.specNo || '',
-      builder: detail.builder || '',
-      partnerName: detail.partnerName || '',
-      siteName: detail.siteName || '',
-      region: detail.region || '',
-      orderType: detail.orderType || '',
-      businessType: detail.businessType || '',
-      salesManager: detail.salesManager || '',
-      specDate: detail.specDate || prev.specDate,
-      progressStatus: detail.integratedProgress || '',
-      expectedDeliveryDate: detail.expectedDeliveryDate || '',
-      bidetProgress: detail.integratedProgress || '',
-      paidOption: detail.paidOption || '',
-      totalHouseholds: detail.totalHouseholds || '',
-      appliedHouseholds: detail.appliedHouseholds || '',
-      completionDate: detail.completionDate || '',
-      originSpecNo: detail.originSpecNo || '',
-      remark: detail.remark || '',
-    }));
-  };
-
-  const handleProfitSelect = (profitId) => {
-    setSelectedProfitId(profitId);
-    if (!profitId) return;
-    const detail = getProfitDetail(profitId);
-    if (detail) {
-      applyProfitDetailToForm(detail);
-    }
-  };
-
-  const updateField = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
+    const {
+    navigate,
+    inputMode,
+    setInputMode,
+    profitSearch,
+    setProfitSearch,
+    selectedProfitId,
+    form,
+    setAttachedImage,
+    attachedImage,
+    setAttachedPdf,
+    attachedPdf,
+    setAttachedChecklist,
+    attachedChecklist,
+    filteredProfitList,
+    profitRows,
+    profitSummary,
+    handleProfitSelect,
+    updateField,
+    save,
+  } = useSalesInfoRegisterState();
 
   return (
     <PageShell path={ROUTES.SALES_INFO} title="영업정보 등록">
@@ -356,7 +245,7 @@ export function SalesInfoRegisterPage() {
             ) : profitRows.length === 0 ? (
               <p className={styles.infoNote}>선택한 손익분석 건에 표시할 품번 손익 데이터가 없습니다.</p>
             ) : (
-              <div className={styles.tableWrap}>
+              <div className={`${styles.tableWrap} ${styles.desktopTableWrap}`}>
                 <table className={styles.table}>
                   <thead>
                     <tr>
@@ -410,24 +299,102 @@ export function SalesInfoRegisterPage() {
                 </table>
               </div>
             )}
+            {selectedProfitId && profitRows.length > 0 && (
+              <div className={styles.mobileList}>
+                {profitRows.map((item) => (
+                  <article key={`mobile-${item.row.id}`} className={styles.mobileCard}>
+                    <div className={styles.mobileHead}>
+                      <strong>{item.row.itemCode || '-'}</strong>
+                      <span>{item.row.type || '-'}</span>
+                    </div>
+                    <div className={styles.mobileSub}>{item.row.orderType || '-'}</div>
+                    <div className={styles.mobileMetaGrid}>
+                      <div className={styles.mobileMetaItem}>
+                        <span>수량</span>
+                        <strong>{formatNumber(item.row.qty)}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>건설사 납품가</span>
+                        <strong>{formatNumber(item.detail.bidPrice)}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>대리점 마진율</span>
+                        <strong>{Number(item.detail.marginRateDealer || 0).toFixed(1)}%</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>대리점 공급가</span>
+                        <strong>{formatNumber(item.detail.dealerPrice)}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>매출총이익</span>
+                        <strong>{formatNumber(item.detail.grossProfit)}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>매출총이익(%)</span>
+                        <strong>{Number(item.detail.grossRate || 0).toFixed(1)}%</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>영업이익</span>
+                        <strong>{formatNumber(item.detail.operatingProfit)}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>영업이익(%)</span>
+                        <strong>{Number(item.detail.operatingRate || 0).toFixed(1)}%</strong>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+                <article className={`${styles.mobileCard} ${styles.mobileSummaryCard}`}>
+                  <div className={styles.mobileHead}>
+                    <strong>합계</strong>
+                  </div>
+                  <div className={styles.mobileMetaGrid}>
+                    <div className={styles.mobileMetaItem}>
+                      <span>수량</span>
+                      <strong>{formatNumber(profitSummary.qty)}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>대리점 공급가</span>
+                      <strong>{formatNumber(profitSummary.sales)}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>매출총이익</span>
+                      <strong>{formatNumber(profitSummary.gross)}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>매출총이익(%)</span>
+                      <strong>
+                        {profitSummary.sales > 0 ? `${((profitSummary.gross / profitSummary.sales) * 100).toFixed(1)}%` : '-'}
+                      </strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>영업이익</span>
+                      <strong>{formatNumber(profitSummary.op)}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>영업이익(%)</span>
+                      <strong>
+                        {profitSummary.sales > 0 ? `${((profitSummary.op / profitSummary.sales) * 100).toFixed(1)}%` : '-'}
+                      </strong>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            )}
           </CardBody>
         </Card>
 
         <div className={styles.footer}>
           <Button variant="secondary" onClick={() => navigate(ROUTES.SALES_INFO)}>취소</Button>
-          <Button
-            onClick={() => {
-              notify.success('영업정보가 저장되었습니다. (목업)');
-              navigate(ROUTES.SALES_INFO);
-            }}
-          >
-            저장
-          </Button>
+          <Button onClick={save}>저장</Button>
         </div>
       </div>
     </PageShell>
   );
 }
+
+
+
 
 
 

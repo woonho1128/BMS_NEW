@@ -1,0 +1,204 @@
+.shellWide {
+  max-width: 100% !important;
+  width: 100%;
+  margin: 0 !important;
+  padding: 8px 10px 12px !important;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filterBar {
+  padding: 8px 10px !important;
+}
+
+.filterBar :global(.filters) {
+  gap: 8px;
+  align-items: center;
+}
+
+.filterBar :global(.filterItem) {
+  gap: 5px;
+}
+
+.filterBar :global(.filterLabel) {
+  font-size: 12px;
+}
+
+.filterBar :global(.filterInput),
+.filterBar :global(.filterSelect) {
+  height: 30px;
+  font-size: 12px;
+}
+
+.filterBar :global(.checkboxGroup) {
+  gap: 8px;
+}
+
+.filterBar :global(.checkboxItem) {
+  font-size: 12px;
+}
+
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.kpiCard {
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpiLabel {
+  font-size: 13px;
+  color: #5f7088;
+  font-weight: 600;
+}
+
+.kpiValue {
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: #172338;
+  font-weight: 800;
+}
+
+.kpiValueRate {
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: #2a62da;
+  font-weight: 800;
+}
+
+.tableCard {
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.tableHeader {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e3ebf6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tableTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2c42;
+}
+
+.tableMeta {
+  font-size: 12px;
+  color: #6a7b92;
+}
+
+.tableCount {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3a4c68;
+}
+
+.tableWrap {
+  overflow: auto;
+  max-height: calc(100vh - 360px);
+}
+
+.table {
+  width: 100%;
+  min-width: 1800px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  border: 1px solid #e3ebf6;
+  padding: 6px 8px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.table thead th {
+  background: #f3f7fd;
+  color: #334766;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.table tbody tr:nth-child(even) td {
+  background: #fbfdff;
+}
+
+.teamCell {
+  background: #f7faff;
+  color: #1d2d47;
+  font-weight: 700;
+  text-align: left;
+  min-width: 180px;
+  padding-left: 10px !important;
+}
+
+.typeCell {
+  font-weight: 600;
+  color: #32435f;
+  min-width: 94px;
+  text-align: left;
+}
+
+.numCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #2a3b57;
+}
+
+.rateCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #294fc6;
+  font-weight: 700;
+}
+
+.totalRow td {
+  background: #f1f6ff !important;
+  font-weight: 700;
+}
+
+.footNote {
+  margin: 0;
+  padding: 9px 10px 11px;
+  font-size: 12px;
+  color: #6b7d94;
+}
+
+@media (max-width: 1100px) {
+  .shellWide {
+    padding: 8px !important;
+  }
+
+  .kpiRow {
+    grid-template-columns: 1fr;
+  }
+
+  .kpiValue,
+  .kpiValueRate {
+    font-size: 30px;
+  }
+}

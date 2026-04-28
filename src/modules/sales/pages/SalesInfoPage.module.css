@@ -40,6 +40,85 @@
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
+.mobileList {
+  display: none;
+}
+
+.mobileCard {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  cursor: pointer;
+}
+
+.mobileCard + .mobileCard {
+  margin-top: 10px;
+}
+
+.mobileCardMuted {
+  opacity: 0.85;
+  background: #f8fafc;
+}
+
+.mobileTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #172338;
+}
+
+.mobileSub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #5a6b84;
+}
+
+.mobileMetaGrid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mobileMetaItem {
+  border: 1px solid #e8eef7;
+  border-radius: 8px;
+  background: #fbfdff;
+  padding: 6px 8px;
+}
+
+.mobileMetaItem span {
+  display: block;
+  font-size: 11px;
+  color: #5a6b84;
+}
+
+.mobileMetaItem strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #1d2a3b;
+}
+
+.mobileProfitRow {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.mobileEmpty {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  padding: 16px 12px;
+  color: #5a6b84;
+  text-align: center;
+  font-size: 12px;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -187,4 +266,37 @@
   border-color: #bcd4fb;
   color: #1f5fcf;
   font-weight: var(--font-weight-semibold);
+}
+
+@media (max-width: 768px) {
+  .tableHeaderRow {
+    justify-content: flex-start;
+  }
+
+  .desktopTableWrapper {
+    display: none;
+  }
+
+  .mobileList {
+    display: block;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .empty {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .tableCount {
+    font-size: 12px;
+  }
+
+  .empty {
+    padding: var(--space-lg);
+  }
 }

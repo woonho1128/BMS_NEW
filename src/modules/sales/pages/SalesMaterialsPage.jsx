@@ -84,6 +84,48 @@ export function SalesMaterialsPage() {
               </tbody>
             </table>
           </div>
+          <div className={styles.mobileList}>
+            {list.length === 0 ? (
+              <div className={styles.mobileEmpty}>조회 결과가 없습니다.</div>
+            ) : (
+              list.map((item) => (
+                <article
+                  key={`mobile-${item.id}`}
+                  className={styles.mobileCard}
+                  onClick={() => navigate(`${ROUTES.SALES_MATERIAL}/${item.id}`)}
+                >
+                  <div className={styles.mobileTitle}>{item.title}</div>
+                  <div className={styles.mobileMetaGrid}>
+                    <div className={styles.mobileMetaItem}>
+                      <span className={styles.mobileMetaLabel}>유형</span>
+                      <span className={styles.mobileMetaValue}>{item.type}</span>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span className={styles.mobileMetaLabel}>등록일</span>
+                      <span className={styles.mobileMetaValue}>{item.date}</span>
+                    </div>
+                  </div>
+                  <div className={styles.mobileActionRow}>
+                    {item.attachments > 0 ? (
+                      <button
+                        type="button"
+                        className={styles.downloadBtn}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          notify.info('첨부파일 다운로드는 추후 API 연동 예정입니다.');
+                        }}
+                      >
+                        다운로드
+                        <span className={styles.attachmentCount}>{item.attachments}</span>
+                      </button>
+                    ) : (
+                      <span className={styles.noAttachment}>첨부 없음</span>
+                    )}
+                  </div>
+                </article>
+              ))
+            )}
+          </div>
         </section>
       </div>
     </PageShell>

@@ -50,6 +50,8 @@ export const ROUTES = {
   SALES_SUPPORT: '/sales/support',                                  
   SALES_SUPPORT_RECEIVABLE: '/sales/support/receivable',            
   SALES_SUPPORT_DISCOUNT_PROMOTION: '/sales/support/discount-promotion', 
+  SALES_PROMOTION_REGISTER: '/sales/promotion/register',
+  SALES_PROMOTION_HISTORY: '/sales/promotion/history',
 
   APPROVAL_SALES: '/approval/sales',
   APPROVAL_SALES_ID: '/approval/sales/:id',
@@ -88,6 +90,9 @@ export const ROUTES = {
   ANALYTICS_DATA_PROMO: '/analytics/data-collection/promo', 
   ANALYTICS_CUSTOM: '/analytics/custom',               
   ANALYTICS_PROJECT_PERFORMANCE: '/analytics/project-performance',
+  ANALYTICS_PROJECT_ORDER_STATUS: '/analytics/project-order-status',
+  ANALYTICS_PROJECT_PERSONAL_SALES: '/analytics/project-personal-sales',
+  ANALYTICS_PROJECT_MONTHLY_PLAN_MEETING: '/analytics/project-monthly-plan-meeting',
   ANALYTICS_YEARLY_DELIVERY_FORECAST: '/analytics/yearly-delivery-forecast',
 
   ADMIN_USERS: '/admin/users',

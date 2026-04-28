@@ -155,7 +155,7 @@ export function SalesInfoPage() {
           <div className={styles.tableHeaderRow}>
             <span className={styles.tableCount}>{filteredList.length}건</span>
           </div>
-          <div className={styles.tableWrapper}>
+          <div className={`${styles.tableWrapper} ${styles.desktopTableWrapper}`}>
             <table className={styles.table}>
               <thead>
                 <tr>
@@ -232,6 +232,68 @@ export function SalesInfoPage() {
                 })}
               </tbody>
             </table>
+          </div>
+          <div className={styles.mobileList}>
+            {paginatedList.length === 0 ? (
+              <div className={styles.mobileEmpty}>조회 결과가 없습니다.</div>
+            ) : (
+              paginatedList.map((item) => {
+                const grossProfitColor = getProfitRateColor(item.grossProfitRate);
+                const operatingProfitColor = getProfitRateColor(item.operatingProfitRate);
+                return (
+                  <article
+                    key={`mobile-${item.id}`}
+                    className={classnames(
+                      styles.mobileCard,
+                      !item.hasProfitAnalysis && styles.mobileCardMuted
+                    )}
+                    onClick={() => handleRowClick(item.id)}
+                  >
+                    <div className={styles.mobileTitle}>{item.siteName}</div>
+                    <div className={styles.mobileSub}>{item.builder}</div>
+                    <div className={styles.mobileMetaGrid}>
+                      <div className={styles.mobileMetaItem}>
+                        <span>SPEC</span>
+                        <strong>{item.specNo}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>진행</span>
+                        <strong>{item.progress}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>등록자</span>
+                        <strong>{item.author}</strong>
+                      </div>
+                      <div className={styles.mobileMetaItem}>
+                        <span>주문일</span>
+                        <strong>{item.orderDate}</strong>
+                      </div>
+                    </div>
+                    <div className={styles.mobileProfitRow}>
+                      <span className={styles.badge}>
+                        {item.hasProfitAnalysis ? 'Y' : 'N'}
+                      </span>
+                      <span
+                        className={classnames(
+                          styles.profitRate,
+                          grossProfitColor && styles[`profitRate_${grossProfitColor}`]
+                        )}
+                      >
+                        매출총이익 {item.grossProfitRate != null ? item.grossProfitRate.toFixed(1) : '-'}
+                      </span>
+                      <span
+                        className={classnames(
+                          styles.profitRate,
+                          operatingProfitColor && styles[`profitRate_${operatingProfitColor}`]
+                        )}
+                      >
+                        영업이익 {item.operatingProfitRate != null ? item.operatingProfitRate.toFixed(1) : '-'}
+                      </span>
+                    </div>
+                  </article>
+                );
+              })
+            )}
           </div>
           {filteredList.length === 0 && (
             <p className={styles.empty}>조건에 맞는 영업정보가 없습니다.</p>

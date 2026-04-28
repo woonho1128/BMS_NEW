@@ -58,7 +58,7 @@
   --layout-page-padding: 24px;
   --layout-section-gap: 24px;
   --layout-card-gap: 20px;
-  --layout-max-width: 1440px;
+  --layout-max-width: 100%;
 
   /* Common aliases */
   --color-bg: var(--color-bg-page);

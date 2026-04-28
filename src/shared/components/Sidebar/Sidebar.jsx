@@ -119,16 +119,16 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
   const submitChangePassword = (e) => {
     e.preventDefault();
     if (!pwForm.next || pwForm.next.length < 4) {
-      setPwError('??鍮꾨?踰덊샇瑜?4???댁긽 ?낅젰?섏꽭??');
+      setPwError('새 비밀번호를 4자 이상 입력하세요.');
       return;
     }
     if (pwForm.next !== pwForm.confirm) {
-      setPwError('??鍮꾨?踰덊샇 ?뺤씤???쇱튂?섏? ?딆뒿?덈떎.');
+      setPwError('새 비밀번호 확인이 일치하지 않습니다.');
       return;
     }
-    // Mock 泥섎━
+    // Mock 처리
     setPwModalOpen(false);
-    notify.success('鍮꾨?踰덊샇媛 蹂寃쎈릺?덉뒿?덈떎. (紐⑹뾽)');
+    notify.success('비밀번호가 변경되었습니다. (목업)');
   };
 
   const autoOpenIds = useMemo(() => {
@@ -223,7 +223,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
         className={classnames(styles.sidebar, isOpen && styles.sidebarExpanded)}
         aria-expanded={isOpen}
       >
-        {/* 1. ?곷떒: 濡쒓퀬 & 而⑦듃濡?(Toggle, Pin) */}
+        {/* 1. 상단: 로고 & 컨트롤(Toggle, Pin) */}
         <div className={styles.top}>
           <div className={styles.brand}>
             <button
@@ -233,7 +233,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
               aria-label="대시보드로 이동"
               title="대시보드"
             >
-              <img className={styles.brandLogoImg} src="/logo.png" alt="?뚯궗 濡쒓퀬" />
+              <img className={styles.brandLogoImg} src="/logo.png" alt="회사 로고" />
             </button>
           </div>
           <div className={styles.controls}>
@@ -251,9 +251,9 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
                 type="button"
                 className={classnames(styles.controlBtn, pinned && styles.controlBtnActive)}
                 onClick={onTogglePin}
-                aria-label={pinned ? '怨좎젙 ?댁젣' : '怨좎젙'}
+                aria-label={pinned ? '고정 해제' : '고정'}
                 aria-pressed={pinned}
-                title={pinned ? '怨좎젙 ?댁젣' : '怨좎젙'}
+                title={pinned ? '고정 해제' : '고정'}
               >
                 {pinned ? <PinOff size={20} /> : <Pin size={20} />}
               </button>
@@ -261,7 +261,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
           </div>
         </div>
 
-        {/* 2. 以묎컙: 硫붾돱 (flex-1, overflow-y-auto) */}
+        {/* 2. 중간: 메뉴 (flex-1, overflow-y-auto) */}
         <div className={styles.navWrap}>
           {isOpen ? (
             <SidebarExpandedNav
@@ -284,7 +284,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
           )}
         </div>
 
-        {/* 3. ?섎떒: ?ъ슜???뺣낫 + 硫붾돱 */}
+        {/* 3. 하단: 사용자정보 + 메뉴 */}
         <SidebarUserPanel
           styles={styles}
           user={user}
@@ -299,7 +299,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
       <Modal open={pwModalOpen} onClose={() => setPwModalOpen(false)} title="비밀번호 변경" size="sm">
         <form className={styles.pwForm} onSubmit={submitChangePassword}>
           <label className={styles.pwField}>
-            <span className={styles.pwLabel}>?꾩옱 鍮꾨?踰덊샇</span>
+            <span className={styles.pwLabel}>현재 비밀번호</span>
             <input
               className={styles.pwInput}
               type="password"
@@ -309,7 +309,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
             />
           </label>
           <label className={styles.pwField}>
-            <span className={styles.pwLabel}>??鍮꾨?踰덊샇</span>
+            <span className={styles.pwLabel}>새 비밀번호</span>
             <input
               className={styles.pwInput}
               type="password"
@@ -319,7 +319,7 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
             />
           </label>
           <label className={styles.pwField}>
-            <span className={styles.pwLabel}>??鍮꾨?踰덊샇 ?뺤씤</span>
+            <span className={styles.pwLabel}>새 비밀번호 확인</span>
             <input
               className={styles.pwInput}
               type="password"
@@ -331,10 +331,10 @@ export function Sidebar({ isOpen, pinned, onToggle, onTogglePin, onClose }) {
           {pwError && <div className={styles.pwError}>{pwError}</div>}
           <div className={styles.pwActions}>
             <button type="button" className={styles.pwBtn} onClick={() => setPwModalOpen(false)}>
-              痍⑥냼
+              취소
             </button>
             <button type="submit" className={classnames(styles.pwBtn, styles.pwBtnPrimary)}>
-              蹂寃?
+              변경
             </button>
           </div>
         </form>

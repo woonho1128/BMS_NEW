@@ -1,0 +1,109 @@
+.shellWide {
+  max-width: 100% !important;
+  width: 100%;
+  margin: 0 !important;
+  padding: 6px 8px 8px !important;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterBar {
+  padding: 6px 8px !important;
+}
+
+.filterBar :global(.filters) {
+  gap: 8px;
+  align-items: center;
+}
+
+.filterBar :global(.filterItem) {
+  gap: 5px;
+}
+
+.filterBar :global(.filterLabel) {
+  font-size: 12px;
+}
+
+.filterBar :global(.filterInput),
+.filterBar :global(.filterSelect) {
+  height: 28px;
+  font-size: 12px;
+}
+
+.infoBar {
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  background: #fff;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #435a78;
+}
+
+.tableCard {
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow: auto;
+  max-height: calc(100vh - 230px);
+}
+
+.matrixTable {
+  width: 100%;
+  min-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.matrixTable th,
+.matrixTable td {
+  border: 1px solid #dfe7f3;
+  padding: 4px 6px;
+  font-size: 13px;
+  text-align: right;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.matrixTable thead th {
+  background: #f3f7ff;
+  color: #2f4563;
+  text-align: center;
+  font-weight: 700;
+}
+
+.matrixTable tbody tr:nth-child(even) td {
+  background: #fbfdff;
+}
+
+.leftCell {
+  text-align: left !important;
+  color: #1f3554;
+}
+
+.totalCol {
+  background: #edf4ff;
+  font-weight: 700;
+}
+
+.totalRow td {
+  background: #f1f6ff !important;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .shellWide {
+    padding: 8px !important;
+  }
+}

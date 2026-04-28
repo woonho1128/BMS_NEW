@@ -53,6 +53,27 @@
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
+.tableTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e4ebf4;
+  background: #fbfdff;
+}
+
+.tableTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #172338;
+}
+
+.tableCount {
+  font-size: 12px;
+  color: #5a6b84;
+}
+
 .shipNoButton {
   padding: 0;
   border: none;
@@ -100,6 +121,79 @@
   font-size: 12px;
 }
 
+.mobileList {
+  display: none;
+}
+
+.mobileCard {
+  border-top: 1px solid #edf2f8;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.mobileHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobileSelect {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #3d4c64;
+}
+
+.mobileCustomer {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #172338;
+}
+
+.mobileMetaGrid {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mobileMetaItem {
+  border: 1px solid #e8eef7;
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: #fbfdff;
+}
+
+.mobileMetaItem span {
+  display: block;
+  font-size: 11px;
+  color: #5a6b84;
+}
+
+.mobileMetaItem strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #1e2f47;
+}
+
+.mobileDestination {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #3f5472;
+  word-break: keep-all;
+}
+
+.mobileEmpty {
+  padding: 16px 12px;
+  text-align: center;
+  color: #5a6b84;
+  font-size: 12px;
+}
+
 @media (max-width: 1024px) {
   .shellWide {
     padding-left: 8px;
@@ -108,5 +202,19 @@
 
   .actionRow {
     flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktopTable {
+    display: none;
+  }
+
+  .tableTop {
+    padding: 10px;
+  }
+
+  .mobileList {
+    display: block;
   }
 }

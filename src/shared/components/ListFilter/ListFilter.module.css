@@ -158,3 +158,69 @@
   flex: 0 0 auto;
   white-space: nowrap;
 }
+
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .filters {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .filterItem {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .filterLabel {
+    min-width: 56px;
+  }
+
+  .filterInput,
+  .filterSelect,
+  .filterInputWide {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .filterActions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .searchBtn,
+  .resetBtn {
+    min-height: 36px;
+  }
+
+  .singleLine {
+    overflow-x: visible;
+  }
+
+  .singleLine .filters {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .singleLine .filterItem {
+    flex: 1 1 100%;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .filterActions {
+    justify-content: stretch;
+  }
+
+  .searchBtn,
+  .resetBtn {
+    flex: 1 1 calc(50% - 4px);
+  }
+}

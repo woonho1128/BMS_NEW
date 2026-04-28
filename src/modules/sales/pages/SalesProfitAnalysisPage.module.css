@@ -251,3 +251,59 @@
   color: #1f5fcf;
   font-weight: var(--font-weight-semibold);
 }
+
+@media (max-width: 768px) {
+  .tabs {
+    gap: 4px;
+    padding: 5px;
+  }
+
+  .tab {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .listHeaderRow {
+    justify-content: flex-start;
+  }
+
+  .rowCard {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .rowTitle {
+    flex: 1 1 100%;
+    white-space: normal;
+  }
+
+  .rowMeta {
+    flex: 1 1 auto;
+    white-space: normal;
+  }
+
+  .rowActions {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .actionBtn {
+    min-height: 32px;
+  }
+}

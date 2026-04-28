@@ -134,3 +134,41 @@
   border-color: #2f7df6;
   color: #2f7df6;
 }
+
+@media (max-width: 768px) {
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .tableTop {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .table {
+    min-width: 760px;
+    font-size: 12px;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 10px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageTitle {
+    font-size: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 14px;
+  }
+}

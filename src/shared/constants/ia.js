@@ -1,4 +1,4 @@
-import {
+﻿import {
   LayoutDashboard,
   Briefcase,
   FileCheck,
@@ -48,6 +48,14 @@ const MAIN = [
             children: [
               { id: 'sales-short-project-register', label: '단납 현장 등록', path: '/sales/short-project/register' },
               { id: 'sales-short-project-list', label: '단납 현장 내역', path: '/sales/short-project' },
+            ],
+          },
+          {
+            id: 'sales-promotion',
+            label: '프로모션 관리',
+            children: [
+              { id: 'sales-promotion-register', label: '프로모션 등록', path: '/sales/promotion/register' },
+              { id: 'sales-promotion-history', label: '프로모션 내역', path: '/sales/promotion/history' },
             ],
           },
           { id: 'sales-support-receivable', label: '수신채권금 관리', path: '/sales/support/receivable' },
@@ -121,9 +129,12 @@ const MAIN = [
         id: 'insights-project',
         label: '프로젝트부문',
         children: [
+          { id: 'analytics-project-order-status', label: '프로젝트 수주 현황', path: '/analytics/project-order-status' },
+          { id: 'analytics-project-personal-sales', label: '프로젝트 개인 별 매출 현황', path: '/analytics/project-personal-sales' },
+          { id: 'analytics-project-monthly-plan-meeting', label: '월별 계획 회의 관리', path: '/analytics/project-monthly-plan-meeting' },
           { id: 'analytics-project-performance', label: '프로젝트 실적 요약', path: '/analytics/project-performance' },
           { id: 'analytics-yearly-delivery-forecast', label: '연도별 납품예정 현황', path: '/analytics/yearly-delivery-forecast' },
-          { id: 'analytics-custom', label: '연도 별 채널 비중', path: '/analytics/custom' },
+          { id: 'analytics-custom', label: '연도 및 채널별 비중', path: '/analytics/custom' },
         ],
       },
       {

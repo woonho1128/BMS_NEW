@@ -365,6 +365,76 @@
   border: 1px solid var(--color-border);
 }
 
+.mobileList {
+  display: none;
+}
+
+.mobileCard {
+  border: 1px solid #dce4ef;
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+}
+
+.mobileCard + .mobileCard {
+  margin-top: 10px;
+}
+
+.mobileSummaryCard {
+  background: #f7faff;
+}
+
+.mobileHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mobileHead strong {
+  font-size: 14px;
+  color: #172338;
+}
+
+.mobileHead span {
+  font-size: 12px;
+  color: #5a6b84;
+}
+
+.mobileSub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #5a6b84;
+}
+
+.mobileMetaGrid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mobileMetaItem {
+  border: 1px solid #e8eef7;
+  border-radius: 8px;
+  background: #fbfdff;
+  padding: 6px 8px;
+}
+
+.mobileMetaItem span {
+  display: block;
+  font-size: 11px;
+  color: #5a6b84;
+}
+
+.mobileMetaItem strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #1d2a3b;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -449,4 +519,24 @@
   margin-top: var(--space-md);
   background: var(--color-bg-page);
   border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+@media (max-width: 768px) {
+  .desktopTableWrap {
+    display: none;
+  }
+
+  .mobileList {
+    display: block;
+  }
+
+  .footer {
+    padding: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .footer button {
+    flex: 1;
+    min-height: 44px;
+  }
 }

@@ -1,282 +1,225 @@
-/**
- * 대리점 관리 Mock (목록·관리카드 상세, API 연동 없음)
- */
+﻿const MOCK_PARTNERS = [
+  {
+    id: 'P1001',
+    name: '건설도기특상',
+    manager: '김민수',
+    region: '서울',
+    status: 'active',
+    division: 'project',
+  },
+  {
+    id: 'P1002',
+    name: '프라임 유통',
+    manager: '이서준',
+    region: '경기',
+    status: 'active',
+    division: 'retail',
+  },
+  {
+    id: 'P1003',
+    name: '한빛상사',
+    manager: '박지훈',
+    region: '인천',
+    status: 'pending',
+    division: 'project',
+  },
+  {
+    id: 'P1004',
+    name: '동남세라믹',
+    manager: '최도윤',
+    region: '부산',
+    status: 'inactive',
+    division: 'retail',
+  },
+  {
+    id: 'P1005',
+    name: '영진하우징',
+    manager: '정하늘',
+    region: '대전',
+    status: 'active',
+    division: 'project',
+  },
+];
 
-/** 담당자/지역/거래상태 필터 옵션 */
+const SALES_YEARS = ['2023', '2024', '2025', '2026'];
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function buildSalesByYear(seed) {
+  return SALES_YEARS.map((year, idx) => ({
+    year,
+    total: seed + idx * 40,
+    bidet: Math.round((seed + idx * 40) * 0.45),
+    kitchen: Math.round((seed + idx * 40) * 0.3),
+    bath: Math.round((seed + idx * 40) * 0.25),
+  }));
+}
+
+function buildStaffByYear(primaryManager) {
+  return SALES_YEARS.map((year, idx) => ({
+    year,
+    manager: idx < 2 ? primaryManager : `${primaryManager}(겸)`,
+    salesRep: ['김지연', '이민호', '박수진', '정유진'][idx],
+  }));
+}
+
+function buildFinancialByYear(seed) {
+  return SALES_YEARS.map((year, idx) => ({
+    year,
+    receivable: (seed + idx * 18) * 1000000,
+    collateral: (seed * 0.35 + idx * 5) * 1000000,
+    bill: (seed * 0.2 + idx * 3) * 1000000,
+  }));
+}
+
+function buildDetail(base) {
+  const isRetail = base.division === 'retail';
+
+  return {
+    id: base.id,
+    name: base.name,
+    manager: base.manager,
+    region: base.region,
+    status: base.status,
+    division: base.division,
+    businessCardLinked: true,
+    basic: {
+      partnerCode: base.id,
+      companyName: base.name,
+      bizNo: `120-81-${base.id.slice(-4)}`,
+      ceoName: isRetail ? '김소연' : '이정우',
+      address: `${base.region}시 테스트로 123`,
+      phone: '02-1234-5678',
+      fax: '02-1234-5679',
+      bizType: isRetail ? '도소매' : '건설/특판',
+      bizItem: isRetail ? '위생도기, 수전' : '프로젝트 납품',
+      establishedAt: '2018-01-15',
+    },
+    representative: {
+      name: isRetail ? '오리테일' : '강프로젝트',
+      birthDate: '1982-06-15',
+      mobile: '010-2222-3333',
+      email: 'owner@sample.com',
+      address: `${base.region}시 대표자 주소 45`,
+      memo: '기존 명함 검색 연동 대상',
+    },
+    salesByYear: buildSalesByYear(isRetail ? 360 : 480),
+    staffByYear: buildStaffByYear(base.manager),
+    financialByYear: buildFinancialByYear(isRetail ? 42 : 56),
+    partnerMemo: isRetail ? '리테일 부문 메모 예시' : '프로젝트 부문 메모 예시',
+    partnerTraits: ['TRUST', 'FAST'],
+    partnerTraitRatios: {
+      TRUST: 55,
+      FAST: 45,
+    },
+    competitorBrands: [
+      { id: `${base.id}-brand-1`, name: 'A사', isHandling: true, scale: '중' },
+      { id: `${base.id}-brand-2`, name: 'B사', isHandling: false, scale: '소' },
+    ],
+    mapCenter: { lat: 37.5665, lng: 126.978, radiusKm: 3 },
+    nearbyPoints: [
+      { id: `${base.id}-near-1`, name: '지점A', lat: 37.56, lng: 126.97 },
+      { id: `${base.id}-near-2`, name: '지점B', lat: 37.57, lng: 126.99 },
+    ],
+    historyNotes: isRetail
+      ? '에이전트 이력 및 특이사항 - 리테일'
+      : '에이전트 이력 및 특이사항 - 프로젝트',
+    staffMembers: [
+      {
+        id: `${base.id}-staff-1`,
+        name: base.manager,
+        mobile: '010-1111-2222',
+        email: 'manager@sample.com',
+        emailLocal: 'manager',
+        emailDomainType: 'sample.com',
+        emailDomainDirect: 'sample.com',
+        memo: '주담당',
+      },
+    ],
+  };
+}
+
+const MOCK_PARTNER_DETAILS = Object.fromEntries(
+  MOCK_PARTNERS.map((partner) => [partner.id, buildDetail(partner)])
+);
+
+const MOCK_PARTNER_EDIT_HISTORIES = Object.fromEntries(
+  MOCK_PARTNERS.map((partner) => [
+    partner.id,
+    [
+      {
+        id: `${partner.id}-h2`,
+        changedAt: '2026-04-11 14:20',
+        changedBy: '관리자',
+        reason: '담당자 변경',
+        changes: [
+          { field: '담당자', before: '홍길동', after: partner.manager },
+          { field: '거래상태', before: '거래요청', after: '거래중' },
+        ],
+      },
+      {
+        id: `${partner.id}-h1`,
+        changedAt: '2026-03-03 10:00',
+        changedBy: '시스템',
+        reason: '최초 등록',
+        changes: [
+          { field: '상호', before: '-', after: partner.name },
+          { field: '지역', before: '-', after: partner.region },
+        ],
+      },
+    ],
+  ])
+);
+
+export const MOCK_DIVISION_OPTIONS = [
+  { value: '', label: '전체' },
+  { value: 'project', label: '프로젝트 부문' },
+  { value: 'retail', label: '리테일 부문' },
+];
+
 export const MOCK_MANAGER_OPTIONS = [
   { value: '', label: '전체' },
-  { value: '김영업', label: '김영업' },
-  { value: '이팀장', label: '이팀장' },
-  { value: '박대리', label: '박대리' },
-  { value: '정매니저', label: '정매니저' },
+  ...Array.from(new Set(MOCK_PARTNERS.map((row) => row.manager))).map((manager) => ({
+    value: manager,
+    label: manager,
+  })),
 ];
 
 export const MOCK_REGION_OPTIONS = [
   { value: '', label: '전체' },
-  { value: '서울', label: '서울' },
-  { value: '경기', label: '경기' },
-  { value: '인천', label: '인천' },
-  { value: '부산', label: '부산' },
-  { value: '대구', label: '대구' },
-  { value: '기타', label: '기타' },
+  ...Array.from(new Set(MOCK_PARTNERS.map((row) => row.region))).map((region) => ({
+    value: region,
+    label: region,
+  })),
 ];
 
 export const MOCK_STATUS_OPTIONS = [
   { value: '', label: '전체' },
   { value: 'active', label: '거래중' },
   { value: 'inactive', label: '거래중단' },
-  { value: 'pending', label: '검토중' },
+  { value: 'pending', label: '거래요청' },
 ];
 
-/** 대리점 목록 (필터용) */
-export const MOCK_PARTNERS_LIST = [
-  { id: '1', manager: '김영업', name: '(주)테스트대리점', region: '서울', status: 'active' },
-  { id: '2', manager: '이팀장', name: '경기수원대리점', region: '경기', status: 'active' },
-  { id: '3', manager: '박대리', name: '인천송도대리점', region: '인천', status: 'active' },
-  { id: '4', manager: '정매니저', name: '부산해운대대리점', region: '부산', status: 'inactive' },
-  { id: '5', manager: '김영업', name: '대구수성대리점', region: '대구', status: 'active' },
-  { id: '6', manager: '이팀장', name: '울산대리점', region: '기타', status: 'pending' },
-  { id: '7', manager: '박대리', name: '(주)강남대리점', region: '서울', status: 'active' },
-  { id: '8', manager: '정매니저', name: '성남분당대리점', region: '경기', status: 'active' },
-];
-
-/** id별 관리카드 상세 (8개 섹션 전체, ERP + 담당자 입력) */
-const PARTNER_DETAIL_BY_ID = {
-  '1': {
-    basic: {
-      partnerCode: 'PRT-001',
-      companyName: '(주)테스트대리점',
-      bizNo: '123-45-67890',
-      ceoName: '홍길동',
-      address: '서울특별시 강남구 테헤란로 123',
-      phone: '02-1234-5678',
-      fax: '02-1234-5679',
-      bizType: '도매 및 소매업',
-      bizItem: '건축자재 유통',
-      establishedAt: '2010-03-15',
-    },
-    representative: {
-      name: '홍길동',
-      birthDate: '1975-05-20',
-      mobile: '010-1234-5678',
-      email: 'hong@test.com',
-      address: '서울 강남구 역삼동 456',
-    },
-    salesByYear: [
-      { year: 2024, amount: 1250000000, categories: { 위생도기: 640000000, 타일: 400000000, 수전금구: 210000000 } },
-      { year: 2023, amount: 1180000000, categories: { 위생도기: 600000000, 타일: 375000000, 수전금구: 205000000 } },
-      { year: 2022, amount: 1090000000, categories: { 위생도기: 545000000, 타일: 350000000, 수전금구: 195000000 } },
-      { year: 2021, amount: 980000000, categories: { 위생도기: 500000000, 타일: 305000000, 수전금구: 175000000 } },
-      { year: 2020, amount: 890000000, categories: { 위생도기: 455000000, 타일: 275000000, 수전금구: 160000000 } },
-    ],
-    staffByYear: {
-      2020: { name: '', isActive: false },
-      2021: { name: '', isActive: false },
-      2022: { name: '', isActive: false },
-      2023: { name: '홍길동', isActive: true },
-      2024: { name: '홍길동', isActive: true },
-    },
-    financialByYear: [
-      { year: 2024, revenue: 1250000000, cost: 980000000, profit: 270000000, equity: 450000000 },
-      { year: 2023, revenue: 1180000000, cost: 920000000, profit: 260000000, equity: 420000000 },
-      { year: 2022, revenue: 1090000000, cost: 860000000, profit: 230000000, equity: 390000000 },
-      { year: 2021, revenue: 980000000, cost: 780000000, profit: 200000000, equity: 360000000 },
-      { year: 2020, revenue: 890000000, cost: 710000000, profit: 180000000, equity: 340000000 },
-    ],
-    partnerMemo: 'VIP 대리점. 연 2회 현장 점검 예정.',
-    competitorBrands: {
-      '계림요업': { isHandling: false, scale: '' },
-      '이누스': { isHandling: false, scale: '' },
-      '대림통상': { isHandling: false, scale: '' },
-      'ASK': { isHandling: false, scale: '' },
-      'R&CO': { isHandling: false, scale: '' },
-      'VOVO': { isHandling: false, scale: '' },
-    },
-    competitorWithin3km: '반경 3km 내 당사 1곳, D대리점 1곳, E대리점 1곳.',
-    historyNotes: '2022년 확장 이전. 담당자 변경 2024.01.',
-  },
-  '2': {
-    basic: {
-      partnerCode: 'PRT-002',
-      companyName: '경기수원대리점',
-      bizNo: '234-56-78901',
-      ceoName: '김대리',
-      address: '경기도 수원시 영통구 광교로 100',
-      phone: '031-234-5678',
-      fax: '031-234-5679',
-      bizType: '도매 및 소매업',
-      bizItem: '건축자재',
-      establishedAt: '2012-08-01',
-    },
-    representative: {
-      name: '김대리',
-      birthDate: '1980-11-12',
-      mobile: '010-2345-6789',
-      email: 'kim@partner.com',
-      address: '경기 수원시',
-    },
-    salesByYear: [
-      { year: 2024, amount: 980000000, categories: { 위생도기: 510000000, 타일: 310000000, 수전금구: 160000000 } },
-      { year: 2023, amount: 920000000, categories: { 위생도기: 475000000, 타일: 290000000, 수전금구: 155000000 } },
-      { year: 2022, amount: 850000000, categories: { 위생도기: 435000000, 타일: 270000000, 수전금구: 145000000 } },
-      { year: 2021, amount: 780000000, categories: { 위생도기: 400000000, 타일: 245000000, 수전금구: 135000000 } },
-      { year: 2020, amount: 710000000, categories: { 위생도기: 360000000, 타일: 225000000, 수전금구: 125000000 } },
-    ],
-    staffByYear: {
-      2020: { name: '정매니저', isActive: true },
-      2021: { name: '정매니저', isActive: false },
-      2022: { name: '이팀장', isActive: true },
-      2023: { name: '이팀장', isActive: true },
-      2024: { name: '이팀장', isActive: true },
-    },
-    financialByYear: [
-      { year: 2024, revenue: 980000000, cost: 760000000, profit: 220000000, equity: 380000000 },
-      { year: 2023, revenue: 920000000, cost: 720000000, profit: 200000000, equity: 350000000 },
-      { year: 2022, revenue: 850000000, cost: 660000000, profit: 190000000, equity: 320000000 },
-      { year: 2021, revenue: 780000000, cost: 610000000, profit: 170000000, equity: 300000000 },
-      { year: 2020, revenue: 710000000, cost: 550000000, profit: 160000000, equity: 280000000 },
-    ],
-    partnerMemo: '',
-    competitorBrands: {
-      '계림요업': { isHandling: true, scale: '50' },
-      '이누스': { isHandling: false, scale: '' },
-      '대림통상': { isHandling: false, scale: '' },
-      'ASK': { isHandling: false, scale: '' },
-      'R&CO': { isHandling: false, scale: '' },
-      'VOVO': { isHandling: false, scale: '' },
-    },
-    competitorWithin3km: '인근 당사 0곳, 경쟁 대리점 2곳.',
-    historyNotes: '신규 계약 2020. 매출 꾸준히 성장.',
-  },
-};
-
-const DEFAULT_DETAIL = {
-  basic: {
-    partnerCode: '-',
-    companyName: '-',
-    bizNo: '-',
-    ceoName: '-',
-    address: '-',
-    phone: '-',
-    fax: '-',
-    bizType: '-',
-    bizItem: '-',
-    establishedAt: '-',
-  },
-  representative: {
-    name: '-',
-    birthDate: '-',
-    mobile: '-',
-    email: '-',
-    address: '-',
-  },
-  salesByYear: [
-    { year: 2024, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
-    { year: 2023, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
-    { year: 2022, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
-    { year: 2021, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
-    { year: 2020, amount: 0, categories: { 위생도기: 0, 타일: 0, 수전금구: 0 } },
-  ],
-  staffByYear: {
-    2020: { name: '-', isActive: false },
-    2021: { name: '-', isActive: false },
-    2022: { name: '-', isActive: false },
-    2023: { name: '-', isActive: false },
-    2024: { name: '-', isActive: false },
-  },
-  financialByYear: [
-    { year: 2024, revenue: 0, cost: 0, profit: 0, equity: 0 },
-    { year: 2023, revenue: 0, cost: 0, profit: 0, equity: 0 },
-    { year: 2022, revenue: 0, cost: 0, profit: 0, equity: 0 },
-    { year: 2021, revenue: 0, cost: 0, profit: 0, equity: 0 },
-    { year: 2020, revenue: 0, cost: 0, profit: 0, equity: 0 },
-  ],
-  partnerMemo: '',
-  competitorBrands: {
-    '계림요업': { isHandling: false, scale: '' },
-    '이누스': { isHandling: false, scale: '' },
-    '대림통상': { isHandling: false, scale: '' },
-    'ASK': { isHandling: false, scale: '' },
-    'R&CO': { isHandling: false, scale: '' },
-    'VOVO': { isHandling: false, scale: '' },
-  },
-  competitorWithin3km: '',
-  historyNotes: '',
-};
-
-/**
- * 대리점 목록 조회 (필터 적용)
- */
 export function getPartnersList(filters = {}) {
-  let list = [...MOCK_PARTNERS_LIST];
-  if (filters.manager) {
-    list = list.filter((p) => p.manager === filters.manager);
-  }
-  if (filters.name) {
-    const q = String(filters.name).toLowerCase().trim();
-    if (q) list = list.filter((p) => p.name.toLowerCase().includes(q));
-  }
-  if (filters.region) {
-    list = list.filter((p) => p.region === filters.region);
-  }
-  if (filters.status) {
-    list = list.filter((p) => p.status === filters.status);
-  }
-  return list;
+  const keyword = String(filters.name || '').trim().toLowerCase();
+
+  return MOCK_PARTNERS.filter((row) => {
+    if (filters.division && row.division !== filters.division) return false;
+    if (filters.manager && row.manager !== filters.manager) return false;
+    if (filters.region && row.region !== filters.region) return false;
+    if (filters.status && row.status !== filters.status) return false;
+    if (keyword && !row.name.toLowerCase().includes(keyword)) return false;
+    return true;
+  }).map((row) => clone(row));
 }
 
-/**
- * 대리점 관리카드 상세 조회 (id)
- */
 export function getPartnerById(id) {
-  const row = MOCK_PARTNERS_LIST.find((p) => p.id === id);
-  if (!row) return null;
-  const detail = PARTNER_DETAIL_BY_ID[id] || DEFAULT_DETAIL;
-  return {
-    id: row.id,
-    manager: row.manager,
-    name: row.name,
-    region: row.region,
-    status: row.status,
-    ...detail,
-  };
+  const detail = MOCK_PARTNER_DETAILS[id];
+  return detail ? clone(detail) : null;
 }
-
-const PARTNER_EDIT_HISTORY_BY_ID = {
-  '1': [
-    {
-      id: '1-h-1',
-      changedAt: '2026-04-06 10:12',
-      changedBy: '김영업 과장',
-      reason: '상세 수정 저장',
-      changes: [
-        { field: '기본 주소', before: '서울 강남구 테헤란로 123 (구주소)', after: '서울 강남구 테헤란로 123' },
-        { field: '대표자 이메일', before: 'old-mail@partner.co.kr', after: 'hong@test.com' },
-      ],
-    },
-    {
-      id: '1-h-2',
-      changedAt: '2026-03-28 16:55',
-      changedBy: '박세현 대리',
-      reason: '상세 수정 저장',
-      changes: [
-        { field: '대리점 메모', before: '-', after: 'VIP 대리점. 월 2회 현장 방문 예정.' },
-      ],
-    },
-  ],
-  '2': [
-    {
-      id: '2-h-1',
-      changedAt: '2026-04-01 09:05',
-      changedBy: '조동욱 사원',
-      reason: '상세 수정 저장',
-      changes: [
-        { field: '경쟁사 취급 브랜드', before: '계림요업:Y:30', after: '계림요업:Y:50|VOVO:Y:20' },
-      ],
-    },
-  ],
-};
 
 export function getPartnerEditHistoryById(id) {
-  return PARTNER_EDIT_HISTORY_BY_ID[String(id)] || [];
+  return clone(MOCK_PARTNER_EDIT_HISTORIES[id] || []);
 }

@@ -251,9 +251,64 @@ export function DeliveryRequestDetailPage() {
             size="small"
             pagination={{ pageSize: 15 }}
             scroll={{ x: 2100, y: 420 }}
-            className={styles.mainTable}
+            className={`${styles.mainTable} ${styles.desktopTable}`}
             rowKey="key"
           />
+          <div className={styles.mobileList}>
+            {filtered.length === 0 ? (
+              <div className={styles.mobileEmpty}>조회 결과가 없습니다.</div>
+            ) : (
+              filtered.map((row) => (
+                <article
+                  key={`mobile-${row.key}`}
+                  className={styles.mobileCard}
+                  onClick={() => setSelectedNo(row.shipmentNo)}
+                >
+                  <div className={styles.mobileHead}>
+                    <button
+                      type="button"
+                      className={styles.shipNoButton}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedNo(row.shipmentNo);
+                      }}
+                    >
+                      {row.shipmentNo}
+                    </button>
+                    <span className={styles.mobileShipResult}>{row.shipResult}</span>
+                  </div>
+                  <div className={styles.mobileCustomer}>{row.customerName}</div>
+                  <div className={styles.mobileMetaGrid}>
+                    <div className={styles.mobileMetaItem}>
+                      <span>출하형태</span>
+                      <strong>{row.shippingType}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>공장</span>
+                      <strong>{row.factory}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>출고예정일</span>
+                      <strong>{row.requestDate}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>도착예정일</span>
+                      <strong>{row.arrivalDate}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>금액</span>
+                      <strong>{fmt(row.amount)}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>부가세</span>
+                      <strong>{fmt(row.vat)}</strong>
+                    </div>
+                  </div>
+                  <div className={styles.mobileDestination}>{row.destination}</div>
+                </article>
+              ))
+            )}
+          </div>
         </div>
 
         <Modal

@@ -65,6 +65,8 @@ const ShortProjectRegisterPage = lazyNamed(
 );
 const TileTeamPage = lazyNamed(() => import('../modules/sales/pages/TileTeamPage'), 'TileTeamPage');
 const SalesSupportPage = lazyNamed(() => import('../modules/sales/pages/SalesSupportPage'), 'SalesSupportPage');
+const PromotionRegisterPage = lazyNamed(() => import('../modules/sales/pages/PromotionRegisterPage'), 'PromotionRegisterPage');
+const PromotionHistoryPage = lazyNamed(() => import('../modules/sales/pages/PromotionHistoryPage'), 'PromotionHistoryPage');
 
 const SalesApprovalPage = lazyNamed(() => import('../modules/approval/pages/SalesApprovalPage'), 'SalesApprovalPage');
 const SalesApprovalDetailPage = lazyNamed(() => import('../modules/approval/pages/SalesApprovalDetailPage'), 'SalesApprovalDetailPage');
@@ -123,6 +125,19 @@ const CustomReportPage = lazy(() =>
 );
 const ProjectPerformancePage = lazy(() =>
   import('../modules/analytics/pages/ProjectPerformancePage').then((module) => ({ default: module.ProjectPerformancePage }))
+);
+const ProjectOrderStatusPage = lazy(() =>
+  import('../modules/analytics/pages/ProjectOrderStatusPage').then((module) => ({ default: module.ProjectOrderStatusPage }))
+);
+const ProjectPersonalSalesPage = lazy(() =>
+  import('../modules/analytics/pages/ProjectPersonalSalesPage').then((module) => ({
+    default: module.ProjectPersonalSalesPage,
+  }))
+);
+const ProjectMonthlyPlanMeetingPage = lazy(() =>
+  import('../modules/analytics/pages/ProjectMonthlyPlanMeetingPage').then((module) => ({
+    default: module.ProjectMonthlyPlanMeetingPage,
+  }))
 );
 const YearlyDeliveryForecastPage = lazy(() =>
   import('../modules/analytics/pages/YearlyDeliveryForecastPage').then((module) => ({
@@ -215,6 +230,8 @@ export function Router() {
           <Route path={toRelative(ROUTES.SALES_SUPPORT)} element={<SalesSupportPage />} />
           <Route path={toRelative(ROUTES.SALES_SUPPORT_RECEIVABLE)} element={<SupportReceivablePage />} />
           <Route path={toRelative(ROUTES.SALES_SUPPORT_DISCOUNT_PROMOTION)} element={<DiscountPromotionPage />} />
+          <Route path={toRelative(ROUTES.SALES_PROMOTION_REGISTER)} element={<PromotionRegisterPage />} />
+          <Route path={toRelative(ROUTES.SALES_PROMOTION_HISTORY)} element={<PromotionHistoryPage />} />
           <Route
             path={toRelative(ROUTES.APPROVAL_SALES)}
             element={
@@ -277,6 +294,9 @@ export function Router() {
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_CATALOG)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
           <Route path={toRelative(ROUTES.ANALYTICS_DATA_PROMO)} element={<Navigate to={ROUTES.ANALYTICS_DATA_COLLECTION} replace />} />
           <Route path={toRelative(ROUTES.ANALYTICS_CUSTOM)} element={<CustomReportPage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_PROJECT_ORDER_STATUS)} element={<ProjectOrderStatusPage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_PROJECT_PERSONAL_SALES)} element={<ProjectPersonalSalesPage />} />
+          <Route path={toRelative(ROUTES.ANALYTICS_PROJECT_MONTHLY_PLAN_MEETING)} element={<ProjectMonthlyPlanMeetingPage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_PROJECT_PERFORMANCE)} element={<ProjectPerformancePage />} />
           <Route path={toRelative(ROUTES.ANALYTICS_YEARLY_DELIVERY_FORECAST)} element={<YearlyDeliveryForecastPage />} />
           <Route path={toRelative(ROUTES.ADMIN_USERS)} element={<UsersAdminPage />} />

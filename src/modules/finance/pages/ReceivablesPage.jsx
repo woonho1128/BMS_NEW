@@ -5,10 +5,7 @@
  * - 다운로드는 공통 `downloadCsv` 유틸 사용(엑셀 한글 깨짐 완화용 BOM 포함)
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Download, Printer } from 'lucide-react';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
-import { Button } from '../../../shared/components/Button/Button';
-import { downloadCsv } from '../../../shared/utils/csv';
 import { formatMoney } from '../../../shared/utils/formatters';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { fetchReceivablesStatus } from '../api/receivables.api';
@@ -17,12 +14,25 @@ import { fetchCollateral } from '../api/collateral.api';
 import { fetchDeposits } from '../api/deposits.api';
 import { MOCK_PARTNERS_LIST } from '../../master/data/partnersMock';
 import ReceivablesTabContent from './components/ReceivablesTabContent';
+import { ReceivablesHeaderActions, ReceivablesTabs } from './components/ReceivablesHeaderTabs';
+import {
+  buildBillFields,
+  buildCollateralFields,
+  buildDepositFields,
+  buildReceivableFields,
+  createMonthOptions,
+  createYearOptions,
+  getDefaultYearMonth,
+} from './receivablesPage.helpers';
+import {
+  downloadBillCsv,
+  downloadCollateralCsv,
+  downloadReceivableCsv,
+  handleBillFilterInput,
+  handleCollateralFilterInput,
+  handleDepositFilterInput,
+} from './receivablesPage.actions';
 import styles from './ReceivablesPage.module.css';
-
-function getDefaultYearMonth() {
-  const now = new Date();
-  return { year: now.getFullYear(), month: now.getMonth() + 1 };
-}
 
 export function ReceivablesPage() {
   const { user } = useAuth();
@@ -160,57 +170,13 @@ export function ReceivablesPage() {
     [billCriteria, billFrom, billTo, filterValue.partnerId]
   );
 
-  const billFields = useMemo(() => {
-    return [
-      {
-        id: 'billCriteria',
-        label: '설정기준',
-        type: 'radio',
-        options: [
-          { value: 'issueDate', label: '발행일' },
-          { value: 'dueDate', label: '만기일' },
-        ],
-        row: 0,
-      },
-      {
-        id: 'billRange',
-        label: '설정기간',
-        type: 'dateRange',
-        fromKey: 'billFrom',
-        toKey: 'billTo',
-        row: 0,
-      },
-      {
-        id: 'partnerId',
-        label: '대리점',
-        type: 'select',
-        options: isAgencyRole
-          ? [{ value: filterValue.partnerId, label: selectedPartnerLabel || '내 대리점' }]
-          : partnerOptionsAll,
-        disabled: isAgencyRole,
-        wide: true,
-        row: 0,
-      },
-    ];
-  }, [isAgencyRole, filterValue.partnerId, selectedPartnerLabel, partnerOptionsAll]);
+  const billFields = useMemo(
+    () => buildBillFields({ isAgencyRole, partnerId: filterValue.partnerId, selectedPartnerLabel, partnerOptionsAll }),
+    [isAgencyRole, filterValue.partnerId, selectedPartnerLabel, partnerOptionsAll]
+  );
 
   const handleBillFilterChange = useCallback((id, value) => {
-    if (id === 'partnerId') {
-      setFilterValue((prev) => ({ ...prev, partnerId: value }));
-      return;
-    }
-    if (id === 'billCriteria') {
-      setBillCriteria(value);
-      return;
-    }
-    if (id === 'billFrom') {
-      setBillFrom(value);
-      return;
-    }
-    if (id === 'billTo') {
-      setBillTo(value);
-      return;
-    }
+    handleBillFilterInput({ setFilterValue, setBillCriteria, setBillFrom, setBillTo }, id, value);
   }, []);
 
   const handleBillReset = useCallback(() => {
@@ -246,78 +212,19 @@ export function ReceivablesPage() {
 
   const rows = useMemo(() => data?.rows ?? [], [data]);
 
-  const yearOptions = useMemo(() => {
-    const y = Number(defaultYear);
-    const list = [];
-    for (let i = 0; i < 5; i += 1) {
-      const yy = String(y - i);
-      list.push({ value: yy, label: `${yy}년` });
-    }
-    return list;
-  }, [defaultYear]);
-
-  const monthOptions = useMemo(() => {
-    const list = [{ value: '', label: '월 선택' }];
-    for (let m = 1; m <= 12; m += 1) {
-      const mm = String(m).padStart(2, '0');
-      list.push({ value: mm, label: `${m}월` });
-    }
-    return list;
-  }, []);
+  const yearOptions = useMemo(() => createYearOptions(defaultYear), [defaultYear]);
+  const monthOptions = useMemo(() => createMonthOptions(), []);
 
   const handleDownload = useCallback(() => {
-    if (!rows.length) return;
-    const safePartner = (selectedPartnerLabel || 'partner').replaceAll(' ', '_');
-    downloadCsv(
-      `채권채무현황_${safePartner}_${filterValue.year}${filterValue.month}.csv`,
-      [
-        { key: 'baseYm', label: '기준연월' },
-        { key: 'tradeLimit', label: '거래한도' },
-        { key: 'creditLimit', label: '여신한도' },
-        { key: 'prevReceivable', label: '전월 외상매출금' },
-        { key: 'salesThisMonth', label: '당월 판매금액' },
-        { key: 'depositThisMonth', label: '당월 입금금액' },
-        { key: 'receivableThisMonth', label: '당월 외상매출금' },
-        { key: 'unpaidBill', label: '미결제어음' },
-      ],
-      rows
-    );
+    downloadReceivableCsv(rows, selectedPartnerLabel, filterValue.year, filterValue.month);
   }, [rows, selectedPartnerLabel, filterValue.year, filterValue.month]);
 
   const handleBillDownload = useCallback(() => {
-    const rowsToExport = billResult.rows || [];
-    if (!rowsToExport.length) return;
-    const safePartner = (selectedPartnerLabel || 'partner').replaceAll(' ', '_');
-    downloadCsv(
-      `어음조회_${safePartner}.csv`,
-      [
-        { key: 'billNo', label: '어음번호' },
-        { key: 'issueDate', label: '발행일' },
-        { key: 'dueDate', label: '만기일' },
-        { key: 'amount', label: '금액' },
-        { key: 'status', label: '상태' },
-        { key: 'memo', label: '메모' },
-      ],
-      rowsToExport.map((r) => ({ ...r, memo: r.memo || '' }))
-    );
+    downloadBillCsv(billResult.rows || [], selectedPartnerLabel);
   }, [billResult.rows, selectedPartnerLabel]);
 
   const handleCollateralDownload = useCallback(() => {
-    const rowsToExport = collateralResult.rows || [];
-    if (!rowsToExport.length) return;
-    const safePartner = (selectedPartnerLabel || 'partner').replaceAll(' ', '_');
-    downloadCsv(
-      `담보조회_${safePartner}_${collateralYear}.csv`,
-      [
-        { key: 'collateralName', label: '담보명' },
-        { key: 'status', label: '담보상태' },
-        { key: 'companySetAmount', label: '당사설정액' },
-        { key: 'creditLimit', label: '여신한도' },
-        { key: 'appraisedValue', label: '감정가' },
-        { key: 'year', label: '설정년도' },
-      ],
-      rowsToExport
-    );
+    downloadCollateralCsv(collateralResult.rows || [], selectedPartnerLabel, collateralYear);
   }, [collateralResult.rows, selectedPartnerLabel, collateralYear]);
 
   const depositFilterValue = useMemo(
@@ -329,33 +236,20 @@ export function ReceivablesPage() {
     [depositYear, depositMonth, filterValue.partnerId]
   );
 
-  const depositFields = useMemo(() => {
-    const yearOptionsForFilter = yearOptions.map((o) => ({ value: o.value, label: o.label }));
-    const monthOptionsForFilter = monthOptions.filter((o) => o.value !== '').map((o) => ({ value: o.value, label: o.label }));
-    return [
-      { id: 'depositYear', label: '년도', type: 'select', options: yearOptionsForFilter, width: 120, row: 0 },
-      { id: 'depositMonth', label: '월', type: 'select', options: monthOptionsForFilter, width: 90, row: 0 },
-      {
-        id: 'partnerId',
-        label: '대리점',
-        type: 'select',
-        options: isAgencyRole
-          ? [{ value: filterValue.partnerId, label: selectedPartnerLabel || '내 대리점' }]
-          : partnerOptionsAll,
-        disabled: isAgencyRole,
-        wide: true,
-        row: 0,
-      },
-    ];
-  }, [yearOptions, monthOptions, isAgencyRole, filterValue.partnerId, selectedPartnerLabel, partnerOptionsAll]);
+  const depositFields = useMemo(
+    () => buildDepositFields({
+      yearOptions,
+      monthOptions,
+      isAgencyRole,
+      partnerId: filterValue.partnerId,
+      selectedPartnerLabel,
+      partnerOptionsAll,
+    }),
+    [yearOptions, monthOptions, isAgencyRole, filterValue.partnerId, selectedPartnerLabel, partnerOptionsAll]
+  );
 
   const handleDepositFilterChange = useCallback((id, value) => {
-    if (id === 'partnerId') {
-      setFilterValue((prev) => ({ ...prev, partnerId: value }));
-      return;
-    }
-    if (id === 'depositYear') setDepositYear(value);
-    if (id === 'depositMonth') setDepositMonth(value);
+    handleDepositFilterInput({ setFilterValue, setDepositYear, setDepositMonth }, id, value);
   }, []);
 
   const handleDepositReset = useCallback(() => {
@@ -370,55 +264,17 @@ export function ReceivablesPage() {
     setDepositResult({ rows: [], totalAmount: 0, totalCount: 0 });
   }, [isAgencyRole, activeTab, depositYear, depositMonth, filterValue.partnerId]);
 
-  const fields = useMemo(() => {
-    const yearOptionsForFilter = yearOptions.map((o) => ({ value: o.value, label: o.label }));
-    const monthOptionsForFilter = monthOptions.filter((o) => o.value !== '').map((o) => ({ value: o.value, label: o.label }));
-
-    const partnerField = {
-      id: 'partnerId',
-      label: '대리점',
-      type: 'select',
-      options: isAgencyRole
-        ? [{ value: filterValue.partnerId, label: selectedPartnerLabel || '내 대리점' }]
-        : partnerOptions,
-      disabled: isAgencyRole,
-      wide: true,
-      row: 0,
-    };
-
-    const yearField = {
-      id: 'year',
-      label: '기준년도',
-      type: 'select',
-      options: yearOptionsForFilter,
-      width: 120,
-      row: 0,
-    };
-
-    const monthField = {
-      id: 'month',
-      label: '기준월',
-      type: 'select',
-      options: monthOptionsForFilter,
-      width: 120,
-      row: 0,
-    };
-
-    if (isAgencyRole) {
-      return [partnerField, yearField, monthField];
-    }
-
-    const partnerQueryField = {
-      id: 'partnerQuery',
-      label: '대리점검색',
-      type: 'text',
-      placeholder: '대리점 검색',
-      wide: true,
-      row: 0,
-    };
-
-    return [partnerQueryField, partnerField, yearField, monthField];
-  }, [isAgencyRole, filterValue.partnerId, selectedPartnerLabel, partnerOptions, yearOptions, monthOptions]);
+  const fields = useMemo(
+    () => buildReceivableFields({
+      isAgencyRole,
+      filterValue,
+      selectedPartnerLabel,
+      partnerOptions,
+      yearOptions,
+      monthOptions,
+    }),
+    [isAgencyRole, filterValue, selectedPartnerLabel, partnerOptions, yearOptions, monthOptions]
+  );
 
   const handleFilterChange = useCallback((id, value) => {
     setFilterValue((prev) => ({ ...prev, [id]: value }));
@@ -450,76 +306,19 @@ export function ReceivablesPage() {
     [collateralStatus, collateralYear, collateralPartnerQuery, filterValue.partnerId]
   );
 
-  const collateralFields = useMemo(() => {
-    const yearOptionsForFilter = yearOptions.map((o) => ({ value: o.value, label: o.label }));
-    const statusOptions = [
-      { value: '전체', label: '전체' },
-      { value: '정상', label: '정상' },
-      { value: '해지', label: '해지' },
-    ];
-
-    const statusField = {
-      id: 'collateralStatus',
-      label: '담보상태',
-      type: 'select',
-      options: statusOptions,
-      width: 120,
-      row: 0,
-    };
-
-    const yearField = {
-      id: 'collateralYear',
-      label: '설정년도',
-      type: 'select',
-      options: yearOptionsForFilter,
-      width: 120,
-      row: 0,
-    };
-
-    const partnerField = {
-      id: 'partnerId',
-      label: '대리점',
-      type: 'select',
-      options: isAgencyRole
-        ? [{ value: filterValue.partnerId, label: selectedPartnerLabel || '내 대리점' }]
-        : collateralPartnerOptions,
-      disabled: isAgencyRole,
-      wide: true,
-      row: 0,
-    };
-
-    if (isAgencyRole) {
-      return [statusField, yearField, partnerField];
-    }
-
-    const partnerQueryField = {
-      id: 'collateralPartnerQuery',
-      label: '대리점검색',
-      type: 'text',
-      placeholder: '대리점 검색',
-      wide: true,
-      row: 0,
-    };
-
-    return [statusField, yearField, partnerQueryField, partnerField];
-  }, [yearOptions, isAgencyRole, filterValue.partnerId, selectedPartnerLabel, collateralPartnerOptions]);
+  const collateralFields = useMemo(
+    () => buildCollateralFields({
+      yearOptions,
+      isAgencyRole,
+      partnerId: filterValue.partnerId,
+      selectedPartnerLabel,
+      collateralPartnerOptions,
+    }),
+    [yearOptions, isAgencyRole, filterValue.partnerId, selectedPartnerLabel, collateralPartnerOptions]
+  );
 
   const handleCollateralFilterChange = useCallback((id, value) => {
-    if (id === 'partnerId') {
-      setFilterValue((prev) => ({ ...prev, partnerId: value }));
-      return;
-    }
-    if (id === 'collateralStatus') {
-      setCollateralStatus(value);
-      return;
-    }
-    if (id === 'collateralYear') {
-      setCollateralYear(value);
-      return;
-    }
-    if (id === 'collateralPartnerQuery') {
-      setCollateralPartnerQuery(value);
-    }
+    handleCollateralFilterInput({ setFilterValue, setCollateralStatus, setCollateralYear, setCollateralPartnerQuery }, id, value);
   }, []);
 
   const handleCollateralReset = useCallback(() => {
@@ -529,25 +328,11 @@ export function ReceivablesPage() {
   }, [defaultYear]);
 
   const actions = (
-    <div className={styles.headerActions}>
-      <Button
-        variant="icon"
-        onClick={handleDownload}
-        disabled={activeTab !== 'receivable' || !rows.length}
-        aria-label="다운로드(엑셀)"
-        title="다운로드(엑셀)"
-      >
-        <Download size={18} />
-      </Button>
-      <Button
-        variant="icon"
-        onClick={() => window.print()}
-        aria-label="인쇄"
-        title="인쇄"
-      >
-        <Printer size={18} />
-      </Button>
-    </div>
+    <ReceivablesHeaderActions
+      styles={styles}
+      onDownload={handleDownload}
+      disableDownload={activeTab !== 'receivable' || !rows.length}
+    />
   );
 
   return (
@@ -558,44 +343,7 @@ export function ReceivablesPage() {
       actions={actions}
     >
       <div className={styles.page}>
-        <div className={styles.tabs} role="tablist" aria-label="채권 정보 탭">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === 'receivable'}
-            className={activeTab === 'receivable' ? styles.tabActive : styles.tab}
-            onClick={() => setActiveTab('receivable')}
-          >
-            채권
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === 'bill'}
-            className={activeTab === 'bill' ? styles.tabActive : styles.tab}
-            onClick={() => setActiveTab('bill')}
-          >
-            어음
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === 'collateral'}
-            className={activeTab === 'collateral' ? styles.tabActive : styles.tab}
-            onClick={() => setActiveTab('collateral')}
-          >
-            담보
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeTab === 'deposit'}
-            className={activeTab === 'deposit' ? styles.tabActive : styles.tab}
-            onClick={() => setActiveTab('deposit')}
-          >
-            입금
-          </button>
-        </div>
+        <ReceivablesTabs styles={styles} activeTab={activeTab} setActiveTab={setActiveTab} />
 
                 <ReceivablesTabContent
           activeTab={activeTab}

@@ -6,6 +6,7 @@ import { Modal } from '../../../shared/components/Modal/Modal';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { classnames } from '../../../shared/utils/classnames';
 import {
+  MOCK_DIVISION_OPTIONS,
   MOCK_MANAGER_OPTIONS,
   MOCK_REGION_OPTIONS,
   MOCK_STATUS_OPTIONS,
@@ -15,6 +16,7 @@ import {
 import styles from './PartnersPage.module.css';
 
 const PARTNER_FILTER_FIELDS = [
+  { id: 'division', label: '부문', type: 'select', options: MOCK_DIVISION_OPTIONS, row: 0 },
   { id: 'manager', label: '담당자', type: 'select', options: MOCK_MANAGER_OPTIONS, row: 0 },
   { id: 'name', label: '상호', type: 'text', placeholder: '상호 검색', wide: true, row: 0 },
   { id: 'region', label: '지역', type: 'select', options: MOCK_REGION_OPTIONS, row: 0 },
@@ -22,6 +24,7 @@ const PARTNER_FILTER_FIELDS = [
 ];
 
 const INITIAL_FILTER = {
+  division: '',
   manager: '',
   name: '',
   region: '',
@@ -29,6 +32,7 @@ const INITIAL_FILTER = {
 };
 
 const STATUS_LABEL = { active: '거래중', inactive: '거래중단', pending: '검토요청' };
+const DIVISION_LABEL = { project: '프로젝트부문', retail: '리테일부문' };
 
 export function PartnersPage() {
   const navigate = useNavigate();
@@ -89,7 +93,7 @@ export function PartnersPage() {
     <PageShell
       path="/master/partners"
       title="대리점 관리"
-      description="대리점 목록 조회 및 관리"
+      description="부문별 목록 조회 및 관리"
       actions={
         <Button variant="primary" onClick={handleAdd}>
           + 등록
@@ -109,7 +113,7 @@ export function PartnersPage() {
           <div className={styles.count}>{list.length}건</div>
           <div className={styles.cardGrid}>
             {list.length === 0 ? (
-              <p className={styles.empty}>조건에 맞는 대리점이 없습니다.</p>
+              <p className={styles.empty}>조건에 맞는 데이터가 없습니다.</p>
             ) : (
               list.map((item) => (
                 <div
@@ -141,6 +145,10 @@ export function PartnersPage() {
                     </span>
                   </div>
                   <div className={styles.cardBody}>
+                    <div className={styles.cardRow}>
+                      <span className={styles.cardLabel}>부문</span>
+                      <span className={styles.cardValue}>{DIVISION_LABEL[item.division] || '-'}</span>
+                    </div>
                     <div className={styles.cardRow}>
                       <span className={styles.cardLabel}>담당자</span>
                       <span className={styles.cardValue}>{item.manager}</span>

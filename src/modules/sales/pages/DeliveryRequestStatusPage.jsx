@@ -1,258 +1,32 @@
-﻿import React, { useMemo, useState, useCallback } from 'react';
+﻿import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Modal, Table } from 'antd';
 import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { formatNumber } from '../../../shared/utils/formatters';
+import {
+  STATUS_COLORS,
+  useDeliveryRequestStatusData,
+} from './useDeliveryRequestStatusData';
 import styles from './DeliveryRequestStatusPage.module.css';
-
-const STATUS_OPTIONS = [
-  { value: 'ALL', label: '전체' },
-  { value: 'PICKING', label: 'PICKING' },
-  { value: 'APPROVAL', label: '상신중' },
-  { value: 'REQUESTED', label: '출고대기' },
-  { value: 'REJECTED', label: '결재반려' },
-  { value: 'DONE', label: '출고완료' },
-];
-
-const STATUS_COLORS = {
-  PICKING: '#e85b93',
-  APPROVAL: '#7a7a7a',
-  REQUESTED: '#27b4f1',
-  REJECTED: '#18b7a3',
-  DONE: '#6f7ccf',
-};
-
-const SHIPPING_TYPE_OPTIONS = [
-  { value: '', label: '전체' },
-  { value: '건설사직납', label: '건설사직납' },
-  { value: '도소매출고', label: '도소매출고' },
-  { value: '납품출고', label: '납품출고' },
-];
-
-const FACTORY_OPTIONS = [
-  { value: '', label: '전체' },
-  { value: '창원SW공장', label: '창원SW공장' },
-  { value: '안산수전공장', label: '안산수전공장' },
-  { value: '강원타일공장', label: '강원타일공장' },
-];
-
-const SALES_GROUP_OPTIONS = [
-  { value: '', label: '전체' },
-  { value: '김주오', label: '김주오' },
-  { value: '박준혁', label: '박준혁' },
-  { value: '이명호', label: '이명호' },
-  { value: '김진원', label: '김진원' },
-];
-
-const MOCK_ROWS = [
-  {
-    key: '1',
-    deliveryNo: 'DN202603010004',
-    status: 'APPROVAL',
-    customerCode: '200347',
-    customerName: '디엘이앤씨 주식회사(구 대림산업)',
-    factory: '안양SW공장',
-    requestDate: '2026-03-01',
-    amount: 390000,
-    vat: 39000,
-    salesGroup: '김주오',
-    transportMethod: '납품출고',
-    shippingType: '건설사직납',
-    destination: '경남 사천시 동금동 151-5번지',
-    inputUser: '김주오',
-    modifiedBy: '김주오',
-    modifiedAt: '2026-03-24',
-    approvedBy: '-',
-    signedBy: '-',
-  },
-  {
-    key: '2',
-    deliveryNo: 'DN202603010005',
-    status: 'PICKING',
-    customerCode: '200347',
-    customerName: '디엘이앤씨 주식회사(구 대림산업)',
-    factory: '안산수전공장',
-    requestDate: '2026-03-03',
-    amount: 66170,
-    vat: 6617,
-    salesGroup: '김주오',
-    transportMethod: '납품출고',
-    shippingType: '건설사직납',
-    destination: '경남 사천시 동금동 151-5번지',
-    inputUser: '김주오',
-    modifiedBy: '김주오',
-    modifiedAt: '2026-03-24',
-    approvedBy: '-',
-    signedBy: '-',
-  },
-  {
-    key: '3',
-    deliveryNo: 'DN202603010006',
-    status: 'REQUESTED',
-    customerCode: '308359',
-    customerName: '유아름다운욕실나라',
-    factory: '강원타일공장',
-    requestDate: '2026-03-07',
-    amount: 0,
-    vat: 0,
-    salesGroup: '이명호',
-    transportMethod: '도소매출고',
-    shippingType: '거래처납',
-    destination: '세종특별자치시 새롬플라자',
-    inputUser: '이명호',
-    modifiedBy: '이명호',
-    modifiedAt: '2026-02-27',
-    approvedBy: '-',
-    signedBy: '-',
-  },
-  {
-    key: '4',
-    deliveryNo: 'DN202603010011',
-    status: 'REJECTED',
-    customerCode: '113605',
-    customerName: '여여세라믹(주)',
-    factory: '강원타일공장',
-    requestDate: '2026-03-16',
-    amount: 2430000,
-    vat: 243000,
-    salesGroup: '김진원',
-    transportMethod: '도소매출고',
-    shippingType: '직납',
-    destination: '김해',
-    inputUser: '김진원',
-    modifiedBy: '김진원',
-    modifiedAt: '2026-03-03',
-    approvedBy: '박준혁',
-    signedBy: '-',
-  },
-  {
-    key: '5',
-    deliveryNo: 'DN202603010016',
-    status: 'DONE',
-    customerCode: '200347',
-    customerName: '디엘이앤씨 주식회사(구 대림산업)',
-    factory: '안산수전공장',
-    requestDate: '2026-03-24',
-    amount: 67186760,
-    vat: 6718676,
-    salesGroup: '박준혁',
-    transportMethod: '납품출고',
-    shippingType: '건설사직납',
-    destination: '인천광역시 서구 원당동 1026-1',
-    inputUser: '박준혁',
-    modifiedBy: '박준혁',
-    modifiedAt: '2026-03-04',
-    approvedBy: '김주오',
-    signedBy: '김주오',
-  },
-];
-
-const DETAIL_ROWS_BY_DELIVERY = {
-  DN202603010004: [
-    { key: '1', no: 1, refName: '안산수전공장', itemCode: 'SAH-G4441ZZC', itemName: '발코니수전(냉수)', spec: '이지쿡/2구', qty: 310, unitPrice: 15000, amount: 4650000, vat: 465000, vatName: '일반세금계산서', note: '' },
-    { key: '2', no: 2, refName: '안산수전공장', itemCode: 'SAH-G4443ZZH', itemName: '발코니수전(온수)', spec: '이지쿡/1구', qty: 310, unitPrice: 8000, amount: 2480000, vat: 248000, vatName: '일반세금계산서', note: '' },
-  ],
-  DN202603010005: [
-    { key: '1', no: 1, refName: '창원SW공장', itemCode: 'FAH-K1417CR1NDW', itemName: '주방수전', spec: 'DL&CO용', qty: 72, unitPrice: 45000, amount: 3240000, vat: 324000, vatName: '일반세금계산서', note: '현장 납품' },
-  ],
-};
 
 function fmt(n) {
   return formatNumber(Number(n || 0));
 }
 
-function makeDateList(from, to) {
-  const start = new Date(from);
-  const end = new Date(to);
-  const out = [];
-  const cursor = new Date(start);
-  while (cursor <= end) {
-    out.push(cursor.toISOString().slice(0, 10));
-    cursor.setDate(cursor.getDate() + 1);
-  }
-  return out;
-}
-
 export function DeliveryRequestStatusPage() {
   const { pathname } = useLocation();
-  const [selectedDeliveryNo, setSelectedDeliveryNo] = useState(null);
-  const [filterValue, setFilterValue] = useState({
-    dateFrom: '2026-03-01',
-    dateTo: '2026-03-26',
-    shippingType: '',
-    status: 'ALL',
-    customerCode: '',
-    customerName: '',
-    factory: '',
-    salesGroup: '',
-  });
-
-  const onChange = useCallback((id, value) => {
-    setFilterValue((prev) => ({ ...prev, [id]: value }));
-  }, []);
-
-  const onReset = useCallback(() => {
-    setFilterValue({
-      dateFrom: '2026-03-01',
-      dateTo: '2026-03-26',
-      shippingType: '',
-      status: 'ALL',
-      customerCode: '',
-      customerName: '',
-      factory: '',
-      salesGroup: '',
-    });
-  }, []);
-
-  const fields = useMemo(
-    () => [
-      { id: 'dateRange', label: '출고예정일', type: 'dateRange', fromKey: 'dateFrom', toKey: 'dateTo', row: 0 },
-      { id: 'shippingType', label: '출하형태', type: 'select', options: SHIPPING_TYPE_OPTIONS, row: 0, width: 130 },
-      { id: 'factory', label: '공장', type: 'select', options: FACTORY_OPTIONS, row: 0, width: 140 },
-      { id: 'salesGroup', label: '영업그룹', type: 'select', options: SALES_GROUP_OPTIONS, row: 0, width: 120 },
-      { id: 'customerCode', label: '거래처코드', type: 'text', row: 1, width: 120 },
-      { id: 'customerName', label: '거래처', type: 'text', row: 1, width: 220 },
-      { id: 'status', label: '출하상태', type: 'radio', options: STATUS_OPTIONS, row: 1 },
-    ],
-    []
-  );
-
-  const filteredRows = useMemo(() => {
-    return MOCK_ROWS.filter((row) => {
-      if (filterValue.dateFrom && row.requestDate < filterValue.dateFrom) return false;
-      if (filterValue.dateTo && row.requestDate > filterValue.dateTo) return false;
-      if (filterValue.shippingType && row.shippingType !== filterValue.shippingType) return false;
-      if (filterValue.status !== 'ALL' && row.status !== filterValue.status) return false;
-      if (filterValue.customerCode && !row.customerCode.includes(filterValue.customerCode)) return false;
-      if (filterValue.customerName && !row.customerName.includes(filterValue.customerName)) return false;
-      if (filterValue.factory && row.factory !== filterValue.factory) return false;
-      if (filterValue.salesGroup && row.salesGroup !== filterValue.salesGroup) return false;
-      return true;
-    });
-  }, [filterValue]);
-
-  const chartBars = useMemo(() => {
-    const days = makeDateList(filterValue.dateFrom, filterValue.dateTo);
-    return days.map((day) => {
-      const rows = filteredRows.filter((r) => r.requestDate === day);
-      const total = rows.length || 1;
-      const values = {
-        PICKING: rows.filter((r) => r.status === 'PICKING').length,
-        APPROVAL: rows.filter((r) => r.status === 'APPROVAL').length,
-        REQUESTED: rows.filter((r) => r.status === 'REQUESTED').length,
-        REJECTED: rows.filter((r) => r.status === 'REJECTED').length,
-        DONE: rows.filter((r) => r.status === 'DONE').length,
-      };
-      return {
-        day,
-        segments: Object.entries(values).map(([status, count]) => ({
-          status,
-          percent: (count / total) * 100,
-        })),
-      };
-    });
-  }, [filterValue.dateFrom, filterValue.dateTo, filteredRows]);
+  const {
+    selectedDeliveryNo,
+    setSelectedDeliveryNo,
+    filterValue,
+    onChange,
+    onReset,
+    fields,
+    filteredRows,
+    chartBars,
+    detailRows,
+  } = useDeliveryRequestStatusData();
 
   const columns = [
     {
@@ -297,8 +71,6 @@ export function DeliveryRequestStatusPage() {
     { title: '부가세명', dataIndex: 'vatName', width: 120 },
     { title: '비고', dataIndex: 'note', width: 200 },
   ];
-
-  const detailRows = selectedDeliveryNo ? DETAIL_ROWS_BY_DELIVERY[selectedDeliveryNo] || [] : [];
 
   return (
     <PageShell path={pathname} className={styles.shellWide}>
@@ -357,9 +129,58 @@ export function DeliveryRequestStatusPage() {
             size="small"
             pagination={{ pageSize: 15 }}
             scroll={{ x: 2500, y: 390 }}
-            className={styles.statusTable}
+            className={`${styles.statusTable} ${styles.desktopTable}`}
             rowKey="key"
           />
+          <div className={styles.mobileList}>
+            {filteredRows.length === 0 ? (
+              <div className={styles.mobileEmpty}>조회 결과가 없습니다.</div>
+            ) : (
+              filteredRows.map((row) => (
+                <article
+                  key={`mobile-${row.key}`}
+                  className={styles.mobileCard}
+                  onClick={() => setSelectedDeliveryNo(row.deliveryNo)}
+                >
+                  <div className={styles.mobileHead}>
+                    <button
+                      type="button"
+                      className={styles.deliveryNoButton}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedDeliveryNo(row.deliveryNo);
+                      }}
+                    >
+                      {row.deliveryNo}
+                    </button>
+                    <span className={styles.mobileStatus} style={{ background: STATUS_COLORS[row.status] || '#7a7a7a' }}>
+                      {row.status}
+                    </span>
+                  </div>
+                  <div className={styles.mobileCustomer}>{row.customerName}</div>
+                  <div className={styles.mobileMetaGrid}>
+                    <div className={styles.mobileMetaItem}>
+                      <span>공장</span>
+                      <strong>{row.factory}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>출고예정</span>
+                      <strong>{row.requestDate}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>금액</span>
+                      <strong>{fmt(row.amount)}</strong>
+                    </div>
+                    <div className={styles.mobileMetaItem}>
+                      <span>부가세</span>
+                      <strong>{fmt(row.vat)}</strong>
+                    </div>
+                  </div>
+                  <div className={styles.mobileDestination}>{row.destination}</div>
+                </article>
+              ))
+            )}
+          </div>
         </div>
 
         <Modal

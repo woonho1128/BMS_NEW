@@ -100,6 +100,84 @@
   font-size: 12px;
 }
 
+.mobileList {
+  display: none;
+}
+
+.mobileCard {
+  border-top: 1px solid #edf2f8;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.mobileHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobileShipResult {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #2f4e72;
+  background: #eaf2ff;
+}
+
+.mobileCustomer {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #172338;
+}
+
+.mobileMetaGrid {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mobileMetaItem {
+  border: 1px solid #e8eef7;
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: #fbfdff;
+}
+
+.mobileMetaItem span {
+  display: block;
+  font-size: 11px;
+  color: #5a6b84;
+}
+
+.mobileMetaItem strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #1e2f47;
+}
+
+.mobileDestination {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #3f5472;
+  word-break: keep-all;
+}
+
+.mobileEmpty {
+  padding: 16px 12px;
+  text-align: center;
+  color: #5a6b84;
+  font-size: 12px;
+}
+
 @media (max-width: 1024px) {
   .shellWide {
     padding-left: 8px;
@@ -108,5 +186,19 @@
 
   .summaryBand {
     font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktopTable {
+    display: none;
+  }
+
+  .tableTop {
+    padding: 10px;
+  }
+
+  .mobileList {
+    display: block;
   }
 }

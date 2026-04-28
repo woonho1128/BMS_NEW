@@ -27,7 +27,6 @@ export default defineConfig({
             if (id.includes('/@rc-component/') || id.includes('/rc-')) return 'vendor-ui';
             if (id.includes('/react-dom/')) return 'vendor-react-dom';
             if (id.includes('/react/')) return 'vendor-react';
-            if (id.includes('/dayjs/')) return 'vendor-dayjs';
             if (id.includes('/react-router-dom/') || id.includes('/react-router/')) return 'vendor-router';
             if (id.includes('/lucide-react/')) return 'vendor-icons';
             return 'vendor';
