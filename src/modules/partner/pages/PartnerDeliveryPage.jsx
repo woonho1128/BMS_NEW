@@ -3,82 +3,36 @@ import { PageShell } from '../../../shared/components/PageShell/PageShell';
 import { ListFilter } from '../../../shared/components/ListFilter/ListFilter';
 import { formatNumber } from '../../../shared/utils/formatters';
 import { usePartnerDeliveryState } from './usePartnerDeliveryState';
+import { buildMonthlyFields, buildStatusFields } from './partnerDelivery.helpers';
 import styles from './PartnerDeliveryPage.module.css';
 
 export function PartnerDeliveryPage() {
   const state = usePartnerDeliveryState();
 
-  const factoryOptions = [
-    { value: '', label: '?꾩껜' },
-    { value: '?쒖슱怨듭옣', label: '?쒖슱怨듭옣' },
-    { value: '遺?곌났??', label: '遺?곌났??' },
-    { value: '?援ш났??', label: '?援ш났??' },
-  ];
+  const monthlyFields = buildMonthlyFields({
+    yearOptions: state.yearOptions,
+    isAgencyRole: state.isAgencyRole,
+    partnerId: state.partnerId,
+    selectedPartnerLabel: state.selectedPartnerLabel,
+    partnerOptionsFiltered: state.partnerOptionsFiltered,
+  });
 
-  const shipTypeOptions = [
-    { value: '', label: '?꾩껜' },
-    { value: '吏곸넚', label: '吏곸넚' },
-    { value: '?앸같', label: '?앸같' },
-  ];
-
-  const monthlyFields = [
-    { id: 'year', label: '?꾨룄', type: 'select', options: state.yearOptions, width: 120, row: 0 },
-    ...(!state.isAgencyRole
-      ? [{ id: 'partnerQuery', label: '?由ъ젏寃??', type: 'text', placeholder: '?由ъ젏 寃??', wide: true, row: 0 }]
-      : []),
-    {
-      id: 'partnerId',
-      label: '?由ъ젏',
-      type: 'select',
-      options: state.isAgencyRole
-        ? [{ value: state.partnerId, label: state.selectedPartnerLabel || '???由ъ젏' }]
-        : state.partnerOptionsFiltered,
-      disabled: state.isAgencyRole,
-      wide: true,
-      row: 0,
-    },
-  ];
-
-  const statusFields = [
-    { id: 'factory', label: '怨듭옣紐?', type: 'select', options: factoryOptions, width: 140, row: 0 },
-    { id: 'shipType', label: '異쒓퀬?뺥깭', type: 'select', options: shipTypeOptions, width: 120, row: 0 },
-    {
-      id: 'shipStatus',
-      label: '異쒓퀬?곹깭',
-      type: 'radio',
-      options: [
-        { value: '?꾩껜', label: '?꾩껜' },
-        { value: '異쒓퀬?湲?', label: '異쒓퀬?湲?' },
-        { value: '異쒓퀬?꾨즺', label: '異쒓퀬?꾨즺' },
-      ],
-      row: 0,
-    },
-    { id: 'range', label: '異쒓퀬?쇱옄', type: 'dateRange', fromKey: 'dateFrom', toKey: 'dateTo', row: 0 },
-    ...(!state.isAgencyRole
-      ? [{ id: 'partnerQuery', label: '?由ъ젏寃??', type: 'text', placeholder: '?由ъ젏 寃??', wide: true, row: 1 }]
-      : []),
-    {
-      id: 'partnerId',
-      label: '?由ъ젏',
-      type: 'select',
-      options: state.isAgencyRole
-        ? [{ value: state.partnerId, label: state.selectedPartnerLabel || '???由ъ젏' }]
-        : state.partnerOptionsFiltered,
-      disabled: state.isAgencyRole,
-      wide: true,
-      row: 1,
-    },
-  ];
+  const statusFields = buildStatusFields({
+    isAgencyRole: state.isAgencyRole,
+    partnerId: state.partnerId,
+    selectedPartnerLabel: state.selectedPartnerLabel,
+    partnerOptionsFiltered: state.partnerOptionsFiltered,
+  });
 
   return (
-    <PageShell path="/partner/delivery" title="異쒓퀬 ?뺣낫 議고쉶" description="?붾퀎 ?댁뿭 諛?異쒓퀬 ?꾪솴 議고쉶">
+    <PageShell path="/partner/delivery" title="출고 정보 조회" description="월별 내역 및 출고 현황 조회">
       <div className={styles.page}>
-        <div className={styles.tabs} role="tablist" aria-label="異쒓퀬 ?뺣낫 ??">
+        <div className={styles.tabs} role="tablist" aria-label="출고 정보 탭">
           <button type="button" role="tab" aria-selected={state.activeTab === 'monthly'} className={`${styles.tabBtn} ${state.activeTab === 'monthly' ? styles.tabBtnActive : ''}`} onClick={() => state.setActiveTab('monthly')}>
-            ?붾퀎 ?댁뿭
+            월별 내역
           </button>
           <button type="button" role="tab" aria-selected={state.activeTab === 'status'} className={`${styles.tabBtn} ${state.activeTab === 'status' ? styles.tabBtnActive : ''}`} onClick={() => state.setActiveTab('status')}>
-            異쒓퀬 ?꾪솴
+            출고 현황
           </button>
         </div>
 
@@ -92,7 +46,7 @@ export function PartnerDeliveryPage() {
             actionsAddon={
               <button type="button" className={styles.actionBtn} onClick={state.runMonthlySearch} disabled={state.isAgencyRole || !state.partnerId || state.monthlyLoading}>
                 <Search size={16} />
-                議고쉶
+                조회
               </button>
             }
             showReset={false}
@@ -107,7 +61,7 @@ export function PartnerDeliveryPage() {
             actionsAddon={
               <button type="button" className={styles.actionBtn} onClick={state.runStatusSearch} disabled={state.isAgencyRole || !state.partnerId || state.statusLoading}>
                 <Search size={16} />
-                議고쉶
+                조회
               </button>
             }
             showReset={false}
@@ -115,17 +69,17 @@ export function PartnerDeliveryPage() {
         )}
 
         {state.activeTab === 'monthly' ? (
-          <section className={styles.card} aria-label="?붾퀎 ?댁뿭 ?뚯씠釉?">
+          <section className={styles.card} aria-label="월별 내역 테이블">
             <div className={styles.tableTop}>
               <div>
-                <div className={styles.tableTitle}>?붾퀎 ?댁뿭</div>
+                <div className={styles.tableTitle}>월별 내역</div>
                 <div className={styles.hint}>
-                  {state.partnerId ? state.selectedPartnerLabel : '?由ъ젏???좏깮?섏꽭??'} 쨌 珥?{formatNumber(state.monthlyResult.totalCount)}嫄?쨌 ?⑷퀎 {formatNumber(state.monthlyResult.totalSum)}??
+                  {state.partnerId ? state.selectedPartnerLabel : '대리점을 선택하세요'} · 총 {formatNumber(state.monthlyResult.totalCount)}건 · 합계 {formatNumber(state.monthlyResult.totalSum)}원
                 </div>
               </div>
               <div className={styles.tableActions}>
-                <button type="button" className={styles.actionBtn} onClick={state.handleMonthlyDownload} disabled={!state.monthlyResult.rows.length}><Download size={16} />?묒?</button>
-                <button type="button" className={styles.actionBtn} onClick={() => window.print()}><Printer size={16} />?몄뇙</button>
+                <button type="button" className={styles.actionBtn} onClick={state.handleMonthlyDownload} disabled={!state.monthlyResult.rows.length}><Download size={16} />엑셀</button>
+                <button type="button" className={styles.actionBtn} onClick={() => window.print()}><Printer size={16} />인쇄</button>
               </div>
             </div>
             <div className={styles.tableWrap}>
@@ -143,9 +97,9 @@ export function PartnerDeliveryPage() {
                 </thead>
                 <tbody>
                   {state.monthlyLoading ? (
-                    <tr><td colSpan={7} className={styles.emptyCell}>濡쒕뵫 以?..</td></tr>
+                    <tr><td colSpan={7} className={styles.emptyCell}>로딩 중...</td></tr>
                   ) : state.monthlyResult.rows.length === 0 ? (
-                    <tr><td colSpan={7} className={styles.emptyCell}>?곗씠?곌? ?놁뒿?덈떎.</td></tr>
+                    <tr><td colSpan={7} className={styles.emptyCell}>데이터가 없습니다.</td></tr>
                   ) : (
                     state.monthlyResult.rows.map((r) => (
                       <tr key={`${r.shipYm}-${r.shipType}-${r.vatType}`}>
@@ -158,25 +112,25 @@ export function PartnerDeliveryPage() {
             </div>
           </section>
         ) : (
-          <section className={styles.card} aria-label="異쒓퀬 ?꾪솴 ?뚯씠釉?">
+          <section className={styles.card} aria-label="출고 현황 테이블">
             <div className={styles.tableTop}>
               <div>
-                <div className={styles.tableTitle}>異쒓퀬 ?꾪솴</div>
-                <div className={styles.hint}>珥?{formatNumber(state.statusResult.totalCount)}嫄?/ ?섎웾 {formatNumber(state.statusResult.totalQty)} / 湲덉븸 {formatNumber(state.statusResult.totalAmount)}??</div>
+                <div className={styles.tableTitle}>출고 현황</div>
+                <div className={styles.hint}>총 {formatNumber(state.statusResult.totalCount)}건 / 수량 {formatNumber(state.statusResult.totalQty)} / 금액 {formatNumber(state.statusResult.totalAmount)}원</div>
               </div>
               <div className={styles.tableActions}>
-                <button type="button" className={styles.actionBtn} onClick={state.handleStatusDownload} disabled={!state.statusResult.rows.length}><Download size={16} />?묒?</button>
-                <button type="button" className={styles.actionBtn} onClick={() => window.print()}><Printer size={16} />?몄뇙</button>
+                <button type="button" className={styles.actionBtn} onClick={state.handleStatusDownload} disabled={!state.statusResult.rows.length}><Download size={16} />엑셀</button>
+                <button type="button" className={styles.actionBtn} onClick={() => window.print()}><Printer size={16} />인쇄</button>
               </div>
             </div>
             <div className={styles.tableWrap}>
               <table className={styles.table}>
-                <thead><tr><th>?곸뾽洹몃９</th><th>怨듭옣援щ텇</th><th>異쒓퀬?뺥깭</th><th className={styles.thNum}>?섎웾</th><th className={styles.thNum}>湲덉븸(??</th></tr></thead>
+                <thead><tr><th>영업그룹</th><th>공장구분</th><th>출고형태</th><th className={styles.thNum}>수량</th><th className={styles.thNum}>금액(원)</th></tr></thead>
                 <tbody>
                   {state.statusLoading ? (
-                    <tr><td colSpan={5} className={styles.emptyCell}>濡쒕뵫 以?..</td></tr>
+                    <tr><td colSpan={5} className={styles.emptyCell}>로딩 중...</td></tr>
                   ) : state.statusResult.rows.length === 0 ? (
-                    <tr><td colSpan={5} className={styles.emptyCell}>?곗씠?곌? ?놁뒿?덈떎.</td></tr>
+                    <tr><td colSpan={5} className={styles.emptyCell}>데이터가 없습니다.</td></tr>
                   ) : (
                     state.statusResult.rows.map((r) => (
                       <tr key={r.id}><td>{r.salesGroup}</td><td>{r.factoryCategory}</td><td>{r.shipType}</td><td className={styles.tdNum}>{formatNumber(r.qty)}</td><td className={styles.tdNum}>{formatNumber(r.amount)}</td></tr>

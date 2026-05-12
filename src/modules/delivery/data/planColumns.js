@@ -1,3 +1,7 @@
+﻿/**
+ * 납품 계획 테이블 공통 컬럼 정의
+ * - PlanTable, DetailModal, 기타 납품계획 화면에서 동일하게 사용한다.
+ */
 export const PLAN_COLUMNS = [
   { key: 'company', label: '건설사', width: 100, align: 'center' },
   { key: 'site', label: '현장명', width: 220, isLink: true },
@@ -11,5 +15,5 @@ export const PLAN_COLUMNS = [
   { key: 'spec', label: '특수사양', width: 98 },
   { key: 'manager', label: '담당자', width: 84, align: 'center' },
   { key: 'item2', label: '품목', width: 86, align: 'center' },
-  { key: 'specManager', label: 'SPEC담당', width: 92, align: 'center' }
+  { key: 'specManager', label: 'SPEC담당', width: 92, align: 'center' },
 ];

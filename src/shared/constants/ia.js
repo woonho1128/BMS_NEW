@@ -36,6 +36,7 @@ const MAIN = [
           { id: 'sales-profit-analysis', label: '손익분석', path: '/profit' },
           { id: 'sales-info', label: '영업정보 등록/조회', path: '/sales/info' },
           { id: 'spec-status', label: 'SPEC-현황', path: '/sales/spec-status' },
+          { id: 'sales-combination-daily-log', label: '조합영업일지관리', path: '/sales/combination-daily-log' },
         ],
       },
       {
@@ -107,7 +108,7 @@ const MAIN = [
         label: '출고/배송조회',
         children: [
           { id: 'partner-delivery', label: '출고 상세 및 현황', path: '/partner/delivery' },
-          { id: 'partner-dispatch', label: '배차 현황', path: '/partner/dispatch' },
+          { id: 'partner-dispatch', label: '운임 현황', path: '/partner/dispatch' },
         ],
       },
       {

@@ -1,5 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { notify } from '../../../../shared/utils/notify';
+import {
+  addOrRemoveId,
+  includesNormalized,
+  isAllRowsSelected,
+  normalizeQuery,
+  toggleIdInList,
+} from './specListUtils';
 import styles from './SpecRegistrationList.module.css';
 
 const INITIAL_ROWS = [
@@ -15,8 +22,8 @@ const INITIAL_ROWS = [
   },
   {
     id: 'spec-102',
-    company: '대리주택',
-    site: '제주 신도심 2차',
+    company: '대림주택',
+    site: '제주 신도시 2차',
     specNo: 'SPEC-2026-102',
     requestedAt: '2026-04-06',
     manager: '이담당',
@@ -31,7 +38,7 @@ const INITIAL_ROWS = [
     requestedAt: '2026-04-07',
     manager: '박현장',
     status: 'completed',
-    items: ['외장타일 300x600', '악세서리'],
+    items: ['욕실타일 300x600', '몰딩세라믹'],
   },
 ];
 
@@ -46,24 +53,24 @@ export const SpecRegistrationList = ({ setRows }) => {
   const companies = useMemo(() => ['all', ...Array.from(new Set(specRows.map((row) => row.company)))], [specRows]);
 
   const filteredRows = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
+    const normalizedQuery = normalizeQuery(query);
     return specRows.filter((row) => {
       if (companyFilter !== 'all' && row.company !== companyFilter) return false;
       if (showPendingOnly && row.status !== 'pending') return false;
       if (!normalizedQuery) return true;
       return (
-        row.site.toLowerCase().includes(normalizedQuery) ||
-        row.specNo.toLowerCase().includes(normalizedQuery) ||
-        row.manager.toLowerCase().includes(normalizedQuery)
+        includesNormalized(row.site, normalizedQuery) ||
+        includesNormalized(row.specNo, normalizedQuery) ||
+        includesNormalized(row.manager, normalizedQuery)
       );
     });
   }, [companyFilter, query, showPendingOnly, specRows]);
 
   const pendingRows = filteredRows.filter((row) => row.status === 'pending');
-  const isAllSelected = pendingRows.length > 0 && pendingRows.every((row) => selectedIds.includes(row.id));
+  const isAllSelected = isAllRowsSelected(pendingRows, selectedIds);
 
   const toggleExpanded = (id) => {
-    setExpandedIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    setExpandedIds((prev) => toggleIdInList(prev, id));
   };
 
   const handleSelectAll = (checked) => {
@@ -75,7 +82,7 @@ export const SpecRegistrationList = ({ setRows }) => {
   };
 
   const handleSelectOne = (id, checked) => {
-    setSelectedIds((prev) => (checked ? [...new Set([...prev, id])] : prev.filter((item) => item !== id)));
+    setSelectedIds((prev) => addOrRemoveId(prev, id, checked));
   };
 
   const handleAddToPlan = () => {
@@ -99,7 +106,7 @@ export const SpecRegistrationList = ({ setRows }) => {
       prev.map((row) => (selectedIds.includes(row.id) ? { ...row, status: 'completed' } : row))
     );
     setSelectedIds([]);
-    notify.success(`${targets.length}건의 스펙을 납품 계획으로 반영했습니다.`);
+    notify.success(`${targets.length}건의 스펙이 납품 계획으로 반영되었습니다.`);
   };
 
   return (
@@ -182,7 +189,7 @@ export const SpecRegistrationList = ({ setRows }) => {
                         </td>
                         <td className={styles.td}>{row.company}</td>
                         <td className={styles.td} onClick={() => toggleExpanded(row.id)}>
-                          <span className={`${styles.chevron} ${expanded ? 'open' : ''}`}>▸</span>
+                          <span className={`${styles.chevron} ${expanded ? 'open' : ''}`}>{'>'}</span>
                           {row.site}
                         </td>
                         <td className={styles.td}>{row.specNo}</td>

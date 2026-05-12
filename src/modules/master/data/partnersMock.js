@@ -41,6 +41,8 @@
   },
 ];
 
+export const MOCK_PARTNERS_LIST = MOCK_PARTNERS;
+
 const SALES_YEARS = ['2023', '2024', '2025', '2026'];
 
 function clone(value) {
@@ -172,8 +174,6 @@ const MOCK_PARTNER_EDIT_HISTORIES = Object.fromEntries(
     ],
   ])
 );
-
-export const MOCK_PARTNERS_LIST = MOCK_PARTNERS;
 
 export const MOCK_DIVISION_OPTIONS = [
   { value: '', label: '전체' },

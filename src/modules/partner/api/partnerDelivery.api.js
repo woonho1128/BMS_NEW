@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 대리점 출고정보 API (Mock)
  */
 
@@ -13,20 +13,21 @@ function inRange(date, from, to) {
 }
 
 function computeVatType(shipment) {
-  // Mock 규칙: 직송=과세, 택배=면세 (필요 시 실제 모델로 교체)
+  // Mock 규칙: 직송=과세, 택배=면세
   if (shipment?.shipType === '직송') return '과세';
   return '면세';
 }
 
 function computeAmount(shipment) {
-  // Mock 규칙: 품목/수량 기반 임의 금액 산출
+  // Mock 규칙: 품목/수량 기반 임시 금액
   const qty = Number(shipment?.qty) || 0;
-  const unit = shipment?.item?.includes('타일') ? 12000 : shipment?.item?.includes('벽지') ? 8000 : 10000;
+  const item = String(shipment?.item || '');
+  const unit = item.includes('타일') ? 12000 : item.includes('벽돌') ? 8000 : 10000;
   return qty * unit;
 }
 
 function computeSalesGroup(shipment) {
-  // Mock 규칙: partnerId 기준 임의 그룹
+  // Mock 규칙: partnerId 기준 임시 그룹
   if (String(shipment?.partnerId) === '1') return '영업1그룹';
   if (String(shipment?.partnerId) === '2') return '영업2그룹';
   return '영업그룹';
@@ -45,7 +46,7 @@ export async function fetchPartnerMonthlyDelivery({ partnerId, year }) {
   const shipments = PARTNER_SHIPMENTS_MOCK.filter((s) => s.partnerId === pid).filter((s) => s.date?.startsWith(`${yy}-`));
   const byKey = new Map();
   shipments.forEach((s) => {
-    const shipYm = s.date.slice(0, 7); // YYYY-MM
+    const shipYm = s.date.slice(0, 7);
     const shipType = s.shipType || '-';
     const vatType = computeVatType(s);
     const key = `${shipYm}__${shipType}__${vatType}`;
@@ -55,7 +56,7 @@ export async function fetchPartnerMonthlyDelivery({ partnerId, year }) {
     const prev =
       byKey.get(key) || {
         shipYm,
-        partnerName: '', // 페이지에서 주입
+        partnerName: '',
         shipType,
         vatType,
         amount: 0,
@@ -101,7 +102,7 @@ export async function fetchPartnerShipmentStatus({ partnerId, factory, shipType,
   rows = rows.map((r) => ({
     ...r,
     salesGroup: computeSalesGroup(r),
-    factoryCategory: r.factory, // 요구 컬럼: 공장구분
+    factoryCategory: r.factory,
     amount: computeAmount(r),
   }));
 
@@ -110,4 +111,3 @@ export async function fetchPartnerShipmentStatus({ partnerId, factory, shipType,
   const totalAmount = rows.reduce((sum, s) => sum + (Number(s.amount) || 0), 0);
   return { rows, totalCount, totalQty, totalAmount };
 }
-

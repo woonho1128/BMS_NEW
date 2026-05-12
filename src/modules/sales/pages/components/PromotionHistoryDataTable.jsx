@@ -1,7 +1,7 @@
 import React from 'react';
+import styles from '../PromotionHistoryPage.module.css';
 
 export function PromotionHistoryDataTable({
-  styles,
   columns,
   rows,
   filters,

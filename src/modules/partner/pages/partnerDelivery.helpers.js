@@ -9,7 +9,7 @@
 
 export const factoryOptions = [
   { value: '', label: '전체' },
-  { value: '제천공장', label: '제천공장' },
+  { value: '서울공장', label: '서울공장' },
   { value: '부산공장', label: '부산공장' },
   { value: '대구공장', label: '대구공장' },
 ];
@@ -20,7 +20,8 @@ export const shipTypeOptions = [
   { value: '택배', label: '택배' },
 ];
 
-export function buildMonthlyFields({ yearOptions, isAgencyRole, partnerQuery, partnerId, selectedPartnerLabel, partnerOptionsFiltered }) {
+export function buildMonthlyFields({ yearOptions, isAgencyRole, partnerId, selectedPartnerLabel, partnerOptionsFiltered }) {
+  // 월별 탭 필터 스키마를 단일 함수에서 구성해 화면/상태 간 중복을 방지한다.
   const fields = [];
   fields.push({ id: 'year', label: '연도', type: 'select', options: yearOptions, width: 120, row: 0 });
   if (!isAgencyRole) {
@@ -39,6 +40,7 @@ export function buildMonthlyFields({ yearOptions, isAgencyRole, partnerQuery, pa
 }
 
 export function buildStatusFields({ isAgencyRole, partnerId, selectedPartnerLabel, partnerOptionsFiltered }) {
+  // 현황 탭 필터 스키마를 단일 함수에서 구성해 유지보수 포인트를 일원화한다.
   const fields = [];
   fields.push({ id: 'factory', label: '공장명', type: 'select', options: factoryOptions, width: 140, row: 0 });
   fields.push({ id: 'shipType', label: '출고형태', type: 'select', options: shipTypeOptions, width: 120, row: 0 });

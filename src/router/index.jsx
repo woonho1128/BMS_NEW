@@ -33,6 +33,10 @@ const SalesInfoPage = lazyNamed(() => import('../modules/sales/pages/SalesInfoPa
 const SalesInfoDetailPage = lazyNamed(() => import('../modules/sales/pages/SalesInfoDetailPage'), 'SalesInfoDetailPage');
 const SalesInfoRegisterPage = lazyNamed(() => import('../modules/sales/pages/SalesInfoRegisterPage'), 'SalesInfoRegisterPage');
 const SpecStatusDiscountPage = lazyNamed(() => import('../modules/sales/pages/SpecStatusDiscountPage'), 'SpecStatusDiscountPage');
+const CombinationDailyLogPage = lazyNamed(
+  () => import('../modules/sales/pages/CombinationDailyLogPage'),
+  'CombinationDailyLogPage'
+);
 
 const SalesReportsPage = lazyNamed(() => import('../modules/sales/pages/SalesReportsPage'), 'SalesReportsPage');
 const WeeklyReportFormPage = lazyNamed(() => import('../modules/sales/pages/WeeklyReportFormPage'), 'WeeklyReportFormPage');
@@ -210,6 +214,7 @@ export function Router() {
           <Route path={toRelative(ROUTES.SALES_INFO_NEW)} element={<SalesInfoRegisterPage />} />
           <Route path={toRelative(ROUTES.SALES_INFO_ID)} element={<SalesInfoDetailPage />} />
           <Route path={toRelative(ROUTES.SPEC_STATUS)} element={<SpecStatusDiscountPage />} />
+          <Route path={toRelative(ROUTES.SALES_COMBINATION_DAILY_LOG)} element={<CombinationDailyLogPage />} />
           <Route path={toRelative(ROUTES.SALES_REPORT)} element={<SalesReportsPage />} />
           <Route path={toRelative(ROUTES.SALES_REPORT_WEEKLY_NEW)} element={<WeeklyReportFormPage />} />
           <Route path={toRelative(ROUTES.SALES_REPORT_TRIP_NEW)} element={<TripReportFormPage />} />

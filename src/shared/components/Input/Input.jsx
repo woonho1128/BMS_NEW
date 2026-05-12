@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { classnames } from '../../utils/classnames';
 import styles from './Input.module.css';
 
@@ -6,7 +6,8 @@ import styles from './Input.module.css';
  * @param {React.InputHTMLAttributes<HTMLInputElement> & { label?: string; error?: string }}
  */
 export function Input({ label, error, className, id, ...props }) {
-  const inputId = id ?? `input-${Math.random().toString(36).slice(2, 9)}`;
+  const fallbackId = useId();
+  const inputId = id ?? `input-${fallbackId}`;
   return (
     <div className={styles.wrapper}>
       {label && (

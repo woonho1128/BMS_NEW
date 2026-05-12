@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 대리점 출고정보 Mock
  * - 실제 연동 시 백엔드 API로 교체
  */
@@ -34,7 +34,7 @@ export const PARTNER_SHIPMENTS_MOCK = [
     shipType: '직송',
     status: '출고완료',
     docNo: 'DO-202601-0008',
-    item: '벽지 C',
+    item: '벽돌 C',
     qty: 30,
   },
   {
@@ -60,4 +60,3 @@ export const PARTNER_SHIPMENTS_MOCK = [
     qty: 90,
   },
 ];
-

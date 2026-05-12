@@ -41,6 +41,7 @@ export const ROUTES = {
   PROFIT_ID: '/profit/:id',
   PROFIT_ID_EDIT: '/profit/:id/edit',
   SPEC_STATUS: '/sales/spec-status',
+  SALES_COMBINATION_DAILY_LOG: '/sales/combination-daily-log',
 
   SHORT_PROJECT: '/sales/short-project',              
   SHORT_PROJECT_REGISTER: '/sales/short-project/register',

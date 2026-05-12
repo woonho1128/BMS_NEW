@@ -3,6 +3,7 @@ import { downloadCsv } from '../../../shared/utils/csv';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { MOCK_PARTNERS_LIST } from '../../master/data/partnersMock';
 import { fetchPartnerMonthlyDelivery, fetchPartnerShipmentStatus } from '../api/partnerDelivery.api';
+import { createYearOptions } from './partnerDelivery.helpers';
 
 export function usePartnerDeliveryState() {
   const { user } = useAuth();
@@ -21,7 +22,7 @@ export function usePartnerDeliveryState() {
 
   const [factory, setFactory] = useState('');
   const [shipType, setShipType] = useState('');
-  const [shipStatus, setShipStatus] = useState('?꾩껜');
+  const [shipStatus, setShipStatus] = useState('전체');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [statusLoading, setStatusLoading] = useState(false);
@@ -29,7 +30,7 @@ export function usePartnerDeliveryState() {
 
   const partnerOptionsAll = useMemo(() => {
     const base = MOCK_PARTNERS_LIST.map((p) => ({ value: p.id, label: p.name }));
-    return [{ value: '', label: '?由ъ젏 ?좏깮' }, ...base];
+    return [{ value: '', label: '대리점 선택' }, ...base];
   }, []);
 
   const partnerOptionsFiltered = useMemo(() => {
@@ -103,12 +104,7 @@ export function usePartnerDeliveryState() {
   }, [isAgencyRole, partnerId, activeTab, monthlyYear, factory, shipType, shipStatus, dateFrom, dateTo, runMonthlySearch, runStatusSearch]);
 
   const yearOptions = useMemo(() => {
-    const list = [];
-    for (let i = 0; i < 5; i += 1) {
-      const y = String(defaultYear - i);
-      list.push({ value: y, label: y });
-    }
-    return list;
+    return createYearOptions(defaultYear).map((opt) => ({ value: opt.value, label: opt.value }));
   }, [defaultYear]);
 
   const monthlyFilterValue = useMemo(() => ({ year: monthlyYear, partnerQuery, partnerId }), [monthlyYear, partnerQuery, partnerId]);
@@ -141,7 +137,7 @@ export function usePartnerDeliveryState() {
   const resetStatusFilter = useCallback(() => {
     setFactory('');
     setShipType('');
-    setShipStatus('?꾩껜');
+    setShipStatus('전체');
     setDateFrom('');
     setDateTo('');
     if (!isAgencyRole) {
@@ -161,14 +157,14 @@ export function usePartnerDeliveryState() {
       vat: r.vat,
       total: r.total,
     }));
-    downloadCsv('?붾퀎?댁뿭.csv', [
-      { key: 'shipYm', label: '異쒓퀬 ?꾩썡' },
-      { key: 'partnerName', label: '?由ъ젏紐?' },
-      { key: 'shipType', label: '異쒓퀬?뺥깭' },
-      { key: 'vatType', label: '遺媛?명삎??' },
-      { key: 'amount', label: '湲덉븸' },
-      { key: 'vat', label: '遺媛??' },
-      { key: 'total', label: '?⑷퀎' },
+    downloadCsv('월별내역.csv', [
+      { key: 'shipYm', label: '출고 연월' },
+      { key: 'partnerName', label: '대리점명' },
+      { key: 'shipType', label: '출고형태' },
+      { key: 'vatType', label: '부가유형' },
+      { key: 'amount', label: '금액' },
+      { key: 'vat', label: '부가세' },
+      { key: 'total', label: '합계' },
     ], rows);
   }, [monthlyResult.rows]);
 
@@ -181,12 +177,12 @@ export function usePartnerDeliveryState() {
       qty: r.qty,
       amount: r.amount,
     }));
-    downloadCsv('異쒓퀬?꾪솴.csv', [
-      { key: 'salesGroup', label: '?곸뾽洹몃９' },
-      { key: 'factoryCategory', label: '怨듭옣援щ텇' },
-      { key: 'shipType', label: '異쒓퀬?뺥깭' },
-      { key: 'qty', label: '?섎웾' },
-      { key: 'amount', label: '湲덉븸(??' },
+    downloadCsv('출고현황.csv', [
+      { key: 'salesGroup', label: '영업그룹' },
+      { key: 'factoryCategory', label: '공장구분' },
+      { key: 'shipType', label: '출고형태' },
+      { key: 'qty', label: '수량' },
+      { key: 'amount', label: '금액(원)' },
     ], rows);
   }, [statusResult.rows]);
 

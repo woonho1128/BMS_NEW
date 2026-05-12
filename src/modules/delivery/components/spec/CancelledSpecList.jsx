@@ -1,5 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { notify } from '../../../../shared/utils/notify';
+import {
+  addOrRemoveId,
+  includesNormalized,
+  isAllRowsSelected,
+  normalizeQuery,
+  toggleIdInList,
+} from './specListUtils';
 import styles from './CancelledSpecList.module.css';
 
 const INITIAL_CANCELLED = [
@@ -12,7 +19,7 @@ const INITIAL_CANCELLED = [
   },
   {
     id: 'c2',
-    company: '대리주택',
+    company: '대림주택',
     site: '취소 현장 2',
     cancelledAt: '2026-03-30',
     reason: '예산 조정',
@@ -22,7 +29,7 @@ const INITIAL_CANCELLED = [
     company: 'DL건설',
     site: '취소 현장 3',
     cancelledAt: '2026-04-01',
-    reason: '납기 일정 변경',
+    reason: '공기 일정 변경',
   },
 ];
 
@@ -33,17 +40,17 @@ export const CancelledSpecList = () => {
   const [expandedIds, setExpandedIds] = useState([]);
 
   const filteredRows = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
+    const normalizedQuery = normalizeQuery(query);
     if (!normalizedQuery) return rows;
     return rows.filter(
       (row) =>
-        row.company.toLowerCase().includes(normalizedQuery) ||
-        row.site.toLowerCase().includes(normalizedQuery) ||
-        row.reason.toLowerCase().includes(normalizedQuery)
+        includesNormalized(row.company, normalizedQuery) ||
+        includesNormalized(row.site, normalizedQuery) ||
+        includesNormalized(row.reason, normalizedQuery)
     );
   }, [query, rows]);
 
-  const isAllSelected = filteredRows.length > 0 && filteredRows.every((row) => selectedIds.includes(row.id));
+  const isAllSelected = isAllRowsSelected(filteredRows, selectedIds);
 
   const restoreItems = (ids) => {
     if (!ids.length) {
@@ -56,7 +63,7 @@ export const CancelledSpecList = () => {
   };
 
   const toggleExpanded = (id) => {
-    setExpandedIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    setExpandedIds((prev) => toggleIdInList(prev, id));
   };
 
   return (
@@ -99,7 +106,9 @@ export const CancelledSpecList = () => {
                   <input
                     type="checkbox"
                     checked={isAllSelected}
-                    onChange={(e) => setSelectedIds(e.target.checked ? filteredRows.map((row) => row.id) : [])}
+                    onChange={(e) =>
+                      setSelectedIds(e.target.checked ? filteredRows.map((row) => row.id) : [])
+                    }
                   />
                 </th>
                 <th className={styles.th}>건설사</th>
@@ -124,15 +133,13 @@ export const CancelledSpecList = () => {
                             type="checkbox"
                             checked={selectedIds.includes(row.id)}
                             onChange={(e) =>
-                              setSelectedIds((prev) =>
-                                e.target.checked ? [...new Set([...prev, row.id])] : prev.filter((id) => id !== row.id)
-                              )
+                              setSelectedIds((prev) => addOrRemoveId(prev, row.id, e.target.checked))
                             }
                           />
                         </td>
                         <td className={styles.td}>{row.company}</td>
                         <td className={styles.td} onClick={() => toggleExpanded(row.id)}>
-                          <span className={`${styles.chevron} ${expanded ? 'open' : ''}`}>▸</span>
+                          <span className={`${styles.chevron} ${expanded ? 'open' : ''}`}>{'>'}</span>
                           {row.site}
                         </td>
                         <td className={styles.tdCancelDate}>{row.cancelledAt}</td>
